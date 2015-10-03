@@ -1,0 +1,18 @@
+<?php
+include("../includes/config.inc.php"); 
+//include("includes/crosssite.inc.php"); 
+$existing=$_REQUEST['existing'];
+
+error_reporting(0);
+?>
+<select name="orgranization" id="orgranization" class="form-control drop_down">
+                <option value="">Select Orgranization</option>                         
+                <?php $Country=mysql_query("SELECT * FROM `tblcallingdata` WHERE STATUS='1' ORDER BY Company_Name ASC");								
+                      while($resultCountry=mysql_fetch_assoc($Country))
+                      {
+                ?>
+                <option value="<?php echo $resultCountry['id']; ?>" 
+                <?php if(isset( $_SESSION['Company_Name']) && $resultCountry['id']== $_SESSION['Company_Name']){ ?>selected			            <?php } ?>>
+                <?php echo stripslashes(ucfirst($resultCountry['Company_Name'])); ?></option>
+                <?php } ?>
+                </select>

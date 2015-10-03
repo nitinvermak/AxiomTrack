@@ -1,0 +1,97 @@
+<script type="text/javascript">
+function IfInterested() {
+    document.getElementById("ifinterested").style.display = "";
+	document.getElementById("nointerested").style.display = "none";
+	
+}
+
+function NotInterested() {
+	//alert("test");
+    document.getElementById("ifinterested").style.display = "none";
+	document.getElementById("nointerested").style.display = "";
+}
+ 
+var popUpObj;
+        function showModalPopUp() {
+            popUpObj = window.open("generate_ticket.php?id=<?php echo $row["callingdata_id"]; ?>&token=<?php echo $token ?>",
+    "ModalPopUp",
+    "toolbar=no," +
+    "scrollbars=no," +
+    "location=no," +
+    "statusbar=no," +
+    "menubar=no," +
+    "resizable=0," +
+    "width=800," +
+    "height=400," +
+    "left = 90," +
+    "top=300"
+    );
+	
+            popUpObj.focus();
+            LoadModalDiv();
+  }
+
+function CallState()
+	{ 
+		country = document.getElementById("country").value;
+		url="ajaxrequest/getstate.php?country="+country+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,country,"GetState");
+	}
+	function GetState(str)
+	{
+		/*alert(str);*/
+		document.getElementById('Divstate').innerHTML=str;
+	}
+function CallDistrict()
+	{
+		state = document.getElementById("state").value;
+		url="ajaxrequest/get_district.php?state="+state+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,state,"GetDistrict");
+	}	
+	function GetDistrict(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divdistrict').innerHTML=str;
+	}
+function CallCity()
+	{
+		district = document.getElementById("district").value;
+		url="ajaxrequest/get_city.php?district="+district+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,state,"GetCity");
+	}
+	function GetCity(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divcity').innerHTML=str;
+	}
+	
+function CallArea()
+	{
+		city = document.getElementById("city").value;
+		url="ajaxrequest/get_area.php?city="+city+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,city,"GetArea");
+	}
+	function GetArea(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divarea').innerHTML=str;
+	}	
+
+function CallPincode()
+	{
+		area = document.getElementById("area").value;
+		url="ajaxrequest/get_pincode.php?area="+area+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,city,"GetPincode");
+	}
+	function GetPincode(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divpincode').innerHTML=str;
+	}
+	
+</script>
