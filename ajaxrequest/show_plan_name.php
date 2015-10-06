@@ -17,7 +17,7 @@ if($catId == 3)
 else 
 	{
 ?>
-<select name="ticketId" id="ticketId" class="form-control drop_down ticket">
+<select name="plan_name" id="plan_name" class="form-control drop_down ticket">
                     	 <option value="">Select Plan</option>
 						 <?php $Country=mysql_query("select * from tblplansubcategory where planCategoryId = '$catId'");
                                while($resultCountry=mysql_fetch_assoc($Country)){

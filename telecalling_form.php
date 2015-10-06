@@ -411,7 +411,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
     <td>Device Amt</td>
     <td valign="top"><select name="p_device_amt" id="p_device_amt" class="form-control drop_down">
       <option value="">Select</option>
-      <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and plan_description='Device Rate'");
+      <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1");
 			  while($resultCountry=mysql_fetch_assoc($Country)){
         ?>
       <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['np_device_amt']) && $resultCountry['id']==$result['np_device_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>

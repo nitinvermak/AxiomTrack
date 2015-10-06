@@ -96,7 +96,7 @@ if(isset($_POST['remove']))
                 <div class="col-sm-10">
                   <select name="telecaller" id="telecaller" class="form-control drop_down">
                   <option label="" value="" selected="selected">Select Telecaller</option>
-                  <?php $Country=mysql_query("select * from tbluser where  User_Category='6' or User_Category='9' or User_Category='8'");
+                  <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
 						while($resultCountry=mysql_fetch_assoc($Country)){
 				  ?>
                   <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>

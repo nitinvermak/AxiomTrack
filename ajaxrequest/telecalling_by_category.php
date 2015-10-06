@@ -54,7 +54,7 @@ if(mysql_num_rows($stockArr)>0)
                      <td><?php echo stripslashes($row["State"]);?></td>
                      <td><?php echo stripslashes($row["City"]);?></td>
                      <td><?php echo stripslashes($row["Area"]);?></td>
-                     <td><a href="../crm/telecalling_form.php?id=<?php echo $row["callingdata_id"]; ?>&token=<?=$token?>&cat=<?php echo $callingcategory; ?>">Status</a></td>
+                     <td><a href="telecalling_form.php?id=<?php echo $row["callingdata_id"]; ?>&token=<?=$token?>&cat=<?php echo $callingcategory; ?>">Status</a></td>
                      </tr>
  
 	<?php 
