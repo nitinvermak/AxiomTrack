@@ -82,6 +82,7 @@
             <a tabindex="0" data-toggle="dropdown">Manage Module</a>
             <ul class="dropdown-menu">
               <li><a tabindex="0"  href="manage_module.php?token=<?=$token?>">Add/Edit Module</a></li>
+              <li><a tabindex="0"  href="manage_role.php?token=<?=$token?>">Add/Edit Role</a></li>
             </ul>
          </li>
          <li class="dropdown-submenu">

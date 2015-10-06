@@ -31,7 +31,7 @@ including common files
 */
 
 // general_function.php contains all important and common sql functions
-include("/includes/general_function.php");
+include("includes/general_function.php");
 
 // to search in differenet path if called from  the ajaxrequest folder
 include("../includes/general_function.php");

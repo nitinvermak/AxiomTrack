@@ -26,18 +26,18 @@ $plan_price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_price
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblplan set plan_name='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price' where id=" .$_REQUEST['id'];
+$sql="update tblplan set planSubCategory	='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price' where id=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Plan updated successfully';
 header("location:manage_plan.php?token=".$token);
 exit();
 }
 else{
-$queryArr=mysql_query("select * from tblplan where period='$datasource' and plan_name='$datasource' and plan_description='$plan_description' and productCategoryId='$plan_category' and serviceprovider_id='$service_provider and plan_status='$plan_status' and plan_rate='$plan_price'");
+$queryArr=mysql_query("select * from tblplan where period='$datasource' and planSubCategory	='$datasource' and plan_description='$plan_description' and productCategoryId='$plan_category' and serviceprovider_id='$service_provider and plan_status='$plan_status' and plan_rate='$plan_price'");
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblplan set  plan_name='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price' ");
+$query=mysql_query("insert into tblplan set  planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price' ");
 $_SESSION['sess_msg']='Plan added successfully';
 header("location:manage_plan.php?token=".$token);
 exit();
@@ -113,7 +113,7 @@ $result=mysql_fetch_assoc($queryArr);
             <?php $Country=mysql_query("select * from tblplancategory");
 						   while($resultCountry=mysql_fetch_assoc($Country)){
 			?>
-            <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['id']) && $resultCountry['id']==$result['plan_category']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['category'])); ?></option>
+            <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['productCategoryId']) && $resultCountry['id']==$result['productCategoryId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['category'])); ?></option>
             <?php } ?>
             </select>        </td>
         </tr>
@@ -127,11 +127,28 @@ $result=mysql_fetch_assoc($queryArr);
          </tr>-->
          <tr >
          <td>Plan Name*</td>
-         <td><div id="responseText"><input type="text" name="plan_name" id="plan_name" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['plan_name'];?>"/></div></td>
+         <td><div id="responseText">
+         <?php 
+		 if($result['planSubCategory'] > 0)
+		 {
+		 ?>
+         <input type="text" name="plan_name" id="plan_name" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['planSubCategory'];?>"/>
+         <?php 
+		 } 
+		 else if($result['serviceprovider_id'] > 0)
+		 {
+		 ?>
+         <input type="text" name="provider" id="provider" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['serviceprovider_id'];?>"/>
+		 <?php 
+		 }
+		 ?>
+         </div></td>
          </tr>
          <tr >
          <td>Description*</td>
-         <td><textarea name="plan_description" id="plan_description" class="form-control txt_area"/><?php if(isset($result['id'])) echo $result['plan_description'];?></textarea></td>
+         <td><textarea name="plan_description" id="plan_description" class="form-control txt_area"/>
+         
+           <?php if(isset($result['id'])) echo $result['plan_description'];?>             </textarea></td>
          </tr>
          <tr >
          <td>Price*</td>
