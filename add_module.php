@@ -21,11 +21,12 @@ if(isset($_REQUEST['moduleName']))
 $moduleName=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['moduleName'])));
 $moduleCategory = htmlspecialchars(mysql_real_escape_string(trim($_POST['moduleCategory'])));
 $displayModuleName = htmlspecialchars(mysql_real_escape_string($_POST['displayModuleName']));
+$parentModuleId = htmlspecialchars(mysql_real_escape_string($_REQUEST['parentModuleId']));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblmodulename set moduleName='$moduleName', moduleCatId = '$moduleCategory', displayModuleName = '$displayModuleName' where moduleId=" .$_REQUEST['id'];
+$sql="update tblmodulename set moduleName='$moduleName', moduleCatId = '$moduleCategory', displayModuleName = '$displayModuleName', parentId = '$parentModuleId' where moduleId=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Module Name updated successfully';
 header("location:manage_module.php?token=".$token);
@@ -36,7 +37,7 @@ $queryArr=mysql_query("select * from tblmodulename where moduleName ='$moduleNam
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblmodulename set  moduleName='$moduleName', moduleCatId = '$moduleCategory', displayModuleName = '$displayModuleName'");
+$query=mysql_query("insert into tblmodulename set  moduleName='$moduleName', moduleCatId = '$moduleCategory', displayModuleName = '$displayModuleName', parentId = '$parentModuleId'");
 $_SESSION['sess_msg']='Module Name added successfully';
 header("location:manage_module.php?token=".$token);
 exit();
@@ -102,6 +103,17 @@ $result=mysql_fetch_assoc($queryArr);
         <tr >
         <td>Module Name*</td>
         <td><input type="text" name="moduleName" id="moduleName" class="form-control text_box" value="<?php if(isset($result['moduleId'])) echo $result['moduleName'];?>" /></td>
+        </tr>
+        <tr >
+          <td>Parent Module</td>
+          <td><select name="parentModuleId" id="parentModuleId" class="form-control input-sm drop_down">
+            <option label="" value="">Select Parent Module</option>
+            <?php $Country=mysql_query("SELECT * FROM tblmoduleparentname ORDER BY 	parentName ASC ");
+                                       while($resultCountry=mysql_fetch_assoc($Country)){
+                        ?>
+            <option value="<?php echo $resultCountry['parentId']; ?>" <?php if(isset($result['parentId']) && $resultCountry['parentId']==$result['parentId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['parentName'])); ?></option>
+            <?php } ?>
+          </select></td>
         </tr>
         <tr >
         <td>Display Module Name*</td>

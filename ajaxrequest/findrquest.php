@@ -1,12 +1,8 @@
-
-
-
-<?php $country=intval($_GET['product']);
-$con = mysql_connect('localhost', 'root', ''); 
-if (!$con) {
-    die('Could not connect: ' . mysql_error());
-}
-mysql_select_db('crm');
+<?php
+include("../includes/config.inc.php"); 
+//include("../includes/crosssite.inc.php"); 
+$country=intval($_GET['product']);
+ 
 $query="SELECT id,rqsttype FROM tblrqsttype WHERE product_id='$country'";
 /*echo $query;*/
 $result=mysql_query($query);
