@@ -75,12 +75,30 @@ $(document).ready(function(){
 				});	 
 		});
 });
+
+
+
 </script>
 <script type="text/javascript">
 $(document).on('click','#chkAll',function(){
 	$(".perCheck1").prop("checked",$("#chkAll").prop("checked"))
      
 });
+
+
+function checkPermission(classA){
+ 
+	ClassB= ".perCheck"+classA;
+
+	//$(ClassB).prop("checked",true)
+	
+	if($(ClassB).is(':checked'))
+    	$(ClassB).prop("checked",false)
+	else
+   		$(ClassB).prop("checked",true)
+}
+
+
 </script>
 </head>
 <body>

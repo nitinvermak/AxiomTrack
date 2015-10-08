@@ -194,6 +194,7 @@
                <li><a tabindex="0" href="add_intervel.php?token=<?=$token?>">Add Interval</a></li>
                <li><a tabindex="0" href="generate_estimates.php?token=<?=$token?>">Generate Estimate</a></li>
                <li><a tabindex="0" href="estimate_view.php?token=<?=$token?>">Estimate View</a></li>
+               <li style="border:0px;"><a href="manage_conveyance.php?token=<?=$token?>">Manage Conveyance</a></li>
             </ul>
       </li>
       <li class="dropdown"><a tabindex="0" data-toggle="dropdown">Option<span class="caret"></span></a>
@@ -222,40 +223,8 @@
        
         </ul>
       </li>
-       <li style="border:0px;"><a href="manage_conveyance.php?token=<?=$token?>">Manage Conveyance</a></li>
       
-      <li class="dropdown">
-        <a tabindex="0" data-toggle="dropdown">Dropdown 2<span class="caret"></span></a>
-        <!-- role="menu": fix moved by arrows (Bootstrap dropdown) -->
-        <ul class="dropdown-menu" role="menu">
-          <li class="dropdown-submenu">
-            <a tabindex="0" data-toggle="dropdown">Action</a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="0">Sub action</a></li>
-              <li class="dropdown-submenu">
-                <a tabindex="0" data-toggle="dropdown">Another sub action</a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="0">Sub action</a></li>
-                  <li><a tabindex="0">Another sub action</a></li>
-                  <li><a tabindex="0">Something else here</a></li>
-                </ul>
-              </li>
-              <li><a tabindex="0">Something else here</a></li>
-            </ul>
-          </li>
-          <li><a tabindex="0">Another action</a></li>
-          <li class="dropdown-submenu">
-            <a tabindex="0" data-toggle="dropdown">Something else here</a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="0">Sub action</a></li>
-              <li><a tabindex="0">Another sub action</a></li>
-              <li><a tabindex="0">Something else here</a></li>
-            </ul>
-          </li>
-          <li class="divider"></li>
-          <li><a tabindex="0">Separated link</a></li>
-        </ul>
-      </li>
+      
     </ul>
   </div>
 </div>	
