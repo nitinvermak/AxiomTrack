@@ -13,8 +13,21 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	header("location: index.php?token=".$token);
 }
 
-
- if(count($_POST['linkID'])>0)
+if(isset($_POST['save']))
+	{
+		foreach($_POST['list'] as $checkvalue)
+		{
+			$Usercategory = mysql_real_escape_string($_POST['Usercategory']);
+			$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory', 	created = Now()";
+			/*echo $sql;*/
+			$result = mysql_query($sql);
+			if($result)
+			{
+				$msg = "Setting Saved !";
+			}
+		}	
+	}
+ /*if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
 		if(isset($_POST['linkID'])&&(isset($_POST['submit'])))
@@ -32,7 +45,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			 }  
   		$id="";
   
-  }
+  }*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,6 +60,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/checkbox_validation.js"></script>
 <script type="text/javascript">
 /* Send ajax request*/
 $(document).ready(function(){
@@ -60,6 +74,12 @@ $(document).ready(function(){
 						$("#divassign").html(data);
 				});	 
 		});
+});
+</script>
+<script type="text/javascript">
+$(document).on('click','#chkAll',function(){
+	$(".perCheck1").prop("checked",$("#chkAll").prop("checked"))
+     
 });
 </script>
 </head>
@@ -88,9 +108,11 @@ $(document).ready(function(){
                         <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['id']) && $resultCountry['id']==$result['id']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['User_Category'])); ?></option>
                         <?php } ?> 
         	</select>
+            
         </div>
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
+      <?php echo "<p style='color:green; font-weight:bold;'>".$msg ."</p>";?>
           <!---- this division shows the Data of devices from Ajax request --->
       </div>
     </form>

@@ -16,39 +16,38 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 		header("location: home.php?token=".$token);
 }
 $error =0;
-if(isset($_REQUEST['moduleName']))
+if(isset($_REQUEST['parentModule']))
 {
-$moduleName=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['moduleName'])));
-$moduleCategory = htmlspecialchars(mysql_real_escape_string(trim($_POST['moduleCategory'])));
-$displayModuleName = htmlspecialchars(mysql_real_escape_string($_POST['displayModuleName']));
+$parentModule = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['parentModule'])));
+echo $parentModule;
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblmodulename set moduleName='$moduleName', moduleCatId = '$moduleCategory', displayModuleName = '$displayModuleName' where moduleId=" .$_REQUEST['id'];
+$sql="update tblModuleParentName set parentName='$parentModule' where parentId=" .$_REQUEST['id'];
 mysql_query($sql);
-$_SESSION['sess_msg']='Module Name updated successfully';
-header("location:manage_module.php?token=".$token);
+$_SESSION['sess_msg']='Parent Module Name updated successfully';
+header("location:manage_parent_module.php?token=".$token);
 exit();
 }
 else{
-$queryArr=mysql_query("select * from tblmodulename where moduleName ='$moduleName'");
+$queryArr=mysql_query("select * from tblModuleParentName where parentName='$parentModule'");
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblmodulename set  moduleName='$moduleName', moduleCatId = '$moduleCategory', displayModuleName = '$displayModuleName'");
-$_SESSION['sess_msg']='Module Name added successfully';
-header("location:manage_module.php?token=".$token);
+$query=mysql_query("insert into tblModuleParentName set parentName='$parentModule'");
+$_SESSION['sess_msg']='Parent Module Name added successfully';
+header("location:manage_parent_module.php?token=".$token);
 exit();
 }
 else
 {
-$msg="Module Name already exists";
+$msg="Parent Module Name already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblmodulename where moduleId =".$_REQUEST['id']);
+$queryArr=mysql_query("select * from tblModuleParentName where parentId =".$_REQUEST['id']);
 $result=mysql_fetch_assoc($queryArr);
 }
 ?>
@@ -62,7 +61,7 @@ $result=mysql_fetch_assoc($queryArr);
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/manage_module.js"></script>
+<script type="text/javascript" src="js/manage_parent_module.js"></script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -73,7 +72,7 @@ $result=mysql_fetch_assoc($queryArr);
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h1>Module</h1>
+    	<h1>Parent Module</h1>
         <hr>
     </div>
     <div class="col-md-12">
@@ -88,31 +87,18 @@ $result=mysql_fetch_assoc($queryArr);
         <tr>
         <td colspan="2"><?php if(isset($msg) && $msg !="") echo "<font color=red>".$msg."</font>"; ?></td>
         </tr>
+        
         <tr >
-          <td>Module Category</td>
-          <td><select name="moduleCategory" id="moduleCategory" class="form-control input-sm drop_down">
-                <option label="" value="">Select Module Category</option>
-                        <?php $Country=mysql_query("SELECT * FROM tblmoduleCategory ORDER BY moduleCategory ASC ");
-                                       while($resultCountry=mysql_fetch_assoc($Country)){
-                        ?>
-                        <option value="<?php echo $resultCountry['moduleCatId']; ?>" <?php if(isset($result['moduleCatId']) && $resultCountry['moduleCatId']==$result['moduleCatId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['moduleCategory'])); ?></option>
-                        <?php } ?> 
-        	</select></td>
+        <td>Parent Module*</td>
+        <td><input type="text" name="parentModule" id="parentModule" class="form-control text_box" value="<?php if(isset($result['parentId'])) echo $result['parentName'];?>" /></td>
         </tr>
-        <tr >
-        <td>Module Name*</td>
-        <td><input type="text" name="moduleName" id="moduleName" class="form-control text_box" value="<?php if(isset($result['moduleId'])) echo $result['moduleName'];?>" /></td>
-        </tr>
-        <tr >
-        <td>Display Module Name*</td>
-        <td><input type="text" name="displayModuleName" id="displayModuleName" class="form-control text_box" value="<?php if(isset($result['moduleId'])) echo $result['displayModuleName'];?>" /></td>
-        </tr>
+        
         <tr>
         <td></td>
         <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Submit"/>
             <input type='reset' name='reset' class="btn btn-primary btn-sm" value="Reset"/>                        
             <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
-			onclick="window.location='manage_module.php?token=<?php echo $token ?>'"/></td>
+			onclick="window.location='manage_parent_module.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>
   		</div>

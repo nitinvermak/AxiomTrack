@@ -262,11 +262,4 @@ $rentFreqId = 1;  //  pass it from the page
 	
 	
 	}
-	
-
-	  
-	
-		
-
-
 ?>

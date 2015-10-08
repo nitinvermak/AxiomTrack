@@ -6,11 +6,11 @@ $searchText = $_REQUEST['searchText'];
 error_reporting(0);
 if ($searchText == '')
 	{
-	$linkSQL = "SELECT A.cust_id as Cid, B.Company_Name as cname, A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id";
+	$linkSQL = "SELECT A.cust_id as Cid, A.status as assignStatus, B.Company_Name as cname, A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id where A.status =0";
 	}
 		else if($searchText !== '')
 			{
-				$linkSQL = "SELECT A.cust_id as Cid, B.Company_Name as cname, A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id  WHERE A.cust_id like '$searchText%' or B.Company_Name like '$searchText%' ";
+				$linkSQL = "SELECT A.cust_id as Cid, A.status as assignStatus, B.Company_Name as cname, A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id  WHERE A.status =0 and (A.cust_id like '$searchText%' or B.Company_Name like '$searchText%')";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);

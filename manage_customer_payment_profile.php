@@ -108,7 +108,7 @@ function GetResponse(str){
     <div class="col-md-12">
       <div class="col-md-6">
         <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Customer Id, Company Name or Mobile">
-        <input type="submit" name="Search" id="Search" value="Search" onClick="ShowContacts()" class="btn btn-primary"/>
+        <input type="submit" name="Search" id="Search" value="Search" onClick="ShowContacts()" class="btn btn-primary btn-sm"/>
         </div>
     </div>
     <div class="clearfix"></div><br>

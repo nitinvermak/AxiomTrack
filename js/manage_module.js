@@ -1,9 +1,9 @@
 // JavaScript Document
 function validate(obj){
-	if(obj.country.value == "")
+	if(obj.moduleName.value == "")
 	{
 	alert ("Please provide Module Name");
-	obj.country.focus();
+	obj.moduleName.focus();
 	return false;
 	}
 }

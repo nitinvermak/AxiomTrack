@@ -192,7 +192,7 @@ function validate(obj)
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td height="34"><input type="submit" name="save" id="save" value="Submit" class="btn btn-primary"></td>
+          <td height="34"><input type="submit" name="save" id="save" value="Submit" class="btn btn-primary btn-sm"></td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>

@@ -19,6 +19,9 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		  $_SESSION['token_time']=time();
 			  if ($resultUser['User_Category']==1)
 			  {
+			  	$sql= mysql_query("Select * from tblmodulename");
+				$result = mysql_fetch_assoc($sql);
+				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["	moduleCatId"]);
 			  	header("location: home.php?token=".$token);
 			  }
 			  else
