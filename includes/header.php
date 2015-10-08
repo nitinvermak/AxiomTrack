@@ -41,14 +41,18 @@
           <div class="collapse navbar-collapse">
     <ul class="nav  navbar-nav">
       <li style="border:0px;"><a href="home.php?token=<?=$token?>">Home</a></li>
+      
       <li class="dropdown"><a tabindex="0" data-toggle="dropdown">Products<span class="caret"></span></a>
         <ul class="dropdown-menu drop_menu" role="menu">
+        
           <li class="dropdown-submenu"><a tabindex="0" data-toggle="dropdown">Manage Branch</a>
             <ul class="dropdown-menu">
               <li><a tabindex="0" href="manage_category.php?token=<?=$token?>">Add Category</a></li>
               <li><a tabindex="0" href="manage_branch.php?token=<?=$token?>">Add Branch</a></li>
             </ul>
           </li>
+          
+          
           <li class="dropdown-submenu">
             <a tabindex="0" data-toggle="dropdown">Manage Address</a>
             <ul class="dropdown-menu">
@@ -81,7 +85,9 @@
          <li class="dropdown-submenu">
             <a tabindex="0" data-toggle="dropdown">Manage Module</a>
             <ul class="dropdown-menu">
+              <li><a tabindex="0"  href="manage_module_category.php?token=<?=$token?>">Add/Edit Module Category</a></li>
               <li><a tabindex="0"  href="manage_module.php?token=<?=$token?>">Add/Edit Module</a></li>
+              <li><a tabindex="0"  href="manage_parent_module.php?token=<?=$token?>">Add/Edit Parent Module</a></li>
               <li><a tabindex="0"  href="manage_role.php?token=<?=$token?>">Add/Edit Role</a></li>
             </ul>
          </li>

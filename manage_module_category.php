@@ -16,7 +16,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
-		$delete_single_row = "DELETE FROM tblmodulename WHERE moduleId='$id'";
+		$delete_single_row = "DELETE FROM tblmoduleCategory WHERE id='$id'";
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -24,12 +24,12 @@ if(isset($_GET['id']))
 		echo "<script> alert('Record Delted Successfully'); </script>";
 	}
 //End
-//Delete multiple records
+//Delete multiple record
 if(isset($_POST['delete_selected']))
 	{
 		foreach($_POST['linkID'] as $chckvalue)
         	{
-		    	$sql = "DELETE FROM tblmodulename WHERE moduleId='$chckvalue'";
+		    	$sql = "DELETE FROM tblmoduleCategory WHERE id='$chckvalue'";
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -61,46 +61,42 @@ if(isset($_POST['delete_selected']))
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Module  Details</h3>
+    	<h3>Module Category Details</h3>
         <hr>
-    </div>
+	</div>
     <div class="col-md-12">
     	<div class="col-md-4 btn_grid">
-        <form name='fullform' method='post' onSubmit="return confirmdelete()">
-           <input type="hidden" name="token" value="<?php echo $token; ?>" />
-           <input type='hidden' name='pagename' value='users'>
-     		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_module.php?token=<?php echo $token ?>')"/>
+   		  <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_module_category.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
+       	  <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">
         
     <div class="table-responsive">
-   <table class="table table-hover table-bordered ">
+    <form name='fullform' method='post' onSubmit="return confirmdelete()">
+  	<table class="table table-hover table-bordered ">
    <?php
-	 $where='';
-	 $linkSQL="";		
-     if(!isset($linkSQL) or $linkSQL =='')		
-     $linkSQL = "SELECT tblmodulename.moduleId, tblmodulename.moduleName, tblmodulecategory.moduleCategory 
-	 			 FROM tblmodulename
-				 INNER JOIN tblmodulecategory
-				 ON tblmodulename.moduleCatId = tblmodulecategory.moduleCatId";
-     $pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_module.php?',$token);
-     if(isset($_SESSION['linkSQL']))
-     $mSQL=$_SESSION['linkSQL']." ".$_SESSION['limit'];
- 	 $oRS = mysql_query($mSQL); 
-   ?>             	        
+		$where='';
+		$linkSQL="";	
+    	if(!isset($linkSQL) or $linkSQL =='')		
+     	$linkSQL = "select * from tblmoduleCategory where 1=1 $where order by moduleCategory";
+  		$pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_module_category.php?',$token);
+  		if(isset($_SESSION['linkSQL']))
+ 		$mSQL=$_SESSION['linkSQL']." ".$_SESSION['limit'];
+  		$oRS = mysql_query($mSQL); 
+  	?>
+   <input type="hidden" name="token" value="<?php echo $token; ?>" />
+   <input type='hidden' name='pagename' value='users'>            	        
    <?php if($_SESSION['sess_msg']!=''){?>
-   <center>
-   <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
-   </center>
+	 		<center>
+            <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
+            </center>
    <?php } ?>
    	  
       <tr>
-      <th>S. No.</th>  
-      <th>Module Name</th> 
-      <th>Module Category</th>  
+      <th>S. No.</th>     
+      <th>Name</th>    
       <th>Action              
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
@@ -131,9 +127,8 @@ if(isset($_POST['delete_selected']))
  	  ?>
       <tr <?php print $class?>>
       <td><?php print $kolor++;?>.</td>
-	  <td><?php echo stripslashes($row["moduleName"]);?></td>
-      <td><?php echo stripcslashes($row["moduleCategory"]);?></td>
-	  <td><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_module.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_module.php?id=<?php echo $row["moduleId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="add_module.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?> </td>
+	  <td><?php echo stripslashes($row["moduleCategory"]);?></td>
+	  <td> <?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_accessories.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_module_category.php?id=<?php echo $row["moduleCatId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?></td>
       </tr>
 <?php }
 		echo $pagerstring;
@@ -143,9 +138,10 @@ if(isset($_POST['delete_selected']))
 ?> 
 	
     </table>
-    </div>
-    </div>
     </form>
+    </div>
+    </div>
+    
 </div>
 <!--end of the content-->
 <!--open of the footer-->

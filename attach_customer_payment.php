@@ -34,6 +34,7 @@ $result=mysql_fetch_assoc($queryArr);
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script  src="js/ajax.js"></script>
 <script>
 function enable(){
@@ -71,6 +72,22 @@ function showDetails()
 		url="ajaxrequest/show_details.php?vehicle_id="+vehicle_id+"&token=<?php echo $token;?>";
 		alert(url);
 		xmlhttpPost(url,vehicle_id,"GetDetails");
+	} 
+function ServiceBranch()
+	{
+		cust_id = document.getElementById("cust_id").value;
+		/*alert(cust_id);*/
+		url="ajaxrequest/assign_service.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,cust_id,"GetResponse");
+	} 
+function editBranch()
+	{
+		cust_id = document.getElementById("cust_id").value;
+		/*alert(cust_id);*/
+		url="ajaxrequest/edit_service_branch.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,cust_id,"GetResponse");
 	} 
 function GetDetails(str){
 	document.getElementById('divHistory').innerHTML=str;
@@ -208,6 +225,36 @@ function getValueHistoryPage(b){
 	
 	     } 
 </script>
+<script>
+//call ajax request when user assign branch services
+$(document).on("click","#save", function(){
+	$.post("ajaxrequest/assign_service_data.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val(),
+					service_branch : $('#service_branch').val(),
+					service_area_mgr : $('#service_area_mgr').val(),
+					service_exe : $('#service_exe').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#alert").html(data);
+				});	 
+})
+// call ajax request when user edit assign branch services
+$(document).on("click","#update", function(){
+	$.post("ajaxrequest/update_assign_service_branch.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val(),
+					service_branch : $('#service_branch').val(),
+					service_area_mgr : $('#service_area_mgr').val(),
+					service_exe : $('#service_exe').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#alert").html(data);
+				});	 
+})
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -247,10 +294,14 @@ function getValueHistoryPage(b){
         <input type="button" name="add_vehicle" id="add_vehicle" value="Add Payment Details" class="btn btn-info btn-sm" onClick="ShowContacts()">            
         <input type="button" name="add_vehicle2" id="add_vehicle2" value="View Plan & History" class="btn btn-info btn-sm" onClick="ShowHistory()">            
         <input type="button" name="add_vehicle3" id="add_vehicle3" value="Edit Plan" class="btn btn-info btn-sm" onClick="ShowEdit()">
+        
+        <input type="button" name="manageServiceBranch" id="manageServiceBranch" value="Add Service Branch" class="btn btn-info btn-sm" onClick="ServiceBranch()">
+         <input type="button" name="editServiceBranch" id="editServiceBranch" value="Edit Service Branch" class="btn btn-info btn-sm" onClick="editBranch()">
        <!-- <input type="button" name="estimateView" id="estimateView" value="Estimate View" class="btn btn-info btn-sm">-->
         </td>
         </tr>
       </table>
+      
       <div id="divShow">
       </div>
       <div id="divHistory">
