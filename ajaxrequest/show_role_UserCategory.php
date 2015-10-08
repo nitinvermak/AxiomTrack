@@ -37,7 +37,8 @@ if(mysql_num_rows($stockArr)>0)
 							<th class='col-md-6'>Module Name</th>  
 							
 							<th class='col-md-3'><p>Action<small>
-							<input type='checkbox' id='chkAll' /> Check/Uncheck All</small></p>
+							<input type='checkbox' onclick=checkPermission(".$row["moduleCatId"].")  /> Check/Uncheck All				
+							</small></p>
 							</th>	
 							</tr>";
 				}
@@ -52,7 +53,7 @@ if(mysql_num_rows($stockArr)>0)
 							<th class='col-md-6'>Module Name</th>  
 							
 							<th class='col-md-3'><p>Action<small>
-							<input type='checkbox' id='chkAll' /> Check/Uncheck All</small></p>
+							<input type='checkbox' onclick=checkPermission(".$row["moduleCatId"].")  /> Check/Uncheck All
 							</th>	
 							</tr>";
 				}
