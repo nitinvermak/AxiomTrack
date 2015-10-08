@@ -20,11 +20,12 @@ $error =0;
 if(isset($_REQUEST['name']))
 {
 $name=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['name'])));
+$displayname = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['displayName'])));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblmoduleCategory set moduleCategory='$name' where moduleCatId=" .$_REQUEST['id'];
+$sql="update tblmoduleCategory set moduleCategory='$name', displayname='$displayname' where moduleCatId=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Module Category updated successfully';
 header("location:manage_module_category.php?token=".$token);
@@ -35,7 +36,7 @@ $queryArr=mysql_query("select * from tblmoduleCategory where moduleCategory ='$n
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblmoduleCategory set  moduleCategory='$name' ");
+$query=mysql_query("insert into tblmoduleCategory set  moduleCategory='$name', displayname='$displayname' ");
 $_SESSION['sess_msg']='Module Category added successfully';
 header("location:manage_module_category.php?token=".$token);
 exit();
@@ -90,6 +91,10 @@ $result=mysql_fetch_assoc($queryArr);
         <tr >
         <td>Category  Name*</td>
         <td><input type="text" name="name" id="name" class="form-control text_box" value="<?php if(isset($result['moduleCatId'])) echo $result['moduleCategory'];?>" /></td>
+        </tr>
+        <tr>
+          <td>Display Name</td>
+          <td><input type="text" name="displayName" id="displayName" class="form-control text_box" value="<?php if(isset($result['moduleCatId'])) echo $result['displayname'];?>" /></td>
         </tr>
         <tr>
         <td> </td>
