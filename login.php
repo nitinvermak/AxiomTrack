@@ -21,7 +21,7 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 			  {
 			  	$sql= mysql_query("Select * from tblmodulename");
 				$result = mysql_fetch_assoc($sql);
-				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["	moduleCatId"]);
+				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["moduleCatId"]);
 			  	header("location: home.php?token=".$token);
 			  }
 			  else

@@ -82,10 +82,12 @@ if(isset($_POST['delete_selected']))
 	 $where='';
 	 $linkSQL="";		
      if(!isset($linkSQL) or $linkSQL =='')		
-     $linkSQL = "SELECT tblmodulename.moduleId, tblmodulename.moduleName, tblmodulecategory.moduleCategory 
-	 			 FROM tblmodulename
+     $linkSQL = "SELECT tblmodulename.moduleId, tblmodulename.displayModuleName, tblmoduleparentname.parentName, tblmodulename.moduleName, tblmodulecategory.moduleCategory 
+				 FROM tblmodulename
 				 INNER JOIN tblmodulecategory
-				 ON tblmodulename.moduleCatId = tblmodulecategory.moduleCatId";
+				 ON tblmodulename.moduleCatId = tblmodulecategory.moduleCatId
+				 INNER JOIN tblmoduleparentname 
+				 ON tblmodulename.parentId = tblmoduleparentname.parentId";
      $pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_module.php?',$token);
      if(isset($_SESSION['linkSQL']))
      $mSQL=$_SESSION['linkSQL']." ".$_SESSION['limit'];
@@ -98,10 +100,12 @@ if(isset($_POST['delete_selected']))
    <?php } ?>
    	  
       <tr>
-      <th>S. No.</th>  
-      <th>Module Name</th> 
-      <th>Module Category</th>  
-      <th>Action              
+      <th><small>S. No.</small></th>  
+      <th><small>Module Name</small></th> 
+      <th><small>Module Category</small></th>  
+      <th><small>Parent Module</small></th>
+      <th><small>Display Module Name</small></th>
+      <th><small>Action</small>              
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
@@ -130,10 +134,12 @@ if(isset($_POST['delete_selected']))
 					$class="bgcolor='#fff'";
  	  ?>
       <tr <?php print $class?>>
-      <td><?php print $kolor++;?>.</td>
-	  <td><?php echo stripslashes($row["moduleName"]);?></td>
-      <td><?php echo stripcslashes($row["moduleCategory"]);?></td>
-	  <td><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_module.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_module.php?id=<?php echo $row["moduleId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="add_module.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?> </td>
+      <td><small><?php print $kolor++;?>.</small></td>
+	  <td><small><?php echo stripslashes($row["moduleName"]);?></small></td>
+      <td><small><?php echo stripcslashes($row["moduleCategory"]);?></small></td>
+      <td><small><?php echo stripcslashes($row["parentName"]);?></small></td>
+      <td><small><?php echo stripcslashes($row["displayModuleName"]);?></small></td>
+	  <td><small><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_module.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_module.php?id=<?php echo $row["moduleId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="add_module.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?></small></td>
       </tr>
 <?php }
 		echo $pagerstring;
