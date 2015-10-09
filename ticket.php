@@ -72,6 +72,7 @@ $result=mysql_query($query);
 <link rel="stylesheet" href="css/custom.css">
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/create_ticket.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!--Ajax request Call-->
 <script  src="js/ajax.js"></script>
 <!--Datepicker-->
@@ -79,26 +80,45 @@ $result=mysql_query($query);
 <!--end-->
 
 <script type="text/javascript" language="javascript">
-function NewCustomer()
-	{   
-	    newclient = document.getElementById("newclient").value
-		/*alert(newclient);*/
-		url="ajaxrequest/ticket_new_customer.php?newclient="+newclient+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,newclient,"getOrganization");
-	}
-	function ExistingCustomer()
-	{
-		existing = document.getElementById("existing").value;
-		/*alert(existing);*/
-		url="ajaxrequest/ticket_existing_customer.php?existing="+existing+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,existing,"getOrganization");
-	}
-	function getOrganization(str){
-	document.getElementById('divOrgranization').innerHTML=str;
-	}
-	
+// send ajax request for new client
+$(document).ready(function(){
+	$("#newclient").click(function(){
+		$.post("ajaxrequest/ticket_new_customer.php?token=<?php echo $token;?>",
+			{
+				newClient : $('#newclient').val()
+			},
+				function( data ){
+					$("#divOrgranization").html(data);
+			});		 
+	});
+});
+// end
+// send ajax request for existing client
+$(document).ready(function(){
+	$("#existing").click(function(){
+		$.post("ajaxrequest/ticket_existing_customer.php?token=<?php echo $token;?>",
+			{
+				existingClient : $('#existing').val()
+			},
+				function( data ){
+					$("#divOrgranization").html(data);
+			});		 
+	});
+});
+//end
+//send ajax request for product
+$(document).ready(function(){
+	$("#product").change(function(){
+		$.post("ajaxrequest/findrquest.php?token=<?php echo $token;?>",
+			{
+				productValue : $('#product').val()
+			},
+				function( data ){
+					$("#statediv").html(data);
+			});		 
+	});
+});
+//end
 </script>
 </head>
 <body>
@@ -120,12 +140,12 @@ function NewCustomer()
         <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
         <div class="radio-inline">
               <label>
-                <input type="radio" name="g"  value="New Client"  id="newclient"  onClick="NewCustomer()" /> New Client
+                <input type="radio" name="g"  value="New Client"  id="newclient" /> New Client
               </label>
 		</div>
          <div class="radio-inline">
         <label>
-                <input type="radio" name="g"  value="Existing Client"  id="existing"  onClick="ExistingCustomer()"/>
+                <input type="radio" name="g"  value="Existing Client"  id="existing"/>
                 Existing Client
               </label>
         </div>
@@ -144,7 +164,7 @@ function NewCustomer()
             <div class="form-group">
                 <label for="Product" class="col-sm-2 control-label">Product*</label>
                 <div class="col-sm-10">
-                <select name="product" onChange="getState(this.value)" class="form-control drop_down">
+                <select name="product" id="product" class="form-control drop_down">
                 <option value="">Select Product</option>
                 <?php while ($row=mysql_fetch_array($result)) { ?>
                 <option value=<?php echo $row['id']?>

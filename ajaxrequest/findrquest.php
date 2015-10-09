@@ -1,9 +1,9 @@
 <?php
 include("../includes/config.inc.php"); 
 //include("../includes/crosssite.inc.php"); 
-$country=intval($_GET['product']);
+$productValue = mysql_real_escape_string($_POST['productValue']);
  
-$query="SELECT id,rqsttype FROM tblrqsttype WHERE product_id='$country'";
+$query="SELECT id,rqsttype FROM tblrqsttype WHERE product_id='$productValue'";
 /*echo $query;*/
 $result=mysql_query($query);
 
