@@ -3,8 +3,11 @@ include("../includes/config.inc.php");
 include("../includes/crosssite.inc.php"); 
 $UserCat = mysql_real_escape_string($_POST['UserCat']);
 /*echo $UserCat;*/
-$linkSQL =  "SELECT A.moduleName as Module, A.moduleCatId as moduleCatId, A.moduleId as MId FROM tblmodulename as A left outer join tblusercategorymodulemapping as B On A.moduleId = B.moduleId and B.usercategoryId ='$UserCat'";
-/*echo $linkSQL;*/
+$linkSQL =  "SELECT A.moduleName as Module, A.moduleCatId as moduleCatId, A.moduleId as MId    , B.moduleId as UserModID             FROM tblmodulename as A
+     		 left outer join tblusercategorymodulemapping as B
+             On A.moduleId = B.moduleId and B.usercategoryId ='$UserCat'
+			 order by A.moduleCatId";
+echo $linkSQL;
 $stockArr=mysql_query($linkSQL);
 $planRateQuery= "Select * from tblmodulecategory";
 	$planRateQueryArr = mysql_query($planRateQuery);

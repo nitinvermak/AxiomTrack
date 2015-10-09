@@ -96,7 +96,8 @@ if(isset($_POST['delete_selected']))
    	  
       <tr>
       <th>S. No.</th>     
-      <th>Name</th>    
+      <th>Name</th> 
+      <th>Display Name</th>   
       <th>Action              
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
@@ -128,6 +129,7 @@ if(isset($_POST['delete_selected']))
       <tr <?php print $class?>>
       <td><?php print $kolor++;?>.</td>
 	  <td><?php echo stripslashes($row["moduleCategory"]);?></td>
+      <td><?php echo stripslashes($row["displayname"]); ?></td>
 	  <td> <?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_accessories.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_module_category.php?id=<?php echo $row["moduleCatId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?></td>
       </tr>
 <?php }

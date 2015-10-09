@@ -23,10 +23,11 @@ $plan_description=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan
 $plan_category=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_category'])));
 $service_provider=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['provider'])));
 $plan_price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_price'])));
+$taxId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['exclusive'])));
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblplan set planSubCategory	='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price' where id=" .$_REQUEST['id'];
+$sql="update tblplan set planSubCategory	='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId' where id=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Plan updated successfully';
 header("location:manage_plan.php?token=".$token);
@@ -37,7 +38,7 @@ $queryArr=mysql_query("select * from tblplan where period='$datasource' and plan
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblplan set  planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price' ");
+$query=mysql_query("insert into tblplan set  planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId'");
 $_SESSION['sess_msg']='Plan added successfully';
 header("location:manage_plan.php?token=".$token);
 exit();
@@ -128,6 +129,7 @@ $result=mysql_fetch_assoc($queryArr);
          <tr >
          <td>Plan Name*</td>
          <td><div id="responseText">
+         <input type="text" name="plan_name" id="plan_name" class="form-control text_box" >
          <?php 
 		 if($result['planSubCategory'] > 0)
 		 {
@@ -146,19 +148,27 @@ $result=mysql_fetch_assoc($queryArr);
          </tr>
          <tr >
          <td>Description*</td>
-         <td><textarea name="plan_description" id="plan_description" class="form-control txt_area"/>
-         
-           <?php if(isset($result['id'])) echo $result['plan_description'];?>             </textarea></td>
+         <td valign="top"><textarea name="plan_description" id="plan_description" class="form-control txt_area"/>
+           <?php if(isset($result['id'])) echo $result['plan_description'];?></textarea></td>
          </tr>
          <tr >
          <td>Price*</td>
          <td><input type="text" name="plan_price" id="plan_price" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['plan_rate'];?>" />   </td>
          </tr>
+         <tr >
+         <td>Tax*</td>
+         <td><select name="exclusive" id="exclusive" class="drop_down form-control">
+         	 	<option value="">Select</option>
+                <option Value="Y">Inclusive</option>
+                <option Value="N">Exclusive</option>
+             </select>
+         </td>
+         </tr>
          <tr>
          <td> </td>
-         <td><input type='submit' name='submit' class="btn btn-primary" value="Submit"/>
-             <input type='reset' name='reset' class="btn btn-primary" value="Reset"/>                        
-             <input type='button' name='cancel' class="btn btn-primary" value="Back" 
+         <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Submit"/>
+             <input type='reset' name='reset' class="btn btn-primary btn-sm" value="Reset"/>                        
+             <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
 			 onclick="window.location='manage_plan.php?token=<?php echo $token ?>'"/></td>
          </tr>
          </table>

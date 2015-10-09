@@ -82,7 +82,10 @@ if(isset($_POST['delete_selected']))
 	 $where='';
 	 $linkSQL="";		
      if(!isset($linkSQL) or $linkSQL =='')		
-     $linkSQL = "SELECT * from tblModuleParentName";
+     $linkSQL = "select tblmoduleparentname.parentName as parent, tblmodulecategory.moduleCategory as category 
+	 			 from tblModuleParentName
+				 inner join tblmodulecategory
+				 on tblmoduleparentname.moduleCatId = tblmodulecategory.moduleCatId";
      $pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_parent_module.php?',$token);
      if(isset($_SESSION['linkSQL']))
      $mSQL=$_SESSION['linkSQL']." ".$_SESSION['limit'];
@@ -95,9 +98,10 @@ if(isset($_POST['delete_selected']))
    <?php } ?>
    	  
       <tr>
-      <th>S. No.</th>  
-      <th>Parent Module Name</th>  
-      <th>Action              
+      <th><small>S. No.</small></th>  
+      <th><small>Parent Module Name</small></th> 
+      <th><small>Module Category</small></th> 
+      <th><small>Action</small>            
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
@@ -126,8 +130,9 @@ if(isset($_POST['delete_selected']))
 					$class="bgcolor='#fff'";
  	  ?>
       <tr <?php print $class?>>
-      <td><?php print $kolor++;?>.</td>
-	  <td><?php echo stripslashes($row["parentName"]);?></td>
+      <td><small><?php print $kolor++;?>.</small></td>
+	  <td><small><?php echo stripslashes($row["parent"]);?></small></td>
+      <td><small><?php echo stripslashes($row["category"]);?></small></td>
 	  <td><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_parent_module.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_parent_module.php?id=<?php echo $row["parentId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="add_parent_module.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?> </td>
       </tr>
 <?php }

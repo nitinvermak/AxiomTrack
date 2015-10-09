@@ -19,12 +19,12 @@ $error =0;
 if(isset($_REQUEST['parentModule']))
 {
 $parentModule = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['parentModule'])));
-echo $parentModule;
+$moduleCategory = htmlspecialchars(mysql_real_escape_string(trim($_POST['moduleCategory'])));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblModuleParentName set parentName='$parentModule' where parentId=" .$_REQUEST['id'];
+$sql="update tblModuleParentName set parentName='$parentModule', moduleCatId = '$moduleCategory' where parentId=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Parent Module Name updated successfully';
 header("location:manage_parent_module.php?token=".$token);
@@ -35,7 +35,7 @@ $queryArr=mysql_query("select * from tblModuleParentName where parentName='$pare
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblModuleParentName set parentName='$parentModule'");
+$query=mysql_query("insert into tblModuleParentName set parentName='$parentModule', moduleCatId	= '$moduleCategory'");
 $_SESSION['sess_msg']='Parent Module Name added successfully';
 header("location:manage_parent_module.php?token=".$token);
 exit();
@@ -88,6 +88,17 @@ $result=mysql_fetch_assoc($queryArr);
         <td colspan="2"><?php if(isset($msg) && $msg !="") echo "<font color=red>".$msg."</font>"; ?></td>
         </tr>
         
+        <tr >
+          <td>Module Category*</td>
+          <td><select name="moduleCategory" id="moduleCategory" class="form-control input-sm drop_down">
+                <option label="" value="">Select Module Category</option>
+                        <?php $Country=mysql_query("SELECT * FROM tblmoduleCategory ORDER BY moduleCategory ASC ");
+                                       while($resultCountry=mysql_fetch_assoc($Country)){
+                        ?>
+                        <option value="<?php echo $resultCountry['moduleCatId']; ?>" <?php if(isset($result['moduleCatId']) && $resultCountry['moduleCatId']==$result['moduleCatId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['moduleCategory'])); ?></option>
+                        <?php } ?> 
+        	</select></td>
+        </tr>
         <tr >
         <td>Parent Module*</td>
         <td><input type="text" name="parentModule" id="parentModule" class="form-control text_box" value="<?php if(isset($result['parentId'])) echo $result['parentName'];?>" /></td>

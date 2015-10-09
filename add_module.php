@@ -64,6 +64,21 @@ $result=mysql_fetch_assoc($queryArr);
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/manage_module.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+		$("#moduleCategory").change(function(){
+			$.post("ajaxrequest/parent_module_request.php?<?php echo $token; ?>",
+				{
+					moduleCategory : $('#moduleCategory').val()
+				},
+					function( data ){
+						$("#showParent").html(data);
+				});
+				 
+		});
+});
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -89,6 +104,7 @@ $result=mysql_fetch_assoc($queryArr);
         <tr>
         <td colspan="2"><?php if(isset($msg) && $msg !="") echo "<font color=red>".$msg."</font>"; ?></td>
         </tr>
+        
         <tr >
           <td>Module Category</td>
           <td><select name="moduleCategory" id="moduleCategory" class="form-control input-sm drop_down">
@@ -101,19 +117,18 @@ $result=mysql_fetch_assoc($queryArr);
         	</select></td>
         </tr>
         <tr >
-        <td>Module Name*</td>
-        <td><input type="text" name="moduleName" id="moduleName" class="form-control text_box" value="<?php if(isset($result['moduleId'])) echo $result['moduleName'];?>" /></td>
+          <td>Parent Module</td>
+          <td>
+          <div id="showParent">
+          	<select name="parentModuleId" id="parentModuleId" class="form-control input-sm drop_down">
+                <option label="" value="">Select Parent Module</option>
+          	</select>
+          </div>
+        </td>
         </tr>
         <tr >
-          <td>Parent Module</td>
-          <td><select name="parentModuleId" id="parentModuleId" class="form-control input-sm drop_down">
-            <option label="" value="">Select Parent Module</option>
-            <?php $Country=mysql_query("SELECT * FROM tblmoduleparentname ORDER BY 	parentName ASC ");
-                                       while($resultCountry=mysql_fetch_assoc($Country)){
-                        ?>
-            <option value="<?php echo $resultCountry['parentId']; ?>" <?php if(isset($result['parentId']) && $resultCountry['parentId']==$result['parentId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['parentName'])); ?></option>
-            <?php } ?>
-          </select></td>
+        <td>Module Name*</td>
+        <td><input type="text" name="moduleName" id="moduleName" class="form-control text_box" value="<?php if(isset($result['moduleId'])) echo $result['moduleName'];?>" /></td>
         </tr>
         <tr >
         <td>Display Module Name*</td>
