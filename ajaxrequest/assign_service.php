@@ -5,7 +5,7 @@ $cust_id =$_REQUEST['cust_id'];
 error_reporting(0);
 if(isset($_REQUEST['cust_id']) && $_REQUEST['cust_id'])
 	{
-	$queryArr=mysql_query("SELECT * FROM tbl_assign_customer_branch");
+	$queryArr=mysql_query("SELECT * FROM tbl_assign_customer_branch where cust_id = '$cust_id'");
 	$result=mysql_fetch_assoc($queryArr);
 	}
 ?>	
