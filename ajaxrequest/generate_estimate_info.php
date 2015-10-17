@@ -121,8 +121,7 @@ $rentFreqId = 1;  //  pass it from the page
 				invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
 				echo $sql;
 				$result = mysql_query($sql);
-				$newInvoiceId =  mysql_insert_id() + 1;
-				$newInvoiceIdTypeB = mysql_insert_id() +1 ;
+
 				
 				if($typeBAmountEntry==1){
 					echo '</br>';
@@ -130,13 +129,14 @@ $rentFreqId = 1;  //  pass it from the page
 					echo '</br>';
 					$sql1 = "Insert into tbl_Invoice_Master set 
 					intervalId = '$intervalId', customerId ='".$nextCustomer."',
-					invoiceType = 'B' , generatedAmount = '$payableAmountTypeB', taxId = '1', discountedAmount = '0', paidAmount ='0',
-					invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
+					invoiceType = 'B' , generatedAmount = '$payableAmountTypeB', taxId = '1', discountedAmount = '0', paidAmount 					
+					='0',	invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
 					echo $sql1;
 					$result = mysql_query($sql1);
-					$newInvoiceIdTypeB =  mysql_insert_id() +1 ;
-					
+ 					
 				}
+				$newInvoiceId =  mysql_insert_id() + 1;
+				$newInvoiceIdTypeB = $newInvoiceId + 1 ;
 					
 			}				
 				
@@ -222,11 +222,8 @@ $rentFreqId = 1;  //  pass it from the page
 				
 				$result = mysql_query($sql);
 				echo $sql;
-				$newInvoiceId =  mysql_insert_id() ;
-			 
-				echo '</br>';
-				echo '$newInvoiceId ------------------'.$newInvoiceId;
-				echo '</br>';
+			    $newInvoiceId =  mysql_insert_id();
+
 				
 				if($typeBAmountEntry==1){
 					echo '</br>';
@@ -239,11 +236,17 @@ $rentFreqId = 1;  //  pass it from the page
 					echo $sql1;
 					echo '</br>';
 					$result = mysql_query($sql1);
-					$newInvoiceIdTypeB =  mysql_insert_id() ;
-					echo '</br>';
-					echo '$newInvoiceIdTypeB='.$newInvoiceIdTypeB;
-					echo '</br>';
+					$newInvoiceIdTypeB = mysql_insert_id() ;
+					 
+
 				}
+ 
+				echo '</br>';
+				echo 'last $newInvoiceId ------------------'.$newInvoiceId;
+				echo '</br>';
+				echo '</br>';
+				echo '$newInvoiceIdTypeB='.$newInvoiceIdTypeB;
+				echo '</br>';
 					
 				 
 		}
@@ -276,7 +279,7 @@ $rentFreqId = 1;  //  pass it from the page
 		elseif ($row['oneTimePaymentFlag'] == 'Y'){ // this flag takes care of the one time payment. After first payment , only rent 
 			echo '</br>';			
 			$sqlA = "Insert into tbl_Payment_Breakage set 
-					invoiceId = '$newInvoiceIdTypeB', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'A',
+					invoiceId = '$newInvoiceId', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'A',
 					amount ='".$deviceRentAmtDict[$row['deviceRentAmt']]."' ";
 			echo  $sqlA;
 			echo '</br>';

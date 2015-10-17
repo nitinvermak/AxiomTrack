@@ -58,18 +58,58 @@ function getValue(a){
 	alert('as');*/
 	elements= '#'+a+'   input';
 	elementsb= '#'+a+'   select'; 
-	jsonArr= []
+	jsonArr= [];
 	jQuery(elements).map(function() {
            console.log( $(this).attr('id') + '=' + $(this).val());
 		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
 		   
       });
-	 
+	errors=0; 
 	jQuery(elementsb).map(function() {
            console.log($(this).attr('id') + '=' + $(this).val());
+		   if ($(this).attr('id') == 'device_type'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Device Type');
+				  errors=1; 
+				  return false;
+				}		     
+		   }
+		   if ($(this).attr('id') == 'device_amt'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Device amount');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+
+		   if ($(this).attr('id') == 'device_rent'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Device Rent');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+		   if ($(this).attr('id') == 'rent_frq'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Rent Frequency');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+		   if ($(this).attr('id') == 'installation_charges'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Installation Charges');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+		   
+		   
 		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
       }); 
-	  
+	if (errors==1){
+		return; 
+	}  
     /*alert(cust_id);*/
 	 url="ajaxrequest/add_vehicle_Plan_Info.php?token=<?php echo $token;?>";	
 	 /*url="ajaxrequest/test.php?token=<?php echo $token;?>";  */               
@@ -81,22 +121,67 @@ function getValue(a){
 	}
 
 function getValueHistoryPage(b){
-    /*alert(b);
-	alert('as');*/
+    //alert(b);
+	alert('as');
+	 
 	elements= '#'+b+'   input';
 	elementsb= '#'+b+'   select'; 
-	jsonArr= []
+	jsonArr= [];
 	jQuery(elements).map(function() {
            console.log( $(this).attr('id') + '=' + $(this).val());
 		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
 		   
       });
 	 
+	errors=0; 
 	jQuery(elementsb).map(function() {
            console.log($(this).attr('id') + '=' + $(this).val());
+		   if ($(this).attr('id') == 'device_type'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Device Type');
+				  errors=1; 
+				  return false;
+				}		     
+		   }
+		   if ($(this).attr('id') == 'device_amt'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Device amount');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+
+		   if ($(this).attr('id') == 'device_rent'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Device Rent');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+		   if ($(this).attr('id') == 'rent_frq'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Rent Frequency');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+		   if ($(this).attr('id') == 'installation_charges'){
+				if($(this).val() == 'X_'){
+				  alert('Please Enter Installation Charges');
+				  errors=1;
+				  return false;
+				}		     
+		   }
+		   
+		   
 		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
       }); 
-	  
+	if (errors==1){
+		alert('aa');
+		return; 
+	}  
+    
+	  alert('a111111111111a');
 /*    alert(cust_id);*/
 	 url="ajaxrequest/add_vehicle_plan_history_info.php?token=<?php echo $token;?>";	                 
 		/*alert(url);*/
@@ -106,36 +191,9 @@ function getValueHistoryPage(b){
 	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA"); 
 	}		
 	
-function getValueHistoryPage(b){
-    /*alert(b);
-	alert('as');*/
-	elements= '#'+b+'   input';
-	elementsb= '#'+b+'   select'; 
-	jsonArr= []
-	jQuery(elements).map(function() {
-           console.log( $(this).attr('id') + '=' + $(this).val());
-		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
-		   
-      });
-	 
-	jQuery(elementsb).map(function() {
-           console.log($(this).attr('id') + '=' + $(this).val());
-		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
-      }); 
-	  
-/*    alert(cust_id);*/
-	 url="ajaxrequest/add_vehicle_plan_history_info.php?token=<?php echo $token;?>";	                 
-		/*alert(url);*/
-	 postData = {'PostData': jsonArr };
-	 //postData = {'PostData': 1234 };
-	 //alert(postData.PostData);
-	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
- 
- 
-	}		 
-	 
 
-	function GetResponseA(str){
+
+function GetResponseA(str){
  		  document.getElementById('divShow').innerHTML=str;
 	
 	     } 
@@ -180,6 +238,8 @@ $(document).on("click","#add_vehicle", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						
+						
 				});	 
 })
 // --------------------------- End  -------------------------------------------//
@@ -245,47 +305,55 @@ $(document).on("click","#Save", function(){
 // ------------------------ End ----------------------------------//
 //---------------------- Case Check ---------------------------- //
 $(document).on("change",".device_type", function(){
-	var deviceType = $(".device_type").val();
+	parentId= '#'+$(this).closest('tr').attr('id');
+	
+	//alert(parentId); 
+	
+	var deviceType = $(parentId).find(".device_type").val();
+	//alert(deviceType);
 	if(deviceType == 1)
 	{
 		/*alert(deviceType);*/
-		$('.device_amt').prop("disabled", false);
-		$('.device_rent').prop("disabled", false);
-		$('.rent_frq').prop("disabled", false);
-		$('.installation_charges').prop("disabled", false);
-		$('.downpayment').prop("disabled", false);
-		$('.NoOfInstallation').prop("disabled", false);
+		$(parentId).find('.device_amt').prop("disabled", false);
+		$(parentId).find('.device_rent').prop("disabled", false);
+		$(parentId).find('.rent_frq').prop("disabled", false);
+		$(parentId).find('.installation_charges').prop("disabled", false);
+		$(parentId).find('.downpayment').prop("disabled", true);
+		$(parentId).find('.NoOfInstallation').prop("disabled", true);
 	}
 	if(deviceType == 2)
 	{
 		/*alert(deviceType);*/
-		$(".device_amt option[value='']").attr('selected', true)
-		$('.device_amt').prop("disabled", true);
-		$('.device_rent').prop("disabled", false);
-		$('.rent_frq').prop("disabled", false);
-		$('.installation_charges').prop("disabled", false);
-		$('.downpayment').prop("disabled", true);
-		$('.NoOfInstallation').prop("disabled", true);
+		$(parentId).find(".device_amt option[value='']").attr('selected', true);
+		$(parentId).find('.device_amt').val('0').attr("selected", "selected");
+		$(parentId).find('.device_amt').val("disabled", true);
+		$(parentId).find('.device_amt').prop("disabled", true);
+		$(parentId).find('.device_rent').prop("disabled", false);
+		$(parentId).find('.rent_frq').prop("disabled", false);
+		$(parentId).find('.installation_charges').prop("disabled", false);
+		$(parentId).find('.downpayment').prop("disabled", true);
+		$(parentId).find('.NoOfInstallation').prop("disabled", true);
 	}
 	if(deviceType == 3)
 	{
 		/*alert(deviceType);*/
-		$('.device_amt').prop("disabled", true);
-		$('.device_rent').prop("disabled", false);
-		$('.rent_frq').prop("disabled", false);
-		$('.installation_charges').prop("disabled", false);
-		$('.downpayment').prop("disabled", true);
-		$('.NoOfInstallation').prop("disabled", true);
+		$(parentId).find('.device_amt').prop("disabled", true);
+		$(parentId).find('.device_amt').val('0').attr("selected", "selected");
+		$(parentId).find('.device_amt').val("disabled", true);
+		$(parentId).find('.rent_frq').prop("disabled", false);
+		$(parentId).find('.installation_charges').prop("disabled", false);
+		$(parentId).find('.downpayment').prop("disabled", true);
+		$(parentId).find('.NoOfInstallation').prop("disabled", true);
 	}
 	if(deviceType == 4)
 	{
 		/*alert(deviceType);*/
-		$('.device_amt').prop("disabled", false);
-		$('.device_rent').prop("disabled", false);
-		$('.rent_frq').prop("disabled", false);
-		$('.installation_charges').prop("disabled", false);
-		$('.downpayment').prop("disabled", false);
-		$('.NoOfInstallation').prop("disabled", false);
+		$(parentId).find('.device_amt').prop("disabled", false);
+		$(parentId).find('.device_rent').prop("disabled", false);
+		$(parentId).find('.rent_frq').prop("disabled", false);
+		$(parentId).find('.installation_charges').prop("disabled", false);
+		$(parentId).find('.downpayment').prop("disabled", false);
+		$(parentId).find('.NoOfInstallation').prop("disabled", false);
 	}	
 });
 // -------------------------- End ------------------------- //
