@@ -17,17 +17,18 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		  $token = md5(uniqid(rand(), true));
 		  $_SESSION['token'] = $token;
 		  $_SESSION['token_time']=time();
-			  if ($resultUser['User_Category']==1)
-			  {
+		  
+			 /* if ($resultUser['User_Category']==1)
+			  {*/
 			  	$sql= mysql_query("Select * from tblmodulename");
 				$result = mysql_fetch_assoc($sql);
 				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["moduleCatId"]);
 			  	header("location: home.php?token=".$token);
-			  }
+			 /* }
 			  else
 			  {
 			     header("location: index.php");
-			  }
+			  }*/
 		  } 
 		  else
 		  {

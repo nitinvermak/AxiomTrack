@@ -21,18 +21,21 @@ $oRS = mysql_query($linkSQL);
 ?>
 <table class="table table-bordered table-hover">  
 <tr>
-<th>S. No.</th>     
-<th>Name</th> 
-<th>Company Name</th>   
-<th>Phone</th> 
-<th>Mobile</th> 
-<th>State</th> 
-<th>City</th> 
-<th>Area</th> 
-<th>Actions              
+<th><small>S. No.</small></th>     
+<th><small>Name</small></th> 
+<th><small>Company Name</small></th>   
+<th><small>Phone</small></th> 
+<th><small>Mobile</small></th> 
+<th><small>State</small></th> 
+<th><small>City</small></th> 
+<th><small>Area</small></th> 
+<th><small>Actions              
 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
 &nbsp;&nbsp;
-<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a></th>     </tr>    
+<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>
+</small>
+</th>     
+</tr>    
 <?php
 $kolor=1;
 	if(mysql_num_rows($oRS)>0)
@@ -45,14 +48,14 @@ $kolor=1;
 				$class="bgcolor='#fff'";
  ?>
 <tr <?php print $class?>>
-<td><?php print $kolor++;?>.</td>
-<td><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></td>
-<td><?php echo stripslashes($row["Company_Name"]);?></td>
-<td><?php echo stripslashes($row["Phone"]);?></td>
-<td><?php echo stripslashes($row["Mobile"]);?></td>
-<td><?php echo stripslashes($row["State"]);?></td>
-<td><?php echo stripslashes($row["City"]);?></td>
-<td><?php echo stripslashes($row["Area"]);?></td>
+<td><small><?php print $kolor++;?>.</small></td>
+<td><small><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></small></td>
+<td><small><?php echo stripslashes($row["Company_Name"]);?></small></td>
+<td><small><?php echo stripslashes($row["Phone"]);?></small></td>
+<td><small><?php echo stripslashes($row["Mobile"]);?></small></td>
+<td><small><?php echo getstate(stripslashes($row["State"]));?></small></td>
+<td><small><?php echo getcities(stripslashes($row["City"]));?></small></td>
+<td><small><?php echo getarea(stripslashes($row["Area"]));?></small></td>
 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
 </tr>
 <?php 
@@ -72,6 +75,6 @@ else
                           <td></td>
                           <td></td>
                           <td></td>
-                          <td height="50"><input type="submit" onClick="return val();" value="Submit" class="btn btn-primary" id="submit" /></td>
+                          <td height="50"><input type="submit" onClick="return val();" value="Submit" class="btn btn-primary btn-sm" id="submit" /></td>
                           </tr>
                           </table><br />

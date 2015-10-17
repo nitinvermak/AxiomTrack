@@ -15,17 +15,31 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 
 if(isset($_POST['save']))
 	{
+		$Usercategory = mysql_real_escape_string($_POST['Usercategory']);
 		foreach($_POST['list'] as $checkvalue)
 		{
-			$Usercategory = mysql_real_escape_string($_POST['Usercategory']);
-			$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory', 	created = Now()";
-			/*echo $sql;*/
-			$result = mysql_query($sql);
-			if($result)
+			$sql=mysql_query("select * from tblusercategorymodulemapping  where moduleId =".$checkvalue);
+			if(mysql_num_rows($sql) == 1)
 			{
-				$msg = "Setting Saved !";
+				$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory' Where moduleId = '$checkvalue'";
+				/*echo $sql;*/
+				$result = mysql_query($sql);
+				if($result)
+				{
+					$msg = "Setting Updated !";
+				}
 			}
-		}	
+			else
+			{
+				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory', 	created = Now()";
+				/*echo $sql;*/
+				$result = mysql_query($sql);
+				if($result)
+				{
+					$msg = "Setting Saved !";
+				}
+			}
+		}
 	}
  /*if(count($_POST['linkID'])>0)
    {			   
@@ -130,7 +144,11 @@ function checkPermission(classA){
         </div>
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
-      <?php echo "<p style='color:green; font-weight:bold;'>".$msg ."</p>";?>
+      <?php if(isset($msg))
+	  		{
+				echo "<p style='color:green; font-weight:bold;'>".$msg ."</p>";
+			}
+	  ?>
           <!---- this division shows the Data of devices from Ajax request --->
       </div>
     </form>

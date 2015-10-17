@@ -16,7 +16,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
-		$delete_single_row = "DELETE FROM tblmoduleCategory WHERE id='$id'";
+		$delete_single_row = "DELETE FROM tblBank WHERE bankId='$id'";
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -24,12 +24,12 @@ if(isset($_GET['id']))
 		echo "<script> alert('Record Delted Successfully'); </script>";
 	}
 //End
-//Delete multiple record
+//Delete multiple records
 if(isset($_POST['delete_selected']))
 	{
 		foreach($_POST['linkID'] as $chckvalue)
         	{
-		    	$sql = "DELETE FROM tblmoduleCategory WHERE id='$chckvalue'";
+		    	$sql = "DELETE FROM tblBank WHERE bankId='$chckvalue'";
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -61,47 +61,46 @@ if(isset($_POST['delete_selected']))
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Module Category Details</h3>
+    	<h3>Bank Details</h3>
         <hr>
-	</div>
+    </div>
     <div class="col-md-12">
-    	<div class="col-md-4 btn_grid">
-   		  <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_module_category.php?token=<?php echo $token ?>')"/>
+    <form name='fullform' method='post' onSubmit="return confirmdelete()">
+       <input type="hidden" name="token" value="<?php echo $token; ?>" />
+       <input type='hidden' name='pagename' value='users'>   
+    	<div class="col-md-4 btn_grid">     	
+     	<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_bank.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-       	  <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
+        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">
         
     <div class="table-responsive">
-    <form name='fullform' method='post' onSubmit="return confirmdelete()">
-  	<table class="table table-hover table-bordered ">
-   <?php
+      <table class="table table-hover table-bordered ">
+      <?php
 		$where='';
-		$linkSQL="";	
-    	if(!isset($linkSQL) or $linkSQL =='')		
-     	$linkSQL = "select * from tblmoduleCategory where 1=1 $where order by moduleCategory";
-  		$pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_module_category.php?',$token);
-  		if(isset($_SESSION['linkSQL']))
+		$linkSQL="";			
+  		if(!isset($linkSQL) or $linkSQL =='')		
+     	$linkSQL = "select * from tblBank where 1=1 $where order by bankName";
+   		$pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_bank.php?',$token);
+ 		if(isset($_SESSION['linkSQL']))
  		$mSQL=$_SESSION['linkSQL']." ".$_SESSION['limit'];
-  		$oRS = mysql_query($mSQL); 
-  	?>
-   <input type="hidden" name="token" value="<?php echo $token; ?>" />
-   <input type='hidden' name='pagename' value='users'>            	        
-   <?php if($_SESSION['sess_msg']!=''){?>
-	 		<center>
-            <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
-            </center>
-   <?php } ?>
-   	  
+ 		$oRS = mysql_query($mSQL); 
+ 		?>
+                	        
+       <?php if($_SESSION['sess_msg']!=''){?>
+                <center>
+                <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
+                </center>
+       <?php } ?>
       <tr>
-      <th>S. No.</th>     
-      <th>Name</th> 
-      <th>Display Name</th>   
-      <th>Action              
+      <th><small>S. No.</small></th>     
+      <th><small>Bank Name</small></th>  
+      <th><small>Action &nbsp;             
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
-      <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
+      <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>      </small></th>   
       </tr>    
 	  <?php
 		$kolor=1;
@@ -127,24 +126,21 @@ if(isset($_POST['delete_selected']))
 					$class="bgcolor='#fff'";
  	  ?>
       <tr <?php print $class?>>
-      <td><?php print $kolor++;?>.</td>
-	  <td><?php echo stripslashes($row["moduleCategory"]);?></td>
-      <td><?php echo stripslashes($row["displayname"]); ?></td>
-	  <td><a href="add_module_category.php?id=<?php echo $row["moduleCatId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a>&nbsp;&nbsp; 
-      <input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
+      <td><small><?php print $kolor++;?>.</small></td>
+	  <td><small><?php echo stripslashes($row["bankName"]);?></small></td>
+	  <td><a href="add_bank.php?id=<?php echo $row["bankId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png'  border='0' title='Edit' /></a>&nbsp;
+	    <input type='checkbox' name='linkID[]' value='<?php echo $row["bankId"]; ?>'></td>
       </tr>
 <?php }
 		echo $pagerstring;
 	  }
     else
-    echo "<tr><td colspan=6 align=center><h3>No records found!</h3></td><tr/></table>";
-?> 
-	
+    echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br></td><tr/></table>";
+?>
     </table>
+    </div>
+    </div>
     </form>
-    </div>
-    </div>
-    
 </div>
 <!--end of the content-->
 <!--open of the footer-->

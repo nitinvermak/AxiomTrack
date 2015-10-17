@@ -22,7 +22,8 @@ if($cust_id != "")
 		<tr>
        
       	<th>S.No.</th>  
-        <th>Invoice/Estimate Id</th>  
+        <th>Estimate Id</th>  
+		<th>Estimate Type</th>
       	<th>Customer Name</th>  
       	<th>Interval Name</th>
       	<th>Generated Amount</th> 
@@ -56,7 +57,8 @@ if($cust_id != "")
         <tr <?php print $class?>>
       	<td><?php print $kolor++;?>.</td>
 	  	<td><?php echo stripslashes($row["invoiceId"]);?><input type="hidden" name="invoiceId" value="<?php echo stripslashes($row["invoiceId"]);?>" /></td>
-      	<td><?php $orgName =  getOraganization(stripslashes($row["callingdata_id"])); echo $orgName;  ?> </td>
+      	<td><?php echo $row["invoiceType"]  ?> </td>
+		<td><?php $orgName =  getOraganization(stripslashes($row["callingdata_id"])); echo $orgName;  ?> </td>
       	<td><?php $intervalName=  getIntervelname(stripslashes($row["intervalId"])); echo $intervalName." ".$row["IntervelYear"]; ?> </td>
         <td><?php echo stripslashes($row["generatedAmount"]);?></td>
         <td><?php if($row["discountedAmount"]==0)
@@ -90,13 +92,12 @@ if($cust_id != "")
 		$invoiceId = $row["invoiceId"];
 		/*echo $invoiceId;*/			
  		
-     	$linkSQL1 = "select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, C.amount as amt, 
-					A.paymentStatusFlag as statusFlag
-					from tbl_invoice_master as A
-					inner join tbl_gps_vehicle_master as B
-					On A.invoiceId = B.id
-					inner join tbl_payment_breakage as C 
-					on B.id = C.invoiceId Where C.invoiceId= '$invoiceId'";
+     	$linkSQL1 = "select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, C.amount as amt					 
+					from  
+					tbl_payment_breakage as C left outer join
+					tbl_gps_vehicle_master as B  
+					On C.vehicleId = B.id					
+					where C.invoiceId= '$invoiceId'";
 		/*echo $linkSQL;*/
  		$oRS1 = mysql_query($linkSQL1); 
  		?>
@@ -140,6 +141,10 @@ if($cust_id != "")
 	  if($row1["paymentType"] == "D")
 	  {
 	  	echo "Installment Amount";
+	  }
+	  if($row1["paymentType"] == "E")
+	  {
+	  	echo "Down Payment Amount";
 	  }
 	  ?>
       </small></td>

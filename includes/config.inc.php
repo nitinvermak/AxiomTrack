@@ -14,13 +14,13 @@ defining all the required Constants
 */
 
 // path of site used to call images,style,js etc by their absolute path.
-define('SITE_WS_PATH','http://localhost/crm/'); 
+define('SITE_WS_PATH','http://localhost/crm/AxiomTrack/'); 
 
 // title of site								
 define('SITE_TITLE','Welcome To IndianTruckers.com'); 												
 
 // Location of airtel directory on server use to include class files
-define('SITE_FS_PATH',$_SERVER['DOCUMENT_ROOT']."/crm");								
+define('SITE_FS_PATH',$_SERVER['DOCUMENT_ROOT']."/crm/AxiomTrack");								
 
 define('SITE_PAGE_TITLE','IndianTruckers.com');
 define('PER_PAGE_ROWS',10);

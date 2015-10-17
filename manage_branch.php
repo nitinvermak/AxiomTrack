@@ -138,7 +138,7 @@ if(isset($_POST['delete_selected']))
 	  <td><small><?php echo stripslashes($row["CompanyName"]);?></small></td>
 	  <td><small><?php echo stripslashes($row["Address"]);?></small></td>
       <td><small><?php echo stripslashes($row["city"]);?></small></td>
-      <td><small><?php echo stripslashes($row["state"]);?></small></td>
+      <td><small><?php echo stripslashes($row["State"]);?></small></td>
       <td><small><?php echo stripslashes($row["pincode"]);?></small></td>
       <td><small><?php echo stripslashes($row["contact_Person"]);?></small></td>
       <td><small><?php echo stripslashes($row["contact_no"]);?></small></td>

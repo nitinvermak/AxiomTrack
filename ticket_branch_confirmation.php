@@ -49,7 +49,21 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/ticket_branch_confirmation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+		$("#branch").change(function(){
+			$.post("ajaxrequest/show_ticket_branch_confirmation.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val(),
+				},
+					function( data){
+						alert(data);
+						$("#divassign").html(data);
+				});	 
+		});
+});
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -70,7 +84,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
-                  <select name="branch" id="branch" class="form-control drop_down" onChange="return ShowByBranch();" >
+                  <select name="branch" id="branch" class="form-control drop_down">
                   <option label="" value="" selected="selected">Select Branch</option>
                   <option value="0">All Branch</option>
                   <?php $Country=mysql_query("select * from tblbranch");									  

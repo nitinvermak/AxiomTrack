@@ -108,9 +108,9 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
 			$customer_type = mysql_real_escape_string($_POST['customer_type']);
 			$downpayment = mysql_real_escape_string($_POST['downpayment']);
 			$installation_charges = mysql_real_escape_string($_POST['installation_charges']);
-			$confirm_client = "insert into tbl_customer_master set 	callingdata_id='$update_id',  calling_product='$calling_products', device_model_id='$model', np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', customer_type='$customer_type', downpaymentAmount='$downpayment', telecaller_id='$telecaller',  confirmation_date=Now() ";
+			$confirm_client = "insert into tbl_customer_master set 	callingdata_id='$update_id',  calling_product='$calling_products', device_model_id='$model', np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', customer_type='$customer_type', telecaller_id='$telecaller',  confirmation_date=Now() ";
 			$result = mysql_query($confirm_client);
-			/*echo "cnfrm".$confirm_client;*/
+			echo "cnfrm".$confirm_client;
 			$change_status = "UPDATE tblcallingdata SET First_Name='$first_name', Last_Name='$last_name', Company_Name='$company', Address='$Address', Area='$area', City='$city', District_id='$district', State='$state', Pin_code='$pincode', Country='$country', Phone='$phone', Mobile='$mobile', email='$email', status ='1', calling_status='1' where id = '$update_id'";
 			$query = mysql_query($change_status);
 			//Save calling status
@@ -500,7 +500,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
     <input type='reset' name='reset' class="btn btn-primary btn-sm" value="Reset"/>                        
     <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
 	 onclick="window.location='telecalling.php?token=<?php echo $token ?>'"/>
-   	<input type='submit' name='submit1' id="confirm" class="btn btn-primary btn-sm" value="Confirm Client" />
+   	<input type='submit' name='submit1' id="submit1" class="btn btn-primary btn-sm" value="Confirm Client" />
     <input type='button' name='gen_ticket' class="btn btn-primary btn-sm" value="Generate Ticket" onClick="showModalPopUp()"/>
     </td>
     <td valign="top">&nbsp;</td>

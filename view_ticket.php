@@ -25,19 +25,20 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script src="js/ajax.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>
-function ShowContacts()
-	{
-		searchText = document.getElementById("searchText").value;
-		/*alert(searchText);*/
-		url="ajaxrequest/show_create_ticket.php?searchText="+searchText+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,searchText,"GetResponse");
-	} 
-function GetResponse(str){
-	document.getElementById('divshow').innerHTML=str;
-	}
+$(document).ready(function(){
+		$("#Search").click(function(){
+			$.post("ajaxrequest/show_create_ticket.php?token=<?php echo $token;?>",
+				{
+					searchText : $('#searchText').val(),
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divshow").html(data);
+				});	 
+		});
+});
 </script>
 </head>
 <body>
@@ -55,7 +56,7 @@ function GetResponse(str){
   	<div class="col-md-12">
     <form method="post" class="form-inline" name="frm_delete">
     	<div class="col-md-4 btn_grid">
-     		<input type='button' name='cancel' class="btn btn-primary" value="Add New" onClick="window.location.replace('ticket.php?token=<?php echo $token ?>')"/>
+     		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('ticket.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
         	 
         </div>
@@ -63,16 +64,26 @@ function GetResponse(str){
     </form>
     <div class="col-md-6">
         <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Ticket Id">
-        <input type="submit" name="Search" id="Search" value="Search" onClick="ShowContacts()" class="btn btn-primary"/>
+        <input type="submit" name="Search" id="Search" value="Search"  class="btn btn-primary btn-sm"/>
         </div>
     </div>
     <div class="col-md-12">
     <!--show message when ticket create-->
-		 <?php if($_SESSION['sess_msg']!=''){?>
-              <div class="alert alert-success" style="max-width:400px;" role="alert">
-			  <?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?>
-              </div>
-         <?php } ?>
+		
+      <?php 
+			if(isset($_SESSION['sess_msg']))
+			{
+		?>	
+        	 <div class="alert alert-success" style="max-width:400px;" role="alert">
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			 <?php echo $_SESSION['sess_msg'];?>
+             </div>
+	 <?php  }
+	 		else
+			{
+				unset($_SESSION['sess_msg']);
+			}
+	  ?>
     </div>
     <div class="col-md-12">
     	<div class="table-responsive" id="divshow">

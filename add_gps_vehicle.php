@@ -39,15 +39,17 @@ if(isset($_REQUEST['organization']))
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
 		$sql="update tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date', ticketId = '$ticketId'  where id=" .$_REQUEST['id'];
-		/*mysql_query($sql);*/
+		mysql_query($sql);
 		echo $sql;
 		$_SESSION['sess_msg']='Vehicle updated successfully';
-		/*header("location:manage_vehicle.php?token=".$token);
-		exit();*/
+		header("location:manage_vehicle.php?token=".$token);
+		exit();
 		}
 	else 
 		{
-		$query=mysql_query("insert into tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date', paymentActiveFlag='N', ticketId = '$ticketId' ");		
+		$query = "insert into tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date', paymentActiveFlag='N', ticketId = '$ticketId'";
+		$sql = mysql_query($query);
+		/*echo $query; */		
 		$update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
 		/*echo $update_sim;*/
 		$querysim = mysql_query($update_sim);		

@@ -4,11 +4,7 @@ include("../includes/crosssite.inc.php");
 $searchText = $_REQUEST['searchText']; 
 /*echo $searchText;*/
 error_reporting(0);
-if ($searchText == '')
-	{
-	$linkSQL = "Please Provide Search Criteria";
-	}
-		else if($searchText !== '')
+		 if($searchText != '')
 			{
 				$linkSQL = "SELECT * from tblcallingdata WHERE First_Name LIKE '$searchText%' OR Last_Name LIKE '$searchText%' OR Company_Name LIKE '$searchText%' OR Mobile  LIKE '$searchText%'";
 				/*echo "cmd" . $linkSQL;*/
@@ -20,13 +16,13 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '<table class="table table-hover table-bordered ">';
 ?>	
 			 <tr>
-             <th>S. No.</th>  
-          	 <th>Name</th> 
-          	 <th>Company Name</th>  
-          	 <th>Phone</th>
-          	 <th>Mobile</th>
-          	 <th>Data Source</th>
-          	 <th>Actions 
+             <th><small>S. No.</small></th>  
+          	 <th><small>Name</small></th> 
+          	 <th><small>Company Name</small></th>  
+          	 <th><small>Phone</small></th>
+          	 <th><small>Mobile</small></th>
+          	 <th><small>Data Source</small></th>
+          	 <th><small>Actions</small> 
               <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
               &nbsp;&nbsp;
               <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a> 
@@ -39,12 +35,24 @@ if(mysql_num_rows($stockArr)>0)
   		{
  	?>
         	<tr <?php print $class?>>
-      		<td><?php print $kolor++;?>.</td>
-	  		<td><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></td>
-	  		<td><?php echo stripslashes($row["Company_Name"]);?></td>
-	  		<td><?php echo stripslashes($row["Phone"]);?></td>
-	  		<td><?php echo stripslashes($row["Mobile"]);?></td>
-      		<td><?php echo stripslashes($row["data_source"]);?></td>
+      		<td><small><?php print $kolor++;?>.</small></td>
+	  		<td><small><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></small></td>
+	  		<td><small><?php echo stripslashes($row["Company_Name"]);?></small></td>
+	  		<td><small>
+			<?php 
+			if($row["Phone"] == '0')
+			{
+				echo "N/A";
+			}
+			else
+			{
+				echo stripslashes($row["Phone"]);
+			}
+			?>
+            </small>
+            </td>
+	  		<td><small><?php echo stripslashes($row["Mobile"]);?></small></td>
+      		<td><small><?php echo stripslashes($row["data_source"]);?></small></td>
 	  		<td><?php if($row["id"]!=1){?>
          	<a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='managecontacts.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " >
           	<img src="images/drop.png" title="Delete" border="0" /></a> 

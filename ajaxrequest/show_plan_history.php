@@ -56,13 +56,13 @@ if(mysql_num_rows($stockArr)>0)
             </small>
             </td>
 	  		<td>
-                <?php echo $row['device_type'];?>
+                <?php echo getDeviceType($row['device_type']);?>
            </td>
 	  		<td>
-            <?php echo $row['device_amt']; ?>
+            <?php echo getDeviceAmt($row['device_amt']); ?>
             </td>
 	  		<td>               
-             <?php echo $row['device_rent_amt']; ?>                
+             <?php echo getDeviceAmt($row['device_rent_amt']); ?>                
             </td>
             <td>
             	<?php echo $row['RentalFrequencyId']; ?>
@@ -85,7 +85,7 @@ if(mysql_num_rows($stockArr)>0)
             <td><small><?php echo stripslashes($row["PlanendDate"]);?> 
             <input type="hidden" name="plan_end" id="plan_end" value="<?php echo stripslashes($row["PlanendDate"]);?>">
             </small></td>
-        	<td><input type="button" name="Save" id="Save" value="View" onclick="showDetails()"></td>
+        	<td><input type="button" name="Save" id="Save" value="View" ></td>
       		</tr>
         
        

@@ -21,15 +21,15 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table class="table table-hover table-bordered">  ';
 ?>		
 				       <tr>
-                  	   <th>S. No.</th>     
-                  	   <th>Name</th>
-                   	   <th>Company Name</th>
-                  	   <th>Phone</th>
-                   	   <th>Mobile</th>
-                       <th>State</th>
-                       <th>City</th>
-                       <th>Area</th>
-                  	   <th>Actions</th>
+                  	   <th><small>S. No.</small></th>     
+                  	   <th><small>Name</small></th>
+                   	   <th><small>Company Name</small></th>
+                  	   <th><small>Phone</small></th>
+                   	   <th><small>Mobile</small></th>
+                       <th><small>State</small></th>
+                       <th><small>City</small></th>
+                       <th><small>Area</small></th>
+                  	   <th><small>Actions</small></th>
                        <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                        &nbsp;&nbsp;
                        <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>                      
@@ -52,18 +52,18 @@ if(mysql_num_rows($stockArr)>0)
  		   if($kolor%2==0)
 				$class="bgcolor='#ffffff'";
 		   else
-				$class="bgcolor='#DCDCDC'";
+				$class="bgcolor='#fff'";
   	
  	?>
     	 				   <tr <?php print $class?>>
-                           <td><?php print $kolor++;?>.</td>
-						   <td><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></td>
-						   <td><?php echo stripslashes($row["Company_Name"]);?></td>
-						   <td><?php echo stripslashes($row["Phone"]);?></td>
-						   <td><?php echo stripslashes($row["Mobile"]);?></td>
-                           <td><?php echo stripslashes($row["State"]);?></td>
-                           <td><?php echo stripslashes($row["City"]);?></td>
-                           <td><?php echo stripslashes($row["Area"]);?></td>
+                           <td><small><?php print $kolor++;?>.</small></td>
+						   <td><small><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></small></td>
+						   <td><small><?php echo stripslashes($row["Company_Name"]);?></small></td>
+						   <td><small><?php echo stripslashes($row["Phone"]);?></small></td>
+						   <td><small><?php echo stripslashes($row["Mobile"]);?></small></td>
+                           <td><small><?php echo getstate(stripslashes($row["State"]));?></small></td>
+                           <td><small><?php echo getcities(stripslashes($row["City"]));?></small></td>
+                           <td><small><?php echo getarea(stripslashes($row["Area"]));?></small></td>
                            <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
   	                       </tr>
 			<?php }

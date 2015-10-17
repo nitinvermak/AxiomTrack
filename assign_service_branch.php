@@ -53,19 +53,18 @@ if(count($_POST['delete_selected'])>0 && (isset($_POST['delete_selected'])) )
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>
-function ShowContacts()
-	{
-		searchText = document.getElementById("searchText").value;
-		/*alert(searchText);*/
-		url="ajaxrequest/assign_service_branch.php?searchText="+searchText+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,searchText,"GetResponse");
-	} 
-function GetResponse(str){
-	document.getElementById('divshow').innerHTML=str;
-	}
+$(document).on("click","#Search", function(){
+	$.post("ajaxrequest/assign_service_branch.php?token=<?php echo $token;?>",
+				{
+					searchText : $('#searchText').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divshow").html(data);
+				});	 
+})
 </script>
 </head>
 <body>
@@ -83,7 +82,7 @@ function GetResponse(str){
     <div class="col-md-12">
       <div class="col-md-6">
         <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Customer Id, Company Name or Mobile">
-        <input type="submit" name="Search" id="Search" value="Search" onClick="ShowContacts()" class="btn btn-primary btn-sm"/>
+        <input type="submit" name="Search" id="Search" value="Search"  class="btn btn-primary btn-sm"/>
         </div>
     </div>
     <div class="clearfix"></div><br>

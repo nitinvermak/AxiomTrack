@@ -59,7 +59,57 @@ if(isset($_POST['remove']))
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/assign_contacts.js"></script>
+<script type="text/javascript">
+function callCity(state_id){ 
+	url="ajaxrequest/getCity1.php?state_id="+state_id+"&City=<?php echo $result['City'];?>&token=<?php echo $token;?>";
+	//alert(url);
+	xmlhttpPost(url,state_id,"getresponsecity");
+	callcat=document.getElementById('callingcat').value;
+	st=document.getElementById('state').value;
+	ct=document.getElementById('city').value;
+	url="ajaxrequest/getgrid.php?state_id="+st+"&city="+ct+"&callcat="+callcat+"&token=<?php echo $token;?>";
+//	alert(url);
+	xmlhttpPost(url,st,"getresponsegrid");
+	}
+	
+	function getresponsecity(str){
+	//alert(str);
+	document.getElementById('divcity').innerHTML=str;
+	//document.getElementById('area1').
+	//document.getElementById("area1").innerHTML = "";
+	//document.getElementById("divpincode").innerHTML = "";
+	}
+	function callGrid()
+	{
+	callcat=document.getElementById('callingcat').value;
+	st=document.getElementById('state').value;
+	ct=document.getElementById('city').value;
+	url="ajaxrequest/getgrid.php?state_id="+st+"&city="+ct+"&callcat="+callcat+"&token=<?php echo $token;?>";
+//	alert(url);
+	xmlhttpPost(url,st,"getresponsegrid");
+	}
+	
+function getresponsegrid(str){
+	//alert(str);
+	document.getElementById('divassign').innerHTML=str;
+	//document.getElementById('area1').
+	//document.getElementById("area1").innerHTML = "";
+	//document.getElementById("divpincode").innerHTML = "";
+	}
+	//show assign contacts
+	function ShowContact()
+	{
+		branch = document.getElementById("branch").value;	 
+		url="ajaxrequest/show_assigned_contact.php?branch="+branch+"&token=<?php echo $token;?>"; 
+		/*alert(url);*/
+		xmlhttpPost(url,branch,"getResponseAssignContact");
+	}
+ 
+	function getResponseAssignContact(str){
+		/*alert(str);*/
+		document.getElementById('divassign').innerHTML=str;
+	}
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -141,7 +191,7 @@ if(isset($_POST['remove']))
         <div class="clearfix"></div>
         
            <div class="col-md-6">
-            <input type="button" name="view" id="view" class="btn btn-primary" value="View Assigned Contact" onClick="ShowContact()"/>	
+            <input type="button" name="view" id="view" class="btn btn-primary btn-sm" value="View Assigned Contact" onClick="ShowContact()"/>	
            </div>
         
       </div> 
@@ -155,18 +205,19 @@ if(isset($_POST['remove']))
           $oRS = mysql_query($linkSQL);	
   		  ?>
           <tr>
-          <th>S. No.</th>     
-          <th>Name</th> 
-          <th>Company Name</th>
-          <th>Phone</th>
-          <th>Mobile</th>
-          <th>State</th>
-          <th>City</th>
-          <th>Area</th>
-          <th>Actions
+          <th><small>S. No.</small></th>     
+          <th><small>Name</small></th> 
+          <th><small>Company Name</small></th>
+          <th><small>Phone</small></th>
+          <th><small>Mobile</small></th>
+          <th><small>State</small></th>
+          <th><small>City</small></th>
+          <th><small>Area</small></th>
+          <th><small>Actions
           <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
           &nbsp;&nbsp;
-          <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>          </th>   
+          <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>          </small>
+          </th>   
           </tr> 
           <?php
 			$kolor=1;
@@ -194,19 +245,19 @@ if(isset($_POST['remove']))
 				$class="bgcolor='#fff'";
  			?>
             <tr <?php print $class?>>
-            <td><?php print $kolor++;?>.</td>
-			<td><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></td>
-			<td><?php echo stripslashes($row["Company_Name"]);?></td>
-			<td><?php echo stripslashes($row["Phone"]);?></td>
-			<td><?php echo stripslashes($row["Mobile"]);?></td>
-            <td><?php echo stripslashes($row["State"]);?></td>
-            <td><?php echo stripslashes($row["City"]);?></td>
-            <td><?php echo stripslashes($row["Area"]);?></td>
+            <td><small><?php print $kolor++;?>.</small></td>
+			<td><small><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></small></td>
+			<td><small><?php echo stripslashes($row["Company_Name"]);?></small></td>
+			<td><small><?php echo stripslashes($row["Phone"]);?></small></td>
+			<td><small><?php echo stripslashes($row["Mobile"]);?></small></td>
+            <td><small><?php echo getstate(stripslashes($row["State"]));?></small></td>
+            <td><small><?php echo getcities(stripslashes($row["City"]));?></small></td>
+            <td><small><?php echo getarea(stripslashes($row["Area"]));?></small></td>
             <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
             </tr> 
            <?php 
 			}
-				echo $pagerstring;
+				/*echo $pagerstring;*/
 			}
     		else
     			echo "<tr><td colspan=6 align=center><h3>No records found!</h3></td><tr/></table>";
@@ -215,15 +266,8 @@ if(isset($_POST['remove']))
           </table>
           <table>
           <tr>
-          <td></td>
-          <td> </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td height="50"><input type="submit" class="btn btn-primary" onClick="return confirm('Do you really to want to assign this records');" value="Submit" id="submit" /></td>
+         
+          <td height="50"><input type="submit" class="btn btn-primary btn-sm" onClick="return confirm('Do you really to want to assign this records');" value="Submit" id="submit" /></td>
           </tr>
           </table>
           <br>

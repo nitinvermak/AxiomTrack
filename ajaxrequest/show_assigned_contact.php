@@ -1,7 +1,8 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
-$branch_id=$_REQUEST['branch'];
+include("../includes/crosssite.inc.php"); 
+$branch_id = mysql_real_escape_string($_POST['branch']);
+/*echo $branch_id;*/
 error_reporting(0);
 if ($branch_id == "")
 	{
@@ -20,17 +21,19 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table class="table table-bordered table-hover">';
 ?>		               
     	          <tr>
-                  <th>S. No.</th> 
-                  <th>Name</th>  
-                  <th>Company Name</th> 
-                  <th>Phone</th>
-                  <th>Mobile</th>
-                  <th>State</th>
-                  <th>City</th>
-                  <th>Area</th>
-                  <th>Actions                  
+                  <th><small>S. No.</small></th> 
+                  <th><small>Name</small></th>  
+                  <th><small>Company Name</small></th> 
+                  <th><small>Phone</small></th>
+                  <th><small>Mobile</small></th>
+                  <th><small>State</small></th>
+                  <th><small>City</small></th>
+                  <th><small>Area</small></th>
+                  <th><small>Actions                  
                   <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All 		                  </a>&nbsp;&nbsp;
-                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck                  All</a></th>  
+                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck                  All</a>
+                  </small>
+                  </th>  
                   </tr>    
 	
 	<?php
@@ -54,14 +57,14 @@ if(mysql_num_rows($stockArr)>0)
   	
  	?>
                    <tr <?php print $class?>>
-                   <td><?php print $kolor++;?>.</td>
-				   <td><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]); ?></td>
-				   <td><?php echo stripslashes($row["Company_Name"]);?></td>
-				   <td><?php echo stripslashes($row["Phone"]);?></td>
-				   <td><?php echo stripslashes($row["Mobile"]);?></td>
-                   <td><?php echo stripslashes($row["State"]);?></td>
-                   <td><?php echo stripslashes($row["City"]);?></td>
-                   <td><?php echo stripslashes($row["Area"]);?></td>
+                   <td><small><?php print $kolor++;?>.</small></td>
+				   <td><small><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]); ?></small></td>
+				   <td><small><?php echo stripslashes($row["Company_Name"]);?></small></td>
+				   <td><small><?php echo stripslashes($row["Phone"]);?></small></td>
+				   <td><small><?php echo stripslashes($row["Mobile"]);?></small></td>
+                   <td><small><?php echo getstate(stripslashes($row["State"]));?></small></td>
+                   <td><small><?php echo getcities(stripslashes($row["City"]));?></small></td>
+                   <td><small><?php echo getarea(stripslashes($row["Area"]));?></small></td>
                    <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                    </tr>
  
@@ -78,7 +81,7 @@ if(mysql_num_rows($stockArr)>0)
                         <table>
                         <tr>
                         <td></td>
-                        <td colspan="3"><input type="submit" name="remove" value="Remove" class="btn btn-primary" onClick="return val();" id="submit" /> </td>
+                        <td colspan="3"><input type="submit" name="remove" value="Remove" class="btn btn-primary btn-sm" onClick="return val();" id="submit" /> </td>
                         <td></td>
                         </tr>
                         </table><br /><br />

@@ -25,7 +25,7 @@ if($company != 0)
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." B.callingdata_id = '$company'" ;
 		$counter+=1;
-		echo $linkSQL;
+		/*echo $linkSQL;*/
 	}
 if ( $date !='' and $dateto !='') {
 	if ($counter > 0 )
