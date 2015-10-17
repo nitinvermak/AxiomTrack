@@ -284,12 +284,18 @@ function cleanvar($var,$el)
 */
 function upload_file($filename,$destination,$tbl_field="")
 {
-//	echo $_FILES[$filename]['name'];
+	echo $_FILES[$filename]['name'];
 //	die;
 	if($_FILES[$filename]['name']!='')
 	{
 		 $ext=explode('.',$_FILES[$filename]['name']);  // get the extention of image	
 		 $name=$ext[0]."_".date("YmdHis").".$ext[1]";
+		 echo $destination.$name;
+		 echo '</br>';
+		 echo '....';
+		 echo $filename;
+		 echo $_FILES[$filename]['tmp_name'];
+		 
 		 move_uploaded_file($_FILES[$filename]['tmp_name'],$destination.$name)or die("can't Uploaded");
 		 chmod($destination.$name,0777);
 		 $sql_edit_part=$name ;
@@ -946,7 +952,26 @@ function getdevicename($id)
   else
   return NULL;
 }
-
+function getDeviceType($id)
+{
+  $sql="select DeviceType from tbl_device_type where DeviceTypeId=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['DeviceType'])
+  return $result['DeviceType'];
+  else
+  return NULL;
+}
+function getDeviceAmt($id)
+{
+  $sql="select plan_rate from tblplan where id=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['plan_rate'])
+  return $result['plan_rate'];
+  else
+  return NULL;
+}
 function getdeviceimei($id)
 {
   $sql="select imei_no from tbl_device_master where id=".$id;

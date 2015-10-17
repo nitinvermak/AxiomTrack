@@ -56,8 +56,38 @@ if(isset($_POST['remove']))
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/assign_contacts_telecaller.js"></script>
+<!--<script type="text/javascript" src="js/assign_contacts_telecaller.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+// ajax request call when click assign contact
+$(document).ready(function(){
+		$("#assign_device").click(function(){
+			$.post("ajaxrequest/assigncontacts_branch_telecaller.php?token=<?php echo $token;?>",
+				{
+					callingcat : $('#callingcat').val(),
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+				});	 
+		});
+});
+//end
+$(document).ready(function(){
+		$("#view_device").click(function(){
+			$.post("ajaxrequest/show_assign_contacts_branch_telecaller.php?token=<?php echo $token;?>",
+				{
+					callingcat : $('#callingcat').val(),
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+				});	 
+		});
+});
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -109,8 +139,8 @@ if(isset($_POST['remove']))
         <div class="clearfix"></div>
         
            <div class="col-md-6">
-            <input type="button" name="assign_device" class="btn btn-primary" onClick="return ShowbyCategory()" value="Assign Contact" />
-            <input type="button" name="view_device" value="View Assigned" class="btn btn-primary" onClick="return ShowbyAssignContacts()" />
+            <input type="button" name="assign_device" id="assign_device" class="btn btn-primary btn-sm" value="Assign Contact" />
+            <input type="button" name="view_device" id="view_device" value="View Assigned" class="btn btn-primary btn-sm" />
            </div>
         
       </div> 

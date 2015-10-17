@@ -1,10 +1,10 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$dateform = $_REQUEST['dateform'];
-$dateto =$_GET['dateto'];
-$branch = $_GET['branch']; 
-$users = $_GET['users']; 
+$dateform = mysql_real_escape_string($_POST['dateform']);
+$dateto = mysql_real_escape_string($_POST['dateto']);
+$branch = mysql_real_escape_string($_POST['branch']); 
+$users = mysql_real_escape_string($_POST['users']); 
 /*echo $branch;
 echo $dateto;*/
 error_reporting(0);

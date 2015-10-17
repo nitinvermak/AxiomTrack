@@ -124,7 +124,7 @@ function confirmdelete(obj)
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">State*</label>
+                <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
                   <select name="branch" id="branch" class="form-control drop_down" >
                   <option label="" value="" selected="selected">All Branch</option>
@@ -140,8 +140,8 @@ function confirmdelete(obj)
         <div class="col-md-6">
             <div class="form-group">
              <div class="col-sm-10 pull-right">
-               <input type="button" name="assign" value="Assign Ticket" id="submit" class="btn btn-primary"  onclick="showUnassignedStock()" />
-               <input type="button" name="view" id="view" value="View Assigned Ticket" class="btn btn-primary" onClick="showAssignedStock()"/>
+               <input type="button" name="assign" value="Assign Ticket" id="submit" class="btn btn-primary btn-sm"  onclick="showUnassignedStock()" />
+               <input type="button" name="view" id="view" value="View Assigned Ticket" class="btn btn-primary btn-sm" onClick="showAssignedStock()"/>
                </div>
             </div>
         </div>

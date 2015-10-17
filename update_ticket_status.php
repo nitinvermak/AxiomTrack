@@ -80,30 +80,36 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   });
 </script>
 <script type="text/javascript" language="javascript">
-function ShowRecords()
-	{
-		dateform = document.getElementById("dateform").value;	
-		branch = document.getElementById("branch").value;	
-		users = document.getElementById("users").value;	
-		dateto = document.getElementById("dateto").value;
-		url="ajaxrequest/update_assign_ticket_branch.php?dateform="+dateform+"&dateto="+dateto+"&branch="+branch+"&users="+users+"&token=<?php echo $token;?>"; 
-		/*alert(url);*/
-		xmlhttpPost(url,dateform,"getResponse");
-	}
-function ShowbyId()
-	{
-		ticket_id = document.getElementById("ticket_id").value;
-		url="ajaxrequest/update_assign_ticket_technician.php?ticket_id="+ticket_id+"&token=<?php echo $token;?>"; 
-		/*alert(url);*/
-		xmlhttpPost(url,ticket_id,"getResponse");
-	}
-function getResponse(str)
-	{
-	/*alert(str);*/
-	document.getElementById('divassign').innerHTML=str;
-	}
-
-
+// filter Records
+$(document).ready(function(){
+	$("#search").click(function(){
+		$.post("ajaxrequest/update_assign_ticket_branch.php?token=<?php echo $token;?>",
+				{
+					dateform : $('#dateform').val(),
+					branch	:	$('#branch').val(),
+					users	:	$('#users').val(),
+					dateto	:	$('#dateto').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+				});	 
+	});
+});
+// filter by ticketId
+$(document).ready(function(){
+	$("#searchById").click(function(){
+		$.post("ajaxrequest/update_assign_ticket_techician.php?token=<?php echo $token;?>",
+				{
+					ticket_id : $('#ticket_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+				});	 
+	});
+});
+//End
 </script>
 </head>
 <body>
@@ -150,7 +156,7 @@ function getResponse(str)
            <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
            <?php } ?>
            </select></td>
-     <td><input type="button" name="search" value="Submit" class="btn btn-primary btn-sm" onClick="return ShowRecords()"/></td>
+     <td><input type="button" name="search" id="search" value="Submit" class="btn btn-primary btn-sm" onClick="return ShowRecords()"/></td>
      <td>&nbsp;</td>
      <td>&nbsp;</td>
       <td>&nbsp;</td>
@@ -158,7 +164,7 @@ function getResponse(str)
       <tr>
         <td class="col-xs-1">Ticket Id </td>
         <td class="col-xs-2"><input type="text" name="ticket_id" id="ticket_id" class="form-control text_box-sm"></td>
-        <td><input type="button" name="search" id="search" class="btn btn-primary btn-sm" value="Search" onClick="ShowbyId()"></td>
+        <td><input type="button" name="searchById" id="searchById" class="btn btn-primary btn-sm" value="Search"></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

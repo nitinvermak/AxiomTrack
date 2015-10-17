@@ -32,7 +32,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <!--open of the wraper-->
 <div id="wraper">
 	<!--include header-->
-    <?php include_once('includes/headerUpper.php');?>
+ 
     <?php include_once('includes/header.php');?>
     <!--end-->
     <!--open of the content-->

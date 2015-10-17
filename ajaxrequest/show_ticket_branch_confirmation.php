@@ -1,7 +1,8 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
-$branch=$_REQUEST['branch']; 
+include("../includes/crosssite.inc.php"); 
+$branch = $_REQUEST['branch']; 
+echo $branch;
 error_reporting(0);
 if ($branch == 0)
 	{

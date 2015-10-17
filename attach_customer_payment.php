@@ -36,117 +36,7 @@ $result=mysql_fetch_assoc($queryArr);
 <link rel="stylesheet" href="css/custom.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script  src="js/ajax.js"></script>
-<script>
-function enable(){
-	alert('akakaka');
-	document.getElementById("device_type").disabled=false;
-}
-function ShowContacts()
-	{
-		cust_id = document.getElementById("cust_id").value;
-		/*alert(cust_id);*/
-		url="ajaxrequest/add_vehicle.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,cust_id,"GetResponse");
-	} 
-function ShowEdit()
-	{
-		cust_id = document.getElementById("cust_id").value;
-		/*alert(cust_id);*/
-		url="ajaxrequest/edit_payment_details.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,cust_id,"GetResponse");
-	} 
-function ShowHistory()
-	{
-		cust_id = document.getElementById("cust_id").value;
-		/*alert(cust_id);*/
-		url="ajaxrequest/show_plan_history.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,cust_id,"GetResponse");
-	}
-function showDetails()
-	{
-		vehicle_id = document.getElementById("vehicle_id").value;
-		/*alert(cust_id);*/
-		url="ajaxrequest/show_details.php?vehicle_id="+vehicle_id+"&token=<?php echo $token;?>";
-		alert(url);
-		xmlhttpPost(url,vehicle_id,"GetDetails");
-	} 
-function ServiceBranch()
-	{
-		cust_id = document.getElementById("cust_id").value;
-		/*alert(cust_id);*/
-		url="ajaxrequest/assign_service.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,cust_id,"GetResponse");
-	} 
-function editBranch()
-	{
-		cust_id = document.getElementById("cust_id").value;
-		/*alert(cust_id);*/
-		url="ajaxrequest/edit_service_branch.php?cust_id="+cust_id+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,cust_id,"GetResponse");
-	} 
-function GetDetails(str){
-	document.getElementById('divHistory').innerHTML=str;
-	}
-function GetResponse(str){
-	document.getElementById('divShow').innerHTML=str;
-	}
-</script>
 <script type="text/javascript">
-function checkCondition(){
-	if(device_type.value == 1){
-		instalment.disabled = true;
-		NoOfInstallation.disabled = true;
-		instalment_frq.disabled = true;
-		instalment.value ="";
-		NoOfInstallation.value = "";
-		instalment_frq.value = "";
-	}
-	if(device_type.value == 2){
-		instalment.disabled = true;
-		NoOfInstallation.disabled = true;
-		instalment_frq.disabled = true;
-		device_amt.disabled = true;
-		instalment.value ="";
-		NoOfInstallation.value = "";
-		instalment_frq.value = "";
-		device_amt.value = "";
-	}
-	if(device_type.value == 3){
-		downpayment.disabled = true;
-		NoOfInstallation.disabled = true;
-		instalment_frq.disabled = true;
-		device_amt.disabled = true;
-		downpayment.value ="";
-		NoOfInstallation.value = "";
-		instalment_frq.value = "";
-		device_amt.value = "";
-	}
-	if(device_type.value == 4) {
-		device_type.disabled = false;
-		device_amt.disabled = false;
-		device_rent.disabled = false;
-		rent_frq.disabled = false;
-		installation_charges.disabled = false;
-		downpayment.disabled = false;
-		NoOfInstallation.disabled = false;
-		instalment_frq.disabled = false;
-	}
-	
-	/*else{
-		instalment.disabled = false;
-		NoOfInstallation.disabled = false;
-		instalment_frq.disabled = false;
-		device_amt.disabled = false;
-	}*/
-}
-</script>
-<script type="text/javascript">
-
 function getValue1()
 {
 	custid = document.getElementById("custid").value;
@@ -163,7 +53,6 @@ function getValue1()
 	/*plan_end = document.getElementById("plan_end").value;*/
 	alert(vehicle_id);
 }
-
 function getValue(a){
     /*alert(a);
 	alert('as');*/
@@ -182,15 +71,41 @@ function getValue(a){
       }); 
 	  
     /*alert(cust_id);*/
-	 url="ajaxrequest/add_vehicle_Plan_Info.php?token=<?php echo $token;?>";	                 
+	 url="ajaxrequest/add_vehicle_Plan_Info.php?token=<?php echo $token;?>";	
+	 /*url="ajaxrequest/test.php?token=<?php echo $token;?>";  */               
 		/*alert(url);*/
 	 postData = {'PostData': jsonArr };
 	 //postData = {'PostData': 1234 };
 	 //alert(postData.PostData);
-	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
- 
- 
-	}	
+	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA"); 
+	}
+
+function getValueHistoryPage(b){
+    /*alert(b);
+	alert('as');*/
+	elements= '#'+b+'   input';
+	elementsb= '#'+b+'   select'; 
+	jsonArr= []
+	jQuery(elements).map(function() {
+           console.log( $(this).attr('id') + '=' + $(this).val());
+		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
+		   
+      });
+	 
+	jQuery(elementsb).map(function() {
+           console.log($(this).attr('id') + '=' + $(this).val());
+		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
+      }); 
+	  
+/*    alert(cust_id);*/
+	 url="ajaxrequest/add_vehicle_plan_history_info.php?token=<?php echo $token;?>";	                 
+		/*alert(url);*/
+	 postData = {'PostData': jsonArr };
+	 //postData = {'PostData': 1234 };
+	 //alert(postData.PostData);
+	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA"); 
+	}		
+	
 function getValueHistoryPage(b){
     /*alert(b);
 	alert('as');*/
@@ -226,7 +141,7 @@ function getValueHistoryPage(b){
 	     } 
 </script>
 <script>
-//call ajax request when user assign branch services
+// ------------- call ajax request when user assign branch services -------------- //
 $(document).on("click","#save", function(){
 	$.post("ajaxrequest/assign_service_data.php?token=<?php echo $token;?>",
 				{
@@ -240,7 +155,8 @@ $(document).on("click","#save", function(){
 						$("#alert").html(data);
 				});	 
 })
-// call ajax request when user edit assign branch services
+// --------------------------- End  -----------------------------------------------//
+// ----------------------- call ajax request when user edit assign branch services --------------------//
 $(document).on("click","#update", function(){
 	$.post("ajaxrequest/update_assign_service_branch.php?token=<?php echo $token;?>",
 				{
@@ -254,6 +170,126 @@ $(document).on("click","#update", function(){
 						$("#alert").html(data);
 				});	 
 })
+// --------------------------- End --------------------------------------------------//
+// ---------------- Add Payments Details --------------------------------------- //
+$(document).on("click","#add_vehicle", function(){
+	$.post("ajaxrequest/add_vehicle.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divShow").html(data);
+				});	 
+})
+// --------------------------- End  -------------------------------------------//
+// --------------------------- Show Edit ------------------------------///
+$(document).on("click","#showEdit", function(){
+	$.post("ajaxrequest/edit_payment_details.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divShow").html(data);
+				});	 
+})
+// ------------------------- End ---------------------//
+// ---------------------------- Show History ------------------------//
+$(document).on("click","#showHistory", function(){
+	$.post("ajaxrequest/show_plan_history.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divShow").html(data);
+				});	 
+})
+// ------------------------------ End -----------------------------//
+// -------------------------- Add Service Branch ---------------------------//
+$(document).on("click","#manageServiceBranch", function(){
+	$.post("ajaxrequest/assign_service.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divShow").html(data);
+				});	 
+})
+// ----------------------------- End -------------------------------------//
+// --------------------------- Edit Service Branch -----------------------//
+$(document).on("click","#editServiceBranch", function(){
+	$.post("ajaxrequest/edit_service_branch.php?token=<?php echo $token;?>",
+				{
+					cust_id : $('#cust_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divShow").html(data);
+				});	 
+})
+// --------------------------- End -------------------------------//
+// --------------------- History View ------------------------------//
+$(document).on("click","#Save", function(){
+	$.post("ajaxrequest/show_details.php?token=<?php echo $token;?>",
+				{
+					vehicle_id : $('#vehicle_id').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divHistory").html(data);
+				});	 
+})
+// ------------------------ End ----------------------------------//
+//---------------------- Case Check ---------------------------- //
+$(document).on("change",".device_type", function(){
+	var deviceType = $(".device_type").val();
+	if(deviceType == 1)
+	{
+		/*alert(deviceType);*/
+		$('.device_amt').prop("disabled", false);
+		$('.device_rent').prop("disabled", false);
+		$('.rent_frq').prop("disabled", false);
+		$('.installation_charges').prop("disabled", false);
+		$('.downpayment').prop("disabled", false);
+		$('.NoOfInstallation').prop("disabled", false);
+	}
+	if(deviceType == 2)
+	{
+		/*alert(deviceType);*/
+		$(".device_amt option[value='']").attr('selected', true)
+		$('.device_amt').prop("disabled", true);
+		$('.device_rent').prop("disabled", false);
+		$('.rent_frq').prop("disabled", false);
+		$('.installation_charges').prop("disabled", false);
+		$('.downpayment').prop("disabled", true);
+		$('.NoOfInstallation').prop("disabled", true);
+	}
+	if(deviceType == 3)
+	{
+		/*alert(deviceType);*/
+		$('.device_amt').prop("disabled", true);
+		$('.device_rent').prop("disabled", false);
+		$('.rent_frq').prop("disabled", false);
+		$('.installation_charges').prop("disabled", false);
+		$('.downpayment').prop("disabled", true);
+		$('.NoOfInstallation').prop("disabled", true);
+	}
+	if(deviceType == 4)
+	{
+		/*alert(deviceType);*/
+		$('.device_amt').prop("disabled", false);
+		$('.device_rent').prop("disabled", false);
+		$('.rent_frq').prop("disabled", false);
+		$('.installation_charges').prop("disabled", false);
+		$('.downpayment').prop("disabled", false);
+		$('.NoOfInstallation').prop("disabled", false);
+	}	
+});
+// -------------------------- End ------------------------- //
+
 </script>
 </head>
 <body>
@@ -270,7 +306,7 @@ $(document).on("click","#update", function(){
     </div>
     <div class="col-md-12">
     	
-        <form name='myform' action="" method="post" >
+        <form name='myform' id="myform" action="" method="post">
         <input type="hidden" name="submitForm" value="yes" />
         <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['cust_id']) and $_GET['cust_id']>0){ echo $_GET['cust_id']; }?>"/>
         <input type="hidden" name="device_id" id="device_id" value="<?php $query = mysql_query("select device_id from tbldeviceid")?>"/>
@@ -281,23 +317,26 @@ $(document).on("click","#update", function(){
         <td><input type="text" name="cust_id" id="cust_id" class="form-control text_box" value="<?php if(isset($result['cust_id'])) echo $result['cust_id'];?>" readonly></td>
         <td>Customer Name</td>
         <td><input type="text" name="customer_name" id="customer_name" value="<?php if(isset($result['cust_id'])) echo $result['Company_Name'];?>" class="form-control text_box" readonly></td>
+        <td>&nbsp;</td>
         </tr>
         <tr >
         <td>Activation Date</td>
         <td><input type="text" name="createdate" id="createdate" value="<?php if(isset($result['cust_id'])) echo $result['created'];?>" class="form-control text_box" readonly></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
+        <td>&nbsp;</td>
         </tr>
         
         <tr>
-        <td height="34" colspan="4">
-        <input type="button" name="add_vehicle" id="add_vehicle" value="Add Payment Details" class="btn btn-info btn-sm" onClick="ShowContacts()">            
-        <input type="button" name="add_vehicle2" id="add_vehicle2" value="View Plan & History" class="btn btn-info btn-sm" onClick="ShowHistory()">            
-        <input type="button" name="add_vehicle3" id="add_vehicle3" value="Edit Plan" class="btn btn-info btn-sm" onClick="ShowEdit()">
+        <td height="34" colspan="5">
+        <input type="button" name="add_vehicle" id="add_vehicle" value="Add Payment Details" class="btn btn-info btn-sm">            
+        <input type="button" name="showHistory" id="showHistory" value="View Plan & History" class="btn btn-info btn-sm">            
+        <input type="button" name="showEdit" id="showEdit" value="Edit Plan" class="btn btn-info btn-sm">
         
-        <input type="button" name="manageServiceBranch" id="manageServiceBranch" value="Add Service Branch" class="btn btn-info btn-sm" onClick="ServiceBranch()">
-         <input type="button" name="editServiceBranch" id="editServiceBranch" value="Edit Service Branch" class="btn btn-info btn-sm" onClick="editBranch()">
-       <!-- <input type="button" name="estimateView" id="estimateView" value="Estimate View" class="btn btn-info btn-sm">-->
+        <input type="button" name="manageServiceBranch" id="manageServiceBranch" value="Add Service Branch" class="btn btn-info btn-sm">
+         <input type="button" name="editServiceBranch" id="editServiceBranch" value="Edit Service Branch" class="btn btn-info btn-sm">
+        <input type="button" name="back" id="back" value="Back" 
+        onclick="window.location='manage_customer_payment_profile.php?token=<?php echo $token ?>'" class="btn btn-info btn-sm">        
         </td>
         </tr>
       </table>

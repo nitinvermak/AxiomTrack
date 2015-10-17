@@ -304,7 +304,7 @@ function CallPincode()
      
     </div>    
     <div class="col-md-12" id="contactform"> <!--open of the single form-->
-    <form name='myform' action="" class="form-horizontal" method="post" onSubmit="return chkcontactform(this)">
+    <form name='myform' action="" class="form-horizontal" enctype="multipart/form-data" method="post" onSubmit="return chkcontactform(this)">
        	<input type="hidden" name="submitForm" value="yes" />
         <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
         <div class="col-md-6 form">

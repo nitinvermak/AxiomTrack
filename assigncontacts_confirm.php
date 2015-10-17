@@ -45,6 +45,32 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/assigncontact_confirmation.js"></script>
+<script type="text/javascript">
+function ShowbyCategory()
+	{   
+	    callingcat = document.getElementById("callingcat").value;
+		//alert(branch);
+		url="ajaxrequest/assigncontacts_branch_confirmation.php?callingcat="+callingcat+"&token=<?php echo $token;?>";
+		//alert(url);
+		xmlhttpPost(url,callingcat,"getResponseUnassignedStock");
+	}
+	/*function ShowByBranch()
+	{
+		branch = document.getElementById("branch").value;	
+		model = document.getElementById("modelname").value;	 
+		url="ajaxrequest/show_branch_device_confirmation.php?branch="+branch+"&model="+model+"&token=<?php echo $token;?>"; 
+		//alert(url);
+		xmlhttpPost(url,branch,"getResponseUnassignedStock");
+	}*/
+ 
+	function getResponseUnassignedStock(str){
+	//alert(str);
+	document.getElementById('divassign').innerHTML=str;
+	//document.getElementById('area1').
+	//document.getElementById("area1").innerHTML = "";
+	//document.getElementById("divpincode").innerHTML = "";
+	}
+</script>
 </head>
 <body>
 <!--open of the wraper-->

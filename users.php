@@ -1,6 +1,4 @@
 <?php
-//echo("hi");
-//die;
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 
@@ -54,6 +52,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				if(mysql_num_rows($queryArr)<=0)
 				{
 					$sql="insert into tbluser set emp_id='$emp_id',First_Name='$first_name',Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), Contact_No='$contact',emailid='$email_id',DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'),Address='$address',country='$country',State='$state',City='$city', Area='$area',Pin_code='$pincode', User_Category='$user_type', branch_id='$branch', User_ID='$user_name', Password='$password',User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
+					/*echo $sql;*/
 					$query=mysql_query($sql);		
 					echo "<script> alert('User Created Successfully!'); </script>";
 					header("location: manage_users.php?token=".$token);
@@ -270,7 +269,7 @@ function callPincode(area){
           </tr>
           <tr>
           <td valign="top">&nbsp;</td>
-          <td colspan="2"><input type="reset" id="reset" class="btn btn-primary"  value="Reset"/> <input type="submit" value="Submit" id="submit"  class="btn btn-primary" /> <input type='button' name='cancel' class="btn btn-primary" value="Back" onclick="window.location.replace('manage_users.php?token=<?php echo $token ?>')"/></td>
+          <td colspan="2"><input type="reset" id="reset" class="btn btn-primary"  value="Reset"/> <input type="submit" value="Submit" id="submit"  class="btn btn-primary" /> <input type='button' name='cancel' class="btn btn-primary" value="Back" onClick="window.location.replace('manage_users.php?token=<?php echo $token ?>')"/></td>
           <td valign="top">&nbsp;</td>
         </tr>
     </table>

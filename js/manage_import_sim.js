@@ -32,7 +32,7 @@ function singlecontact() {
 function multiplecontact() {
 //alert("test");
    document.getElementById("contactform").style.display = "none";
-document.getElementById("contactUpload").style.display = "";
+   document.getElementById("contactUpload").style.display = "";
 }
 function chkcontactform(obj)
 {

@@ -14,8 +14,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if(isset($_POST['submit']))
 	{
-		$organizationName = mysql_real_escape_string($_POST['organizationName']);
-		$quickBookRefNo = mysql_real_escape_string($_POST['quickBookRefNo']);
 		/*Cash payment*/
 		$cashAmount = mysql_real_escape_string($_POST['cashAmount']);
 		/*Cheque*/
@@ -35,44 +33,44 @@ if(isset($_POST['submit']))
 		if(isset($_POST['cash']) && ($_POST['cheque']) && ($_POST['onlineTransfer']))
 			{
 				//Save Data Online payement 
-				$sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', RefNo = '$refNo', Amount = '$onlineTransferAmount'";
+				$sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
 				/*echo $sql;*/
-			/*	$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 				$OnlineTransferId = mysql_insert_id();
 				//Save Data Cheque
-				$sql = "Insert into PaymentCheque Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
+				$sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
 				/*echo $sql;*/
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 				$ChequeID = mysql_insert_id();
 				//Save Data Cash Payment
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', ChequeID = '$ChequeID', OnlineTransferId = '$OnlineTransferId', RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
+				$sql = "Insert into paymentmethoddetailsmaster Set CashAmount = '$cashAmount', ChequeID = '$ChequeID', OnlineTransferId = '$OnlineTransferId', RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
 				/*echo $sql;*/
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 			}
 		else if (isset($_POST['cash']))
 			{
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
-				/*$result = mysql_query($sql);*/
+				$sql = "Insert into paymentmethoddetailsmaster Set CashAmount = '$cashAmount', RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 			}
 		else if(isset($_POST['cheque']))
 			{
-				$sql = "Insert into PaymentCheque Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*$result = mysql_query($sql);*/
+				$sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 				$ChequeID = mysql_insert_id(); 
 				
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', ChequeID = '$ChequeID', RecivedDate = '$revievingDate', Remarks = '$remarks', RecievedBy = '$recievedby'";
+				$sql = "Insert into paymentmethoddetailsmaster Set ChequeID = '$ChequeID', RecivedDate = '$revievingDate', Remarks = '$remarks', RecievedBy = '$recievedby'";
 				/*echo $sql;*/
 			}
 		else if(isset($_POST['onlineTransfer']))
 			{
-				$sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*$result = mysql_query($sql);*/
+				$sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 				$OnlineTransferId = mysql_insert_id();
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', OnlineTransferId = '$OnlineTransferId', RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
-				/*$result = mysql_query($sql);*/
+				$sql = "Insert into paymentmethoddetailsmaster Set OnlineTransferId = '$OnlineTransferId', RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 			}
 		
@@ -97,11 +95,9 @@ if(isset($_POST['submit']))
 <script type="text/javascript" src="js/textboxEnabled.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
-// Date 
  $(function() {
-    $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+    $( "#revievingDate" ).datepicker({dateFormat: 'yy-mm-dd'});
   });
-// End Date
 </script>
 
 </head>
@@ -118,24 +114,9 @@ if(isset($_POST['submit']))
         <hr>
     </div>
     <div class="col-md-12">
-    <form name='fullform' class="form-horizontal"  method='post' onSubmit="return validate(this)">
+    <form name='fullform' class="form-horizontal"  method='post'>
     <div class="table-responsive">
     	<table class="formStyle" border="0">
-        <tr>
-          <td>Organization</td>
-          <td><select name="organizationName" id="organizationName" class="form-control drop_down">
-	<option value="">Select Organization</option>
-    <?php $Country=mysql_query("select A.cust_id as customerId, B.Company_Name as CompanyName 
-								from tbl_customer_master as A
-								inner join tblcallingdata as B
-								On A.callingdata_id = B.id order by B.Company_Name ASC");
-		  while($resultCountry=mysql_fetch_assoc($Country)){
-	?>
-    <option value="<?php echo $resultCountry['customerId']; ?>"><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>             <?php } ?>
-</select></td>
-          <td>Quick Book Ref. No.</td>
-          <td><input type="text" name="quickBookRefNo" id="quickBookRefNo" class="form-control text_box"> </td>
-        </tr>
         <tr>
         <th colspan="4">Cash <input type="checkbox" name="cash" id="cash"></th>
         </tr>
@@ -152,27 +133,18 @@ if(isset($_POST['submit']))
         <td class="col-md-2">Cheque No.</td>
         <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box" disabled></td>
         <td class="col-md-2">Cheque Date</td>
-        <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box" disabled></td>
+        <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="form-control text_box" disabled></td>
         </tr>
         <tr>
         <td class="col-md-2">Bank</td>
-        <td class="col-md-4">
-        <select name="bank" id="bank" class="form-control drop_down ddlCountry" disabled>
-            <option value="">Select Plan Category</option>
-            <?php $Country=mysql_query("select * from tblBank");
-						   while($resultCountry=mysql_fetch_assoc($Country)){
-			?>
-            <option value="<?php echo $resultCountry['bankId']; ?>" <?php if(isset($result['bankId']) && $resultCountry['bankId']==$result['bankId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['bankName'])); ?></option>
-            <?php } ?>
-        </select>
-        </td>
+        <td class="col-md-4"><input type="text" name="bank" id="bank" class="form-control text_box" disabled></td>
         <td class="col-md-2">Amount</td>
         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box" disabled></td>
         </tr>
         
         <tr>
         <td class="col-md-2">Bank Deposit Date</td>
-        <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="date form-control text_box" disabled></td>
+        <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box" disabled></td>
         <td class="col-md-2"></td>
         <td class="col-md-4"></td>
         </tr>
@@ -190,7 +162,7 @@ if(isset($_POST['submit']))
         </tr>
         <tr>
         <td class="col-md-2">Date of Recieving</td>
-        <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="date form-control text_box" ></td>
+        <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="form-control text_box" ></td>
         <td class="col-md-2">Remarks</td>
         <td class="col-md-4"><input type="text" name="remarks" id="remarks" class="form-control text_box" ></td>
         </tr>

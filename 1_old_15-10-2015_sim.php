@@ -12,118 +12,55 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
- /*foreach ($_POST as $key => $value) {
-      
-        echo $key."<br />";
-		}*/
-
-  if (!empty($_POST))
+//Save single sim Record
+if(isset($_POST['singleSave']))
 	{
-	
-	$userid=$_SESSION['user_id'];
-		if ($_REQUEST['sim']!="")
-		{
-	//	echo $_REQUEST['first_name'];
-	//	die;
-		$provider_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['provider']));
-		$sim_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['sim']));
-		$mobile_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
-		$date_of_purchase=htmlspecialchars(mysql_real_escape_string($_REQUEST['date']));
-		$state_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['state1']));
-		$plan=htmlspecialchars(mysql_real_escape_string($_REQUEST['plan1']));
-		$sql="insert into tblsim set company_id='$provider_name', sim_no='$sim_name', mobile_no='$mobile_no', date_of_purchase='$date_of_purchase', state_id='$state_name', plan_categoryid='$plan'";
-		/*echo $sql;*/
-		//die;
-		insertcontact($sql);
-		?>
-                <script language="javascript">
-				alert("Data Added Successfully!");
-				</script>
-                <?php
-				header("location: manage_sim.php?token=".$token);
-				
-		}
-		else
-		{
-		$provider_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['provider2']));
-		$date_of_purchase =htmlspecialchars(mysql_real_escape_string($_REQUEST['date2']));		
-		$state_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['state3']));
-		$plan=htmlspecialchars(mysql_real_escape_string($_REQUEST['plan2']));
-		$filename=upload_file("contactfile",SITE_FS_PATH."/Upload/","");
-		
+		$providerCompany = mysql_real_escape_string($_POST['provider']);
+		$plan1 = mysql_real_escape_string($_POST['plan1']);
+		$state1 = mysql_real_escape_string($_POST['state1']);
+		$date = mysql_real_escape_string($_POST['date']);
+		$simNo = mysql_real_escape_string($_POST['sim']);
+		$mobileNo = mysql_real_escape_string($_POST['mobile']);
+		$checkDuplicate = "SELECT * FROM tblsim WHERE mobile_no = '$mobileNo' AND sim_no = '$simNo'";
+		$result = mysql_query($checkDuplicate);
+		if(mysql_num_rows($result) <= 0)
+		  {
+  			 $sql = "INSERT INTO tblsim set company_id = '$providerCompany', plan_categoryid = '$plan1', 
+  					 state_id = '$state1', date_of_purchase = '$date', sim_no = '$simNo', mobile_no = '$mobileNo'";
+  			 $resultSql = mysql_query($sql);
+         	 $_SESSION['sess_msg'] = "Sim added Successfully ";
+         	 header("location:manage_sim.php?token=".$token);
+		  }
+		else 
+		  {
+			   $msg= "Record already Exist";
+		  }
 
-		
-		require_once 'excelreader/excel_reader2.php';
-		$data = new Spreadsheet_Excel_Reader(SITE_FS_PATH."/Upload/".$filename);
-		
-		//echo $data->sheets[0]['numRows'];
-		//die;
-		 $chkdata=0;
-		 $msgvalue="";
-		for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
-			for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++) 
-			{
-				
-				
-					
-					if($j==1)
-					{
-				
-						$first_name=htmlspecialchars(mysql_real_escape_string($data->sheets[0]['cells'][$i][$j]));
-						if (trim($first_name)=="" )
-						{
-						  $chkdata=1;
-						  $msgvalue=$msgvalue." Row No. ".$i." Sim No. Missing<br />";
-						 }
-						
-					}
-					if($j==2)
-					{
-					//echo $data->sheets[0]['cells'][$i][$j];
-					//die;
-						$last_name=htmlspecialchars(mysql_real_escape_string($data->sheets[0]['cells'][$i][$j]));
-						if (trim($last_name)=="")
-						{
-						  $chkdata=1;
-						  $msgvalue=$msgvalue." Row No. ".$i." Mobile No. Missing<br />";
-						 }
-					}
-					
-			}
-		$datasource=htmlspecialchars(mysql_real_escape_string($_REQUEST['datasource1']));
-		if($chkdata==0)
-		{
-					$sql="insert into tblsim set company_id='$provider_name', sim_no='$first_name', mobile_no='$last_name', date_of_purchase='$date_of_purchase', state_id='$state_name', plan_categoryid='$plan'";
-			
-		//	echo $sql;
-		//	die;
-			insertcontact($sql);	
-			}
-			$chkdata=0;
-		}
-			if($msgvalue!="")
-			{
-				$_SESSION["ERROR_MESSAGE"]=$msgvalue;
-				header("location: simupload_message.php?token=".$token);
-			
-			}
-			else
-			{
-				?>
-                <script language="javascript">
-				alert("Data Uploaded Successfully!");
-				</script>
-                <?php
-				header("location: manage_sim.php?token=".$token);
-			}
-		}
- 	}
-	  	function insertcontact($sql)
-		{
-			$query=mysql_query($sql);
-		}
-//$name=htmlspecialchars(mysql_real_escape_string($_REQUEST['name']));
+	}
+//End
+// Import CSV file
+if(isset($_POST['importFile']))
+  {
+  	 $provider2 = mysql_real_escape_string($_POST['provider2']);
+	 $date2 = mysql_real_escape_string($_POST['date2']);
+	 $plan2 = mysql_real_escape_string($_POST['plan2']);
+	 $state3 = mysql_real_escape_string($_POST['state3']);
+     $contactfile = $_FILES['contactfile'] ['tmp_name'];
+	/* echo $contactfile;*/
+	 $handle = fopen($contactfile, "r");
+	 while(($fileOp = fgetcsv($handle, 1000, ",")) !== false)
+	 {
+	 	$simNo = $fileOp[0];
+		$mobileNo = $fileOp[1];
+		$sql = "INSERT INTO tblsim set company_id = '$provider2', plan_categoryid = '$plan2', 
+  			    state_id = '$state3', date_of_purchase = '$date2', sim_no = '$simNo', mobile_no = '$mobileNo'";
+		echo $sql;
+  		$resultSql = mysql_query($sql);
+        $_SESSION['sess_msg'] = "Sim added Successfully ";
+        header("location:manage_sim.php?token=".$token);
+	 }
+  }
+// End 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -173,7 +110,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
      
     </div>    
     <div class="col-md-12" id="contactform"> <!--open of the single form-->
-    <form name='myform' action="" class="form-horizontal" method="post" onSubmit="return chkcontactform(this)">
+    <form name='myform' action="" class="form-horizontal" method="post" enctype="multipart/form-data" onSubmit="return chkcontactform(this)">
        	<input type="hidden" name="submitForm" value="yes" />
         <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
     	<div class="col-md-4">
@@ -245,7 +182,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
        <div class="col-md-4">
        		<div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" value="Submit" id="submit" class="btn btn-primary btn-sm" />
+                  <input type="submit" value="Submit" name="singleSave" id="singleSave" class="btn btn-primary btn-sm" />
                   <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='manage_sim.php?token=<?php echo $token ?>'" />
                 </div>
   			</div> 
@@ -254,7 +191,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     </div> 
     <!--end single sim  form--> 
     
-    <div id="contactUpload"  style="display:none;" class="col-md-12"> <!--open of the multiple sim form-->
+    <div id="contactUpload"  style="" class="col-md-12"> <!--open of the multiple sim form-->
     <form name="contact1" method="post" enctype="multipart/form-data" class="form-horizontal" onSubmit="return chkupload(this)">
     	<div class="col-md-5">
          	<div class="form-group">
@@ -316,7 +253,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             </div> 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" value="Submit" id="submit" class="btn btn-primary btn-sm" />
+                  <input type="submit" value="Submit" name="importFile" id="importFile" class="btn btn-primary btn-sm" />
                   <input type="button" value="Download Format" name="download" class="btn btn-primary btn-sm" onClick="window.location='Samples/sim_import_format.xls'" />
                   <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='manage_sim.php?token=<?php echo $token ?>'" />
                 </div>
