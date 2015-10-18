@@ -218,14 +218,8 @@ if($cust_id != "")
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$orgTotal = $orgTotal + $vehicleTotal;
-				
 				}
-				 
- 
  	  ?>
-   
- 
-  	
 
 	<?php 
     	}
@@ -244,6 +238,7 @@ if($cust_id != "")
     	<?php 
  
 			echo 'RS.'.$orgTotal;
+			echo "<input type='hidden' name='total$invoiceId' id='total$invoiceId' value='$orgTotal'>";
 		?>
     </td>
    
@@ -256,7 +251,14 @@ if($cust_id != "")
     <td></td>
     <td></td>
     <td><p class="pull-right"><strong>Discount</strong></td>
-    <td>0</td>
+    <td>
+        	<?php 
+ 
+			echo $row["discountedAmount"];
+		    ?>
+
+
+    </td>
     </tr>
     <tr>
     <td></td>
@@ -269,7 +271,7 @@ if($cust_id != "")
     <td>
     	<?php 
  
-			echo 'RS.'.$orgTotal;
+			echo 'RS.'.( $orgTotal - $row["discountedAmount"] );
 		?>
 	</td>
     </tr>
@@ -279,19 +281,25 @@ if($cust_id != "")
     <tr>
     <td>Provide Discount</td>
     <td>
-    <select name="discountAmt" id="discountAmt" class="form-control drop_down">
+    <select name="discountAmt" id="discountAmt<?php echo $invoiceId; ?>" class="form-control drop_down" onchange=showData1(<?php echo $invoiceId; ?>)>
     	<option value="0">Select</option>
     	<option value="Rs">RS</option>
     	<option value="Percentage">Percentage</option>
     </select>
+
     </td>
     <td>
-    <div id="inputBox">
-    <input type="text" name="rupee" id="rupee" class="form-control text_box">
-    </div>
+     <input type='text' name='Percentage' id='Percentage<?php echo $invoiceId; ?>' 
+       class='form-control text_box' style="display: none;"
+       onkeyup="calPercent(<?php echo $invoiceId; ?>)"
+     placeholder="Percentage"
+     >
+     Rs.<input type='text' name='rupee' id='rupee<?php echo $invoiceId; ?>' class='form-control text_box'>
+
     </td>
     <td>
-    <input type="button" value="Go" class="btn btn-primary btn-sm" id="go" name="go">
+    <input type="button" value="Go" class="btn btn-primary btn-sm" id="go" onclick="addPercent(<?php echo $invoiceId; ?>)" 
+    name="go">
     </td>
     </tr>
     </table>

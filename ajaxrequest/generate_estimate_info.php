@@ -32,6 +32,7 @@ foreach ( $myArray as $array1){
 
 $genDate = $Intervel_Year.'-'.$intervalMonth.'-01';
 $dueDate = $Intervel_Year.'-'.$intervalMonth.'-15';
+$monthDays=cal_days_in_month(CAL_GREGORIAN,$intervalMonth,$Intervel_Year);
 
 $sql0 = "UPDATE `tblesitmateperiod` SET GeneratedStatus='Y', GeneratedDate = Now() WHERE intervalId = '$interval_Id'"; 
 $result = mysql_query($sql0);
@@ -42,6 +43,9 @@ $rentFreqId = 1;  //  pass it from the page
     $joinQuery = "
 	        SELECT  
 			A.id as vehicleId , A.customer_Id  as customerId, B.device_amt as deviceAmount,
+			EXTRACT(DAY FROM A.installation_date) AS installation_date,
+			EXTRACT(MONTH FROM A.installation_date) AS installation_month,
+			EXTRACT(YEAR FROM A.installation_date) AS installation_year,
 			B.device_rent_amt as deviceRentAmt , B.installation_charges as  installationCharges,
 			B.oneTimePaymentFlag as oneTimePaymentFlag, B.planId as planId, B.instalmentId vehicleInstalmentId,
 			C.id as installmenPlanId, C. Installmentamount as installmentAmountID,
@@ -98,7 +102,15 @@ $rentFreqId = 1;  //  pass it from the page
 		echo '</br>';
 		
 		$loopCounter=$loopCounter+1;
-		
+		$proRataDeviceRentAmt =0;
+		$vehicle_installation_date = $row["installation_date"]; // return only the day of the month
+		$monthDays=cal_days_in_month(CAL_GREGORIAN,$row["installation_month"],$row["installation_year"]);
+		echo '</br>';
+		echo '$monthDays='.$monthDays;
+		echo '</br>';
+		echo '----------------------------------------vehicle_installation_date= '.$vehicle_installation_date;
+		echo '</br>';
+		$proRataDeviceRentAmt = 0;
 		if ($nextCustomer == -1){  // to get invoice id for the first payment breakage Ids
 			$sqlMaxId = "Select Max(invoiceId) as  invoiceId from tbl_Invoice_Master ";
 			$resultMaxId  = mysql_fetch_array(mysql_query($sqlMaxId));
@@ -184,7 +196,12 @@ $rentFreqId = 1;  //  pass it from the page
 		
 		
 		if ($row['oneTimePaymentFlag'] == 'N'){		
-		    $payableAmountTypeA  = $payableAmountTypeA +  $deviceRentAmtDict[$row["deviceRentAmt"]] + $installationChargesDict[$row["installationCharges"]] ; 
+		
+			$proRataDeviceRentAmt = $deviceRentAmtDict[$row["deviceRentAmt"]] * ($monthDays - $vehicle_installation_date + 1)/$monthDays;
+			echo '</br>';
+			echo 'prorata rent='.$proRataDeviceRentAmt;
+			echo '</br>';
+		    $payableAmountTypeA  = $payableAmountTypeA +  $proRataDeviceRentAmt + $installationChargesDict[$row["installationCharges"]] ; 
 			$sqlUpd = "UPDATE `tbl_gps_vehicle_payment_master` SET oneTimePaymentFlag='Y' WHERE planId = '".$row['planId']."'"; 
             $resultUpd = mysql_query($sqlUpd);			
 		}
@@ -274,7 +291,7 @@ $rentFreqId = 1;  //  pass it from the page
 			echo '</br>';
 			$sqlA = "Insert into tbl_Payment_Breakage set 
 					invoiceId = '$newInvoiceId', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'A',
-					amount ='".$deviceRentAmtDict[$row['deviceRentAmt']]."' ";
+					amount ='".$proRataDeviceRentAmt."' ";
 			echo  $sqlA;
 			echo '</br>';
 			$resultA = mysql_query($sqlA);

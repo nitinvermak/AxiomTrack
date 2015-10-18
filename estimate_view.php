@@ -12,6 +12,134 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
+if(isset($_POST['submit']))
+    {
+        $returnCode= 0;
+        $invoiceId = mysql_real_escape_string($_POST['hiddenInvoiceID']);
+        /*Cash payment*/
+        $cashAmount = mysql_real_escape_string($_POST['cashAmount']);
+        /*Cheque*/
+        $chequeNo = mysql_real_escape_string($_POST['chequeNo']);
+        $chequeDate = mysql_real_escape_string($_POST['chequeDate']);  
+        $bank = mysql_real_escape_string($_POST['bank']); 
+        $amountCheque = mysql_real_escape_string($_POST['amountCheque']);
+        $depositDate = mysql_real_escape_string($_POST['depositDate']);
+        /*Online Tranfer*/
+        $onlineTransferAmount = mysql_real_escape_string($_POST['onlineTransferAmount']);
+        $refNo = mysql_real_escape_string($_POST['refNo']);
+        /*Other Details*/
+        $revievingDate = mysql_real_escape_string($_POST['revievingDate']);
+        $remarks = mysql_real_escape_string($_POST['remarks']);
+        $recievedby = mysql_real_escape_string($_POST['recievedby']);
+        $confirmby = mysql_real_escape_string($_POST['confirmby']);
+
+        if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
+            $returnCode = 1;        
+
+        }
+        if(isset($_POST['cash']) == False && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== False){
+            $returnCode = 2;        
+        }
+        if(isset($_POST['cash']) == False && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== True){
+            $returnCode = 3;        
+        }
+        if(isset($_POST['cash']) == True && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== False){
+            $returnCode = 4;        
+        }
+        if(isset($_POST['cash']) == True && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
+            $returnCode = 5;        
+        }
+        if(isset($_POST['cash']) == True && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== False){
+            $returnCode = 6;        
+        }
+        if(isset($_POST['cash']) == True && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== True){
+            $returnCode = 7;        
+        }
+        if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== False){
+            $returnCode = 8;        
+        }
+
+        switch ($returnCode) {
+            case 1:
+                $sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', 
+                quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', Amount = '$onlineTransferAmount'";
+                $result = mysql_query($sql);
+                $OnlineTransferId = mysql_insert_id();
+                break;
+            case 2:
+                $sql = "Insert into PaymentCheque Set customerId = '$organizationName', 
+                quickBookRefNo = '$quickBookRefNo', ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
+                Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
+                $result = mysql_query($sql);
+                $ChequeID = mysql_insert_id(); 
+                break;
+            case 3:
+                // Cheque Payment
+                $sql = "Insert into PaymentCheque Set customerId = '$organizationName', 
+                quickBookRefNo = '$quickBookRefNo', ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
+                Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
+                $result = mysql_query($sql);
+                $ChequeID = mysql_insert_id();
+                //Online Payment
+                // do nothing
+                break;
+            case 4:
+                // Cash Payment
+                // do nothing
+                break;
+            case 5:
+                // Cash Payment
+                // do nothing
+
+                // Online Payment
+                $sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', 
+                quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', Amount = '$onlineTransferAmount'";
+                $result = mysql_query($sql);
+                $OnlineTransferId = mysql_insert_id();
+            case 6:
+                //Cash Payment
+                // do nothing
+
+                //Cheque Payment
+                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
+                Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
+                $result = mysql_query($sql);
+                $ChequeID = mysql_insert_id();
+                // cash amount
+                // do nothing
+                break;
+            case 7:
+                // cash payment
+                // do nothing
+                //Cheque Payment
+                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
+                Bank = '$bank', DepositDate = '$depositDate', Amount = '$amountCheque'";
+                $result = mysql_query($sql);
+                $ChequeID = mysql_insert_id();
+                 // Online Payment
+                $sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', 
+                quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', Amount = '$onlineTransferAmount'";
+                $result = mysql_query($sql);
+                $OnlineTransferId = mysql_insert_id();
+            default:
+                # code...
+                break;
+        }
+        $sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', 
+                quickBookRefNo = '$quickBookRefNo', OnlineTransferId = '$OnlineTransferId', 
+                RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
+                $result = mysql_query($sql);
+                $paymentId = mysql_insert_id();
+
+        $flagStatus ="Update tbl_invoice_master Set paymentStatusFlag = 'B', invoiceFlag = 'Y' 
+                      Where invoiceId = '$invoiceId'";
+        $resultSql = mysql_query($flagStatus);
+
+        $invoicePaymentMap = "Insert into tblpaymentinvoicemap Set invoiceId = '$invoiceId', 
+                               paymentId = '$paymentId'";
+
+        $invoicePaymentMapSql = mysql_query($invaoicePaymentMap);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,16 +172,64 @@ $(document).ready(function(){
 		});
 });
 /* End */
-// Send Ajax Request when Select percentage
-$(document).on("click","#save", function(){
-    
-});
+// calculate percentage
+ function showData1(inId){
+
+   //alert('#discountAmt'+inId);
+    varA='#discountAmt'+inId;
+    varB='#Percentage'+inId;
+    var1 = $(varA).val();
+    //alert(varB);
+    if ( var1 == 'Percentage'){
+       // alert('aa');
+        $(varB).show();                    
+    }
+    if (var1 == 'Rs'){
+       // alert('bb');
+        $(varB).hide();                    
+    }
+
+}
+function calPercent(inId){
+    v1="#total"+inId;
+    v2='#Percentage'+inId;
+    v3='#rupee'+inId;
+    varA = $(v1).val();
+    varB = $(v2).val();  
+    if (varB > 100 || 0 > varB){
+
+        alert('please provide correct discount');
+        return;    
+    }
+    varC = (varA*varB)/100;
+    $(v3).val(varC);
+
+
+}
+ 
 // End
+// send discount data
+function addPercent(invoiceId)
+{       v3='#rupee'+invoiceId;
+        $.post("ajaxrequest/percentage_amt.php?token=<?php echo $token;?>",
+                {
+                    invId: invoiceId,
+                    rupeeAmt : $(v3).val(),
+
+                },
+                function( data){
+                    $('.modal').modal('hide');
+                    location.reload();
+                });  
+}
+//End
 function getValue(name, iName, iId, amount, iYear)
 	{
+
 		/*alert(name+iName+iId+amount+iYear);*/
 		document.getElementById("name").innerHTML = "Company Name: "+name+ ", Interval Name: "+iName+ " "+iYear+ ", Payable Amount: "+amount;
-	}
+	    $('#hiddenInvoiceID').val(iId);
+    }
 </script>
 </head>
 <body>
@@ -105,9 +281,8 @@ function getValue(name, iName, iId, amount, iYear)
       <div class="modal-body">
       	<!--Start form -->
          <form name='fullform' class="form-horizontal"  method='post'>
-    	 <div class="table-responsive">
-         
-         
+         <input type="hidden" name="hiddenInvoiceID" id="hiddenInvoiceID" value="">
+    	 <div class="table-responsive">         
     	 <table class="formStyle" border="0">
          <tr>
          <td colspan="4"><p id="name" style="font-weight:bold; font-family:'Trebuchet MS';"></p></td>
@@ -128,7 +303,7 @@ function getValue(name, iName, iId, amount, iYear)
          <td class="col-md-2">Cheque No.</td>
          <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box" disabled></td>
          <td class="col-md-2">Cheque Date</td>
-         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box" disabled></td>
          </tr>
          <tr>
          <td class="col-md-2">Bank</td>
@@ -156,7 +331,7 @@ function getValue(name, iName, iId, amount, iYear)
          </tr>
          <tr>
          <td class="col-md-2">Date of Recieving</td>
-         <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="form-control text_box" ></td>
+         <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="date form-control text_box" ></td>
          <td class="col-md-2">Remarks</td>
          <td class="col-md-4"><input type="text" name="remarks" id="remarks" class="form-control text_box" ></td>
          </tr>
