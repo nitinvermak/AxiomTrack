@@ -38,7 +38,7 @@ function Show()
 	    year = document.getElementById("year").value;
 		//alert(branch);
 		url="ajaxrequest/show_generate_estimate.php?year="+year+"&token=<?php echo $token;?>";
-		alert(url);
+		/*alert(url);*/
 		xmlhttpPost(url,year,"getResponse");
 	}
 	function getResponse(str){

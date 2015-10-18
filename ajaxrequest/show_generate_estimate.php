@@ -34,7 +34,7 @@ if(mysql_num_rows($stockArr)>0)
    			<tr <?php print $class?>   id='<?php echo stripslashes($row["intervalId"]);?>' >
             <td><?php print $kolor++;?>.<input type="hidden" name="interval_Id" id="interval_Id" value="<?php echo stripslashes($row['intervalId']); ?>"></td>
 			<td><?php echo stripslashes($row["IntervelYear"]);?><input type="hidden" name="Intervel_Year" id="Intervel_Year" value="<?php echo stripslashes($row["IntervelYear"]);?>"></td>	
-            <td><?php echo stripslashes($row["Intervalname"]);?><input type="hidden" name="Interval_name" id="Interval_name" value="<?php echo stripslashes($row["Intervalname"]);?>"></td>	
+            <td><?php echo stripslashes($row["Intervalname"]);?><input type="hidden" name="Interval_name" id="Interval_name" value="<?php echo stripslashes($row["Intervalname"]);?>"><input type="hidden" name="intervalMonth" id="intervalMonth" value="<?php echo stripslashes($row["intervalMonth"]);?>" /></td>	
 			<td><?php echo stripslashes($row["GeneratedStatus"]);?><input type="hidden" name="Generated_Status" id="Generated_Status"value="<?php echo stripslashes($row["GeneratedStatus"]);?>"></td>                           	
 			<td><?php echo stripslashes($row["GeneratedDate"]);?><input type="hidden" name="gen_date" id="gen_date" value="<?php echo stripslashes($row["GeneratedDate"]);?>"></td>
           	  

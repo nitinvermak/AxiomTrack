@@ -43,6 +43,12 @@ $(document).ready(function(){
 				});	 
 		});
 });
+/* End */
+// Send Ajax Request when Select percentage
+$(document).on("click","#save", function(){
+    
+});
+// End
 function getValue(name, iName, iId, amount, iYear)
 	{
 		/*alert(name+iName+iId+amount+iYear);*/

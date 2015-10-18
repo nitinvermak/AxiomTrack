@@ -17,11 +17,21 @@ foreach ( $myArray as $array1){
 				case 'interval_Id':
 					$interval_Id = $chunk[1];	 		
 					echo $interval_Id;
+					break;	
+			    case 'intervalMonth':
+					$intervalMonth = $chunk[1];	 		
+					echo $intervalMonth;
 					break;					 				 				
- 					
+ 				case 'Intervel_Year':
+					$Intervel_Year = $chunk[1];	 		
+					echo $Intervel_Year;
+					break;
 		}  
  	} 
 }
+
+$genDate = $Intervel_Year.'-'.$intervalMonth.'-01';
+$dueDate = $Intervel_Year.'-'.$intervalMonth.'-15';
 
 $sql0 = "UPDATE `tblesitmateperiod` SET GeneratedStatus='Y', GeneratedDate = Now() WHERE intervalId = '$interval_Id'"; 
 $result = mysql_query($sql0);
@@ -117,6 +127,7 @@ $rentFreqId = 1;  //  pass it from the page
 				echo '</br>';
 				$sql = "Insert into tbl_Invoice_Master set 
 				intervalId = '$intervalId', customerId ='".$nextCustomer."',
+				generateDate = '$genDate' , dueDate = '$dueDate',
 				invoiceType = 'A', generatedAmount = '$payableAmountTypeA', taxId = '1', discountedAmount = '0', paidAmount ='0',
 				invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
 				echo $sql;
@@ -129,6 +140,7 @@ $rentFreqId = 1;  //  pass it from the page
 					echo '</br>';
 					$sql1 = "Insert into tbl_Invoice_Master set 
 					intervalId = '$intervalId', customerId ='".$nextCustomer."',
+					generateDate = '$genDate' , dueDate = '$dueDate',
 					invoiceType = 'B' , generatedAmount = '$payableAmountTypeB', taxId = '1', discountedAmount = '0', paidAmount 					
 					='0',	invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
 					echo $sql1;
@@ -217,7 +229,9 @@ $rentFreqId = 1;  //  pass it from the page
 				echo '</br>';
 				$sql = "Insert into tbl_Invoice_Master set 
 				intervalId = '$intervalId', customerId ='".$row['customerId']."',
-				invoiceType = 'A' , generatedAmount = '$payableAmountTypeA', taxId = '1', discountedAmount = '0', paidAmount ='0',
+				generateDate = '$genDate' , dueDate = '$dueDate',
+				invoiceType = 'A' , generatedAmount = '$payableAmountTypeA', taxId = '1', discountedAmount = '0', 
+				paidAmount ='0',
 				invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
 				
 				$result = mysql_query($sql);
@@ -231,6 +245,7 @@ $rentFreqId = 1;  //  pass it from the page
 					echo '</br>';
 					$sql1 = "Insert into tbl_Invoice_Master set 
 					intervalId = '$intervalId', customerId ='".$row['customerId']."',
+					generateDate = '$genDate' , dueDate = '$dueDate',
 					invoiceType = 'B', generatedAmount = '$payableAmountTypeB', taxId = '1', discountedAmount = '0', paidAmount ='0',
 					invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
 					echo $sql1;

@@ -21,15 +21,16 @@ if($cust_id != "")
 ?>		
 		<tr>
        
-      	<th>S.No.</th>  
-        <th>Estimate Id</th>  
-		<th>Estimate Type</th>
-      	<th>Customer Name</th>  
-      	<th>Interval Name</th>
-      	<th>Generated Amount</th> 
-        <th>Discount Amount</th> 
-        <th>Payment Details</th>
-        <th>Make Payment</th>
+      	<th><small>S.No.</small></th>  
+        <th><small>Estimate Id</small></th>  
+		<th><small>Estimate Type</small></th>
+      	<th><small>Customer Name</small></th>  
+      	<th><small>Generated Date</small></th>
+        <th><small>Due Date</small></th>
+      	<th><small>Generated Amount</small></th> 
+        <th><small>Discount Amount</small></th> 
+        <th><small>Payment Details</small></th>
+        <th><small>Make Payment</small></th>
       	</tr>    
         <?php
 		$kolor=1;
@@ -55,16 +56,18 @@ if($cust_id != "")
 					$class="bgcolor='#fff'";
  	  	?>
         <tr <?php print $class?>>
-      	<td><?php print $kolor++;?>.</td>
-	  	<td><?php echo stripslashes($row["invoiceId"]);?><input type="hidden" name="invoiceId" value="<?php echo stripslashes($row["invoiceId"]);?>" /></td>
-      	<td>
+      	<td><small><?php print $kolor++;?>.</small></td>
+	  	<td><small><?php echo stripslashes($row["invoiceId"]);?><input type="hidden" name="invoiceId" value="<?php echo stripslashes($row["invoiceId"]);?>" /></small></td>
+      	<td><small>
 		  <?php if ($row["invoiceType"] == "A"){ echo 'Rental';} elseif($row["invoiceType"] == "B") { echo 'Device';}  ?>
-        
+        </small>
         </td>
-		<td><?php $orgName =  getOraganization(stripslashes($row["callingdata_id"])); echo $orgName;  ?> </td>
-      	<td><?php $intervalName=  getIntervelname(stripslashes($row["intervalId"])); echo $intervalName." ".$row["IntervelYear"]; ?> </td>
-        <td><?php echo stripslashes($row["generatedAmount"]);?></td>
-        <td><?php if($row["discountedAmount"]==0)
+		<td><small><?php $orgName =  getOraganization(stripslashes($row["callingdata_id"])); echo $orgName;  ?></small></td>
+      	<td><small><?php echo stripslashes($row["generateDate"]);?> </small></td>
+        <td class="<?php if(strtotime($row["dueDate"]) < strtotime(date("Y-m-d"))) echo 'datecolor' ?>">
+        <small><?php echo stripslashes($row["dueDate"]); ?></small></td>
+        <td><small><?php echo stripslashes($row["generatedAmount"]);?></small></td>
+        <td><small><?php if($row["discountedAmount"]==0)
 					{
 						echo "N/A";
 					}
@@ -72,7 +75,7 @@ if($cust_id != "")
 					{
 						echo stripcslashes($row["discountedAmount"]);	
 					}
-			?>
+			?></small>
 		</td>
         <td><strong>
          
@@ -245,8 +248,55 @@ if($cust_id != "")
     </td>
    
     </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><p class="pull-right"><strong>Discount</strong></td>
+    <td>0</td>
+    </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><p class="pull-right"><strong>Grand Total</strong></td>
+    <td>
+    	<?php 
+ 
+			echo 'RS.'.$orgTotal;
+		?>
+	</td>
+    </tr>
     </table>
-                
+    <div>
+    <table>
+    <tr>
+    <td>Provide Discount</td>
+    <td>
+    <select name="discountAmt" id="discountAmt" class="form-control drop_down">
+    	<option value="0">Select</option>
+    	<option value="Rs">RS</option>
+    	<option value="Percentage">Percentage</option>
+    </select>
+    </td>
+    <td>
+    <div id="inputBox">
+    <input type="text" name="rupee" id="rupee" class="form-control text_box">
+    </div>
+    </td>
+    <td>
+    <input type="button" value="Go" class="btn btn-primary btn-sm" id="go" name="go">
+    </td>
+    </tr>
+    </table>
+    </div>
+
                 
                 
   
