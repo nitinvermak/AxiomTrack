@@ -44,11 +44,6 @@
 
 $(document).ready(function(){
 	$('#submit').click(function(){
-		if($("#organizationName").val() == "" ){
-		    $("#organizationName").focus();
-		    alert("Please Select Organization Name");
-		    return false;
-		}
 		if($("#cash").prop('checked') == true)
 		{
 			if($("#cashAmount").val() == "" ){

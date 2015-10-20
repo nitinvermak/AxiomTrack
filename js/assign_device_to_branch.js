@@ -23,12 +23,12 @@
 	}
    	function confirmdelete(obj)
    	{
-		if(obj.modelname.value == "0")
+		/*if(obj.modelname.value == "0")
 		{
 			alert('Please Select Device Name');
 			obj.modelname.focus();
 			return false;
-		}
+		}*/
 		if(obj.branch.value == "")
 	 	{
 			 alert("Please Select Branch");

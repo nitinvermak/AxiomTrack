@@ -46,8 +46,10 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
     }
 	else{
  	$query = "insert into tblticket set product='$product', organization_id='$orgranization', organization_type='$orgranizationType', rqst_type='$request', device_model_id='$model_id', no_of_installation='$no_of_installation', description='$description', appointment_date='$ap_date_time', createddate=Now()";
-	$_SESSION['sess_msg']='Ticket Generate successfully';
+	
 	mysql_query($query);
+	$ticket = mysql_insert_id();
+	$_SESSION['sess_msg']='Generated Ticket Id: '.'<span style=font-weight:bold;>'.$ticket.'</span>'. ' Successfully';
 	header("location:view_ticket.php?token=".$token);
 	exit();
 	}

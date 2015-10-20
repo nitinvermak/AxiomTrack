@@ -23,22 +23,21 @@ if (isset($_SESSION) && $_SESSION['login']=='')
      		{ //echo 'nitin';
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-		        /*  $device_id=$_POST['linkID'][$dsl];*/
-	   	  		$branch_id=$_POST['branch'];
-		  		$status_id="0";
-				$device_model = $_POST['devic_model_id'];
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "delete from tbl_device_assign_branch where device_id='$chckvalue'";
-				/*echo $sql;*/
-				$results = mysql_query($sql); 	
-				$assign = "Update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
-				/*echo $sql;*/
-				$query = mysql_query($assign);
-				 
-				/* echo $query;*/
-	  			$_SESSION['sess_msg']="State deleted successfully";
-   			   }
-			 }  
+		             /*  $device_id=$_POST['linkID'][$dsl];*/
+	   	  		     $branch_id=$_POST['branch'];
+		  		       $status_id="0";
+				         $device_model = $_POST['devic_model_id'];
+		  		       $createdby=$_SESSION['user_id'];
+				         $sql = "delete from tbl_device_assign_branch where device_id='$chckvalue'";
+				         /*echo $sql;*/
+				         $results = mysql_query($sql); 	
+				         $assign = "Update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
+				         /*echo $sql;*/
+				         $query = mysql_query($assign);
+				         /* echo $query;*/
+	  			       $_SESSION['sess_msg']="State deleted successfully";
+   			      }
+			   }  
   		$id="";
   
   }
@@ -50,25 +49,27 @@ if (isset($_SESSION) && $_SESSION['login']=='')
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-		        /*  $device_id=$_POST['linkID'][$dsl];*/
-	   	  		$branch_id=$_POST['branch'];
-		  		$status_id="1";
-				$device_model = $_POST['devic_model_id'];
-		  		$createdby=$_SESSION['user_id']; 
-	            $check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'") or die(mysql_error());
-						if(!$row = mysql_fetch_array($check_deviceId) or die(mysql_error()))
-						{
-							 $sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
-							 //echo $sql;
-							 $results = mysql_query($sql); 	
-							 $assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', branch_id='$branch_id', assigned_date=Now()";
-							 //echo $sql;
-							 $query = mysql_query($assign);
-							  //echo $query; 
-							 $_SESSION['sess_msg']="State deleted successfully";
-						}
-   			   }
-			 }  
+      		        /*  $device_id=$_POST['linkID'][$dsl];*/
+      	   	  		$branch_id=$_POST['branch'];
+      		  		  $status_id="1";
+      				    /*$device_model = $_POST['devic_model_id'];*/
+      		  		  $createdby=$_SESSION['user_id']; 
+      	          $check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'") 
+                  or die(mysql_error());
+						      if(!$row = mysql_fetch_array($check_deviceId) or die(mysql_error()))
+						        {
+        							 $sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
+        							 //echo $sql;
+        							 $results = mysql_query($sql); 	
+        							 $assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', 
+                       branch_id='$branch_id', assigned_date=Now()";
+        							 //echo $sql;
+        							 $query = mysql_query($assign);
+        							  //echo $query; 
+        							 $_SESSION['sess_msg']="State deleted successfully";
+						        }
+   			      }
+			   }  
   		$id="";
   }
 ?>
@@ -126,11 +127,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             <?php } ?>
             </select>
         </div>
-  		<input type="button" name="assign" value="Assign Devices" id="submit" class="btn btn-primary" onClick="showUnassignedStock()" />
-        <input type="button" name="view" id="view" value="View Assigned Devices" class="btn btn-primary" onClick="showAssignedStock()"/>
+  		<input type="button" name="assign" value="Assign Devices" id="submit" class="btn btn-primary btn-sm" onClick="showUnassignedStock()" />
+        <input type="button" name="view" id="view" value="View Assigned Devices" class="btn btn-primary btn-sm" onClick="showAssignedStock()"/>
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
-          <!---- this division shows the Data of devices from Ajax request --->
+          <!---- this division shows the Data of devices from Ajax request -->
       </div>
     </form>
     </div>
