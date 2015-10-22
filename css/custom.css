@@ -369,3 +369,14 @@ color:#FFFFFF;
 background-color:#D9534F;
 color:#FFFFFF;
 }
+#ticketReshudule{
+width:60px;
+float:left;
+display:none;
+margin-right:10px;
+}
+#ticketClose{
+width:60px;
+float:left;
+margin-right:10px;
+}

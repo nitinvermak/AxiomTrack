@@ -82,11 +82,18 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="js/Nibbler.js"></script>
 <script  src="js/ajax.js"></script>
 <script src="js/manage_users.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript" language="javascript">
+// Date 
+ $(function() {
+    $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+  });
+// End Date
 // JavaScript Document
 function callCity(state_id){ 
 	url="ajaxrequest/getCity.php?state_id="+state_id+"&City=<?php echo $result['City'];?>&token=<?php echo $token;?>";
@@ -161,7 +168,7 @@ function callPincode(area){
         <td>Employee ID*</td>
         <td><input name="empId" id="empId" class="form-control text_box" type="text" value="<?php if(isset($result['id'])) echo $result['emp_id'];?>" /></td>
         <td>Date Of Joining*</td>
-        <td><input name="doj" id="doj" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['DOJ'];?>" tabindex="0"  type="text" /></td>
+        <td><input name="doj" id="doj" class="form-control text_box date" value="<?php if(isset($result['id'])) echo $result['DOJ'];?>" tabindex="0"  type="text" /></td>
         </tr>
         <tr>
         <td>First Name*</td>
@@ -171,7 +178,7 @@ function callPincode(area){
         </tr>
         <tr>
         <td>Date of Birth*</td>
-        <td><input name="dob" id="dob" size="25" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['DOB'];?>" type="text" /></td>
+        <td><input name="dob" id="dob" size="25" class="form-control text_box date" value="<?php if(isset($result['id'])) echo $result['DOB'];?>" type="text" /></td>
         <td>Contact No</td>
         <td><input name="contact_no" id="contact_no" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['Contact_No'];?>" type="text" /></td>
         </tr>
@@ -288,7 +295,6 @@ function callPincode(area){
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

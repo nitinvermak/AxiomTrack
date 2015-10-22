@@ -6,9 +6,10 @@ $cust_id = mysql_real_escape_string($_POST['cust_id']);
 error_reporting(0);
 if($cust_id != "")
 {
-		$linkSQL = "Select A.invoiceId as invoiceId, B.paymentID as paymentId, A.customerId as customerId, 
-					A.generatedAmount as Amount, A.generateDate as generateDate, A.dueDate as dueDate, 
-					A.discountedAmount as discount
+		$linkSQL = "Select A.invoiceId as invoiceId, B.paymentID as paymentId, 
+					A.customerId as customerId, A.generatedAmount as Amount, 
+					A.generateDate as generateDate, A.dueDate as dueDate, 
+					A.discountedAmount as discount, F.callingdata_id as callingdateId
 					from tbl_invoice_master as A
 					inner Join tblpaymentinvoicemap as B 
 					On A.invoiceId = B.invoiceId
@@ -17,7 +18,10 @@ if($cust_id != "")
 					inner join paymentonlinetransfer as D 
 					On C.id = D.id
 					inner Join paymentmethoddetailsmaster as E 
-					on D.id = E.paymentId where A.invoiceFlag ='Y' and A.customerId = '$cust_id'";
+					on D.id = E.paymentId 
+					inner join tbl_customer_master as F
+					On A.customerId = F.cust_id
+					where A.invoiceFlag ='Y' and A.customerId = '$cust_id'";
 		/*echo $linkSQL;*/
 		$oRS = mysql_query($linkSQL);
 		if(mysql_num_rows($oRS)>0)
@@ -63,15 +67,14 @@ if($cust_id != "")
       	<td><small><?php print $kolor++;?>.</small></td>
 	  	<td><small><?php echo stripslashes($row["invoiceId"]);?><input type="hidden" name="invoiceId" value="<?php echo stripslashes($row["invoiceId"]);?>" /></small></td>
       	<td><small><?php echo stripslashes($row["paymentId"]);?></small></td>
-		<td><small><?php echo stripcslashes($row['customerId']); ?></small></td>
+		<td><small><?php echo getOraganization(stripcslashes($row['callingdateId'])); ?></small></td>
       	<td><small><?php echo stripslashes($row["Amount"]);?> </small></td>
         <td><small><?php echo stripslashes($row["generateDate"]); ?></small></td>
         <td><small><?php echo stripslashes($row["dueDate"]);?></small></td>
         <td><small><?php echo stripcslashes($row["discount"]); ?></small></td>
-        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg-payment"    
-        onclick="getValue( <?php echo "'".$orgName."','".$intervalName."',".stripslashes($row["invoiceId"]).",".
-		stripslashes($row["generatedAmount"]).",".$row["IntervelYear"]; ?> )">
-        View Invoice</button></td>
+        <td><button type="button" class="btn btn-info btn-sm" id="#edit<?php echo stripslashes($row["paymentId"]);?>"  data-toggle="modal" data-target=".bs-example-modal-lg-payment">
+        View Invoice</button>
+        </td>
       	</tr>
         <?php 
            	}

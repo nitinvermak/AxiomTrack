@@ -154,17 +154,24 @@ if(isset($_POST['submit']))
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
+<link rel="stylesheet" href="http:/resources/demos/style.css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/sim_confirmation.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript" src="js/textboxEnabled.js"></script>
+
 <script type="text/javascript">
 // Date 
 /* $(function() {
     $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
   });*/
+   $(function() {
+    $( ".date" ).datepicker();
+  });
 // End Date
 /* Send ajax request*/
 $(document).ready(function(){
@@ -330,9 +337,9 @@ function getValue(name, iName, iId, amount, iYear)
          </tr>
          <tr>
          <td class="col-md-2">Bank Deposit Date</td>
-         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box" disabled></td>
-         <td class="col-md-2"></td>
-         <td class="col-md-4"></td>
+         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box date" disabled></td>
+         <td class="col-md-2">Confirm Date</td>
+         <td class="col-md-4"><input type="text" name="confirmDate" id="confirmDate" class="form-control text_box" disabled="disabled" /></td>
          </tr>
          <tr>
          <th colspan="4">Online Transfer <input type="checkbox" name="onlineTransfer" id="onlineTransfer"></th>
@@ -389,7 +396,6 @@ function getValue(name, iName, iId, amount, iYear)
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -19,16 +19,16 @@ if(mysql_num_rows($stockArr)>0)
 ?>		
                  
     	              <tr>
-	                  <th>S. No.</th>                        
-	                  <th>Provider</th>  
-	                  <th>Sim No.</th>
-	                  <th>Mobile No.</th>  
-	                  <th>Date of Purchase</th>
-                      <th>Status</th>
-	                  <th>Actions                  
+	                  <th><small>S. No.</small></th>                        
+	                  <th><small>Provider</small></small></th>  
+	                  <th><small>Sim No.</small></th>
+	                  <th><small>Mobile No.</small></th>  
+	                  <th><small>Date of Purchase</small></th>
+                      <th><small>Status</small></th>
+	                  <th><small>Actions                  
 	                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                       &nbsp;&nbsp;
-                      <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>     
+                      <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a></small>  
                       </th>   
                   	  </tr>   
 					  <?php
@@ -49,14 +49,14 @@ if(mysql_num_rows($stockArr)>0)
 								$class="bgcolor='#fff'";
   						?>
           		   <tr <?php print $class?>>
-                   <td><?php print $kolor++;?>.</td>
-				   <td><?php echo getsimprovider(stripslashes($row["company_id"]));?></td>	
-                   <td><?php echo stripslashes($row["sim_no"]);?></td>	
-				   <td><?php echo stripslashes($row["mobile_no"]);?></td>                           	
-				   <td><?php echo stripslashes($row["date_of_purchase"]);?></td>
-                   <td><?php echo stripslashes($stock);?></td>			  
+                   <td><small><?php print $kolor++;?>.</small></td>
+				   <td><small><?php echo getsimprovider(stripslashes($row["company_id"]));?></small></td>	
+                   <td><small><?php echo stripslashes($row["sim_no"]);?></small></td>	
+				   <td><small><?php echo stripslashes($row["mobile_no"]);?></small></td>                           	
+				   <td><small><?php echo stripslashes($row["date_of_purchase"]);?></small></td>
+                   <td><small><?php echo stripslashes($stock);?></small></td>			  
                    <td>
-                   <input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
+                   <input type='checkbox' class="chk" name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                    </tr>
  
 	<?php 
@@ -72,7 +72,7 @@ if(mysql_num_rows($stockArr)>0)
                           <table>
                           <tr>
                           <td></td>
-                          <td colspan="3"><input type="submit" name="submit" class="btn btn-primary" onClick="return val();" value="Assign" id="submit" /> </td>
+                          <td colspan="3"><input type="submit" name="submit" id="assignSim" class="btn btn-primary btn-sm"  value="Assign"  /> </td>
                           <td></td>
                           </tr>
                           </table><br /><br />

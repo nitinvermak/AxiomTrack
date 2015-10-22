@@ -69,9 +69,9 @@ if(isset($_POST['delete_selected']))
        <input type="hidden" name="token" value="<?php echo $token; ?>" />
        <input type='hidden' name='pagename' value='users'> 
     	<div class="col-md-4 btn_grid">
-     		<input type='button' name='cancel' class="btn btn-primary" value="Add New" onClick="window.location.replace('add_branch.php?token=<?php echo $token ?>')"/>
+     		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_branch.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary" value="Delete Selected">
+        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">
@@ -137,9 +137,44 @@ if(isset($_POST['delete_selected']))
       <td><small><?php print $kolor++;?>.</small></td>
 	  <td><small><?php echo stripslashes($row["CompanyName"]);?></small></td>
 	  <td><small><?php echo stripslashes($row["Address"]);?></small></td>
-      <td><small><?php echo stripslashes($row["city"]);?></small></td>
-      <td><small><?php echo stripslashes($row["State"]);?></small></td>
-      <td><small><?php echo stripslashes($row["pincode"]);?></small></td>
+      <td><small>
+	  <?php 
+	  	if($row["city"] ==0)
+		{
+			echo "N/A";
+		}
+		else
+		{
+			echo getcities(stripslashes($row["city"]));
+		}
+	  ?>
+      </small></td>
+      <td><small>
+	  <?php 
+	  	if($row["State"] == 0)
+		{
+			echo "N/A";
+		}
+		else
+		{
+	  		echo getstate(stripslashes($row["State"]));
+      	}
+	  ?>
+      </small></td>
+      <td>
+      <small>
+	  <?php if($row["pincode"] == 0) 
+	  		{
+				echo "N/A";
+			}
+			else
+			{
+	 			echo getpincode(stripslashes($row["pincode"]));
+			}
+	  
+	  ?>
+      
+      </small></td>
       <td><small><?php echo stripslashes($row["contact_Person"]);?></small></td>
       <td><small><?php echo stripslashes($row["contact_no"]);?></small></td>
       <td><small><?php echo stripslashes($row["branchtype"]);?></small></td>

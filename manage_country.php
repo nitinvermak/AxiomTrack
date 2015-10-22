@@ -71,9 +71,9 @@ if(isset($_POST['delete_selected']))
        <input type="hidden" name="token" value="<?php echo $token; ?>" />
        <input type='hidden' name='pagename' value='users'> 
     	<div class="col-md-4 btn_grid">
-     		<input type='button' name='cancel' class="btn btn-primary" value="Add New" onClick="window.location.replace('add_country.php?token=<?php echo $token ?>')"/>
+     		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_country.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary" value="Delete Selected">
+        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">
@@ -131,7 +131,15 @@ if(isset($_POST['delete_selected']))
       <tr <?php print $class?>>
       <td><small><?php print $kolor++;?>.</small></td>
 	  <td><small><?php echo stripslashes($row["Country_name"]);?></small></td>
-	  <td> <?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_country.php?id=<?php echo $row["Country_id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_country.php?id=<?php echo $row["Country_id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["Country_id"]; ?>'><?php } ?> </td>
+	  <td>
+      <a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_country.php?id=<?php echo $row["Country_id"]; ?>&type=del&token=<?php echo $token ?>' } " >
+      <img src="images/drop.png" title="Delete" border="0" />
+      </a>
+      <a href="add_country.php?id=<?php echo $row["Country_id"] ?>&token=<?php echo $token ?>">
+      <img src='images/edit.png' title='Edit' border='0' />
+      </a>
+       &nbsp;&nbsp;
+       <input type='checkbox' name='linkID[]' value='<?php echo $row["Country_id"]; ?>'></td>
       </tr>
 <?php }
 		echo $pagerstring;

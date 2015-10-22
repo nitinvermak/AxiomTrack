@@ -69,9 +69,9 @@ if(isset($_POST['delete_selected']))
        <input type="hidden" name="token" value="<?php echo $token; ?>" />
        <input type='hidden' name='pagename' value='users'> 
     	<div class="col-md-4 btn_grid">  	
-     	<input type='button' name='cancel' class="btn btn-primary" value="Add New" onClick="window.location.replace('add_pincode.php?token=<?php echo $token ?>')"/>
+     	<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('add_pincode.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary" value="Delete Selected">
+        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">
@@ -129,7 +129,16 @@ if(isset($_POST['delete_selected']))
       <td><small><?php print $kolor++;?>.</small></td>
 	  <td><small><?php echo getarea(stripslashes($row["Area_id"]));?></small></td>
       <td><small><?php echo stripslashes($row["Pincode"]);?></small></td>
-	  <td><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_pincode.php?id=<?php echo $row["pincode_id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["pincode_id"]!=1){?> <a href="add_pincode.php?id=<?php echo $row["pincode_id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["pincode_id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["pincode_id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["pincode_id"]; ?>'><?php } ?></td>
+	  <td>
+      <a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_pincode.php?id=<?php echo $row["pincode_id"]; ?>&type=del&token=<?php echo $token ?>' } " >
+      <img src="images/drop.png" title="Delete" border="0" />
+      </a>
+      <a href="add_pincode.php?id=<?php echo $row["pincode_id"] ?>&token=<?php echo $token ?>">
+      <img src='images/edit.png' title='Edit' border='0' />
+      </a>
+      &nbsp;&nbsp;
+      <input type='checkbox' name='linkID[]' value='<?php echo $row["pincode_id"]; ?>'>
+      </td>
       </tr>
 <?php }
 		echo $pagerstring;

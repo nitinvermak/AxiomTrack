@@ -64,6 +64,18 @@ if(count($_POST['linkID'])>0)
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/assign_sim_to_branch.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+$(document).on("click","#assignSim", function(){
+ 
+	if($("#branch").val() == '' )
+		{
+		    $("#branch").focus();
+		   	alert("Please Select Branch");
+		    return false;
+		}
+})
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -78,11 +90,11 @@ if(count($_POST['linkID'])>0)
         <hr>
     </div>
     <div class="col-md-12">
-    <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
+    <form name='fullform' class="form-inline"  method='post'>
       <div class="col-md-12">
       	<div class="form-group">
-    		<label for="exampleInputName2">Device Name</label>
-    			<select name="sim_provider" id="sim_provider" onChange="return callCity(this.value);" class="form-control drop_down" >
+    		<label for="exampleInputName2">Provider</label>
+   		  <select name="sim_provider" id="sim_provider" class="form-control drop_down" >
                 <option label="" value="0" selected="selected">All Provider</option>
                 <?php $Country=mysql_query("select * from tblserviceprovider order by serviceprovider");
 						while($resultCountry=mysql_fetch_assoc($Country)){
@@ -102,8 +114,8 @@ if(count($_POST['linkID'])>0)
                <?php } ?>
                </select>
         </div>
-  		<input type="button" name="assign" value="Assign Sim" id="submit" class="btn btn-primary" onClick="showUnassignedStock()" />
-        <input type="button" name="view" id="view" value="View Assigned Sim" class="btn btn-primary" onClick="showAssignedStock()"/>
+  		<input type="button" name="assign" value="Assign Sim" id="submit" class="btn btn-primary btn-sm" onClick="showUnassignedStock()" />
+        <input type="button" name="view" id="view" value="View Assigned Sim" class="btn btn-primary btn-sm" onClick="showAssignedStock()"/>
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
