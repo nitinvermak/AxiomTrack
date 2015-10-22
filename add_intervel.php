@@ -16,17 +16,20 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if(isset($_POST['submit']))
 	{	
-		$intervel = array("January" => 1, "February" => 1, "March" => 1, "April" => 1, "May" => 1, "June" => 1, "July" => 1, "August" => 1, "September" => 1, "October" => 1, "November" => 1, "December" => 1, "Q1" => 2, "Q2" => 2, "Q3" => 2, "Q4" => 2, "H1" => 3, "H2" => 3, "Yearly" => 4);
+		$intervel = array("January" => [1,1], "February" =>[1,2], "March" => [1,3], "April" => [1,4], 
+					"May" => [1,5], "June" => [1,6], "July" => [1,7], "August" => [1,8], "September" => [1,9], 
+					"October" => [1,10], "November" => [1,11], "December" => [1,12], "Q1" => [1,01], "Q2" => [1,02], 
+					"Q3" => [1,02], "Q4" => [1,02], "H1" =>[1,02], "H2" => [1,02], "Yearly" => [1,02]);
 		foreach ($intervel as $period => $frequency)
-		{
+		{  
 			$year = mysql_real_escape_string($_POST['year']);
 			$intervelname = $item;
 			$generated_status = 'N';
 			$check_rows = mysql_query("SELECT * FROM `tblesitmateperiod` WHERE IntervelYear='$year' and Intervalname='$period'");
 			if(mysql_num_rows($check_rows)<=0)
 				{
-					$sql = "INSERT INTO tblesitmateperiod Set IntervelYear='$year', Intervalname='$period', FrequnceyID='$frequency', GeneratedStatus='$generated_status'";
-					/*echo $sql;*/
+					$sql = "INSERT INTO tblesitmateperiod Set IntervelYear='$year', Intervalname='$period',  
+					FrequnceyID='$frequency[0]', intervalMonth = '$frequency[1]', GeneratedStatus='$generated_status'";
 					$result = mysql_query($sql);
 					$msg="Intervel Added Sucessfully";
 				}

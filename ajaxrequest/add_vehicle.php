@@ -54,18 +54,20 @@ if(mysql_num_rows($stockArr)>0)
 	  		<td><small><?php echo stripslashes($row["model_name"]);?> <input type="hidden" name="model_name" id="model_name" value="<?php echo stripslashes($row["model_name"]);?>"></small></td>
 	  		<td>               
                 <select name="device_type" id="device_type" class="device_type" style="width:140px;">
-                    <option value="">Device Type</option>
+                    <option value="X_"   >Device Type</option>
                     <?php $Country=mysql_query("select * from tbl_device_type");
                                    while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
-                    <option value="<?php echo $resultCountry['DeviceTypeId']; ?>" <?php if(isset($row['customer_type']) && $resultCountry['DeviceTypeId']==$row['customer_type']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['DeviceType'])); ?></option>
+                    <option value="<?php echo $resultCountry['DeviceTypeId']; ?>" 
+					<?php if(isset($row['customer_type']) && $resultCountry['DeviceTypeId']==$row['customer_type']){
+					 ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['DeviceType'])); ?></option>
                     <?php } ?>
           	    </select>  
-                
+                <?php ?>
             </td>
             <td>
             	<select name="device_amt" id="device_amt" class="device_amt" style="width:50px;" >
-                    <option value="">Select</option>
+                    <option value="X_">Select</option>
                     <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1");
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
@@ -77,7 +79,7 @@ if(mysql_num_rows($stockArr)>0)
             </td>
         	<td>
             	<select name="device_rent" id="device_rent" class="device_rent" style="width:50px;" >
-                    <option value="">Select</option>
+                    <option value="X_">Select</option>
                     <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 2");						
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
@@ -88,7 +90,7 @@ if(mysql_num_rows($stockArr)>0)
     		</td>
             <td>
                  <select name="rent_frq" id="rent_frq" class="rent_frq"  style="width:100px;" >
-                    <option value="">Payment Type</option>
+                    <option value="X_">Payment Type</option>
                     <?php $Country=mysql_query("select * from tbl_frequency");						
                                    while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
@@ -99,7 +101,7 @@ if(mysql_num_rows($stockArr)>0)
             </td>
             <td>
             	<select name="installation_charges" id="installation_charges" class="installation_charges" style="width:50px;" >
-                   <option value="">Select</option>
+                   <option value="X_">Select</option>
                     <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3");
 					
                           while($resultCountry=mysql_fetch_assoc($Country)){
@@ -112,12 +114,18 @@ if(mysql_num_rows($stockArr)>0)
               <td>
                   <input name="downpayment" id="downpayment" class="downpayment" style="width:50px;" 
                   value="<?php echo stripcslashes(ucfirst($row['downpaymentAmount']));?>"
+                    
+                   <?php if($row['customer_type'] !=4 ) { echo 'disabled="disabled"'; } ?>
                   / >
  
          
                 
         	 </td>
-              <td><input type="text" name="NoOfInstallation" id="NoOfInstallation" class="NoOfInstallation" value="<?php echo stripcslashes(ucfirst($row['no_of_installment']));?>"  style="width:30px;" /></td>
+              <td><input type="text" name="NoOfInstallation" id="NoOfInstallation" class="NoOfInstallation" 
+                   value="<?php echo     stripcslashes(ucfirst($row['no_of_installment']));?>"  style="width:30px;" 
+                   <?php if($row['customer_type'] !=4 ) { echo 'disabled="disabled"'; } ?>
+                   />
+              </td>
           
         <td><input type="button" name="Save" id="Save" value="Save" onclick="getValue(<?php echo stripslashes($row["id"]);?>);"></td>
       	</tr>
@@ -125,6 +133,8 @@ if(mysql_num_rows($stockArr)>0)
         </div>
 	<?php 
 	      }
+		  
+ 
 	}
     else
    		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";

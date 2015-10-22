@@ -40,9 +40,9 @@ if(isset($_POST['close']))
 	{
 		$ticket_status = mysql_real_escape_string($_POST['status']);
 		$remark = mysql_real_escape_string($_POST['des']);
-		$close_date = mysql_real_escape_string($_POST['close_date']);
+		/*$close_date = mysql_real_escape_string($_POST['close_date']);*/
 		
-		$Update_ticket = "UPDATE tblticket SET ticket_status ='$ticket_status', ticket_remark = '$remark', close_date = '$close_date' where ticket_id =".$ticket_id;
+		$Update_ticket = "UPDATE tblticket SET ticket_status ='$ticket_status', ticket_remark = '$remark', close_date = Now() where ticket_id =".$ticket_id;
 		$query = mysql_query($Update_ticket);
 		/*echo $Update_ticket;*/
 		echo "<script> alert('Ticket Closed');</script>";
@@ -67,9 +67,20 @@ if(isset($_POST['close']))
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
- $(function() {
-    $( "#search_date" ).datepicker({dateFormat: 'yy-mm-dd'});
-  });
+$(document).ready(function(){
+	$("#status").change(function(){
+		if($("#status").val() == 1 )
+			{
+				$("#ticketReshudule").hide();
+				$("#ticketClose").show();
+			}
+		if($("#status").val() == 2 )
+			{
+				$("#ticketClose").hide();
+				$("#ticketReshudule").show();
+			}
+	});
+});
 </script>
 </head>
 <body>
@@ -153,10 +164,10 @@ if(isset($_POST['close']))
             </div>
             
             <div class="form-group" id="divclose" style="display: none">
-               <label for="date_time" class="col-sm-2 control-label">Close&nbsp;Date*</label>
+               <!--<label for="date_time" class="col-sm-2 control-label">Close&nbsp;Date*</label>
                 <div class="col-sm-10" >
                   <input name="date_time" id="date_time"  value="<?php if(isset($result['ticket_id'])) echo 			stripslashes($result["close_date"]);?>" class="form-control text_box"  type="text" />
-				</div>
+				</div>-->
             </div>
             
             <div class="form-group" id="divpp" style="display: none">
@@ -168,10 +179,14 @@ if(isset($_POST['close']))
             
              <div class="clearfix"></div>
              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10" style="margin:0px 0px 10px 158px;">
-                  <input type="submit" value="Resudule" name="submit" id="submit" class="btn btn-primary" />
-                  <input type="submit" value="Close Ticket" name="close" id="close" class="btn btn-primary" />
-                  <input type="button" value="Back" id="Back" class="btn btn-primary" onClick="window.location='update_ticket_status.php?token=<?php echo $token ?>'" />
+                <div class="col-sm-offset-2 col-sm-10" style="margin:0px 0px 10px 160px">
+                  <div id="ticketReshudule">
+                  <input type="submit" value="Submit" name="submit" id="reshudule" class="btn btn-primary btn-sm" />
+                  </div>
+                  <div id="ticketClose">
+                  <input type="submit" value="Submit" name="close" id="close" class="btn btn-primary btn-sm" />
+                  </div>
+                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='update_ticket_status.php?token=<?php echo $token ?>'" />
                 </div>  
                  
   			</div> 

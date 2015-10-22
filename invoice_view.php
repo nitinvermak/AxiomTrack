@@ -1,7 +1,6 @@
- <?php
+<?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
@@ -12,137 +11,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if(isset($_POST['submit']))
-    {
-        $returnCode= 0;
-        $invoiceId = mysql_real_escape_string($_POST['hiddenInvoiceID']);
-        /*Cash payment*/
-        $cashAmount = mysql_real_escape_string($_POST['cashAmount']);
-        /*Cheque*/
-        $chequeNo = mysql_real_escape_string($_POST['chequeNo']);
-        $chequeDate = mysql_real_escape_string($_POST['chequeDate']);  
-        $bankname = mysql_real_escape_string($_POST['bank']); 
-        $amountCheque = mysql_real_escape_string($_POST['amountCheque']);
-        $depositDate = mysql_real_escape_string($_POST['depositDate']);
-        /*Online Tranfer*/
-        $onlineTransferAmount = mysql_real_escape_string($_POST['onlineTransferAmount']);
-        $refNo = mysql_real_escape_string($_POST['refNo']);
-        /*Other Details*/
-        $revievingDate = mysql_real_escape_string($_POST['revievingDate']);
-        $remarks = mysql_real_escape_string($_POST['remarks']);
-        $recievedby = mysql_real_escape_string($_POST['recievedby']);
-        $confirmby = mysql_real_escape_string($_POST['confirmby']);
-
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
-            $returnCode = 1;        
-
-        }
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== False){
-            $returnCode = 2;        
-        }
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== True){
-            $returnCode = 3;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== False){
-            $returnCode = 4;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
-            $returnCode = 5;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== False){
-            $returnCode = 6;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== True){
-            $returnCode = 7;        
-        }
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== False){
-            $returnCode = 8;        
-        }
-
-        switch ($returnCode) {
-            case 1:
-                $sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $OnlineTransferId = mysql_insert_id();
-                break;
-            case 2:
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				echo $sql;
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id(); 
-                break;
-            case 3:
-                // Cheque Payment
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id();
-                //Online Payment
-                // do nothing
-                break;
-            case 4:
-                // Cash Payment
-                // do nothing
-                break;
-            case 5:
-                // Cash Payment
-                // do nothing
-
-                // Online Payment
-                $sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $OnlineTransferId = mysql_insert_id();
-            case 6:
-                //Cash Payment
-                // do nothing
-
-                //Cheque Payment
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id();
-                // cash amount
-                // do nothing
-                break;
-            case 7:
-                // cash payment
-                // do nothing
-                //Cheque Payment
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id();
-                 // Online Payment
-                $sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $OnlineTransferId = mysql_insert_id();
-            default:
-                # code...
-                break;
-        }
-        $sql = "Insert into paymentmethoddetailsmaster Set ChequeID = '$ChequeID', CashAmount = '$cashAmount', OnlineTransferId = '$OnlineTransferId', 
-                RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $paymentId = mysql_insert_id();
-
-        $flagStatus ="Update tbl_invoice_master Set paymentStatusFlag = 'B', invoiceFlag = 'Y' 
-                      Where invoiceId = '$invoiceId'";
-		/*echo $flagStatus;*/
-        $resultSql = mysql_query($flagStatus);
-
-        $invoicePaymentMap = "Insert into tblpaymentinvoicemap Set invoiceId = '$invoiceId', 
-                               paymentId = '$paymentId'";
-		/*echo $invoicePaymentMap;*/
-       	$resultMap = mysql_query($invoicePaymentMap);
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -154,29 +22,22 @@ if(isset($_POST['submit']))
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<link rel="stylesheet" href="http:/resources/demos/style.css">
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/sim_confirmation.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/textboxEnabled.js"></script>
-
 <script type="text/javascript">
 // Date 
 /* $(function() {
     $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
   });*/
-   $(function() {
-    $( ".date" ).datepicker();
-  });
 // End Date
 /* Send ajax request*/
 $(document).ready(function(){
 		$("#company").change(function(){
-			$.post("ajaxrequest/show_estimate_view.php?token=<?php echo $token;?>",
+			$.post("ajaxrequest/invoice_view.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#company').val(),
 				},
@@ -256,7 +117,7 @@ function getValue(name, iName, iId, amount, iYear)
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Estimate View</h3>
+    	<h3>Invoice View</h3>
         <hr>
     </div>
     <div class="col-md-12">
@@ -297,7 +158,7 @@ function getValue(name, iName, iId, amount, iYear)
       	<!--Start form -->
          <form name='fullform' class="form-horizontal"  method='post'>
          <input type="hidden" name="hiddenInvoiceID" id="hiddenInvoiceID" value="">
-    	 <div class="table-responsive">         
+         <div class="table-responsive">         
     	 <table class="formStyle" border="0">
          <tr>
          <td colspan="4"><p id="name" style="font-weight:bold; font-family:'Trebuchet MS';"></p></td>
@@ -307,7 +168,7 @@ function getValue(name, iName, iId, amount, iYear)
          </tr>
          <tr>
          <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="cashAmount" id="cashAmount" class="form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="cashAmount" id="cashAmount" class="form-control text_box"></td>
          <td class="col-md-2"></td>
          <td class="col-md-4"></td>
          </tr>
@@ -316,14 +177,14 @@ function getValue(name, iName, iId, amount, iYear)
          </tr>
          <tr>
          <td class="col-md-2">Cheque No.</td>
-         <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box"></td>
          <td class="col-md-2">Cheque Date</td>
-         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box"></td>
          </tr>
          <tr>
          <td class="col-md-2">Bank</td>
          <td class="col-md-4">
-         <select name="bank" id="bank" class="form-control drop_down ddlCountry" disabled>
+         <select name="bank" id="bank" class="form-control drop_down ddlCountry">
             <option value="">Select Plan Category</option>
             <?php $Country=mysql_query("select * from tblBank");
 						   while($resultCountry=mysql_fetch_assoc($Country)){
@@ -333,22 +194,22 @@ function getValue(name, iName, iId, amount, iYear)
         </select>
          </td>
          <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box"></td>
          </tr>
          <tr>
          <td class="col-md-2">Bank Deposit Date</td>
-         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box date" disabled></td>
-         <td class="col-md-2">Confirm Date</td>
-         <td class="col-md-4"><input type="text" name="confirmDate" id="confirmDate" class="form-control text_box" disabled="disabled" /></td>
+         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box"></td>
+         <td class="col-md-2"></td>
+         <td class="col-md-4"></td>
          </tr>
          <tr>
          <th colspan="4">Online Transfer <input type="checkbox" name="onlineTransfer" id="onlineTransfer"></th>
          </tr>
          <tr>
          <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" class="form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" class="form-control text_box"></td>
          <td class="col-md-2">Reference No.</td>
-         <td class="col-md-4"><input type="text" name="refNo" id="refNo" class="form-control text_box" disabled></td>
+         <td class="col-md-4"><input type="text" name="refNo" id="refNo" class="form-control text_box"></td>
          </tr>
          <tr>
          <th colspan="4">Other Details</th>
@@ -396,6 +257,7 @@ function getValue(name, iName, iId, amount, iYear)
 </div>
 <!--end wraper-->
 <!-------Javascript------->
+<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
