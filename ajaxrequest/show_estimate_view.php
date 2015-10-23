@@ -11,8 +11,7 @@ if($cust_id != "")
 					on A.cust_id = B.customerId
 					inner Join tblesitmateperiod as C
 					on B.intervalId = C.intervalId
-					
-					 where B.customerId ='$cust_id'";
+					where B.customerId ='$cust_id'";
 		/*echo $linkSQL;*/
 		$oRS = mysql_query($linkSQL);
 		if(mysql_num_rows($oRS)>0)

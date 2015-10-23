@@ -21,7 +21,8 @@ if(isset($_POST['save']))
 			$sql=mysql_query("select * from tblusercategorymodulemapping  where moduleId =".$checkvalue);
 			if(mysql_num_rows($sql) == 1)
 			{
-				$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory' Where moduleId = '$checkvalue'";
+				$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue', 
+						usercategoryId = '$Usercategory' Where moduleId = '$checkvalue'";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
 				if($result)
@@ -31,7 +32,8 @@ if(isset($_POST['save']))
 			}
 			else
 			{
-				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory', 	created = Now()";
+				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', 
+						usercategoryId = '$Usercategory', created = Now()";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
 				if($result)
@@ -41,25 +43,6 @@ if(isset($_POST['save']))
 			}
 		}
 	}
- /*if(count($_POST['linkID'])>0)
-   {			   
-  		$dsl="";
-		if(isset($_POST['linkID'])&&(isset($_POST['submit'])))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
-	   	  		$branch_id=$_POST['branch'];
-		  		$confirmation_status="1";
-		  		$createdby=$_SESSION['user_id'];
-	            $sql = "update tbl_sim_branch_assign set branch_confirmation_status='$confirmation_status' where 					                          						                branch_id='$branch_id' and sim_id='$chckvalue'";
-				$results = mysql_query($sql);	
-				
-				$_SESSION['sess_msg']="State deleted successfully";
-   			   }
-			 }  
-  		$id="";
-  
-  }*/
 ?>
 <!DOCTYPE html>
 <html lang="en">

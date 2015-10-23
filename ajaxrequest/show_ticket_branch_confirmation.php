@@ -6,14 +6,14 @@ echo $branch;
 error_reporting(0);
 if ($branch == 0)
 	{
-	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
-WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0'";
+		$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
+					WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0'";
 	}
-		else
-			{
-				$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
+else
+	{
+		$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
 WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0' and B.branch_id='$branch'";
-			}
+	}
 	
  
 $stockArr=mysql_query($linkSQL);
@@ -75,7 +75,7 @@ if(mysql_num_rows($stockArr)>0)
 
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
+   	echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
 ?> 
                          
           				<form method="post">

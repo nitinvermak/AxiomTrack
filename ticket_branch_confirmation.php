@@ -23,14 +23,14 @@ if (isset($_SESSION) && $_SESSION['login']=='')
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-		        /*  $device_id=$_POST['linkID'][$dsl];*/
-	   	  		$branch_id=$_POST['branch'];
-		  		$confirmation_status="1";
-		  		$createdby=$_SESSION['user_id'];
-	            $sql = "update tbl_ticket_assign_branch set branch_confirmation_status	='$confirmation_status' 
-						where ticket_id='$chckvalue'";
-				$results = mysql_query($sql);
-   			   }
+      		        /*  $device_id=$_POST['linkID'][$dsl];*/
+      	   	  		$branch_id=$_POST['branch'];
+      		  		  $confirmation_status="1";
+      		  		  $createdby=$_SESSION['user_id'];
+      	          $sql = "update tbl_ticket_assign_branch set branch_confirmation_status	='$confirmation_status' 
+      						where ticket_id='$chckvalue'";
+      				    $results = mysql_query($sql);
+     			    }
 			 }  
   		$id="";
   
@@ -57,10 +57,10 @@ $(document).ready(function(){
 				{
 					branch : $('#branch').val(),
 				},
-					function( data){
-						alert(data);
+					function( data)
+          {
 						$("#divassign").html(data);
-				});	 
+				  });	 
 		});
 });
 </script>

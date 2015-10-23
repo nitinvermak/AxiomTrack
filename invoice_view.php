@@ -37,7 +37,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 /* Send ajax request*/
 $(document).ready(function(){
 		$("#company").change(function(){
-			$.post("ajaxrequest/invoice_view.php?token=<?php echo $token;?>",
+			$.post("ajaxrequest/invoice_details.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#company').val(),
 				},
@@ -48,57 +48,7 @@ $(document).ready(function(){
 		});
 });
 /* End */
-// calculate percentage
- function showData1(inId){
 
-   //alert('#discountAmt'+inId);
-    varA='#discountAmt'+inId;
-    varB='#Percentage'+inId;
-    var1 = $(varA).val();
-    //alert(varB);
-    if ( var1 == 'Percentage'){
-       // alert('aa');
-        $(varB).show();                    
-    }
-    if (var1 == 'Rs'){
-       // alert('bb');
-        $(varB).hide();                    
-    }
-
-}
-function calPercent(inId){
-    v1="#total"+inId;
-    v2='#Percentage'+inId;
-    v3='#rupee'+inId;
-    varA = $(v1).val();
-    varB = $(v2).val();  
-    if (varB > 100 || 0 > varB){
-
-        alert('please provide correct discount');
-        return;    
-    }
-    varC = (varA*varB)/100;
-    $(v3).val(varC);
-
-
-}
- 
-// End
-// send discount data
-function addPercent(invoiceId)
-{       v3='#rupee'+invoiceId;
-        $.post("ajaxrequest/percentage_amt.php?token=<?php echo $token;?>",
-                {
-                    invId: invoiceId,
-                    rupeeAmt : $(v3).val(),
-
-                },
-                function( data){
-                    $('.modal').modal('hide');
-                    location.reload();
-                });  
-}
-//End
 function getValue(name, iName, iId, amount, iYear)
 	{
 
