@@ -11,15 +11,15 @@ if($cust_id != "")
 					A.generateDate as generateDate, A.dueDate as dueDate, 
 					A.discountedAmount as discount, F.callingdata_id as callingdateId
 					from tbl_invoice_master as A
-					inner Join tblpaymentinvoicemap as B 
+					left outer Join tblpaymentinvoicemap as B 
 					On A.invoiceId = B.invoiceId
-					inner join paymentcheque as C 
+					left outer join paymentcheque as C 
 					On B.paymentId = C.id
-					inner join paymentonlinetransfer as D 
+					left outer join paymentonlinetransfer as D 
 					On C.id = D.id
-					inner Join paymentmethoddetailsmaster as E 
+					left outer Join paymentmethoddetailsmaster as E 
 					on D.id = E.paymentId 
-					inner join tbl_customer_master as F
+					left outer join tbl_customer_master as F
 					On A.customerId = F.cust_id
 					where A.invoiceFlag ='Y' and A.customerId = '$cust_id'";
 		/*echo $linkSQL;*/
@@ -66,8 +66,8 @@ if($cust_id != "")
  	  	?>
         <tr <?php print $class?>>
       	<td><small><?php print $kolor++;?>.</small></td>
-	  	<td><small><?php echo stripslashes($row["invoiceId"]);?><input type="hidden" name="invoiceId" value="<?php echo stripslashes($row["invoiceId"]);?>" /></small></td>
-      	<td><small><?php echo stripslashes($row["paymentId"]);?></small></td>
+	  	<td><small><?php echo stripslashes($row["invoiceId"]);?></small></td>
+      	<td><small><?php echo stripslashes($row["paymentId"]);?><input type="hidden" name="paymentId" id="paymentId" value="<?php echo stripslashes($row["paymentId"]);?>" /></small></td>
 		<td><small><?php echo getOraganization(stripcslashes($row['callingdateId'])); ?></small></td>
       	<td><small><?php echo stripslashes($row["Amount"]);?> </small></td>
         <td><small><?php echo stripslashes($row["generateDate"]); ?></small></td>
@@ -259,38 +259,13 @@ if($cust_id != "")
                     </td>
                     </tr>
                     </table>
-                    <div>
-                    <table>
-                    <tr>
-                    <td>Provide Discount</td>
-                    <td>
-                    <select name="discountAmt" id="discountAmt<?php echo $invoiceId; ?>" class="form-control drop_down" onchange=showData1(<?php echo $invoiceId; ?>)>
-                        <option value="0">Select</option>
-                        <option value="Rs">RS</option>
-                        <option value="Percentage">Percentage</option>
-                    </select>
-
-                    </td>
-                    <td>
-                     <input type='text' name='Percentage' id='Percentage<?php echo $invoiceId; ?>' 
-                       class='form-control text_box' style="display: none;"
-                       onkeyup="calPercent(<?php echo $invoiceId; ?>)" placeholder="Percentage">
-                     Rs.<input type='text' name='rupee' id='rupee<?php echo $invoiceId; ?>' class='form-control text_box'>
-                    </td>
-                    <td>
-                    <input type="button" value="Go" class="btn btn-primary btn-sm" id="go" onclick="addPercent(<?php echo $invoiceId; ?>)" 
-                    name="go">
-                    </td>
-                    </tr>
-                    </table>
-    				</div>
                 </div>
             </div>
           </div>
         </div>
         <!-- End  Make Payment modal-->
         </td>
-        <td><button onclick="funcShowa(<?php echo stripslashes($row["paymentId"]);?>)"  type="button" class="btn btn-info btn-sm" id="#edit<?php echo stripslashes($row["paymentId"]);?>"  data-toggle="modal" data-target=".bs-example-modal-lg-payment">
+        <td><button type="button" class="btn btn-info btn-sm viewDetails" data-toggle="modal" data-target=".bs-example-modal-lg-payment" onclick="getPaymentDetails(<?php echo stripslashes($row["paymentId"]);?>)">
         View Invoice</button>
         </td>
       	</tr>

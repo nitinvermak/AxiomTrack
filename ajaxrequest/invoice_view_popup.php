@@ -1,13 +1,17 @@
 <?php 
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
+$paymentId = mysql_real_escape_string($_POST['paymentId']);
+$sql = mysql_query("SELECT * from paymentmethoddetailsmaster as A
+		LEFT OUTER JOIN paymentcheque as B 
+		ON A.PaymentID = B.Id
+		LEFT OUTER JOIN paymentonlinetransfer as C 
+		ON B.Id = C.Id where A.PaymentID = '$paymentId'");
+$row = mysql_fetch_assoc($sql);
 ?>
-<div class="modal fade bs-example-modal-lg-payment" id="showInvoice" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-     <div class="modal-header">
+	 <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Make Payment</h4>
+        <h4 class="modal-title" id="myModalLabel">Make Payment<?php echo $paymentId; ?></h4>
       </div>
       <div class="modal-body">
       	<!--Start form -->
@@ -23,7 +27,7 @@ include("../includes/crosssite.inc.php");
          </tr>
          <tr>
          <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="cashAmount" id="cashAmount" class="form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="cashAmount" id="cashAmount" class="form-control text_box" value="<?php echo $row['CashAmount']; ?>" ></td>
          <td class="col-md-2"></td>
          <td class="col-md-4"></td>
          </tr>
@@ -32,9 +36,9 @@ include("../includes/crosssite.inc.php");
          </tr>
          <tr>
          <td class="col-md-2">Cheque No.</td>
-         <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box" value="<?php echo $row['ChequeNo']; ?>"></td>
          <td class="col-md-2">Cheque Date</td>
-         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box" value="<?php echo $row['ChequeDate']; ?>"></td>
          </tr>
          <tr>
          <td class="col-md-2">Bank</td>
@@ -44,40 +48,40 @@ include("../includes/crosssite.inc.php");
             <?php $Country=mysql_query("select * from tblBank");
 						   while($resultCountry=mysql_fetch_assoc($Country)){
 			?>
-            <option value="<?php echo $resultCountry['bankId']; ?>" <?php if(isset($result['bankId']) && $resultCountry['bankId']==$result['bankId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['bankName'])); ?></option>
+            <option value="<?php echo $resultCountry['bankId']; ?>" <?php if(isset($row['Bank']) && $resultCountry['bankId']==$row['Bank']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['bankName'])); ?></option>
             <?php } ?>
         </select>
          </td>
          <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box" value="<?php echo $row['Amount']; ?>"></td>
          </tr>
          <tr>
          <td class="col-md-2">Bank Deposit Date</td>
-         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" value="<?php echo $row['DepositDate']; ?>" class="form-control text_box" ></td>
          <td class="col-md-2"></td>
          <td class="col-md-4"></td>
          </tr>
          <tr>
-         <th colspan="4">Online Transfer <input type="checkbox" name="onlineTransfer" id="onlineTransfer"></th>
+         <th colspan="4">Online Transfer <input type="checkbox" name="onlineTransfer" id="onlineTransfer" ></th>
          </tr>
          <tr>
          <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" class="form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" value="<?php echo $row['Amount']; ?>" class="form-control text_box"></td>
          <td class="col-md-2">Reference No.</td>
-         <td class="col-md-4"><input type="text" name="refNo" id="refNo" class="form-control text_box"></td>
+         <td class="col-md-4"><input type="text" name="refNo" id="refNo" value="<?php echo $row['RefNo']; ?>" class="form-control text_box"></td>
          </tr>
          <tr>
          <th colspan="4">Other Details</th>
          </tr>
          <tr>
          <td class="col-md-2">Date of Recieving</td>
-         <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="date form-control text_box" ></td>
+         <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" value="<?php echo $row['RecivedDate']; ?>" class="date form-control text_box" ></td>
          <td class="col-md-2">Remarks</td>
-         <td class="col-md-4"><input type="text" name="remarks" id="remarks" class="form-control text_box" ></td>
+         <td class="col-md-4"><input type="text" name="remarks" id="remarks" value="<?php echo $row['Remarks']; ?>" class="form-control text_box" ></td>
          </tr>
          <tr>
          <td class="col-md-2">Payment Revieved by</td>
-         <td class="col-md-4"><input type="text" name="recievedby" id="recievedby" class="form-control text_box" ></td>
+         <td class="col-md-4"><input type="text" name="recievedby" id="recievedby" class="form-control text_box"  value="<?php echo $row['RecievedBy']; ?>"></td>
          <td class="col-md-2">Payment Confirm by</td>
          <td class="col-md-4"><input type="text" name="confirmby" id="confirmby" class="form-control text_box" ></td>
          </tr>
@@ -98,6 +102,4 @@ include("../includes/crosssite.inc.php");
     	 </form>
         <!-- End Form -->
       </div>
-    </div>
-  </div>
-</div>
+   

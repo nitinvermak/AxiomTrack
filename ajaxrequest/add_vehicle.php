@@ -10,9 +10,14 @@ if ($cust_id == '')
 	}
 		else if($cust_id !== '')
 			{
-				$linkSQL = "SELECT A.cust_id,A.customer_type, A.np_device_amt, A.np_device_rent, A.installment_amt, A.r_installation_charge, A.no_of_installment, A.rent_payment_mode, B.vehicle_no, B.id, B.installation_date, B.model_name, B.paymentActiveFlag FROM tbl_customer_master as A
-INNER JOIN tbl_gps_vehicle_master as B 
-ON A.cust_id = B.Customer_id WHERE A.cust_id = '$cust_id' and B.paymentActiveFlag='N'";
+				$linkSQL = "SELECT A.cust_id, A.customer_type, A.np_device_amt, A.np_device_rent, 
+							A.installment_amt, A.r_installation_charge, A.no_of_installment, 
+							A.rent_payment_mode, B.vehicle_no, B.id, B.installation_date, 
+							B.model_name, B.paymentActiveFlag 
+							FROM tbl_customer_master as A
+							INNER JOIN tbl_gps_vehicle_master as B 
+							ON A.cust_id = B.Customer_id 
+							WHERE A.cust_id = '$cust_id' and B.paymentActiveFlag='N'";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);

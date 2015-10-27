@@ -98,16 +98,13 @@ if($cust_id != "")
 		$invoiceId = $row["invoiceId"];
 		/*echo $invoiceId;*/			
  		
-     	$linkSQL1 = "select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, C.amount as amt,
-		                    C.vehicleId  as vId					 
+     	$linkSQL1 = "select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, C.amount as amt,		                    C.vehicleId  as vId					 
 					from  
 					tbl_payment_breakage as C left outer join
 					tbl_gps_vehicle_master as B  
 					On C.vehicleId = B.id					
 					where C.invoiceId= '$invoiceId'
-					order by   C.vehicleId, C.typeOfPaymentId
-					";
-		 
+					order by   C.vehicleId, C.typeOfPaymentId";
 		$oRS1 = mysql_query($linkSQL1); 
 		//echo 'num='.mysql_num_rows($oRS1);
  		?>
@@ -116,10 +113,37 @@ if($cust_id != "")
       <th><small>S. No.</small></th>
       <th><small>Vehile Reg. No.</small></th>
       <th><small>Rent</small></th> 
-      <th><small>Device Amount</small></th>  
-      <th><small>Installation Charges</small></th>  
-      <th><small>Installment Amount</small></th>  
-      <th><small>DownPayment Amount</small></th>     
+      <?php 
+	  if($typeB != 0)
+	  {
+      	echo "<th><small>Device Amount</small></th>  ";
+	  }
+	  else
+	  {
+	  	// do something
+	  }
+	  ?>
+      <th><small>Installation Charges</small></th> 
+      <?php 
+	  if($typeD != NULL) 
+	  {
+      	echo "<th><small>Installment Amount</small></th>";
+	  }
+	  else
+	  {
+	  	// do something
+	  }
+	  ?>
+      <?php 
+	  if($typeE != 0)
+	  {
+      	echo "<th><small>DownPayment Amount</small></th>     ";
+	  }
+	  else
+	  {
+	  	// do something
+	  }
+	  ?>
       <th><small>Total Amount</small></th> 
       </tr>    
       </thead>
@@ -135,8 +159,9 @@ if($cust_id != "")
 			$vehicleTotal =0;
 			$orgTotal=0;
   			while ($row1 = mysql_fetch_array($oRS1))
-  			{   ++$rowCounter;
-  				if ($vehicleId != $row1['vId'] && $initialFlag == -1 ){
+  			{  	
+				 ++$rowCounter;
+  				 if ($vehicleId != $row1['vId'] && $initialFlag == -1 ){
 				 //echo '-----first-----';
 				 $typeA=' ';
 				 $typeB=' ';
@@ -144,7 +169,7 @@ if($cust_id != "")
 				 $typeD=' ';
 				 $typeE=' ';		 
 				 $initialFlag = 0;
-				 $vehicleReg=  stripslashes($row1["vehicleNo"]);
+				 /*$vehicleReg=  stripslashes($row1["vehicleNo"]);*/
 				 $vehicleId = $row1['vId'];
 				}
 				//echo '</br>';
@@ -160,12 +185,33 @@ if($cust_id != "")
 				//echo '$maxRow ='.$maxRow;
 				    echo '<tr>';
 					echo '<td><small>'.$counter.'</small></td>';
-					echo '<td><small>'.$vehicleReg.'</small></td>';
+					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
 					echo '<td><small>'.$typeA.'</small></td>';
-					echo '<td><small>'.$typeB.'</small></td>';
+					if($typeB != 0)
+					{
+						echo '<td><small>'.$typeB.'</small></td>';
+					}
+					else
+					{
+						// do something
+					}
 					echo '<td><small>'.$typeC.'</small></td>';
-					echo '<td><small>'.$typeD.'</small></td>';
-					echo '<td><small>'.$typeE.'</small></td>';
+					if($typeD != 0) 
+	  				{
+						echo '<td><small>'.$typeD.'</small></td>';
+					}
+					else
+					{
+						// do something
+					}
+					if($typeE != 0)
+					{
+						echo '<td><small>'.$typeE.'</small></td>';
+					}
+					else
+					{
+						// do something
+					}
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$vehicleId=   $row1["vId"];
@@ -208,12 +254,33 @@ if($cust_id != "")
 				   // echo 'last record';
 		            echo '<tr>';
 					echo '<td><small>'.$counter.'</small></td>';
-					echo '<td><small>'.$vehicleReg.'</small></td>';
+					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
 					echo '<td><small>'.$typeA.'</small></td>';
-					echo '<td><small>'.$typeB.'</small></td>';
+					if($typeB != 0)
+					{
+						echo '<td><small>'.$typeB.'</small></td>';
+					}
+					else
+					{
+						// do something
+					}
 					echo '<td><small>'.$typeC.'</small></td>';
-					echo '<td><small>'.$typeD.'</small></td>';
-					echo '<td><small>'.$typeE.'</small></td>';
+					if($typeD != 0) 
+	  				{
+						echo '<td><small>'.$typeD.'</small></td>';
+					}
+					else
+					{
+						// do something
+					}
+					if($typeE != 0)
+					{
+						echo '<td><small>'.$typeE.'</small></td>';
+					}
+					else
+					{
+						// do something
+					}
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$orgTotal = $orgTotal + $vehicleTotal;
@@ -226,9 +293,36 @@ if($cust_id != "")
     }
     ?>
     <tr>
-    <td></td>
-    <td></td>
-    <td></td>
+    <?php 
+	if($typeB != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		//do something
+	}
+	?>
+    <?php 
+	if($typeD != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		// do something
+	}
+	?>
+    <?php 
+	if($typeE != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		// do something
+	}
+	?>
     <td></td>
     <td></td>
     <td></td>
@@ -243,9 +337,36 @@ if($cust_id != "")
    
     </tr>
     <tr>
-    <td></td>
-    <td></td>
-    <td></td>
+    <?php 
+	if($typeB != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		//do something
+	}
+	?>
+    <?php 
+	if($typeD != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		// do something
+	}
+	?>
+    <?php 
+	if($typeE != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		// do something
+	}
+	?>
     <td></td>
     <td></td>
     <td></td>
@@ -260,9 +381,36 @@ if($cust_id != "")
     </td>
     </tr>
     <tr>
-    <td></td>
-    <td></td>
-    <td></td>
+   <?php 
+	if($typeB != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		//do something
+	}
+	?>
+    <?php 
+	if($typeD != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		// do something
+	}
+	?>
+    <?php 
+	if($typeE != 0)
+	{
+    	echo "<td></td>";
+	}
+	else
+	{
+		// do something
+	}
+	?>
     <td></td>
     <td></td>
     <td></td>
