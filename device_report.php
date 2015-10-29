@@ -78,6 +78,7 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
         <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" onClick="return SearchRecords();" />
         <input type="button" name="view" id="view" value="Download Report" class="btn btn-primary btn-sm" onClick="window.location.replace('device_report_export.php?token=<?php echo $token;?>')" />
          <input type="button" name="view" id="view" value="Summary" class="btn btn-primary btn-sm" onClick="window.location.replace('device_summary.php?token=<?php echo $token;?>')" />
+         <input type="button" name="advanceFilter" id="advanceFilter" value="Advance Filter" class="btn btn-primary btn-sm" onClick="window.location.replace('device_advance_filter.php?token=<?php echo $token;?>')" />
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
 

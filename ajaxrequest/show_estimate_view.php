@@ -113,37 +113,10 @@ if($cust_id != "")
       <th><small>S. No.</small></th>
       <th><small>Vehile Reg. No.</small></th>
       <th><small>Rent</small></th> 
-      <?php 
-	  if($typeB != 0)
-	  {
-      	echo "<th><small>Device Amount</small></th>  ";
-	  }
-	  else
-	  {
-	  	// do something
-	  }
-	  ?>
+      <th><small>Device Amount</small></th>
       <th><small>Installation Charges</small></th> 
-      <?php 
-	  if($typeD != NULL) 
-	  {
-      	echo "<th><small>Installment Amount</small></th>";
-	  }
-	  else
-	  {
-	  	// do something
-	  }
-	  ?>
-      <?php 
-	  if($typeE != 0)
-	  {
-      	echo "<th><small>DownPayment Amount</small></th>     ";
-	  }
-	  else
-	  {
-	  	// do something
-	  }
-	  ?>
+      <th><small>Installment Amount</small></th>
+	  <th><small>DownPayment Amount</small></th>
       <th><small>Total Amount</small></th> 
       </tr>    
       </thead>
@@ -187,31 +160,10 @@ if($cust_id != "")
 					echo '<td><small>'.$counter.'</small></td>';
 					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
 					echo '<td><small>'.$typeA.'</small></td>';
-					if($typeB != 0)
-					{
-						echo '<td><small>'.$typeB.'</small></td>';
-					}
-					else
-					{
-						// do something
-					}
+					echo '<td><small>'.$typeB.'</small></td>';
 					echo '<td><small>'.$typeC.'</small></td>';
-					if($typeD != 0) 
-	  				{
-						echo '<td><small>'.$typeD.'</small></td>';
-					}
-					else
-					{
-						// do something
-					}
-					if($typeE != 0)
-					{
-						echo '<td><small>'.$typeE.'</small></td>';
-					}
-					else
-					{
-						// do something
-					}
+					echo '<td><small>'.$typeD.'</small></td>';
+					echo '<td><small>'.$typeE.'</small></td>';
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$vehicleId=   $row1["vId"];
@@ -256,31 +208,10 @@ if($cust_id != "")
 					echo '<td><small>'.$counter.'</small></td>';
 					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
 					echo '<td><small>'.$typeA.'</small></td>';
-					if($typeB != 0)
-					{
-						echo '<td><small>'.$typeB.'</small></td>';
-					}
-					else
-					{
-						// do something
-					}
+					echo '<td><small>'.$typeB.'</small></td>';
 					echo '<td><small>'.$typeC.'</small></td>';
-					if($typeD != 0) 
-	  				{
-						echo '<td><small>'.$typeD.'</small></td>';
-					}
-					else
-					{
-						// do something
-					}
-					if($typeE != 0)
-					{
-						echo '<td><small>'.$typeE.'</small></td>';
-					}
-					else
-					{
-						// do something
-					}
+					echo '<td><small>'.$typeD.'</small></td>';
+					echo '<td><small>'.$typeE.'</small></td>';
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$orgTotal = $orgTotal + $vehicleTotal;
@@ -293,37 +224,10 @@ if($cust_id != "")
     }
     ?>
     <tr>
-    <?php 
-	if($typeB != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		//do something
-	}
-	?>
-    <?php 
-	if($typeD != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		// do something
-	}
-	?>
-    <?php 
-	if($typeE != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		// do something
-	}
-	?>
     <td></td>
+	<td></td>
+	<td></td>
+	<td></td>
     <td></td>
     <td></td>
     <td><p class="pull-right"><strong>Total Amount</strong></p></td>
@@ -337,36 +241,9 @@ if($cust_id != "")
    
     </tr>
     <tr>
-    <?php 
-	if($typeB != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		//do something
-	}
-	?>
-    <?php 
-	if($typeD != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		// do something
-	}
-	?>
-    <?php 
-	if($typeE != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		// do something
-	}
-	?>
+    <td></td>
+	<td></td>
+	<td></td>
     <td></td>
     <td></td>
     <td></td>
@@ -380,38 +257,10 @@ if($cust_id != "")
 
     </td>
     </tr>
-    <tr>
-   <?php 
-	if($typeB != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		//do something
-	}
-	?>
-    <?php 
-	if($typeD != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		// do something
-	}
-	?>
-    <?php 
-	if($typeE != 0)
-	{
-    	echo "<td></td>";
-	}
-	else
-	{
-		// do something
-	}
-	?>
     <td></td>
+	<td></td>
+	<td></td>
+	<td></td>
     <td></td>
     <td></td>
     <td><p class="pull-right"><strong>Grand Total</strong></td>

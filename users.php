@@ -28,6 +28,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			$address=htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
 			$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
 			$state=htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
+			$district=htmlspecialchars(mysql_real_escape_string($_REQUEST['district']));
 			$city=htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
 			$area=htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
 			$pincode=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
@@ -40,7 +41,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		{
 			if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 			{
-				$update_record ="Update tbluser set emp_id='$emp_id',First_Name='$first_name',Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), Contact_No='$contact',emailid='$email_id',DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'),Address='$address',country='$country',State='$state',City='$city', Area='$area',Pin_code='$pincode', User_Category='$user_type', branch_id='$branch', User_ID='$user_name', Password='$password',User_Status='A',Created_date=CURDATE(),CreatedBY='$userid' where id=".$_REQUEST['id'];
+				$update_record ="Update tbluser set emp_id='$emp_id',First_Name='$first_name',Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), Contact_No='$contact',emailid='$email_id',DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'),Address='$address',countryId='$country',stateId='$state', districtId='$district', cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', branch_id='$branch', User_ID='$user_name', Password='$password',User_Status='A',Created_date=CURDATE(),CreatedBY='$userid' where id=".$_REQUEST['id'];
 				$sqlquery=mysql_query($update_record);		
 				echo "<script> alert('User Updated Successfully!'); </script>";
 				header("location: manage_users.php?token=".$token);
@@ -51,7 +52,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				//$result=mysql_fetch_assoc($queryArr);
 				if(mysql_num_rows($queryArr)<=0)
 				{
-					$sql="insert into tbluser set emp_id='$emp_id',First_Name='$first_name',Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), Contact_No='$contact',emailid='$email_id',DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'),Address='$address',country='$country',State='$state',City='$city', Area='$area',Pin_code='$pincode', User_Category='$user_type', branch_id='$branch', User_ID='$user_name', Password='$password',User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
+					$sql="insert into tbluser set emp_id='$emp_id',First_Name='$first_name',Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), Contact_No='$contact',emailid='$email_id',DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'),Address='$address',countryId='$country',stateId='$state', districtId='$district', cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', branch_id='$branch', User_ID='$user_name', Password='$password',User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
 					/*echo $sql;*/
 					$query=mysql_query($sql);		
 					echo "<script> alert('User Created Successfully!'); </script>";
@@ -94,43 +95,69 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
     $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
   });
 // End Date
-// JavaScript Document
-function callCity(state_id){ 
-	url="ajaxrequest/getCity.php?state_id="+state_id+"&City=<?php echo $result['City'];?>&token=<?php echo $token;?>";
-	//alert(url);
-	xmlhttpPost(url,state_id,"getresponsecity");
+function CallState()
+	{ 
+		country = document.getElementById("country").value;
+		url="ajaxrequest/getstate.php?country="+country+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,country,"GetState");
 	}
-	function getresponsecity(str){
-	/*alert(str);*/
-	document.getElementById('divcity').innerHTML=str;
-	//document.getElementById('area1').
-	document.getElementById("area1").innerHTML = "";
-	document.getElementById("divpincode").innerHTML = "";
+	function GetState(str)
+	{
+		/*alert(str);*/
+		document.getElementById('Divstate').innerHTML=str;
 	}
-
-function callArea(city){ 
-	url="ajaxrequest/getarea.php?city="+city+"&area=<?php echo $result['Area'];?>&token=<?php echo $token;?>";
-	/*alert(url);*/
-	xmlhttpPost(url,city,"getresponsearea");
+function CallDistrict()
+	{
+		state = document.getElementById("state").value;
+		url="ajaxrequest/get_district.php?state="+state+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,state,"GetDistrict");
+	}	
+	function GetDistrict(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divdistrict').innerHTML=str;
+	}
+function CallCity()
+	{
+		district = document.getElementById("district").value;
+		url="ajaxrequest/get_city.php?district="+district+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,state,"GetCity");
+	}
+	function GetCity(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divcity').innerHTML=str;
 	}
 	
-	function getresponsearea(str){
-	//alert(str);
-	document.getElementById('divarea').innerHTML=str;
-	document.getElementById("divpincode").innerHTML = "";
-
+function CallArea()
+	{
+		city = document.getElementById("city").value;
+		url="ajaxrequest/get_area.php?city="+city+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,city,"GetArea");
 	}
+	function GetArea(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divarea').innerHTML=str;
+	}	
 
-function callPincode(area){ 
-	url="ajaxrequest/getpincode.php?area="+area+"&city="+document.getElementById('city').value+"&pincode=<?php echo $result['Pin_code'];?>&token=<?php echo $token;?>";
-	//alert(url);
-	xmlhttpPost(url,area,"getresponsepincode");
+function CallPincode()
+	{
+		area = document.getElementById("area").value;
+		url="ajaxrequest/get_pincode.php?area="+area+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,city,"GetPincode");
+	}
+	function GetPincode(str)
+	{
+		/*alert(str);*/
+		document.getElementById('divpincode').innerHTML=str;
 	}
 	
-	function getresponsepincode(str){
-	//alert(str);
-	document.getElementById('divpincode').innerHTML=str;
-	}
 	
 	function hidediv(usercat)
 	{
@@ -190,61 +217,62 @@ function callPincode(area){
         </tr>
         <tr>
           <td>Country*</td>
-          <td><select name="country" id="country" class="form-control drop_down">
-            <option value="">Select Country</option>
-            <?php $Country=mysql_query("select * from tblcountry");
-                                                  
-                                                  while($resultCountry=mysql_fetch_assoc($Country)){
-                                                  ?>
-            <option value="<?php echo $resultCountry['Country_name']; ?>" <?php if(isset($Country_name) && $resultCountry['Country_name']==$country){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['Country_name'])); ?> </option>
-            <?php } ?>
-          </select></td>
+          <td><select name="country" id="country" class="form-control drop_down" onChange="return CallState(this.value)">
+                    <option value="">Select Country</option>
+                    <?php $Country=mysql_query("select * from tblcountry");						  
+                          while($resultCountry=mysql_fetch_assoc($Country)){
+                    ?>
+                    <option value="<?php echo $resultCountry['Country_id']; ?>" <?php if(isset($result['countryId']) && $resultCountry['Country_id']==$result['countryId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['Country_name'])); ?>            </option>
+                    <?php } ?>
+                  </select></td>
           <td>State*</td>
-          <td><select name="state" id="state" class="form-control drop_down" onChange="return callCity(this.value)">
-            <option label="" value="" selected="selected">Select State</option>
-            <?php $Country=mysql_query("select * from tblstate order by State_name");
-			 while($resultCountry=mysql_fetch_assoc($Country)){
-									  ?>
-            <option value="<?php echo $resultCountry['State_name']; ?>" <?php if(isset($State_name) && $resultCountry['State_name']==$State){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['State_name'])); ?></option>
-            <?php } ?>
-          </select></td>
+          <td>
+          	 <div id="Divstate">
+                 	<select name="state" id="state" onChange="return CallDistrict(this.value)" class="form-control drop_down">
+                      <option value="">Select State</option>
+                   </select>
+              </div>          </td>
         </tr>
         <tr>
         <td rowspan="3" valign="top">Address</td>
         <td rowspan="3" valign="top"><textarea id="address" name="address" class="txt_area form-control" ><?php if(isset($result['id'])) echo $result['Address'];?></textarea></td>
         <td>District*</td>
-        <td valign="top"><div id="divcity">
-            <select name="city" id="city" onChange="return callArea(this.value)" class="form-control drop_down" >
-              <option label="" value="" selected="selected">Select City</option>
-              <?php $Country=mysql_query("select distinct city_name from tblcity order by city_name");
-									  while($resultCountry=mysql_fetch_assoc($Country)){
-			  ?>
-              <option value="<?php echo $resultCountry['city_name']; ?>" <?php if(isset($city_name) && $resultCountry['city_name']==$City){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['city_name'])); ?></option>
-              <?php } ?>
+        <td valign="top">
+         <div  id="divdistrict">
+         	<select name="district" id="district"  class="form-control drop_down" onChange="return CallCity(this.value)">
+            	<option value="">Select District</option>
             </select>
-          </div>   </td>
+         </div>        </td>
         </tr>
         <tr>
-        <td>Area</td>
-        <td><div id="divarea">
-          <select name="area" id="area" class="form-control drop_down" onChange="return callPincode(this.value)">
-            <option label="" value="" selected="selected">Select Area</option>
-            <?php $Country=mysql_query("select distinct Area from tblcity order by Area");
-							  while($resultCountry=mysql_fetch_assoc($Country)){
-									  ?>
-            <option value="<?php echo $resultCountry['Area']; ?>" <?php if(isset($Area) && $resultCountry['Area']==$Area){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['Area'])); ?></option>
-            <?php } ?>
-          </select>
-        </div></td>
+        <td>City</td>
+        <td>
+        <div id="divcity">
+        	<select name="city" id="city" onChange="return CallArea(this.value)" class="form-control drop_down" >
+            	<option value="">Select City</option>
+            </select>
+        </div>        </td>
         </tr>
         <tr>
-        <td>Pin Code</td>
-        <td valign="top"><div id="divpincode">
-          <input name="pin_code" id="pin_code"  value="<?php if(isset($result['id'])) echo $result['Pin_code'];?>" tabindex="0" class="form-control text_box" type="text" />
-        </div>          </td>
+        <td>&nbsp;</td>
+        <td valign="top">&nbsp;</td>
         </tr>
        
-       <tr>
+        <tr>
+          <td valign="top">Area</td>
+          <td valign="top">
+           <div  id="divarea">
+             <select name="area" id="area" onChange="return CallPincode(this.value)" class="form-control drop_down">
+               <option value="">Select Area</option>
+             </select>
+           </div>          </td>
+          <td>Pin Code</td>
+          <td>
+          <div  id="divpincode">
+              <input name="pin_code" id="pin_code" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['Pin_code']; ?>" type="text" />
+          </div>          </td>
+        </tr>
+        <tr>
        <td valign="top">User Type</td>
        <td valign="top"><select name="user_type" class="form-control drop_down" id="user_type" onChange="hidediv(this.value)">
             <option label="" value="" selected="selected">Select User </option>
@@ -276,7 +304,7 @@ function callPincode(area){
           </tr>
           <tr>
           <td valign="top">&nbsp;</td>
-          <td colspan="2"><input type="reset" id="reset" class="btn btn-primary"  value="Reset"/> <input type="submit" value="Submit" id="submit"  class="btn btn-primary" /> <input type='button' name='cancel' class="btn btn-primary" value="Back" onClick="window.location.replace('manage_users.php?token=<?php echo $token ?>')"/></td>
+          <td colspan="2"><input type="reset" id="reset" class="btn btn-primary btn-sm"  value="Reset"/> <input type="submit" value="Submit" id="submit"  class="btn btn-primary btn-sm" /> <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" onClick="window.location.replace('manage_users.php?token=<?php echo $token ?>')"/></td>
           <td valign="top">&nbsp;</td>
         </tr>
     </table>

@@ -21,8 +21,7 @@ if(isset($_POST['save']))
 			$sql=mysql_query("select * from tblusercategorymodulemapping  where moduleId =".$checkvalue);
 			if(mysql_num_rows($sql) == 1)
 			{
-				$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue', 
-						usercategoryId = '$Usercategory' Where moduleId = '$checkvalue'";
+				$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory' Where moduleId = '$checkvalue'";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
 				if($result)
@@ -32,8 +31,7 @@ if(isset($_POST['save']))
 			}
 			else
 			{
-				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', 
-						usercategoryId = '$Usercategory', created = Now()";
+				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory', 	created = Now()";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
 				if($result)
