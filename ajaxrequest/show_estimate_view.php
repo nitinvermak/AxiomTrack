@@ -108,18 +108,18 @@ if($cust_id != "")
 		$oRS1 = mysql_query($linkSQL1); 
 		//echo 'num='.mysql_num_rows($oRS1);
  		?>
-      <thead>
+     <!-- <thead>
       <tr>
       <th><small>S. No.</small></th>
       <th><small>Vehile Reg. No.</small></th>
-      <th><small>Rent</small></th> 
+      <th><small>Rent</small></th>
       <th><small>Device Amount</small></th>
       <th><small>Installation Charges</small></th> 
       <th><small>Installment Amount</small></th>
 	  <th><small>DownPayment Amount</small></th>
       <th><small>Total Amount</small></th> 
       </tr>    
-      </thead>
+      </thead>-->
   
 	  <?php
 	  $kolor1=1;
@@ -133,6 +133,7 @@ if($cust_id != "")
 			$orgTotal=0;
   			while ($row1 = mysql_fetch_array($oRS1))
   			{  	
+				
 				 ++$rowCounter;
   				 if ($vehicleId != $row1['vId'] && $initialFlag == -1 ){
 				 //echo '-----first-----';
@@ -144,6 +145,39 @@ if($cust_id != "")
 				 $initialFlag = 0;
 				 /*$vehicleReg=  stripslashes($row1["vehicleNo"]);*/
 				 $vehicleId = $row1['vId'];
+				 // show table header
+				 echo '<thead>
+					   <tr>';
+				 echo '<th><small>S. No.</small></th>';
+				 echo '<th><small>Vehile Reg. No.</small></th>';
+				 if($row1['paymentType'] == A && $row1['amt'] >0)
+				 {
+				 	echo '<th><small>Rent</small></th>';
+				 }
+				 if($row1['paymentType'] == B && $row1['amt'] >0)
+				 {
+				 	echo '<th><small>Device Amount</small></th>';
+				 }
+				 if($row1['paymentType'] == C && $row1['amt'] >0)
+				 {
+				 	echo '<th><small>Installation Charges</small></th>';
+				 }	
+				 else
+				 {
+				 	echo '<th><small>Installation Charges</small></th>';
+				 }
+				 if($row1['paymentType'] == D && $row1['amt'] > 0)
+				 {		
+				 	echo '<th><small>Installment Amount</small></th>';
+				 }
+				 if($row1['paymentType'] == E && $row1['amt'] > 0)
+				 {
+				 	echo '<th><small>DownPayment Amount</small></th>';
+				 }
+				 echo '<th><small>Total Amount</small></th> ';
+				 echo '</tr>
+					  </thead>';
+				// end table header
 				}
 				//echo '</br>';
 				//echo $vehicleId;
@@ -152,18 +186,35 @@ if($cust_id != "")
 				//echo '</br>';
 				//echo '$rowCounter='.$rowCounter;
 				
+				
 				if ($vehicleId != $row1['vId'] ){
 				//echo 'asas';
 				//echo '$counter='.$counter;
 				//echo '$maxRow ='.$maxRow;
+					
 				    echo '<tr>';
 					echo '<td><small>'.$counter.'</small></td>';
 					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
-					echo '<td><small>'.$typeA.'</small></td>';
-					echo '<td><small>'.$typeB.'</small></td>';
-					echo '<td><small>'.$typeC.'</small></td>';
-					echo '<td><small>'.$typeD.'</small></td>';
-					echo '<td><small>'.$typeE.'</small></td>';
+					if($typeA > 0)
+					{
+						echo '<td><small>'.$typeA.'</small></td>';
+					}
+					if($typeB > 0)
+					{
+						echo '<td><small>'.$typeB.'</small></td>';
+					}
+					if($typeC > 0)
+					{
+						echo '<td><small>'.$typeC.'</small></td>';
+					}
+					if($typeD > 0)
+					{
+						echo '<td><small>'.$typeD.'</small></td>';
+					}
+					if($typeE > 0)
+					{
+						echo '<td><small>'.$typeE.'</small></td>';
+					}
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$vehicleId=   $row1["vId"];
@@ -207,11 +258,26 @@ if($cust_id != "")
 		            echo '<tr>';
 					echo '<td><small>'.$counter.'</small></td>';
 					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
-					echo '<td><small>'.$typeA.'</small></td>';
-					echo '<td><small>'.$typeB.'</small></td>';
-					echo '<td><small>'.$typeC.'</small></td>';
-					echo '<td><small>'.$typeD.'</small></td>';
-					echo '<td><small>'.$typeE.'</small></td>';
+					if($typeA > 0)
+					{
+						echo '<td><small>'.$typeA.'</small></td>';
+					}
+					if($typeB > 0)
+					{
+						echo '<td><small>'.$typeB.'</small></td>';
+					}
+					if($typeC > 0)
+					{
+						echo '<td><small>'.$typeC.'</small></td>';
+					}
+					if($typeD > 0)
+					{
+						echo '<td><small>'.$typeD.'</small></td>';
+					}
+					if($typeE >0)
+					{
+						echo '<td><small>'.$typeE.'</small></td>';
+					}
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$orgTotal = $orgTotal + $vehicleTotal;
@@ -224,12 +290,29 @@ if($cust_id != "")
     }
     ?>
     <tr>
-    <td></td>
 	<td></td>
-	<td></td>
-	<td></td>
-    <td></td>
-    <td></td>
+    <?php
+	if($typeA > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeB > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeC > 0)
+	{
+    	echo "<td></td>";
+	}
+	if($typeD >0)
+	{
+    echo "<td></td>";
+	}
+	if($typeE >0)
+	{
+    echo "<td></td>";
+	}
+	?>
     <td><p class="pull-right"><strong>Total Amount</strong></p></td>
     <td>
     	<?php 
@@ -242,11 +325,28 @@ if($cust_id != "")
     </tr>
     <tr>
     <td></td>
-	<td></td>
-	<td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+	 <?php
+	if($typeA > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeB > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeC > 0)
+	{
+    	echo "<td></td>";
+	}
+	if($typeD >0)
+	{
+    echo "<td></td>";
+	}
+	if($typeE >0)
+	{
+    echo "<td></td>";
+	}
+	?>
     <td><p class="pull-right"><strong>Discount</strong></td>
     <td>
         	<?php 
@@ -258,11 +358,28 @@ if($cust_id != "")
     </td>
     </tr>
     <td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-    <td></td>
-    <td></td>
+	 <?php
+	if($typeA > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeB > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeC > 0)
+	{
+    	echo "<td></td>";
+	}
+	if($typeD >0)
+	{
+    echo "<td></td>";
+	}
+	if($typeE >0)
+	{
+    echo "<td></td>";
+	}
+	?>
     <td><p class="pull-right"><strong>Grand Total</strong></td>
     <td>
     	<?php 

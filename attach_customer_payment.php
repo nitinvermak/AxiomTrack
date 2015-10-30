@@ -292,7 +292,12 @@ $(document).on("click","#editServiceBranch", function(){
 })
 // --------------------------- End -------------------------------//
 // --------------------- History View ------------------------------//
-$(document).on("click","#Save", function(){
+function getDetails(obj)
+{
+	var vehicleId = obj;
+	var id = "#divHistory"+vehicleId;
+	alert(id);
+	$(id).toggle();
 	$.post("ajaxrequest/show_details.php?token=<?php echo $token;?>",
 				{
 					vehicle_id : $('#vehicle_id').val()
@@ -301,7 +306,7 @@ $(document).on("click","#Save", function(){
 						/*alert(data);*/
 						$("#divHistory").html(data);
 				});	 
-})
+}
 // ------------------------ End ----------------------------------//
 //---------------------- Case Check ---------------------------- //
 $(document).on("change",".device_type", function(){
@@ -410,9 +415,7 @@ $(document).on("change",".device_type", function(){
       </table>
       
       <div id="divShow">
-      </div>
-      <div id="divHistory">
-        	
+      <!-- Show payment history -->
       </div>
   	  </div>
       </form>

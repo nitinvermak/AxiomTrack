@@ -972,6 +972,16 @@ function getDeviceAmt($id)
   else
   return NULL;
 }
+function getFrequency($id)
+{
+  $sql="select FrqDescription from tbl_frequency where FrqId=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['FrqDescription'])
+  return $result['FrqDescription'];
+  else
+  return NULL;
+}
 function getdeviceimei($id)
 {
   $sql="select imei_no from tbl_device_master where id=".$id;
