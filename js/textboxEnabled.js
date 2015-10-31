@@ -98,16 +98,13 @@ $(document).ready(function(){
 		    alert("Please Enter Recieving Date");
 		    return false;
 		}
+		
 		if($("#recievedby").val() == "" ){
 		    $("#recievedby").focus();
 		    alert("Please Enter Payment Revieved");
 		    return false;
 		}
-		else
-		{
-			alert('Please Select Payment Type');
-			 $("#cash").focus();
-		}
+
 	});
 });
 

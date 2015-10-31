@@ -11,7 +11,10 @@ if($cust_id != "")
 					on A.cust_id = B.customerId
 					inner Join tblesitmateperiod as C
 					on B.intervalId = C.intervalId
-					where B.customerId ='$cust_id'";
+					where B.customerId ='$cust_id'
+					and B.paymentStatusFlag = 'A'
+					order by invoiceId
+					";
 		/*echo $linkSQL;*/
 		$oRS = mysql_query($linkSQL);
 		if(mysql_num_rows($oRS)>0)
@@ -150,30 +153,21 @@ if($cust_id != "")
 					   <tr>';
 				 echo '<th><small>S. No.</small></th>';
 				 echo '<th><small>Vehile Reg. No.</small></th>';
-				 if($row1['paymentType'] == A && $row1['amt'] >0)
+				 
+				 
+				 if($row['invoiceType'] == 'A')
 				 {
 				 	echo '<th><small>Rent</small></th>';
+					echo '<th><small>Installation Charges</small></th>';
 				 }
-				 if($row1['paymentType'] == B && $row1['amt'] >0)
+
+ 				 if($row['invoiceType'] == 'B')
 				 {
 				 	echo '<th><small>Device Amount</small></th>';
+					echo '<th><small>Installment Amount</small></th>';
+					echo '<th><small>DownPayment Amount</small></th>';
 				 }
-				 if($row1['paymentType'] == C && $row1['amt'] >0)
-				 {
-				 	echo '<th><small>Installation Charges</small></th>';
-				 }	
-				 else
-				 {
-				 	echo '<th><small>Installation Charges</small></th>';
-				 }
-				 if($row1['paymentType'] == D && $row1['amt'] > 0)
-				 {		
-				 	echo '<th><small>Installment Amount</small></th>';
-				 }
-				 if($row1['paymentType'] == E && $row1['amt'] > 0)
-				 {
-				 	echo '<th><small>DownPayment Amount</small></th>';
-				 }
+ 
 				 echo '<th><small>Total Amount</small></th> ';
 				 echo '</tr>
 					  </thead>';
@@ -195,26 +189,19 @@ if($cust_id != "")
 				    echo '<tr>';
 					echo '<td><small>'.$counter.'</small></td>';
 					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
-					if($typeA > 0)
-					{
+					
+					if($row['invoiceType'] == 'A'){
 						echo '<td><small>'.$typeA.'</small></td>';
+						echo '<td><small>'.$typeC.'</small></td>';								
 					}
-					if($typeB > 0)
-					{
-						echo '<td><small>'.$typeB.'</small></td>';
-					}
-					if($typeC > 0)
-					{
-						echo '<td><small>'.$typeC.'</small></td>';
-					}
-					if($typeD > 0)
-					{
+					
+					if($row['invoiceType'] == 'B'){				 
+ 						echo '<td><small>'.$typeB.'</small></td>';
 						echo '<td><small>'.$typeD.'</small></td>';
-					}
-					if($typeE > 0)
-					{
 						echo '<td><small>'.$typeE.'</small></td>';
-					}
+				    }
+					
+ 
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$vehicleId=   $row1["vId"];
@@ -258,26 +245,17 @@ if($cust_id != "")
 		            echo '<tr>';
 					echo '<td><small>'.$counter.'</small></td>';
 					echo '<td><small>'.$row1["vehicleNo"].'</small></td>';
-					if($typeA > 0)
-					{
+					if($row['invoiceType'] == 'A'){
 						echo '<td><small>'.$typeA.'</small></td>';
+						echo '<td><small>'.$typeC.'</small></td>';								
 					}
-					if($typeB > 0)
-					{
-						echo '<td><small>'.$typeB.'</small></td>';
-					}
-					if($typeC > 0)
-					{
-						echo '<td><small>'.$typeC.'</small></td>';
-					}
-					if($typeD > 0)
-					{
+					
+					if($row['invoiceType'] == 'B'){				   
+ 						echo '<td><small>'.$typeB.'</small></td>';
 						echo '<td><small>'.$typeD.'</small></td>';
-					}
-					if($typeE >0)
-					{
 						echo '<td><small>'.$typeE.'</small></td>';
-					}
+				    }
+					
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
 					$orgTotal = $orgTotal + $vehicleTotal;

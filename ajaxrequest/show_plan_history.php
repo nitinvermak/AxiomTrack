@@ -16,7 +16,10 @@ if ($cust_id == '')
 						    on A.cust_id = B.customer_Id
 						    INNER JOIN tbl_gps_vehicle_payment_master as C 
 						    ON B.id = C.Vehicle_id
-						    WHERE A.cust_id = '$cust_id'";
+						    WHERE A.cust_id = '$cust_id'
+							and C.PlanactiveFlag = 'Y'
+							order by B.vehicle_no
+							";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
@@ -59,7 +62,7 @@ if(mysql_num_rows($stockArr)>0)
 	  		<td><small><?php  if($row['device_amt'] !=0) { echo getDeviceAmt($row['device_amt']); } else { echo 'N/A'; } ?></small></td>
 	  		<td><small><?php if($row['device_rent_amt'] !=0) { echo getDeviceAmt($row['device_rent_amt']); } else { echo 'N/A';} ?></small></td>
             <td><small><?php if($row['RentalFrequencyId'] !=0) { echo getFrequency($row['RentalFrequencyId']); } else { echo 'N/A';} ?></small></td>
-        	<td><small><?php if($row['r_installation_charge'] !=0) { echo getDeviceAmt($row['r_installation_charge']); } else { echo 'N/A'; } ?></small></td>
+        	<td><small><?php if($row['r_installation_charge'] !=0) { echo getDeviceAmt($row['installation_charges']); } else { echo 'N/A'; } ?></small></td>
             <td><small><?php if($row['InstallmentamountID'] !=0){ echo $row['InstallmentamountID'];} else { echo 'N/A';} ?></small></td>
             <td><small><?php if($row['NoOfInstallment'] !=0) { echo stripcslashes(ucfirst($row['NoOfInstallment']));} else { echo 'N/A';}?></small></td>
             <td><small><?php if($row['InstFrequencyID'] !=0) { echo getFrequency($row['InstFrequencyID']); } else { echo 'N/A'; } ?></small></td>
@@ -71,11 +74,12 @@ if(mysql_num_rows($stockArr)>0)
             </small></td>
         	<td><a name="Details" id="Details" onclick="getDetails(<?php echo stripslashes($row["Vehicle_id"]);?>)"><img class="pointer" id="image" src="images/plus.gif" /></a></td>
       		</tr>
-            <tr>
+            <tr id="divHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="display: none;">
             <td colspan="13" style="margin:0; padding:0; border:none;">
-            <div id="divHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="margin:0; padding:0;">
-        		<!-- show payment history details -->
-      		</div>
+            <div id="dataDivHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="margin:0; padding:0;">
+        		 
+      		</div> 
+          
             </td>
             </tr>
         
@@ -84,7 +88,7 @@ if(mysql_num_rows($stockArr)>0)
 	      }
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No Plan & History found!</h3>";
 	?> 
           			
                 

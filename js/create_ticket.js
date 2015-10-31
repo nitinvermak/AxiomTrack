@@ -80,14 +80,38 @@ function getXMLHTTP() {
 		}
 				
 	}
-
-function validate(obj){
-	if(obj.name.value == "")
+// ticket form validate
+function chkcontactform(obj)
+{
+	if(obj.orgranization.value == "")
 	{
-	alert ("Please provide Name");
-	obj.name.focus();
-	return false;
+		alert("Please Select Organization");
+		obj.orgranization.focus();
+		return false;
 	}
-
-
+	if(obj.product.value == "")
+	{
+		alert("Please Select Product");
+		obj.product.focus();
+		return false;
+	}
+	if(obj.request.value == "")
+	{
+		alert("Please Select Request Type");
+		obj.request.focus();
+		return false;
+	}
+	if(obj.des.value == "")
+	{
+		alert("Please Provide Description");
+		obj.des.focus();
+		return false;
+	}
+	if(obj.date_time.value == "____/__/__ __:__")
+	{
+		alert("Please Provide Appointment DateTime ");
+		obj.date_time.focus();
+		return false;
+	}
 }
+// end

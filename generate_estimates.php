@@ -60,7 +60,7 @@ function getValue(a){
      
 	 postData = {'PostData': jsonArr };
 	 console.log(jsonArr);
-	 alert(jsonArr);
+	 alert('Invoice for selected month are getting generated');
  
 	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
 	}	

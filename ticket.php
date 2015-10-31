@@ -181,7 +181,7 @@ $(document).ready(function(){
             <div class="form-group">
                 <label for="Mobile" class="col-sm-2 control-label">Request&nbsp;Type*</label>
                 <div class="col-sm-10" id="statediv">
-                 <select name="request"  onchange="return divshow(this.value)" class="form-control drop_down">
+                 <select name="request" id="request"  onchange="return divshow(this.value)" class="form-control drop_down">
                  <option>Select Request Type</option>                              
                  </select>
                 </div>
@@ -232,8 +232,8 @@ $(document).ready(function(){
              <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10" style="margin:10px 0px 10px 170px;">
                 
-                  <input type="submit" value="Submit" name="submit" id="submit" class="btn btn-primary" />
-                  <input type="button" value="Back" id="Back" class="btn btn-primary" onClick="window.location='view_ticket.php?token=<?php echo $token ?>'" />
+                  <input type="submit" value="Submit" name="submit" id="submit" class="btn btn-primary btn-sm" />
+                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='view_ticket.php?token=<?php echo $token ?>'" />
                 </div>  
                  
   			</div> 

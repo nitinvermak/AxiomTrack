@@ -343,7 +343,7 @@ function fnRandomChar ($var_MaxLength = 8,$advanced=false,$loweruppper=0)
 function run_query($sql)
 {
 	$result=doquery($sql);
-	?>
+	?><title>getDeviceAmt</title>
 	<table border="1">
 		<tr>
 		<?php

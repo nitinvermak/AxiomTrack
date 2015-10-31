@@ -16,7 +16,10 @@ if ($cust_id == '')
 						    on A.cust_id = B.customer_Id
 						    INNER JOIN tbl_gps_vehicle_payment_master as C 
 						    ON B.id = C.Vehicle_id
-						    WHERE A.cust_id = '$cust_id'";
+						    WHERE A.cust_id = '$cust_id'
+							and C.PlanactiveFlag = 'Y'
+							order by B.vehicle_no
+							";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
@@ -55,7 +58,7 @@ if(mysql_num_rows($stockArr)>0)
             </small>
             </td>
 	  		<td>
-            <select name="device_type" id="device_type" style="width:50px;">
+            <select name="device_type" id="device_type" class="device_type" style="width:50px;">
                     <option value="X_">Device Type</option>
                     <?php $Country=mysql_query("select * from tbl_device_type");
                                    while($resultCountry=mysql_fetch_assoc($Country)){
@@ -65,22 +68,22 @@ if(mysql_num_rows($stockArr)>0)
           	    </select>
            </td>
 	  		<td>
-            <select name="device_amt" id="device_amt" >
+            <select name="device_amt" id="device_amt" class="device_amt" >
                     <option value="X_">Select</option>
-                    <?php $Country=mysql_query("select * from tblplan");
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1");
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
-                  	  <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($row['device_amt']) && $resultCountry['id']==$row['device_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                  	  <option value="<?php echo $resultCountry['id']; ?>" <?php if( $resultCountry['id']==$row['device_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
                 <?php } ?>
         	</select>
             <small><input type="hidden" name="model_name" id="model_name" value="<?php echo stripslashes($row["model_name"]);?>"></small></td>
 	  		<td>               
               <select name="device_rent" id="device_rent">
                     <option value="X_">Select</option>
-                    <?php $Country=mysql_query("select * from tblplan where plan_category = 4 and plan_description='Rental'");						
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 2");						
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
-                    <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($row['device_rent_amt']) && $resultCountry['id']==$row['device_rent_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                    <option value="<?php echo $resultCountry['id']; ?>" <?php if($resultCountry['id']==$row['device_rent_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
                     <?php } ?>
     			</select> 
                 
@@ -91,14 +94,14 @@ if(mysql_num_rows($stockArr)>0)
                     <?php $Country=mysql_query("select * from tbl_frequency");						
                                    while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
-                    <option value="<?php echo $resultCountry['FrqId']; ?>" <?php if(isset($row['RentalFrequencyId']) && $resultCountry['FrqId']==$row['RentalFrequencyId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['FrqDescription'])); ?></option>
+                    <option value="<?php echo $resultCountry['FrqId']; ?>" <?php if( $resultCountry['FrqId']==$row['RentalFrequencyId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['FrqDescription'])); ?></option>
                     <?php } ?>
                  </select>
             </td>
         	<td>
             	<select name="installation_charges" id="installation_charges">
                    <option value="X_">Select</option>
-                    <?php $Country=mysql_query("select * from tblplan where plan_category = 4 and plan_description='Installtion_Charges'");
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3");
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
                 <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($row['r_installation_charge']) && $resultCountry['id']==$row['r_installation_charge']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
@@ -137,7 +140,7 @@ if(mysql_num_rows($stockArr)>0)
 	      }
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No Plan found!</h3>";
 	?> 
           			
                 

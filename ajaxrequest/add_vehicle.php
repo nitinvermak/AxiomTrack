@@ -17,7 +17,9 @@ if ($cust_id == '')
 							FROM tbl_customer_master as A
 							INNER JOIN tbl_gps_vehicle_master as B 
 							ON A.cust_id = B.Customer_id 
-							WHERE A.cust_id = '$cust_id' and B.paymentActiveFlag='N'";
+							WHERE A.cust_id = '$cust_id' and B.paymentActiveFlag='N'
+							order by B.vehicle_no
+							";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
@@ -39,6 +41,7 @@ if(mysql_num_rows($stockArr)>0)
              <th><small>Inst. Charges</small></th>
              <th><small>Down Payment Amt</small></th>
              <th><small>No of Installment</small></th>
+             <th><small>Installment Amount</small></th>
              <th><small>Action</small></th>
              </tr>
 	
@@ -127,22 +130,27 @@ if(mysql_num_rows($stockArr)>0)
                 
         	 </td>
               <td><input type="text" name="NoOfInstallation" id="NoOfInstallation" class="NoOfInstallation" 
-                   value="<?php echo     stripcslashes(ucfirst($row['no_of_installment']));?>"  style="width:30px;" 
+                   value="<?php echo stripcslashes(ucfirst($row['no_of_installment']));?>"  style="width:30px;" 
                    <?php if($row['customer_type'] !=4 ) { echo 'disabled="disabled"'; } ?>
                    />
               </td>
+              <td><input type="text" name="installationAmount" id="installationAmount" class="NoOfInstallation" 
+                   value=""  readonly style="width:50px;" 
+                  />
+              </td>
+          
           
         <td><input type="button" name="Save" id="Save" value="Save" onclick="getValue(<?php echo stripslashes($row["id"]);?>);"></td>
       	</tr>
         
-        </div>
+        
 	<?php 
 	      }
 		  
  
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No records found!</h3>";
 	?> 
           			
                 

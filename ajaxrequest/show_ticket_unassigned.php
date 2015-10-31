@@ -1,6 +1,6 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
+include("../includes/crosssite.inc.php"); 
 $date=$_REQUEST['date']; 
 error_reporting(0);
 if ($date == 0)

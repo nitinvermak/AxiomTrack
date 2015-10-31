@@ -16,7 +16,10 @@ if ($vehicle_id == '')
 							INNER JOIN tbl_gps_vehicle_master as B 
 							on A.cust_id = B.customer_Id 
 							INNER JOIN tbl_gps_vehicle_payment_master as C 
-							ON B.id = C.Vehicle_id WHERE C.Vehicle_id = '$vehicle_id' AND C.PlanactiveFlag = 'Y'";
+							ON B.id = C.Vehicle_id WHERE C.Vehicle_id = '$vehicle_id' AND C.PlanactiveFlag = 'N'
+							order by C.PlanStartDate
+							
+							";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
@@ -89,5 +92,5 @@ if(mysql_num_rows($stockArr)>0)
 	      }
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<strong> No records found! </strong> ";
 	?> 

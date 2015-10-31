@@ -82,13 +82,13 @@ function getValue(a){
 				}		     
 		   }
 
-		  /* if ($(this).attr('id') == 'device_rent'){
+		   if ($(this).attr('id') == 'device_rent'){
 				if($(this).val() == 'X_'){
 				  alert('Please Enter Device Rent');
 				  errors=1;
 				  return false;
 				}		     
-		   }*/
+		   }
 		   if ($(this).attr('id') == 'rent_frq'){
 				if($(this).val() == 'X_'){
 				  alert('Please Enter Rent Frequency');
@@ -96,13 +96,13 @@ function getValue(a){
 				  return false;
 				}		     
 		   }
-		   /*if ($(this).attr('id') == 'installation_charges'){
+		   if ($(this).attr('id') == 'installation_charges'){
 				if($(this).val() == 'X_'){
 				  alert('Please Enter Installation Charges');
 				  errors=1;
 				  return false;
 				}		     
-		   }*/
+		   }
 		   
 		   
 		   jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
@@ -296,15 +296,16 @@ function getDetails(obj)
 {
 	var vehicleId = obj;
 	var id = "#divHistory"+vehicleId;
-	alert(id);
+	var divId = '#dataDivHistory'+vehicleId;
+	//alert(id);
 	$(id).toggle();
 	$.post("ajaxrequest/show_details.php?token=<?php echo $token;?>",
 				{
-					vehicle_id : $('#vehicle_id').val()
+					vehicle_id : vehicleId
 				},
 					function( data){
 						/*alert(data);*/
-						$("#divHistory").html(data);
+						$(divId).html(data);
 				});	 
 }
 // ------------------------ End ----------------------------------//
@@ -318,9 +319,9 @@ $(document).on("change",".device_type", function(){
 	//alert(deviceType);
 	if(deviceType == 1)
 	{
-		/*alert(deviceType);*/
+		//alert(deviceType);
 		$(parentId).find('.device_amt').prop("disabled", false);
-		$(parentId).find('.device_rent').prop("disabled", true);
+		$(parentId).find('.device_rent').prop("disabled", false);
 		$(parentId).find('.rent_frq').prop("disabled", false);
 		$(parentId).find('.installation_charges').prop("disabled", false);
 		$(parentId).find('.downpayment').prop("disabled", true);
@@ -328,11 +329,17 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 2)
 	{
-		/*alert(deviceType);*/
-		$(parentId).find(".device_amt option[value='']").attr('selected', true);
-		$(parentId).find('.device_amt').val('0').attr("selected", "selected");
-		$(parentId).find('.device_amt').val("disabled", true);
-		$(parentId).find('.device_amt').prop("disabled", true);
+		//alert(deviceType);
+ 		$(parentId).find('.device_amt').prop("disabled", false);
+		$(parentId).find('.device_amt > option').each(function () {		 
+		   	if ($(this).text() == "0") {
+				
+				$(this).attr("selected", "selected");
+				$(this).prop('selected', true);
+				return;
+			}
+		});			
+  		$(parentId).find('.device_amt').prop("disabled", true);
 		$(parentId).find('.device_rent').prop("disabled", false);
 		$(parentId).find('.rent_frq').prop("disabled", false);
 		$(parentId).find('.installation_charges').prop("disabled", false);
@@ -341,10 +348,18 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 3)
 	{
-		/*alert(deviceType);*/
-		$(parentId).find('.device_amt').prop("disabled", true);
-		$(parentId).find('.device_amt').val('0').attr("selected", "selected");
-		$(parentId).find('.device_amt').val("disabled", true);
+		//alert(deviceType);		
+ 		$(parentId).find('.device_amt').prop("disabled", false);
+		$(parentId).find('.device_amt > option').each(function () {
+		     
+		   	if ($(this).text() == "0") {
+			   
+				$(this).attr("selected", "selected");
+				$(this).prop('selected', true);
+				return;
+			}
+		});			
+  		$(parentId).find('.device_amt').prop("disabled", true);
 		$(parentId).find('.rent_frq').prop("disabled", false);
 		$(parentId).find('.installation_charges').prop("disabled", false);
 		$(parentId).find('.downpayment').prop("disabled", true);
@@ -352,7 +367,7 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 4)
 	{
-		/*alert(deviceType);*/
+		//alert(deviceType);
 		$(parentId).find('.device_amt').prop("disabled", false);
 		$(parentId).find('.device_rent').prop("disabled", false);
 		$(parentId).find('.rent_frq').prop("disabled", false);
@@ -413,11 +428,10 @@ $(document).on("change",".device_type", function(){
         </td>
         </tr>
       </table>
-      
-      <div id="divShow">
+  	  </div>
+       <div id="divShow">
       <!-- Show payment history -->
       </div>
-  	  </div>
       </form>
       </div>
       <div class="col-md-3">

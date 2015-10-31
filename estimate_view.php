@@ -128,8 +128,8 @@ if(isset($_POST['submit']))
                 break;
         }
         $sql = "Insert into paymentmethoddetailsmaster Set ChequeID = '$ChequeID', CashAmount = '$cashAmount', OnlineTransferId = '$OnlineTransferId', 
-                RecivedDate = '$revievingDate', Remarks = '$remarks' , RecievedBy = '$recievedby'";
-				/*echo $sql;*/
+                RecivedDate = STR_TO_DATE('$revievingDate','%m/%d/%Y'), Remarks = '$remarks' , RecievedBy = '$recievedby'";
+				echo $sql;
                 $result = mysql_query($sql);
                 $paymentId = mysql_insert_id();
 
