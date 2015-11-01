@@ -72,8 +72,8 @@ if(mysql_num_rows($stockArr)>0)
             <td><small><?php echo stripslashes($row["PlanendDate"]);?> 
             <input type="hidden" name="plan_end" id="plan_end" value="<?php echo stripslashes($row["PlanendDate"]);?>">
             </small></td>
-        	<td><a name="Details" id="Details" onclick="getDetails(<?php echo stripslashes($row["Vehicle_id"]);?>)"><img class="pointer" id="image" src="images/plus.gif" /></a></td>
-      		</tr>
+        	<td><img class="pointer" id="image" onclick="getDetails(<?php echo stripslashes($row["Vehicle_id"]);?>)" src="images/plus.gif" /></td>
+</tr>
             <tr id="divHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="display: none;">
             <td colspan="13" style="margin:0; padding:0; border:none;">
             <div id="dataDivHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="margin:0; padding:0;">

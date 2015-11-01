@@ -109,7 +109,7 @@ $(document).ready(function(){
           <td>Module Category</td>
           <td><select name="moduleCategory" id="moduleCategory" class="form-control input-sm drop_down">
                 <option label="" value="">Select Module Category</option>
-                        <?php $Country=mysql_query("SELECT * FROM tblmoduleCategory ORDER BY moduleCategory ASC ");
+                        <?php $Country=mysql_query("SELECT * FROM tblmodulecategory ORDER BY moduleCategory ASC ");
                                        while($resultCountry=mysql_fetch_assoc($Country)){
                         ?>
                         <option value="<?php echo $resultCountry['moduleCatId']; ?>" <?php if(isset($result['moduleCatId']) && $resultCountry['moduleCatId']==$result['moduleCatId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['moduleCategory'])); ?></option>

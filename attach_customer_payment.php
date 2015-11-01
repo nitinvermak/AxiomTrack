@@ -16,7 +16,6 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 		header("location: home.php?token=".$token);
 }
 $error =0;
-/*echo "ok11";*/
 if(isset($_REQUEST['cust_id']) && $_REQUEST['cust_id']){
 $queryArr=mysql_query("SELECT A.cust_id, A.calling_product, B.Company_Name, B.created FROM tbl_customer_master as A 
 					   INNER JOIN  tblcallingdata as B 
@@ -54,8 +53,9 @@ function getValue1()
 	alert(vehicle_id);
 }
 function getValue(a){
-    /*alert(a);
-	alert('as');*/
+    /*alert(a);*/
+	alert('as');
+	$('.loader').show();
 	elements= '#'+a+'   input';
 	elementsb= '#'+a+'   select'; 
 	jsonArr= [];
@@ -114,6 +114,8 @@ function getValue(a){
 	 url="ajaxrequest/add_vehicle_Plan_Info.php?token=<?php echo $token;?>";	
 	 /*url="ajaxrequest/test.php?token=<?php echo $token;?>";  */               
 		/*alert(url);*/
+	 $(".loader").removeAttr("disabled");
+     $('.loader').fadeOut(1000);
 	 postData = {'PostData': jsonArr };
 	 //postData = {'PostData': 1234 };
 	 //alert(postData.PostData);
@@ -297,6 +299,12 @@ function getDetails(obj)
 	var vehicleId = obj;
 	var id = "#divHistory"+vehicleId;
 	var divId = '#dataDivHistory'+vehicleId;
+	if($('#image').attr('src') === 'images/plus.gif'){ /* check source */
+            $('#image').attr('src','images/minus.gif'); /* change source */
+        }
+        else{
+            $('#image').attr('src','images/plus.gif'); /* change source */
+        }
 	//alert(id);
 	$(id).toggle();
 	$.post("ajaxrequest/show_details.php?token=<?php echo $token;?>",
@@ -446,6 +454,11 @@ $(document).on("change",".device_type", function(){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

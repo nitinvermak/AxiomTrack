@@ -92,5 +92,5 @@ if(mysql_num_rows($stockArr)>0)
 	      }
 	}
     else
-   		 echo "<strong> No records found! </strong> ";
+   		 echo "<center><span style='color:red; padding:3px 0px 3px 0px; font-weight:bold'> No records found ! </span></center>";
 	?> 

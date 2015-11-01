@@ -220,10 +220,10 @@ function deleteCok(){
       </tr>
       <tr>
       <td></td>
-      <td><input type='submit' name='submit' class="btn btn-primary" value="Submit" onClick="check();"/>
-        <input type='reset' name='reset' class="open btn btn-primary" value="Reset"  onClick="deleteCok();"/>        
-        <input type='button' name='cancel' class="btn btn-primary" value="Back" 
-		  onclick="window.open('manage_model.php?token=<?php echo $token ?>');deleteCok();"/></td>
+      <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Submit" onClick="check();"/>
+        <input type='reset' name='reset' class="open btn btn-primary btn-sm" value="Reset"  onClick="deleteCok();"/>        
+        <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
+		  onclick="window.location='manage_model.php?token=<?php echo $token ?>'; deleteCok();"/></td>
       </tr>
       </table>
   	    </div>

@@ -66,7 +66,7 @@ function ShowbyCategory()
     <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
       <div class="col-md-12">
       	<div class="form-group">
-    		<label for="exampleInputName2">Calling&nbsp;Category*</label>
+    		<label for="exampleInputName2">Calling&nbsp;Category <span class="red">*</span></label>
     			<select name="callingcat" id="callingcat" onChange="return ShowbyCategory();" class="form-control drop_down">
                 <option label="" value="" selected="selected">Select Category</option>
                 <?php $Country=mysql_query("select DISTINCT callingcategory_id  from tblassign where status_id ='2'");
@@ -77,7 +77,7 @@ function ShowbyCategory()
                 </select>
   		</div>
         <div class="form-group">
-            <label for="exampleInputEmail2">Executive*</label>
+            <label for="exampleInputEmail2">Executive <span class="red">*</span></label>
             		<select name="telecaller" id="telecaller" onChange="return ShowbyTelecaller();" class="form-control drop_down">
                     <option label="" value="" selected="selected">Select Executive</option>
                     <?php $Country=mysql_query("select * from tbluser ORDER BY First_Name,Last_Name ASC");

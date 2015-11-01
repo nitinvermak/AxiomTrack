@@ -262,29 +262,29 @@ function CallPincode()
          <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
          <table class="table">
          <tr>
-         <td>First Name*</td>
+         <td>First Name <span class="red">*</span></td>
          <td><input name="first_name" id="first_name" value="<?php if(isset($result['id'])) echo $result['First_Name']; ?>" class="form-control text_box" type="text" /></td>
-         <td>Last Name*</td>
+         <td>Last Name <span class="red">*</span></td>
          <td><input name="last_name" id="last_name" value="<?php if(isset($result['id'])) echo $result['Last_Name']; ?>" class="form-control text_box" type="text" />            </td>
         </tr>
         <tr>
-        <td>Company Name*</td>
+        <td>Company Name <span class="red">*</span></td>
         <td colspan="4"><input name="company" id="company" value="<?php if(isset($result['id'])) {echo $result['Company_Name'];$_SESSION['organization'] = $result['id'];} ?>"  class="form-control text_box" type="text" />          </td>
         </tr>
         <tr>
-        <td>Phone*</td>
+        <td>Phone <span class="red">*</span></td>
         <td><input name="phone" id="phone" value="<?php if(isset($result['id'])) echo $result['Phone']; ?>" class="form-control text_box" type="text" /></td>
-        <td>Mobile* </td>
+        <td>Mobile <span class="red">*</span> </td>
         <td><input name="mobile" id="mobile" value="<?php if(isset($result['id'])) echo $result['Mobile']; ?>" class="form-control text_box" type="text" />          </td>
         </tr>
         <tr>
-        <td>Email*</td>
+        <td>Email <span class="red">*</span></td>
         <td><input name="email" id="email" value="<?php if(isset($result['id'])) echo $result['email']; ?>" class="form-control text_box" type="text" />          </td>
         <td>Other Contact Details</td>
         <td><input name="area2" id="area2" value="" class="form-control text_box" type="text" />        </td>
         </tr>
         <tr>
-        <td>Country</td>
+        <td>Country <span class="red">*</span></td>
         <td><select name="country" id="country" class="form-control drop_down" onChange="return CallState(this.value)">
             	<option value="">Select Country</option>
 				<?php $Country=mysql_query("select * from tblcountry");
@@ -293,7 +293,7 @@ function CallPincode()
                 <option value="<?php echo $resultCountry['Country_id']; ?>" <?php if(isset($result['Country']) && $resultCountry['Country_id']==$result['Country']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['Country_name'])); ?></option>
                 <?php } ?>
           	</select>        </td>
-        <td valign="top">State*</td>
+        <td valign="top">State <span class="red">*</span></td>
         <td valign="top">
         	<div id="Divstate">
             	<select name="state" id="state" onChange="return CallDistrict(this.value)" class="form-control drop_down">
@@ -303,14 +303,14 @@ function CallPincode()
             </div>        </td>
         </tr>
         <tr>
-        <td>District*</td>
+        <td>District <span class="red">*</span></td>
         <td valign="top"><div id="divdistrict">
           <select name="district" id="district"  class="form-control drop_down" onChange="return CallCity(this.value)">
             <option value="">Select District</option>
             <option value="<?php echo $result['District_id']; ?>" <?php if(isset($result['id']) && $result['District_id']==$result['District_id']){ ?>selected<?php } ?>><?php echo getdistrict(stripslashes(ucfirst($result['District_id']))); ?></option>
           </select>
         </div></td>
-        <td>City*</td>
+        <td>City <span class="red">*</span></td>
         <td><div id="divcity">
           <select name="city" id="city" onChange="return CallArea(this.value)" class="form-control drop_down" >
             <option value="">Select City</option>
@@ -319,20 +319,20 @@ function CallPincode()
         </div></td>
         </tr>
         <tr>
-          <td>Area*</td>
+          <td>Area <span class="red">*</span></td>
         <td><div id="divarea">
           <select name="area" id="area" onChange="return CallPincode(this.value)" class="form-control drop_down">
             <option value="">Select Area</option>
            	 <option value="<?php echo $result['Area']; ?>" <?php if(isset($result['id']) && $result['Area']==$result['Area']){ ?>selected<?php } ?>><?php echo getarea(stripslashes(ucfirst($result['Area']))); ?></option>
           </select>
         </div></td>
-          <td>Pin Code</td>
+          <td>Pin Code <span class="red">*</span></td>
           <td><div id="divpincode">
             <input name="pin_code" id="pin_code" class="form-control text_box"  value="<?php if(isset($result['id'])) echo getpincode($result['Pin_code']); ?>" type="text" />
           </div></td>
         </tr>
         <tr>
-        <td>Address*</td>
+        <td>Address <span class="red">*</span></td>
         <td rowspan="2" valign="top"><textarea id="Address" class="form-control txt_area" name="Address" rows="2" style="width:200px" ><?php if(isset($result['id'])) echo $result['Address']; ?></textarea></td>
         <td>&nbsp;</td>
         <td></td>
@@ -342,7 +342,7 @@ function CallPincode()
         <td valign="top">&nbsp;</td>
         </tr>
         <tr>
-        <td>Telecaller Name*</td>
+        <td>Telecaller Name <span class="red">*</span></td>
         <td  valign="top" width="37%">
             <select name="telecaller" id="telecaller" class="form-control text_box" >
             <?php $Country=mysql_query("SELECT * FROM tblcallingdata as A, tblassign as B 
@@ -352,11 +352,11 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
             <option value="<?php echo $resultCountry['telecaller_id']; ?>" <?php if(isset($datasource) && $resultCountry['telecaller_id']==$datasource){ ?>selected<?php } ?>><?php echo gettelecallername(stripslashes(ucfirst($resultCountry['telecaller_id']))); ?></option>
               <?php } ?>
             </select>        </td>
-        <td>Data Source*</td>
+        <td>Data Source <span class="red">*</span></td>
         <td><input type="text" name="datasource" id="datasource" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['data_source']; ?>" />        </td>
         </tr>
         <tr>
-        <td>Calling Product* </td>
+        <td>Calling Product <span class="red">*</span> </td>
         <td  valign="top"><select name="calling_products" id="calling_products" class="form-control drop_down">
               <?php $Country=mysql_query("select distinct(callingcategory_id) from tblassign where callingdata_id='$id'");
 			  		$_SESSION['product'] = $_GET['cat'];
@@ -366,11 +366,11 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
 			  <?php if($resultCountry['callingcategory_id']== $_GET['cat'] ){ ?>selected<?php } ?>> <?php echo getproducts(stripslashes(ucfirst($resultCountry['callingcategory_id']))); ?></option>
               <?php } ?>
             </select>        </td>
-        <td>Calling Date*</td>
+        <td>Calling Date <span class="red">*</span></td>
         <td><input name="callingdate" id="callingdate" class="form-control text_box" type="text" value="<?php if(isset($result['id'])) echo $result['calling_date']; ?>" /></td>
         </tr>
         <tr>
-        <td>Model*</td>
+        <td>Model <span class="red">*</span></td>
         <td><select name="model" id="model" class="form-control drop_down">
             <option value="">Select</option>
             <?php $Country=mysql_query("select * from tbldevicemodel");
@@ -383,7 +383,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
         <td>&nbsp;</td>
         </tr>
         <tr>
-        <td valign="top">Calling Status*</td>
+        <td valign="top">Calling Status <span class="red">*</span></td>
         <td valign="top"><input type="radio" name="rdopt" id="interested" checked="checked" value="1" onClick="IfInterested()" />
             <strong> Interested</strong></label></td>
           <td><label>
@@ -395,7 +395,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
     <div id="ifinterested">
     <table class="table">
     <tr>
-    <td class="col-sm-2"><strong>Customer Type</strong></td>
+    <td class="col-sm-2"><strong>Customer Type <span class="red">*</span></strong></td>
     <td valign="top"><select name="customer_type" id="customer_type" class="form-control drop_down" onChange="customerType()">
       <option value="">Select</option>
       <?php $Country=mysql_query("select * from tbl_customer_type");
@@ -408,7 +408,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
     <td>&nbsp;</td>
     </tr>
     <tr>
-    <td>Device Amt</td>
+    <td>Device Amt <span class="red">*</span></td>
     <td valign="top"><select name="p_device_amt" id="p_device_amt" class="form-control drop_down">
       <option value="">Select</option>
       <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1");
@@ -417,7 +417,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
       <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['np_device_amt']) && $resultCountry['id']==$result['np_device_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
       <?php } ?>
     </select></td>
-    <td>Rental*</td>
+    <td>Rental <span class="red">*</span></td>
     <td><select name="p_device_rent" id="p_device_rent" class="form-control drop_down">
       <option value="">Select</option>
       <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and plan_description='Rental'");						
@@ -428,7 +428,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
     </select></td>
     </tr>
     <tr>
-    <td>Installation Charges</td>
+    <td>Installation Charges <span class="red">*</span></td>
     <td valign="top"><select name="installation_charges" id="installation_charges" class="form-control drop_down">
       <option value="">Select</option>
       <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and plan_description='Installtion_Charges'");
@@ -437,7 +437,7 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
       <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['r_installation_charge']) && $resultCountry['id']==$result['r_installation_charge']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
       <?php } ?>
     </select></td>
-    <td>Rent Payment Type*</td>
+    <td>Rent Payment Type <span class="red">*</span></td>
     <td><select name="payment_type" id="payment_type" class="form-control drop_down">
             <option value="">Payment Type</option>
       		<?php $Country=mysql_query("select * from tbl_frequency");						
@@ -448,9 +448,9 @@ WHERE A.id = B.callingdata_id and B.callingdata_id ='$id'");
         </select></td>
     </tr>    
     <tr>
-    <td><strong>Installment Amt.</strong></td>
+    <td><strong>Installment Amt. <span class="red">*</span></strong></td>
     <td valign="top"><input type="text" name="downpayment" value="<?php if(isset($result['id'])) echo $result['downpaymentAmount']; ?>" id="downpayment" class="form-control text_box"></td>
-    <td>No of Vehicles*</td>
+    <td>No of Vehicles <span class="red">*</span></td>
     <td><input type="text" name="no_of_vehicles"  class="form-control text_box" id="no_of_vehicles" value="<?php if(isset($result['id'])) echo $result['no_of_vehicles']; ?>" /></td>
     </tr>
        

@@ -65,7 +65,7 @@ function getPaymentDetails(a)
 			paymentId : a
 		},
 		function( data){
-			$(".modal-content").html(data);
+			$(".modal-content-payment").html(data);
 		});	 
 	}
 //End
@@ -112,7 +112,7 @@ function getPaymentDetails(a)
 <!-- Payment Modal Start -->
 <div class="modal fade bs-example-modal-lg-payment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content-payment">
     <!-- Show modal body -->
     </div>
   </div>

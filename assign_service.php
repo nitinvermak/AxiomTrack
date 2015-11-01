@@ -29,7 +29,8 @@ if(isset($_POST['save']))
 		$change_status = mysql_query($update);
 		if($query)
 		{
-		echo "<script> alert('Branch Assign Successfully');</script>";
+			$_SESSION['sess_msg']='Branch assign successfully';
+			header("location:assign_service_branch.php?token=".$token);
 		}
 	}
 
