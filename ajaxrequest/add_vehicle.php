@@ -74,7 +74,7 @@ if(mysql_num_rows($stockArr)>0)
                 <?php ?>
             </td>
             <td>
-            	<select name="device_amt" id="device_amt" class="device_amt" style="width:50px;" >
+            	<select name="device_amt" id="device_amt<?php echo stripslashes($row["id"]);?>" class="device_amt"  style="width:50px;" >
                     <option value="X_">Select</option>
                     <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1");
                           while($resultCountry=mysql_fetch_assoc($Country)){
@@ -129,12 +129,12 @@ if(mysql_num_rows($stockArr)>0)
          
                 
         	 </td>
-              <td><input type="text" name="NoOfInstallation" id="NoOfInstallation" class="NoOfInstallation" 
+              <td><input type="text" name="NoOfInstallation" id="NoOfInstallation<?php echo stripslashes($row["id"]);?>" class="NoOfInstallation" onchange="calTotal(<?php echo stripslashes($row["id"]);?>);"
                    value="<?php echo stripcslashes(ucfirst($row['no_of_installment']));?>"  style="width:30px;" 
                    <?php if($row['customer_type'] !=4 ) { echo 'disabled="disabled"'; } ?>
                    />
               </td>
-              <td><input type="text" name="installationAmount" id="installationAmount" class="NoOfInstallation" 
+              <td><input type="text" name="installationAmount" id="installationAmount<?php echo stripslashes($row["id"]);?>" class="NoOfInstallation" 
                    value=""  readonly style="width:50px;" 
                   />
               </td>

@@ -53,9 +53,9 @@ function getValue1()
 	alert(vehicle_id);
 }
 function getValue(a){
-    /*alert(a);*/
-	alert('as');
-	$('.loader').show();
+    /*alert(a);
+	alert('as');*/
+	
 	elements= '#'+a+'   input';
 	elementsb= '#'+a+'   select'; 
 	jsonArr= [];
@@ -114,8 +114,7 @@ function getValue(a){
 	 url="ajaxrequest/add_vehicle_Plan_Info.php?token=<?php echo $token;?>";	
 	 /*url="ajaxrequest/test.php?token=<?php echo $token;?>";  */               
 		/*alert(url);*/
-	 $(".loader").removeAttr("disabled");
-     $('.loader').fadeOut(1000);
+	 
 	 postData = {'PostData': jsonArr };
 	 //postData = {'PostData': 1234 };
 	 //alert(postData.PostData);
@@ -124,7 +123,7 @@ function getValue(a){
 
 function getValueHistoryPage(b){
     //alert(b);
-	alert('as');
+	/*alert('as');*/
 	 
 	elements= '#'+b+'   input';
 	elementsb= '#'+b+'   select'; 
@@ -233,6 +232,7 @@ $(document).on("click","#update", function(){
 // --------------------------- End --------------------------------------------------//
 // ---------------- Add Payments Details --------------------------------------- //
 $(document).on("click","#add_vehicle", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/add_vehicle.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -240,13 +240,15 @@ $(document).on("click","#add_vehicle", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
-						
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 						
 				});	 
 })
 // --------------------------- End  -------------------------------------------//
 // --------------------------- Show Edit ------------------------------///
 $(document).on("click","#showEdit", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/edit_payment_details.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -254,11 +256,14 @@ $(document).on("click","#showEdit", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // ------------------------- End ---------------------//
 // ---------------------------- Show History ------------------------//
 $(document).on("click","#showHistory", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/show_plan_history.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -266,23 +271,29 @@ $(document).on("click","#showHistory", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // ------------------------------ End -----------------------------//
 // -------------------------- Add Service Branch ---------------------------//
 $(document).on("click","#manageServiceBranch", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/assign_service.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
 				},
 					function( data){
 						/*alert(data);*/
-						$("#divShow").html(data);
+						$("#divShow").html(data);				
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // ----------------------------- End -------------------------------------//
 // --------------------------- Edit Service Branch -----------------------//
 $(document).on("click","#editServiceBranch", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/edit_service_branch.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -290,6 +301,8 @@ $(document).on("click","#editServiceBranch", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // --------------------------- End -------------------------------//
@@ -385,7 +398,15 @@ $(document).on("change",".device_type", function(){
 	}	
 });
 // -------------------------- End ------------------------- //
-
+// calculate installment amt
+function calTotal(obj)
+{
+	var deviceAmt = document.getElementById('device_amt'+obj); 
+	var selectedText = deviceAmt.options[deviceAmt.selectedIndex].text;
+	var NoOfInstallation = document.getElementById('NoOfInstallation'+obj).value; 
+   	document.getElementById('installationAmount'+obj).value = selectedText / NoOfInstallation;
+}
+//end
 </script>
 </head>
 <body>

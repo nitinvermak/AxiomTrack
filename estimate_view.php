@@ -240,9 +240,10 @@ function addPercent(invoiceId)
 //End
 function getValue(name, iName, iId, amount, iYear)
 	{
-
 		/*alert(name+iName+iId+amount+iYear);*/
-		document.getElementById("name").innerHTML = "Company Name: "+name+ ", Interval Name: "+iName+ " "+iYear+ ", Payable Amount: "+amount;
+		document.getElementById("name").innerHTML = name;
+		document.getElementById("intervelName").innerHTML = iName+" "+iYear;
+		document.getElementById("payableamt").innerHTML = amount;
 	    $('#hiddenInvoiceID').val(iId);
     }
 </script>
@@ -300,7 +301,18 @@ function getValue(name, iName, iId, amount, iYear)
     	 <div class="table-responsive">         
     	 <table class="formStyle" border="0">
          <tr>
-         <td colspan="4"><p id="name" style="font-weight:bold; font-family:'Trebuchet MS';"></p></td>
+         <td colspan="4">
+         <table class="table table-bordered">
+         <tr>
+         <td><strong>Company Name:</strong></td>
+         <td><strong><span style="color:#FF0000;" id="name"></span></strong></td>
+         <td><strong>Interval Name:</strong></td>
+         <td><strong><span style="color:#FF0000;" id="intervelName"></span></strong></td>
+         <td><strong>Payable Amount:</strong></td>
+         <td><strong><span style="color:#FF0000;" id="payableamt"></span></strong></td>
+         </tr>
+         </table>
+         </td>
          </tr>
          <tr>
          <th colspan="4">Cash <input type="checkbox" name="cash" id="cash"></th>

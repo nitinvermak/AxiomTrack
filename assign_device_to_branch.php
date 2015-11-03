@@ -51,25 +51,25 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
       		        /*  $device_id=$_POST['linkID'][$dsl];*/
       	   	  		$branch_id=$_POST['branch'];
-      		  		  $status_id="1";
-      				    /*$device_model = $_POST['devic_model_id'];*/
-      		  		  $createdby=$_SESSION['user_id']; 
-      	          $check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'") 
-                  or die(mysql_error());
-						      if(!$row = mysql_fetch_array($check_deviceId) or die(mysql_error()))
-						        {
-        							 $sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
-        							 //echo $sql;
-        							 $results = mysql_query($sql); 	
-        							 $assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', 
-                       branch_id='$branch_id', assigned_date=Now()";
-        							 //echo $sql;
-        							 $query = mysql_query($assign);
-        							  //echo $query; 
-        							 $_SESSION['sess_msg']="State deleted successfully";
-						        }
-   			      }
-			   }  
+      		  		$status_id="1";
+      				/*$device_model = $_POST['devic_model_id'];*/
+      		  		$createdby=$_SESSION['user_id']; 
+      	          	$check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'") 
+                  	or die(mysql_error());
+					if(!$row = mysql_fetch_array($check_deviceId) or die(mysql_error()))
+					{
+        				$sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
+        				//echo $sql;
+        				$results = mysql_query($sql); 	
+        				$assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', 
+                       			  branch_id='$branch_id', assigned_date=Now()";
+        				//echo $sql;
+        				$query = mysql_query($assign);
+        				//echo $query; 
+        				$_SESSION['sess_msg']="State deleted successfully";
+					}
+   			  }
+		 }  
   		$id="";
   }
 ?>
@@ -83,10 +83,46 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<!--<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>-->
-<script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/assign_device_to_branch.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+// Pass Ajax request when view Assigned Devices
+$(document).ready(function(){
+	$('#viewAssignedDevices').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_assigned_stock.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val(),
+					model : $('#model').val(),
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	 
+	});
+});
+// end
+// Pass Ajax request when new Device Assign
+$(document).ready(function(){
+	$('#assignDevices').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/showUnassignedStock.php?token=<?php echo $token;?>",
+				{
+					modelname : $('#modelname').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+// end
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -127,8 +163,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             <?php } ?>
             </select>
         </div>
-  		<input type="button" name="assign" value="Assign Devices" id="submit" class="btn btn-primary btn-sm" onClick="showUnassignedStock()" />
-        <input type="button" name="view" id="view" value="View Assigned Devices" class="btn btn-primary btn-sm" onClick="showAssignedStock()"/>
+  		<input type="button" name="assign" value="Assign Devices" id="assignDevices" class="btn btn-primary btn-sm" />
+        <input type="button" name="view" id="viewAssignedDevices" value="View Assigned Devices" class="btn btn-primary btn-sm"/>
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request -->
@@ -144,6 +180,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->
