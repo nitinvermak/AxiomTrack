@@ -18,27 +18,30 @@ if(isset($_POST['save']))
 		$Usercategory = mysql_real_escape_string($_POST['Usercategory']);
 		foreach($_POST['list'] as $checkvalue)
 		{
-			$sql=mysql_query("select * from tblusercategorymodulemapping  where moduleId =".$checkvalue);
-			if(mysql_num_rows($sql) == 1)
-			{
-				$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory' Where moduleId = '$checkvalue'";
-				/*echo $sql;*/
-				$result = mysql_query($sql);
-				if($result)
+			$sql = "select * from tblusercategorymodulemapping  where moduleId = '$checkvalue' and usercategoryId =".$Usercategory;
+			/*echo $sql;*/
+			$resultSql = mysql_query($sql);
+			if(mysql_num_rows($resultSql) <= 0)
 				{
-					$msg = "Setting Updated !";
+					$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', 
+							usercategoryId = '$Usercategory', created = Now()";
+					/*echo $sql.'<br>';*/
+					$result = mysql_query($sql);
+					if($result)
+					{
+						$msg = "Setting Saved !";
+					}
 				}
-			}
 			else
-			{
-				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', usercategoryId = '$Usercategory', 	created = Now()";
-				/*echo $sql;*/
-				$result = mysql_query($sql);
-				if($result)
 				{
-					$msg = "Setting Saved !";
+					$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue'  			 								                  			Where moduleId = '$checkvalue' and usercategoryId = '$Usercategory'";
+							/*echo $sql.'<br>';*/
+					$result = mysql_query($sql);
+					if($result)
+					{
+						$msg = "Setting Updated !";
+					}
 				}
-			}
 		}
 	}
 ?>

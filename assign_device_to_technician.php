@@ -87,7 +87,24 @@ if (isset($_SESSION) && $_SESSION['login']=='')
       <div class="col-md-12">
       	<div class="form-group">
     		<label for="exampleInputName2">Branch</label>
-    			<select name="branch" id="branch" class="form-control drop_down">
+            <?php 
+			if ($_SESSION['branch'] !=14)
+			
+			{ ?>
+    			 <select name="branch" id="branch" class="form-control drop_down">
+                <option label="" selected="selected">Select Branch</option>
+                <option value="0">All Branch</option>
+                <?php $Country=mysql_query("select * from tblbranch where id =".$_SESSION['branch']);									  
+					  while($resultCountry=mysql_fetch_assoc($Country)){
+				?>
+                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                <?php } ?>
+                </select>
+            <?php }
+			else
+			{
+			?>
+           		<select name="branch" id="branch" class="form-control drop_down">
                 <option label="" selected="selected">Select Branch</option>
                 <option value="0">All Branch</option>
                 <?php $Country=mysql_query("select * from tblbranch");									  
@@ -96,6 +113,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
                 <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                 <?php } ?>
                 </select>
+			<?php }
+			?>
   		</div>
         <div class="form-group">
             <label for="exampleInputEmail2">Technician</label>
@@ -108,8 +127,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             <?php } ?>
             </select>
         </div>
-  		<input type="button" name="assign_devices" id="assign_devices" class="btn btn-primary" value="Assign Devices" onClick="ShowByBranch()"/>
-        <input type="button" name="view_assign" class="btn btn-primary" value="View Assigned Devices" onClick="ViewAssigned()" />
+  		<input type="button" name="assign_devices" id="assign_devices" class="btn btn-primary btn-sm" value="Assign Devices" onClick="ShowByBranch()"/>
+        <input type="button" name="view_assign" class="btn btn-primary btn-sm" value="View Assigned Devices" onClick="ViewAssigned()" />
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->

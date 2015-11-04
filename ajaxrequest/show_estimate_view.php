@@ -416,7 +416,7 @@ if($cust_id != "")
           }
         }
 	 else
-       echo "<tr><td colspan=6 align=center><h3><font color=red>No records found !</h3></font></td><tr/></table>";
+       echo "<h3><font color=red>No records found !</h3></font>";
 	}
 else
 {
