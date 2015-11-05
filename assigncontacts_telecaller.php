@@ -1,7 +1,6 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
@@ -124,6 +123,11 @@ $(document).ready(function(){
            <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Telecaller*</label>
                 <div class="col-sm-10">
+                <?php 
+				$branchname = $_SESSION['branch'];
+				if($branchname == 14)
+				{
+				?>
                   <select name="telecaller" id="telecaller" class="form-control drop_down">
                   <option label="" value="" selected="selected">Select Telecaller</option>
                   <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
@@ -132,6 +136,22 @@ $(document).ready(function(){
                   <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
                   <?php } ?>
                   </select>
+                <?php 
+				}
+				else
+				{
+				?>
+                  <select name="telecaller" id="telecaller" class="form-control drop_down">
+                  <option label="" value="" selected="selected">Select Telecaller</option>
+                  <?php $Country=mysql_query("select * from tbluser WHERE branch_id = '$branchname' order by First_Name ASC ");
+						while($resultCountry=mysql_fetch_assoc($Country)){
+				  ?>
+                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
+                  <?php } ?>
+                  </select>
+                <?php 
+				}
+				?>
                 </div>
             </div>	
         </div>

@@ -46,8 +46,25 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/sim_confirmation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#branch").change(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_branch_device_confirmation.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -66,7 +83,12 @@ if (isset($_SESSION) && $_SESSION['login']=='')
       <div class="col-md-12">
         <div class="form-group">
             <label for="exampleInputEmail2">Branch</label>
-            	<select name="branch" id="branch" onChange="ShowByBranch()" class="form-control drop_down" >
+            <?php 
+			$branchname = $_SESSION['branch'];
+			if($branchname == 14)
+			{
+			?>
+            	<select name="branch" id="branch" class="form-control drop_down" >
                 <option value="">Select Branch</option>
                 <option value="0">All Branch</option>
                 <?php $Country=mysql_query("select * from tblbranch");
@@ -75,6 +97,21 @@ if (isset($_SESSION) && $_SESSION['login']=='')
                 <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                 <?php } ?>
                 </select>
+            <?php 
+			}
+			else
+			{
+			?>
+            	<select name="branch" id="branch" class="form-control drop_down" >
+                <option value="">Select Branch</option>
+                <?php $Country=mysql_query("select * from tblbranch where id = '$branchname'");
+				 	  while($resultCountry=mysql_fetch_assoc($Country)){
+				?>
+                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                <?php } ?>
+                </select>
+             <?php 
+			 }?>
         </div>
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
@@ -91,6 +128,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

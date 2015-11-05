@@ -1,18 +1,34 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
-$search_box = $_REQUEST['search_box'];
+include("../includes/crosssite.inc.php"); 
+$search_box = mysql_real_escape_string($_POST['search_box']);
 /*echo "Sim Report"; */
+$branchname = $_SESSION['branch'];
 error_reporting(0);
-$linkSQL = "SELECT * FROM tblsim as A 
-			LEFT OUTER JOIN tbl_sim_branch_assign as B
-			ON A.id = B.sim_id
-			LEFT OUTER JOIN tbl_sim_technician_assign as C
-			ON B.sim_id = C.sim_id
-			LEFT OUTER JOIN tblbranch as D 
-			ON B.branch_id = D.id
-			LEFT OUTER JOIN tbluser as E 
-			ON C.technician_id = E.id WHERE A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%'";
+if($branchname == 14)
+{
+	$linkSQL = "SELECT * FROM tblsim as A 
+				LEFT OUTER JOIN tbl_sim_branch_assign as B
+				ON A.id = B.sim_id
+				LEFT OUTER JOIN tbl_sim_technician_assign as C
+				ON B.sim_id = C.sim_id
+				LEFT OUTER JOIN tblbranch as D 
+				ON B.branch_id = D.id
+				LEFT OUTER JOIN tbluser as E 
+				ON C.technician_id = E.id WHERE A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%'";
+}
+else
+{
+	$linkSQL = "SELECT * FROM tblsim as A 
+				LEFT OUTER JOIN tbl_sim_branch_assign as B
+				ON A.id = B.sim_id
+				LEFT OUTER JOIN tbl_sim_technician_assign as C
+				ON B.sim_id = C.sim_id
+				LEFT OUTER JOIN tblbranch as D 
+				ON B.branch_id = D.id
+				LEFT OUTER JOIN tbluser as E 
+				ON C.technician_id = E.id WHERE (A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%') And B.branch_id = '$branchname'";
+}
 /*echo $linkSQL;*/
 $stockArr = mysql_query($linkSQL);
 /*$total_num_rows = mysql_num_rows($stockArr);*/
@@ -22,16 +38,16 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
-              	<th>S. No.</th>     
-              	<th>Sim  No.</th>  
-              	<th>Mobile No.</th>
-              	<th>Company</th> 
-              	<th>Status <br />(Instock/Installed)</th>
-              	<th>Allocated/ Unallocated</th>   
-              	<th>Branch Id</th>   
-              	<th>Branch Status</th>
-              	<th>Technician Id</th>
-              	<th>Technician Status</th>                          
+              	<th><small>S. No.</small></th>     
+              	<th><small>Sim  No.</small></th>  
+              	<th><small>Mobile No.</small></th>
+              	<th><small>Company</small></th> 
+              	<th><small>Status (Instock/Installed)</small></th>
+              	<th><small>Allocated/ Unallocated</small></th>   
+              	<th><small>Branch Id</small></th>   
+              	<th><small>Branch Status</small></th>
+              	<th><small>Technician Id</small></th>
+              	<th><small>Technician Status</small></th>                          
               	</tr>    
 				<?php
 				$kolor=1;
@@ -59,11 +75,13 @@ if(mysql_num_rows($stockArr)>0)
 					$class="bgcolor='#fff'";
 			 	?>
 	 			<tr <?php print $class?>>
-	 			<td><?php print $kolor++;?>.</td>
-	 			<td><?php echo stripslashes($row["sim_no"]);?></td>
-	 			<td><?php echo stripslashes($row["mobile_no"]);?></td>
-	 			<td><?php echo getserviceprovider(stripslashes($row["company_id"]));?></td>
-	 			<td><?php 
+	 			<td><small><?php print $kolor++;?>.</small></td>
+	 			<td><small><?php echo stripslashes($row["sim_no"]);?></small></td>
+	 			<td><small><?php echo stripslashes($row["mobile_no"]);?></small></td>
+	 			<td><small><?php echo getserviceprovider(stripslashes($row["company_id"]));?></small></td>
+	 			<td>
+				<small>
+					<?php 
 					if($row["status_id"] == 0)
 						{  
 							echo "<span style='color:red; font-weight:bold;'>Instock</span>";
@@ -72,8 +90,12 @@ if(mysql_num_rows($stockArr)>0)
 						{
 							echo "<span style='color:green; font-weight:bold;'>Installed</span>";
 						}
-					?></td>
-                <td><?php 
+					?>
+                </small>
+                </td>
+                <td>
+                <small>
+					<?php 
                     if($row["branch_assign_status"] == 0)
                         {
                         	echo "<span class='no'>Unallocated</span>";
@@ -82,9 +104,12 @@ if(mysql_num_rows($stockArr)>0)
                         {
                         	echo "<span class='yes'>Allocated</span>";
                         }
-                    ?></td>
-                <td><?php echo stripslashes($row["CompanyName"]);?></td>
+                    ?>
+                </small>
+                </td>
+                <td><small><?php echo stripslashes($row["CompanyName"]);?></small></td>
                 <td>
+                <small>
 				<?php  
                 if($row["technician_assign_status"] == 0)
                     {
@@ -94,8 +119,11 @@ if(mysql_num_rows($stockArr)>0)
                     {
                     echo "<span class='yes'>Assigned</span>";
                     }
-                ?></td>
+                ?>
+                </small>
+                </td>
                 <td>
+                <small>
                 <?php 
                 if($row["technician_id"] == "")
                     {
@@ -105,8 +133,11 @@ if(mysql_num_rows($stockArr)>0)
                     {
                     echo stripslashes($row["First_Name"]." ".$row["Last_Name"] );
                     }
-                ?></td>
+                ?>
+                </small>
+                </td>
                 <td>
+                <small>
                 <?php 
                 if($row["status_id"] == 0)
                     {  
@@ -116,7 +147,9 @@ if(mysql_num_rows($stockArr)>0)
                     {
                     echo "<span style='color:green; font-weight:bold;'>Installed</span>";
                     }
-                ?></td>
+                ?>
+                </small>
+                </td>
                 </tr> 	
 				<?php 
                 }
@@ -124,7 +157,7 @@ if(mysql_num_rows($stockArr)>0)
                 
                         }
                     else
-                    echo "<tr><td colspan=10 align=center><h3 style='color:red;'><font color=red>No records found !</h3><br></font></td><tr/></table>";
+                    echo "<h3 style='color:red;'><font color=red>No records found !</h3><br></font>";
 				}
                 ?>
               

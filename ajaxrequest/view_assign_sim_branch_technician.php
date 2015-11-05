@@ -32,16 +32,16 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table class="table table-hover table-bordered">  ';
 ?>
                 <tr>
-	            <th>S. No.</th>                   
-	            <th>Provider</th>  
-	            <th>Sim No.</th>
-	            <th>Mobile No.</th>  
-	            <th>Branch Assigned Date</th>
-                <th>Status</th>
-	            <th>Actions 
+	            <th><small>S. No.</small></th>                   
+	            <th><small>Provider</small></th>  
+	            <th><small>Sim No.</small></th>
+	            <th><small>Mobile No.</small></th>  
+	            <th><small>Branch Assigned Date</small></th>
+                <th><small>Status</small></th>
+	            <th><small>Actions 
                       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                       &nbsp;&nbsp;
-                      <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>
+                      <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a></small>
                 </th> 
                 </tr>
 				<?php
@@ -58,19 +58,19 @@ if(mysql_num_rows($stockArr)>0)
 						$class="bgcolor='#fff'";  	
  				?>
    			    <tr <?php print $class?>>
-                <td><?php print $kolor++;?>.</td>
-				<td><?php echo stripslashes($row["serviceprovider"]);?></td>	
-                <td><?php echo getSimNO(stripslashes($row["sim_id"]));?></td>	
-				<td><?php echo getMobile(stripslashes($row["sim_id"]));?></td>                           	
-				<td><?php echo stripslashes($row["assigned_date"]);?></td>
-                <td><?php echo stripslashes($stock);?></td>			  
+                <td><small><?php print $kolor++;?>.</td>
+				<td><small><?php echo stripslashes($row["serviceprovider"]);?></small></td>	
+                <td><small><?php echo getSimNO(stripslashes($row["sim_id"]));?></small></td>	
+				<td><small><?php echo getMobile(stripslashes($row["sim_id"]));?></small></td>                           	
+				<td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>
+                <td><small><?php echo stripslashes($stock);?></small></td>			  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["sim_id"]; ?>'></td>
                 </tr>
 				<?php
 				}
 			}
 		else
-			 echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br></td><tr/></table>";
+			 echo "<h3 style='color:red'>No records found!</h3><br>";
 				?> 
                 <form method="post">
                 <table>

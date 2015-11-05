@@ -24,9 +24,10 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$technician_id=$_POST['technician_id'];
 		  		$status_id="1";
 		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_device_assign_technician set device_id='$chckvalue', technician_id ='$technician_id', assigned_date=Now()";
+				$sql = "insert into tbl_device_assign_technician set device_id='$chckvalue', technician_id ='$technician_id', 		 						assigned_date=Now()";
 				$results = mysql_query($sql);
-				$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' where device_id='$chckvalue'";
+				$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' 
+									  where device_id='$chckvalue'";
 				/*echo $assign_technician;*/
 				$confirm = mysql_query($assign_technician);
    			   }
@@ -46,7 +47,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$sql = "DELETE FROM tbl_device_assign_technician where device_id='$chckvalue'";
 				/*echo $sql;*/
 				$results = mysql_query($sql);
-	  			$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' where device_id='$chckvalue'";
+	  			$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' 
+									  where device_id='$chckvalue'";
 				/*echo $assign_technician;*/
 				$confirm = mysql_query($assign_technician);
    			   }
