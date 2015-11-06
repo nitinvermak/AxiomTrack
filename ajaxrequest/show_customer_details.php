@@ -4,7 +4,8 @@ include("../includes/crosssite.inc.php");
 $organization = $_REQUEST['organization']; 
 
 error_reporting(0);
-$linkSQL = "SELECT B.id, B.Company_Name, B.First_Name, B.Last_Name, B.Phone, B.Mobile, B.data_source, B.Address,A.telecaller_id, a.confirmation_date 
+$linkSQL = "SELECT B.id, B.Company_Name, B.First_Name, B.Last_Name, B.Phone, B.Mobile, 
+			B.data_source, B.Address,A.telecaller_id, A.confirmation_date 
 			FROM tbl_customer_master as A 
 			INNER JOIN tblcallingdata as B 
 			ON A.callingdata_id = B.id 

@@ -96,7 +96,7 @@ if(isset($_POST['export']))
 $(document).ready(function(){
 	$("#submit").click(function(){
 		$('.loader').show();
-		$.post("ajaxrequest/ticket_report.php?token=<?php echo $token;?>",
+		$.post("ajaxrequest/customer_details_report.php?token=<?php echo $token;?>",
 				{
 					date : $('#date').val(),
 					dateto : $('#dateto').val(),
@@ -127,7 +127,7 @@ $(document).ready(function(){
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Ticket Report</h3>
+    	<h3>Customer Report</h3>
         <hr>
     </div>
     <div class="col-md-12">
@@ -139,11 +139,6 @@ $(document).ready(function(){
      <td class="col-xs-2"><input type="text" name="date" id="date" class="form-control text_box-sm date"/></td>
      <td class="col-xs-1"><strong>Branch*</strong></td>
 	 <td class="col-xs-2">
-     <?php 
-	 $branchName = $_SESSION['branch'];
-	 if($branchName == 14)
-	 {
-	 ?>
      	<select name="branch" id="branch" class="form-control drop_down-sm">
         <option value="0">All Branch</option>                         
         <?php $Country=mysql_query("SELECT * FROM `tblbranch` ORDER BY CompanyName ASC");								
@@ -155,45 +150,26 @@ $(document).ready(function(){
         <?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
         <?php } ?>
         </select>
-     <?php 
-	 }
-	 else
-	 {
-	 ?>
-     	<select name="branch" id="branch" class="form-control drop_down-sm">                       
-        <?php $Country=mysql_query("SELECT * FROM `tblbranch` where id = '$branchName' ORDER BY CompanyName ASC");								
-              while($resultCountry=mysql_fetch_assoc($Country))
-                   {
-        ?>
-        <option value="<?php echo $resultCountry['id']; ?>" 
-        <?php if(isset( $_SESSION['CompanyName']) && $resultCountry['id']== $_SESSION['CompanyName']){ ?>selected			        <?php } ?>>
-        <?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-        <?php } ?>
-        </select>	
-     <?php 
-	 }?>			
      </td>
-     <td class="col-xs-1"><strong>Status*</strong></td>
-     <td><select name="status" id="status" class="form-control drop_down-sm">
-     	 <option value="" selected>All</option>
-         <option value="0">Pending</option>
-         <option value="1">Closed</option>
-         <option value="2">Reschedule</option>
-         </select></td>
+     <td class="col-xs-1"><strong>Customer Type*</strong></td>
+     <td>
+      <select name="status" id="status" class="form-control drop_down" onChange="customerType()">
+      <option value="">Select</option>
+      <?php $Country=mysql_query("select * from tbl_customer_type");
+				  while($resultCountry=mysql_fetch_assoc($Country)){
+			?>
+      <option value="<?php echo $resultCountry['customer_type_id']; ?>" <?php if(isset($result['customer_type_id']) && $resultCountry['customer_type_id']==$result['customer_type_id']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['customer_type'])); ?></option>
+      <?php } ?>
+      </select>
+     </td>
      <td>&nbsp;</td>
-     <td><p class="ico pull-right"><a name="export" id="export" href="ticket_report_export.php?token=<?php echo $token;?>" title="Download CSV"> <span class="glyphicon glyphicon-download-alt"></span></a></p></td>
+     <td><!--<p class="ico pull-right"><a name="export" id="export" href="ticket_report_export.php?token=<?php echo $token;?>" title="Download CSV"> <span class="glyphicon glyphicon-download-alt"></span></a></p>--></td>
      </tr>
       <tr>
      <td class="col-xs-1"><strong>Date&nbsp;(To)*</strong></td>
      <td class="col-xs-2"><input type="text" name="dateto" id="dateto" class="form-control text_box-sm date"/></td>
      <td class="col-xs-1"><strong>Executive*</strong></td>
-	 <td class="col-xs-2">
-     <?php 
-	 $branchName = $_SESSION['branch'];
-	 if($branchName == 14)
-	 {
-	 ?>
-     	<select name="executive" id="executive" class="form-control drop_down-sm">
+	 <td class="col-xs-2"><select name="executive" id="executive" class="form-control drop_down-sm">
         <option value="0">All Executive</option>                         
         <?php $Country=mysql_query("SELECT * FROM `tbluser`");								
               while($resultCountry=mysql_fetch_assoc($Country))
@@ -202,24 +178,7 @@ $(document).ready(function(){
         <option value="<?php echo $resultCountry['id']; ?>">
         <?php echo stripslashes(ucfirst($resultCountry['First_Name']." " .$resultCountry['Last_Name'])); ?></option>
         <?php } ?>
-        </select>
-     <?php 
-	 }
-	 else
-	 {
-	 ?>
-     	<select name="executive" id="executive" class="form-control drop_down-sm">
-        <option value="0">All Executive</option>                         
-        <?php $Country=mysql_query("SELECT * FROM `tbluser` WHERE branch_id = '$branchName'");								
-              while($resultCountry=mysql_fetch_assoc($Country))
-                   {
-        ?>
-        <option value="<?php echo $resultCountry['id']; ?>">
-        <?php echo stripslashes(ucfirst($resultCountry['First_Name']." " .$resultCountry['Last_Name'])); ?></option>
-        <?php } ?>
-        </select>
-     <?php }?>
-     </td>
+        </select></td>
      <td>&nbsp;</td>
      <td><input type="button" name="assign" value="Submit" id="submit" class="btn btn-primary btn-sm pull-left"/>&nbsp;<input type="button" name="assign" value="Summary" onClick="window.location.replace('ticket_summary.php?token=<?php echo $token;?>')" id="submit" class="btn btn-primary btn-sm" /></td>
      <td>&nbsp;</td>
