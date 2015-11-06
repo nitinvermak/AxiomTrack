@@ -72,6 +72,43 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/ticket_assign_technician.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+// send ajax request when click assign ticket button
+$(document).ready(function(){
+	$("#unassign").click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/assign_ticket_branch_technician.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+// end
+// send ajax request when click assigned ticket
+$(document).ready(function(){
+	$("#assign_view").click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/view_assign_ticket_branch_technician.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+// end
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -92,6 +129,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
+                <?php 
+				$branchName = $_SESSION['branch'];
+				if($branchName == 14)
+				{
+				?>
                   <select name="branch" id="branch" class="form-control drop_down">
                   <option label="" selected="selected">Select Branch</option>
                   <option value="0">All Branch</option>
@@ -101,6 +143,22 @@ if (isset($_SESSION) && $_SESSION['login']=='')
                   <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                   <?php } ?>
                   </select>
+                <?php 
+				}
+				else
+				{
+				?>
+                  <select name="branch" id="branch" class="form-control drop_down">
+                  <option label="" selected="selected">Select Branch</option>
+                  <?php $Country=mysql_query("select * from tblbranch where id = '$branchName'");									  
+				        while($resultCountry=mysql_fetch_assoc($Country)){
+				  ?>
+                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                  <?php } ?>
+                  </select>
+                <?php 
+				}
+				?>
                 </div>
             </div>
         </div>
@@ -122,8 +180,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
         <div class="col-md-6">
             <div class="form-group">
              <div class="col-sm-10 pull-right">
-               <input type="button" name="unassign" value="Assign Ticket" class="btn btn-primary" onClick="return ShowByBranch()" />
-               <input type="button" name="assign_view" value="Assigned Ticket" class="btn btn-primary" onClick="return ShowByBranchAssigned()" />
+               <input type="button" name="unassign" id="unassign" value="Assign Ticket" class="btn btn-primary btn-sm" />
+               <input type="button" name="assign_view" id="assign_view" value="Assigned Ticket" class="btn btn-primary btn-sm" />
                </div>
             </div>
         </div>
@@ -148,6 +206,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->
