@@ -1,5 +1,4 @@
 <?php
-
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
@@ -40,10 +39,11 @@ if(isset($_POST['submit']))
 		$branch = mysql_real_escape_string($_POST['branch']);
 		$telecaller = mysql_real_escape_string($_POST['telecaller']);
 		$callingdate = mysql_real_escape_string($_POST['callingdate']);
+		$customerType = mysql_real_escape_string($_POST['customerType']);
 		$UpdateCallingData = "UPDATE tblcallingdata SET First_Name = '$first_name', Last_Name = '$last_name', Company_Name = '$company', Phone = '$phone', Mobile = '$mobile', email = '$email', Country = '$country', State = '$state', District_id = '$district', City = '$city', Area = '$area', Pin_code = '$pin_code', Address = '$Address', data_source = '$datasource' where id =".$_REQUEST['id'];
 		/*echo $UpdateCallingData;*/
 		$result = mysql_query($UpdateCallingData);
-		$UpdateCustomerMaster = "UPDATE tbl_customer_master SET LeadGenBranchId = '$branch', telecaller_id = '$telecaller', confirmation_date = '$callingdate' Where callingdata_id =".$_REQUEST['id'];
+		$UpdateCustomerMaster = "UPDATE tbl_customer_master SET LeadGenBranchId = '$branch', customer_type = '$customerType', telecaller_id = '$telecaller', confirmation_date = '$callingdate' Where callingdata_id =".$_REQUEST['id'];
 		/*echo $UpdateCustomerMaster;*/
 		$result = mysql_query($UpdateCustomerMaster);
 		$_SESSION['sess_msg']='Customer updated successfully';
@@ -271,10 +271,19 @@ function CallPincode()
         <td><input type="text" name="datasource" id="datasource" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['data_source']; ?>" />        </td>
         </tr>
         <tr>
+        <td>Customer Type</td>
+        <td  valign="top">
+          <select name="customerType" id="customerType" class="form-control drop_down" onChange="customerType()">
+          <option value="">Select</option>
+          <?php $Country=mysql_query("select * from tbl_customer_type");
+                      while($resultCountry=mysql_fetch_assoc($Country)){
+                ?>
+          <option value="<?php echo $resultCountry['customer_type_id']; ?>" <?php if(isset($result['customer_type']) && $resultCountry['customer_type_id']==$result['customer_type']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['customer_type'])); ?></option>
+          <?php } ?>
+    	  </select>
+        </td>
         <td>Calling Date*</td>
-        <td  valign="top"><input name="callingdate" id="callingdate" class="form-control text_box" type="text" value="<?php if(isset($result['id'])) echo $result['confirmation_date']; ?>" /></td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        <td><input name="callingdate" id="callingdate" class="form-control text_box" type="text" value="<?php if(isset($result['id'])) echo $result['confirmation_date']; ?>" /></td>
         </tr>
     </table>
    

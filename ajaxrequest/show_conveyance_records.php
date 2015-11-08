@@ -67,9 +67,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo getOraganization(stripslashes($row["Company"]));?></small></td>
                  <td><small><?php echo gettelecallername(stripslashes($row["Tid"]));?></small></td>
                  <td><textarea name="description" style="width:100px;"></textarea></td>
-                 <td>
-                 <input type="text" name="kmTravel" id="kmTravel<?php print $kolor -1; ?>"  class="kmTravel" style="width:50px;">
-                 </td>
+                 <td><input type="text" name="kmTravel" id="kmTravel<?php print $kolor -1; ?>"  class="kmTravel" style="width:50px;" /></td>
                  <td><input type="text" name="fare" id="fare<?php print $kolor -1 ?>" 
                    onchange="calTotal(<?php print $kolor -1; ?>)"  class="fare" style="width:50px;"></td>
                  <td><input type="text" name="amount" id="amount<?php print $kolor-1; ?>" class="amount" style="width:50px;" readonly>                  <br>

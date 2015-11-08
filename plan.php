@@ -17,28 +17,29 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 }
 $error =0;
 if(isset($_REQUEST['plan_category']))
+	{
+		$datasource=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_name'])));
+		$plan_description=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_description'])));
+		$plan_category=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_category'])));
+		$service_provider=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['provider'])));
+		$plan_price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_price'])));
+		$taxId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['exclusive'])));
+	}
+if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 {
-$datasource=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_name'])));
-$plan_description=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_description'])));
-$plan_category=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_category'])));
-$service_provider=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['provider'])));
-$plan_price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_price'])));
-$taxId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['exclusive'])));
-}
-if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblplan set planSubCategory	='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId' where id=" .$_REQUEST['id'];
+$sql="update tblplan set planSubCategory ='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId' where id=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Plan updated successfully';
 header("location:manage_plan.php?token=".$token);
 exit();
 }
 else{
-$queryArr=mysql_query("select * from tblplan where period='$datasource' and planSubCategory	='$datasource' and plan_description='$plan_description' and productCategoryId='$plan_category' and serviceprovider_id='$service_provider and plan_status='$plan_status' and plan_rate='$plan_price'");
-//$result=mysql_fetch_assoc($queryArr);
+$queryArr=mysql_query("select * from tblplan where productCategoryId = '$plan_category' and planSubCategory = '$datasource' and plan_rate = '$plan_price'");
+$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblplan set  planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId'");
+$query=mysql_query("insert into tblplan set planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId'");
 $_SESSION['sess_msg']='Plan added successfully';
 header("location:manage_plan.php?token=".$token);
 exit();

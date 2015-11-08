@@ -6,15 +6,22 @@ $cust_id = mysql_real_escape_string($_POST['cust_id']);
 error_reporting(0);
 if($cust_id != "")
 {
-		$linkSQL = "select * from tbl_customer_master as A
-					inner join tbl_invoice_master as B
-					on A.cust_id = B.customerId
-					inner Join tblesitmateperiod as C
-					on B.intervalId = C.intervalId
-					where B.customerId ='$cust_id'
-					and B.paymentStatusFlag = 'A'
-					order by invoiceId
-					";
+		$linkSQL = "Select A.invoiceId as invoiceId, A.invoiceType as invoiceType, B.paymentID as paymentId, 
+					A.customerId as customerId, A.generatedAmount as Amount, 
+					A.generateDate as generateDate, A.dueDate as dueDate, 
+					A.discountedAmount as discount, F.callingdata_id as callingdateId
+					from tbl_invoice_master as A
+					left outer Join tblpaymentinvoicemap as B 
+					On A.invoiceId = B.invoiceId
+					left outer join paymentcheque as C 
+					On B.paymentId = C.id
+					left outer join paymentonlinetransfer as D 
+					On C.id = D.id
+					left outer Join paymentmethoddetailsmaster as E 
+					on D.id = E.paymentId 
+					left outer join tbl_customer_master as F
+					On A.customerId = F.cust_id
+					where A.invoiceFlag ='Y' and A.customerId = '$cust_id' order by Amount";
 		/*echo $linkSQL;*/
 		$oRS = mysql_query($linkSQL);
 		if(mysql_num_rows($oRS)>0)
@@ -24,14 +31,15 @@ if($cust_id != "")
 		<tr>
        
       	<th><small>S.No.</small></th>  
-        <th><small>Estimate Id</small></th>  
-		<th><small>Estimate Type</small></th>
+        <th><small>Invoice Id</small></th>  
+        <th><small>Invoice Type </small></th>
+		<th><small>Payment Id</small></th>
       	<th><small>Customer Name</small></th>  
-      	<th><small>Generated Date</small></th>
-        <th><small>Due Date</small></th>
-      	<th><small>Generated Amount</small></th> 
-        <th><small>Discount Amount</small></th> 
-        <th><small>Payment Details</small></th>
+      	<th><small>Generated Amount</small></th>
+        <th><small>Generated Date</small></th>
+      	<th><small>Due Date</small></th> 
+        <th><small>Discount Amount</small></th>
+        <th><small>Details</small></th> 
         <th><small>Make Payment</small></th>
       	</tr>    
         <?php
@@ -59,34 +67,17 @@ if($cust_id != "")
  	  	?>
         <tr <?php print $class?>>
       	<td><small><?php print $kolor++;?>.</small></td>
-	  	<td><small><?php echo stripslashes($row["invoiceId"]);?><input type="hidden" name="invoiceId" value="<?php echo stripslashes($row["invoiceId"]);?>" /></small></td>
-      	<td><small>
-		  <?php if ($row["invoiceType"] == "A"){ echo 'Rental';} elseif($row["invoiceType"] == "B") { echo 'Device';}  ?>
-        </small>
-        </td>
-		<td><small><?php $orgName =  getOraganization(stripslashes($row["callingdata_id"])); echo $orgName;  ?></small></td>
-      	<td><small><?php echo stripslashes($row["generateDate"]);?> </small></td>
-        <td class="<?php if(strtotime($row["dueDate"]) < strtotime(date("Y-m-d"))) echo 'datecolor' ?>">
-        <small><?php echo stripslashes($row["dueDate"]); ?></small></td>
-        <td><small><?php echo stripslashes($row["generatedAmount"]);?></small></td>
-        <td><small><?php if($row["discountedAmount"]==0)
-					{
-						echo "N/A";
-					}
-				  else
-					{
-						echo stripcslashes($row["discountedAmount"]);	
-					}
-			?></small>
-		</td>
-        <td><strong>
-         
-        
-        <button type="button" data-toggle="modal" data-target=".bs-example-modal-lg<?php echo stripslashes($row["invoiceId"]);?>" class="btn btn-info btn-sm">Details</button></strong>
-        <!--Modal-->
-        <!--<a data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</a>-->
-<!-- Make payement modal -->
-        <div class="modal fade bs-example-modal-lg<?php echo stripslashes($row["invoiceId"]);?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	  	<td><small><?php echo stripslashes($row["invoiceId"]);?></small></td>
+        <td><small><?php if ($row["invoiceType"] == "A"){ echo 'Rental';} elseif($row["invoiceType"] == "B") { echo 'Device';}  ?></small></td>
+      	<td><small><?php echo stripslashes($row["paymentId"]);?><input type="hidden" name="paymentId" id="paymentId" value="<?php echo stripslashes($row["paymentId"]);?>" /></small></td>
+		<td><small><?php echo getOraganization(stripcslashes($row['callingdateId'])); ?></small></td>
+      	<td><small><?php echo stripslashes($row["Amount"]);?> </small></td>
+        <td><small><?php echo stripslashes($row["generateDate"]); ?></small></td>
+        <td><small><?php echo stripslashes($row["dueDate"]);?></small></td>
+        <td><small><?php echo stripcslashes($row["discount"]); ?></small></td>
+        <td><button type="button" data-toggle="modal" data-target=".bs-example-modal-lg1<?php echo stripslashes($row["paymentId"]);?>" class="btn btn-info btn-sm">Details</button>
+        <!-- Make payement modal -->
+        <div class="modal fade bs-example-modal-lg1<?php echo stripslashes($row["paymentId"]);?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -269,11 +260,8 @@ if($cust_id != "")
     ?>
     <tr>
 	<td></td>
+    <td></td>
     <?php
-	if($typeA > 0)
-	{
-		echo "<td></td>";
-	}
 	if($typeB > 0)
 	{
 		echo "<td></td>";
@@ -303,11 +291,8 @@ if($cust_id != "")
     </tr>
     <tr>
     <td></td>
-	 <?php
-	if($typeA > 0)
-	{
-		echo "<td></td>";
-	}
+	<td></td>
+	<?php
 	if($typeB > 0)
 	{
 		echo "<td></td>";
@@ -336,11 +321,8 @@ if($cust_id != "")
     </td>
     </tr>
     <td></td>
-	 <?php
-	if($typeA > 0)
-	{
-		echo "<td></td>";
-	}
+    <td></td>
+	<?php	
 	if($typeB > 0)
 	{
 		echo "<td></td>";
@@ -366,49 +348,16 @@ if($cust_id != "")
 		?>
 	</td>
     </tr>
-    </table>
-    <div>
-    <table>
-    <tr>
-    <td>Provide Discount</td>
-    <td>
-    <select name="discountAmt" id="discountAmt<?php echo $invoiceId; ?>" class="form-control drop_down" onchange=showData1(<?php echo $invoiceId; ?>)>
-    	<option value="0">Select</option>
-    	<option value="Rs">RS</option>
-    	<option value="Percentage">Percentage</option>
-    </select>
-
-    </td>
-    <td>
-     <input type='text' name='Percentage' id='Percentage<?php echo $invoiceId; ?>' 
-       class='form-control text_box' style="display: none;"
-       onkeyup="calPercent(<?php echo $invoiceId; ?>)"
-     placeholder="Percentage"
-     >
-     Rs.<input type='text' name='rupee' id='rupee<?php echo $invoiceId; ?>' class='form-control text_box'>
-
-    </td>
-    <td>
-    <input type="button" value="Go" class="btn btn-primary btn-sm" id="go" onclick="addPercent(<?php echo $invoiceId; ?>)" 
-    name="go">
-    </td>
-    </tr>
-    </table>
-    </div>
-
-                
-                
-  
+    </table>              
                 </div>
             </div>
           </div>
         </div>
         <!-- End  Make Payment modal-->
         </td>
-        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg-payment"    
-        onclick="getValue( <?php echo "'".$orgName."','".$intervalName."',".stripslashes($row["invoiceId"]).",".
-		stripslashes($row["generatedAmount"]).",".$row["IntervelYear"]; ?> )">
-        Make Payment</button></td>
+        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg-payment" onclick="getPaymentDetails(<?php echo stripslashes($row["paymentId"]);?>)">
+        View Invoice</button>
+        </td>
       	</tr>
         <?php 
            	}
@@ -416,7 +365,7 @@ if($cust_id != "")
           }
         }
 	 else
-       echo "<h3><font color=red>No records found !</h3></font>";
+       echo "<tr><td colspan=6 align=center><h3><font color=red>No records found !</h3></font></td><tr/></table>";
 	}
 else
 {

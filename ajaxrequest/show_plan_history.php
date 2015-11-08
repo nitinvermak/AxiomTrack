@@ -16,7 +16,10 @@ if ($cust_id == '')
 						    on A.cust_id = B.customer_Id
 						    INNER JOIN tbl_gps_vehicle_payment_master as C 
 						    ON B.id = C.Vehicle_id
-						    WHERE A.cust_id = '$cust_id'";
+						    WHERE A.cust_id = '$cust_id'
+							and C.PlanactiveFlag = 'Y'
+							order by B.vehicle_no
+							";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
@@ -55,45 +58,37 @@ if(mysql_num_rows($stockArr)>0)
             <input type="hidden" name="custid" id="custid" value="<?php echo stripslashes($row["cust_id"]);?>">
             </small>
             </td>
-	  		<td>
-                <?php echo getDeviceType($row['device_type']);?>
-           </td>
-	  		<td>
-            <?php echo getDeviceAmt($row['device_amt']); ?>
-            </td>
-	  		<td>               
-             <?php echo getDeviceAmt($row['device_rent_amt']); ?>                
-            </td>
-            <td>
-            	<?php echo $row['RentalFrequencyId']; ?>
-            </td>
-        	<td>
-            	<?php echo $row['r_installation_charge']; ?>             
-    		</td>
-            <td>
-               <?php echo $row['InstallmentamountID']; ?>          
-            </td>
-            <td>
-           	<?php echo stripcslashes(ucfirst($row['NoOfInstallment']));?>
-        	</td>
-            <td>
-            <?php echo $row['InstFrequencyID']; ?>  
-        	</td>
+	  		<td><small><?php echo getDeviceType($row['device_type']);?></small></td>
+	  		<td><small><?php  if($row['device_amt'] !=0) { echo getDeviceAmt($row['device_amt']); } else { echo 'N/A'; } ?></small></td>
+	  		<td><small><?php if($row['device_rent_amt'] !=0) { echo getDeviceAmt($row['device_rent_amt']); } else { echo 'N/A';} ?></small></td>
+            <td><small><?php if($row['RentalFrequencyId'] !=0) { echo getFrequency($row['RentalFrequencyId']); } else { echo 'N/A';} ?></small></td>
+        	<td><small><?php if($row['r_installation_charge'] !=0) { echo getDeviceAmt($row['installation_charges']); } else { echo 'N/A'; } ?></small></td>
+            <td><small><?php if($row['InstallmentamountID'] !=0){ echo $row['InstallmentamountID'];} else { echo 'N/A';} ?></small></td>
+            <td><small><?php if($row['NoOfInstallment'] !=0) { echo stripcslashes(ucfirst($row['NoOfInstallment']));} else { echo 'N/A';}?></small></td>
+            <td><small><?php if($row['InstFrequencyID'] !=0) { echo getFrequency($row['InstFrequencyID']); } else { echo 'N/A'; } ?></small></td>
             <td><small><?php echo stripslashes($row["PlanStartDate"]);?> 
             <input type="hidden" name="installation_date" id="installation_date" value="<?php echo stripslashes($row["installation_date"]);?>">
             </small></td>
             <td><small><?php echo stripslashes($row["PlanendDate"]);?> 
             <input type="hidden" name="plan_end" id="plan_end" value="<?php echo stripslashes($row["PlanendDate"]);?>">
             </small></td>
-        	<td><input type="button" name="Save" id="Save" value="View" ></td>
-      		</tr>
+        	<td><img class="pointer" id="image" onclick="getDetails(<?php echo stripslashes($row["Vehicle_id"]);?>)" src="images/plus.gif" /></td>
+</tr>
+            <tr id="divHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="display: none;">
+            <td colspan="13" style="margin:0; padding:0; border:none;">
+            <div id="dataDivHistory<?php echo stripslashes($row["Vehicle_id"]);?>" style="margin:0; padding:0;">
+        		 
+      		</div> 
+          
+            </td>
+            </tr>
         
        
 	<?php 
 	      }
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No Plan & History found!</h3>";
 	?> 
           			
                 

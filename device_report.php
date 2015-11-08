@@ -52,11 +52,26 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/device_report.js"></script>
-
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#submit').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/device_report_details.php?token=<?php echo $token;?>",
+				{
+					search_box : $('#search_box').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -75,9 +90,10 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
       <div class="col-md-12">
       	<div class="form-group">
     	<input type="text" name="search_box" id="search_box" class="form-control text_box" Placeholder="Ex. Device Id or IMEI No."/>  		</div>
-        <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" onClick="return SearchRecords();" />
+        <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" />
         <input type="button" name="view" id="view" value="Download Report" class="btn btn-primary btn-sm" onClick="window.location.replace('device_report_export.php?token=<?php echo $token;?>')" />
          <input type="button" name="view" id="view" value="Summary" class="btn btn-primary btn-sm" onClick="window.location.replace('device_summary.php?token=<?php echo $token;?>')" />
+         <input type="button" name="advanceFilter" id="advanceFilter" value="Advance Filter" class="btn btn-primary btn-sm" onClick="window.location.replace('device_advance_filter.php?token=<?php echo $token;?>')" />
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
 
@@ -93,6 +109,11 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

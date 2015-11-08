@@ -14,6 +14,7 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		  $_SESSION['sess_username']=$resultUser['User_ID'];
 		  $_SESSION['name']=$resultUser['First_Name']." ".$resultUser['Last_Name'];
 		  $_SESSION['user_category_id']=$resultUser['User_Category'];
+		  $_SESSION['branch'] = $resultUser['branch_id'];
 		  $token = md5(uniqid(rand(), true));
 		  $_SESSION['token'] = $token;
 		  $_SESSION['token_time']=time();

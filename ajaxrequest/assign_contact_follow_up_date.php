@@ -32,16 +32,16 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
-               	<th>S. No.</th>    
-                <th>Name</th>  
-                <th>Company Name</th>  
-                <th>Phone</th>
-                <th>Mobile</th>
-                <th>Follow-up Date</th>
-               	<th>Actions</th>                  
+               	<th><small>S. No.</small></th>    
+                <th><small>Name</small></th>  
+                <th><small>Company Name</small></th>  
+                <th><small>Phone</small></th>
+                <th><small>Mobile</small></th>
+                <th><small>Follow-up Date</small></th>
+               	<th><small>Actions</small></th>                  
                 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                 &nbsp;&nbsp;
-                <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
+                <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a></small></th>   
                 </tr>    
 				<?php
                   $kolor =1;
@@ -63,13 +63,13 @@ if(mysql_num_rows($stockArr)>0)
                 
                 ?>
               <tr <?php print $class?>>
-              <td><?php print $kolor++;?>.</td>
-              <td><?php echo stripslashes($row["fname"]." ".$row["lname"]);?></td>
-              <td><?php echo stripslashes($row["cname"]);?></td>
-              <td><?php echo stripslashes($row["ph"]);?></td>
-              <td><?php echo stripslashes($row["mob"]);?></td>
-              <td><?php echo stripslashes($row["fdate"]);?></td>
-              <td><a href="update_follow_up.php?id=<?php echo $row["cid"] ?>&token=<?php echo $token ?>">Follow-up</a></td>
+              <td><small><?php print $kolor++;?>.</small></td>
+              <td><small><?php echo stripslashes($row["fname"]." ".$row["lname"]);?></small></td>
+              <td><small><?php echo stripslashes($row["cname"]);?></small></td>
+              <td><small><?php echo stripslashes($row["ph"]);?></small></td>
+              <td><small><?php echo stripslashes($row["mob"]);?></small></td>
+              <td><small><?php echo stripslashes($row["fdate"]);?></small></td>
+              <td><small><a href="update_follow_up.php?id=<?php echo $row["cid"] ?>&token=<?php echo $token ?>">Follow-up</a></small></td>
               </tr>
 		<?php 
 	      }
@@ -80,8 +80,7 @@ if(mysql_num_rows($stockArr)>0)
              <form method="post">
              <table>
              <tr>
-             <td></td>
-             <td colspan="3"><input type="submit" name="submit" class="btn btn-primary" value="Submit" id="submit" /></td>
+             <td colspan="3"><input type="submit" name="submit" class="btn btn-primary btn-sm" value="Submit" id="submit" /></td>
              <td></td>
              </tr>
              </table>

@@ -1,9 +1,11 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
-$branch_id=$_REQUEST['branch'];
-$model=$_REQUEST['model'];
+include("../includes/crosssite.inc.php"); 
+$branch_id = mysql_real_escape_string($_POST['branch']);
+$model = mysql_real_escape_string($_POST['model']);
+
 error_reporting(0);
+
 if ($model == 0)
 	$linkSQL = "select * from tbl_device_master as A, tbl_device_assign_branch as B where A.id = B.device_id and B.branch_id='{$branch_id}' and A.status='0'";
 else
@@ -16,12 +18,12 @@ if(mysql_num_rows($stockArr)>0)
 ?>		
 				  
                   <tr>
-	              <th>Sl. No.</th>                        
-	              <th>Device Model</th>  
-	              <th>Device Id</th>
-	              <th>IMEI NO</th>  
-	              <th>Status</th>
-	              <th>Actions                 
+	              <th><small>S. No.</small></th>                        
+	              <th><small>Device Model</small></th>  
+	              <th><small>Device Id</small></th>
+	              <th><small>IMEI NO</small></th>  
+	              <th><small>Status</small></th>
+	              <th><small>Actions</small>                 
 	              <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                   &nbsp;&nbsp;
                   <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>      
@@ -45,18 +47,18 @@ if(mysql_num_rows($stockArr)>0)
 							$class="bgcolor='#fff'";
   				 ?>
                  <tr <?php print $class?>>
-                 <td><?php print $kolor++;?>.</td>
-				 <td><?php echo getdevicename(stripslashes($row["device_name"]));?>
+                 <td><small><?php print $kolor++;?>.</small></td>
+				 <td><small><?php echo getdevicename(stripslashes($row["device_name"]));?></small>
                  <input type="hidden" name="devic_model_id" value="<?php echo stripslashes($row["device_name"]);?>" /></td>
-                 <td><?php echo stripslashes($row["id"]);?></td>	
-				 <td><?php echo stripslashes($row["imei_no"]);?></td>                           	
-				 <td <?php echo $font_color; ?>><?php echo stripslashes($stock);?></td>			  
+                 <td><small><?php echo stripslashes($row["id"]);?></small></td>	
+				 <td><small><?php echo stripslashes($row["imei_no"]);?></small></td>                           	
+				 <td <?php echo $font_color; ?>><small><?php echo stripslashes($stock);?></small></td>			  
                  <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                  </tr>
 				 <?php }
 				}
     			else
-   		 			echo "<tr><td colspan=6 align=center><h3>No records found!</h3></td><tr/></table><br>";
+   		 			echo "<h3 style='color:red;'>No records found!</h3><br><br>";
 				?> 
                 </table> 
                 <form method="post">

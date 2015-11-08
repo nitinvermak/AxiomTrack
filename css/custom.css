@@ -380,3 +380,15 @@ width:60px;
 float:left;
 margin-right:10px;
 }
+.pointer{
+cursor:pointer;
+}
+.modal-content-payment{
+background-color:#FFFFFF;
+border-radius: 10px;
+}
+.red{
+color:red;
+font-weight:bold;
+font-size:15px;
+}

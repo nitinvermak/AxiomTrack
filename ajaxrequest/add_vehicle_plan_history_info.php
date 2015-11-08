@@ -82,7 +82,7 @@ if($device_type == 4)
 		$result1 = mysql_query($Update);
 		$instalmentId = mysql_insert_id();
 		
-		$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', instalmentId='$instalmentId', Vehicle_id = '$vehicle_id', device_type = '$device_type', device_amt = '$device_amt', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq',PlanStartDate='$installation_date', PlanendDate=' ', PlanactiveFlag='Y'";
+		$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', instalmentId='$instalmentId', Vehicle_id = '$vehicle_id', device_type = '$device_type', device_amt = '$device_amt', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq',PlanStartDate=Now(), PlanendDate=' ', PlanactiveFlag='Y'";
 		echo 'comnd' .$sql;
 		$result = mysql_query($sql);
 
@@ -94,7 +94,7 @@ else
 		echo $change_status; 
 		$change = mysql_query($change_status);
 		
-	$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', Vehicle_id = '$vehicle_id ', device_type = '$device_type', device_amt = '$device_amt', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq', PlanStartDate='$installation_date', PlanendDate=' ', PlanactiveFlag='Y'";
+	$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', Vehicle_id = '$vehicle_id ', device_type = '$device_type', device_amt = '$device_amt', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq', PlanStartDate=Now(), PlanendDate=' ', PlanactiveFlag='Y'";
 	echo 'comnd' .$sql;
 	$result = mysql_query($sql);
  

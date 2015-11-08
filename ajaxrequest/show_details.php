@@ -16,7 +16,10 @@ if ($vehicle_id == '')
 							INNER JOIN tbl_gps_vehicle_master as B 
 							on A.cust_id = B.customer_Id 
 							INNER JOIN tbl_gps_vehicle_payment_master as C 
-							ON B.id = C.Vehicle_id WHERE C.Vehicle_id = '$vehicle_id' AND C.PlanactiveFlag = 'Y'";
+							ON B.id = C.Vehicle_id WHERE C.Vehicle_id = '$vehicle_id' AND C.PlanactiveFlag = 'N'
+							order by C.PlanStartDate
+							
+							";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
@@ -27,7 +30,7 @@ if(mysql_num_rows($stockArr)>0)
 ?>	
 			 
              <tr>
-             <th><small>S. No.</small></th> 
+             <!--<th><small>S. No.</small></th> -->
              <th><small>Vehicle No.</small></th>  
              <th><small>Device Type</small></th>
              <th><small>Device Amt.</small></th>
@@ -47,36 +50,34 @@ if(mysql_num_rows($stockArr)>0)
   		{
  	?>
              
-        	<tr <?php print $class?>  id='<?php echo stripslashes($row["id"]);?>' class="info">
-      		<td><small><?php print $kolor++;?>.</small></td>
+        	<tr id='<?php echo stripslashes($row["id"]);?>'>
+      		<!--<td><small><?php print $kolor++;?>.</small></td>-->
 	  		<td><small><?php echo stripslashes($row["vehicle_no"]);?> 
             <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo stripslashes($row["Vehicle_id"]);?>">
             <input type="hidden" name="custid" id="custid" value="<?php echo stripslashes($row["cust_id"]);?>">
             </small>
             </td>
+	  		<td><small><?php echo getDeviceType($row['device_type']);?></small></td>
 	  		<td>
-                <?php echo $row['device_type'];?>
-           </td>
-	  		<td>
-            <?php echo $row['device_amt']; ?>
+            <small><?php  if($row['device_amt'] !=0) { echo getDeviceAmt($row['device_amt']); } else { echo 'N/A'; } ?></small>
             </td>
 	  		<td>               
-             <?php echo $row['device_rent_amt']; ?>                
+             <small><?php if($row['device_rent_amt'] !=0) { echo getDeviceAmt($row['device_rent_amt']); } else { echo 'N/A';} ?></small>                
             </td>
             <td>
-            	<?php echo $row['RentalFrequencyId']; ?>
+            	<small><?php if($row['RentalFrequencyId'] !=0) { echo getFrequency($row['RentalFrequencyId']); } else { echo 'N/A';} ?></small>
             </td>
         	<td>
-            	<?php echo $row['r_installation_charge']; ?>             
+            	<small><?php if($row['r_installation_charge'] !=0) { echo getDeviceAmt($row['r_installation_charge']); } else { echo 'N/A'; } ?></small>            
     		</td>
             <td>
-               <?php echo $row['InstallmentamountID']; ?>          
+              <small><?php if($row['InstallmentamountID'] !=0){ echo $row['InstallmentamountID'];} else { echo 'N/A';} ?>          
             </td>
             <td>
-           	<?php echo stripcslashes(ucfirst($row['NoOfInstallment']));?>
+           	<small><?php if($row['NoOfInstallment'] !=0) { echo stripcslashes(ucfirst($row['NoOfInstallment']));} else { echo 'N/A';}?></small>
         	</td>
             <td>
-            <?php echo $row['InstFrequencyID']; ?>  
+            <small><?php if($row['InstFrequencyID'] !=0) { echo getFrequency($row['InstFrequencyID']); } else { echo 'N/A'; } ?></small>  
         	</td>
             <td><small><?php echo stripslashes($row["PlanStartDate"]);?> 
             <input type="hidden" name="installation_date" id="installation_date" value="<?php echo stripslashes($row["installation_date"]);?>">
@@ -91,5 +92,5 @@ if(mysql_num_rows($stockArr)>0)
 	      }
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<center><span style='color:red; padding:3px 0px 3px 0px; font-weight:bold'> No records found ! </span></center>";
 	?> 

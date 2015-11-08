@@ -125,7 +125,7 @@ $(document).ready(function(){
         <div class="clearfix">&nbsp;</div>
         <div class="col-md-12">
          	<div class="form-group">
-                <label for="Product" class="col-sm-2 control-label">Ticket Id*</label>
+                <label for="Product" class="col-sm-2 control-label">Ticket Id <span class="red">*</span></label>
                 <div class="col-sm-10">
                 	<select name="ticketId" id="ticketId" class="form-control drop_down ticket">
                     	 <option value="">Select Ticket Id</option>
@@ -150,14 +150,14 @@ $(document).ready(function(){
            
             
             <div class="form-group">
-                <label for="Product" class="col-sm-2 control-label">Vehicle No*</label>
+                <label for="Product" class="col-sm-2 control-label">Vehicle No <span class="red">*</span></label>
                 <div class="col-sm-10">
                 <input name="vehicle_no" id="vehicle_no" type="text" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['vehicle_no']; ?>"/>
                 </div>
             </div>
             
             <div class="form-group">
-                <label for="Mobile" class="col-sm-2 control-label">Techician&nbsp;Name*</label>
+                <label for="Mobile" class="col-sm-2 control-label">Techician&nbsp;Name <span class="red">*</span></label>
                 <div class="col-sm-10" id="statediv">
                  <select name="technician" id="technician" onChange="return ShowMobile();" class="form-control drop_down">
                  <option value="">Select Techician</option>
@@ -192,7 +192,7 @@ $(document).ready(function(){
             </div>
         	
             <div class="form-group">
-                <label for="dateofpurchase" class="col-sm-2 control-label">Mobile*</label>
+                <label for="dateofpurchase" class="col-sm-2 control-label">Mobile <span class="red">*</span></label>
               <div class="col-sm-10" id="divMobile">
                 <select name="mobile_no" id="mobile_no" class="form-control drop_down">
                     <option value="">Select Mobile</option>
@@ -202,7 +202,7 @@ $(document).ready(function(){
             </div>
             
             <div class="form-group">
-                <label for="dateofpurchase" class="col-sm-2 control-label">Device&nbsp;Id *</label>
+                <label for="dateofpurchase" class="col-sm-2 control-label">Device&nbsp;Id <span class="red">*</span></label>
               <div class="col-sm-10" id="divDevice">
                    <select name="device" id="device" class="form-control drop_down" onChange="return ShowIMEIandDeviceName();">
                    <option value="">Select Device</option>
@@ -212,7 +212,7 @@ $(document).ready(function(){
             </div>
             
              <div class="form-group">
-                <label for="dateofpurchase" class="col-sm-2 control-label">IMEI No. *</label>
+                <label for="dateofpurchase" class="col-sm-2 control-label">IMEI No. <span class="red">*</span></label>
                 <div class="col-sm-10" id="divIMEI">
                    <select name="imei" id="imei" class="form-control drop_down">
                    <option value="">Select IMEI</option>
@@ -222,7 +222,7 @@ $(document).ready(function(){
             </div>
             
              <div class="form-group">
-                <label for="dateofpurchase" class="col-sm-2 control-label">Model&nbsp;Name*</label>
+                <label for="dateofpurchase" class="col-sm-2 control-label">Model&nbsp;Name <span class="red">*</span></label>
                 <div class="col-sm-10" id="getModel">
                    <select name="model" id="model" class="form-control drop_down">
                    <option value="">Select Model</option>
@@ -232,7 +232,7 @@ $(document).ready(function(){
             </div>
             
             <div class="form-group">
-                <label for="dateofpurchase" class="col-sm-2 control-label">Server&nbsp;Details*</label>
+                <label for="dateofpurchase" class="col-sm-2 control-label">Server&nbsp;Details <span class="red">*</span></label>
                 <div class="col-sm-10">
                   <select name="server_details" id="server_details" class="form-control drop_down" onChange="return divshow(this.value)">
                   <option value="">Select Server</option>
@@ -244,7 +244,7 @@ $(document).ready(function(){
             </div>
             
              <div class="form-group">
-                <label for="dateofpurchase" class="col-sm-2 control-label">Installation&nbsp;Date*</label>
+                <label for="dateofpurchase" class="col-sm-2 control-label">Installation&nbsp;Date <span class="red">*</span></label>
                 <div class="col-sm-10">
                   <input name="insatallation_date" id="insatallation_date" type="text" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['installation_date']; ?>"/>
                 </div>

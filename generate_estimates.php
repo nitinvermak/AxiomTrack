@@ -47,7 +47,7 @@ function Show()
 
 function getValue(a){
      //console.log( $(this).attr('interval_Id') + '=' + $(this).val());
- 
+ 	$('.loader').show();
 	elements= '#'+a+'   input';
  	jsonArr= []
 	jQuery(elements).map(function() {
@@ -60,13 +60,14 @@ function getValue(a){
      
 	 postData = {'PostData': jsonArr };
 	 console.log(jsonArr);
-	 alert(jsonArr);
+	 alert('Invoice for selected month are getting generated');
  
 	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
 	}	
 	function GetResponseA(str){
  		  document.getElementById('divShow').innerHTML=str;
-	
+		  $(".loader").removeAttr("disabled");
+		  $('.loader').fadeOut(1000);
 	     } 
 </script>
 </head>
@@ -125,6 +126,11 @@ function getValue(a){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

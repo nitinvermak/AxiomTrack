@@ -4,8 +4,7 @@
 error_reporting(-1);
 include_once('headerUpper.php');
 
-$permissionJoin= '
-				  SELECT
+$permissionJoin= 'SELECT
 				  A.moduleName as modulePageName,
 				  A.displayModuleName as displayModuleName,
 				  A.parentId as moduleParentId,
@@ -18,8 +17,7 @@ $permissionJoin= '
 				  on C.parentId = A.parentId 
 				  INNER JOIN tblmodulecategory as D 
 				  on D.moduleCatId = A.moduleCatId
-				  order by  A.moduleCatId ,  A.parentId 
-				  ';
+				  order by  A.moduleCatId ,  A.parentId';
 
 //echo $permissionJoin; 
 

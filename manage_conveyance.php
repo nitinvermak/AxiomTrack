@@ -80,24 +80,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     $( "#dateto" ).datepicker({dateFormat: 'yy-mm-dd'});
   });
 /* Send ajax request*/
-/*$(document).ready(function(){
-		$("#findRecords").click(function(){
-			alert('afsda');
-			$('.loader').show();
-			$.post("ajaxrequest/show_conveyance_records.php?token=<?php echo $token;?>",
-				{
-					dateFrom : $('#dateFrom').val(),
-					dateto	 : $('#dateto').val(),
-					users	 : $('#users').val()
-				},
-					function( data1 ){
-						alert(data1);
-						$("#divassign").append(data1);
-						$(".loader").removeAttr("disabled");
-            			$('.loader').fadeOut(1000);
-				});	 
-		});
-});*/
 function showRecords()
 	{
 		dateFrom = document.getElementById("dateFrom").value;;
@@ -112,19 +94,10 @@ function GetDetails(str){
 	}
 	
 function calTotal(elementId){
-	 
 	var kmTravel = document.getElementById('kmTravel'+elementId).value; 
     var fare = document.getElementById('fare'+elementId).value;
- 
     document.getElementById('amount'+elementId).value = kmTravel * fare;
-
 }	
-</script>
-<script type="text/javascript">
- 
-
-
-
 </script>
 </head>
 <body>

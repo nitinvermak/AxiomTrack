@@ -52,21 +52,35 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" language="javascript">
-function SearchRecords()
+/*function SearchRecords()
 	{   
 	    search_box = document.getElementById("search_box").value;
-		/*alert(search_box);*/
+		
 		url="ajaxrequest/sim_report.php?search_box="+search_box+"&token=<?php echo $token;?>";
-		/*alert(url);*/
+
 		xmlhttpPost(url,search_box,"GetRecords");
 	}
 	function GetRecords(str){
 	document.getElementById('divassign').innerHTML=str;
-	}
+	}*/
+$(document).ready(function(){
+	$('#submit').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/sim_report_details.php?token=<?php echo $token;?>",
+				{
+					search_box : $('#search_box').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
 </script>
 </head>
 <body>
@@ -87,7 +101,7 @@ function SearchRecords()
       	<div class="form-group">
     		<input type="text" name="search_box" id="search_box" class="form-control text_box" placeholder="Search by Sim or Mobile No."  />
   		</div>
-        <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" onClick="return SearchRecords();" />
+        <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm"/>
         <input type="button" name="view" id="view" value="Download Report" class="btn btn-primary btn-sm" onClick="window.location.replace('sim_report_export.php?token=<?php echo $token;?>')" />
          <input type="button" name="summary" id="summary" value="Summary" class="btn btn-primary btn-sm" onClick="window.location.replace('sim_summary.php?token=<?php echo $token;?>')" />
       </div> 
@@ -105,6 +119,11 @@ function SearchRecords()
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

@@ -64,9 +64,46 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/assign_sim_to_technician.js"></script>
+<!--<script type="text/javascript" src="js/assign_sim_to_technician.js"></script>-->
 <script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+// pass ajax request when click assign sime
+$(document).ready(function(){
+	$("#assign_sim").click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/assign_sim_branch_technician.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+// end 
+// pass ajax request when click view assign
+$(document).ready(function(){
+	$('#view_assign').click(function(){
+	$('.loader').show();
+	$.post("ajaxrequest/view_assign_sim_branch_technician.php?token=<?php echo $token;?>",
+				{
+					technician_id : $('#technician_id').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+// end
+</script>
 </head>
 <body>
 <!--open of the wraper-->
@@ -85,6 +122,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
       <div class="col-md-12">
       	<div class="form-group">
     		<label for="exampleInputName2">Branch</label>
+            <?php 
+			$branchname = $_SESSION['branch'];
+			if($branchname == 14)
+			{
+			?>
     			<select name="branch" id="branch" class="form-control drop_down">
                 <option label="" value="" selected="selected">Select Branch</option>
                 <?php $Country=mysql_query("select * from tblbranch");									  
@@ -93,6 +135,20 @@ if (isset($_SESSION) && $_SESSION['login']=='')
                 <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                 <?php } ?>
                 </select>
+             <?php
+			 }
+			 else
+			 {
+			 ?>
+             	<select name="branch" id="branch" class="form-control drop_down">
+                <option label="" value="" selected="selected">Select Branch</option>
+                <?php $Country=mysql_query("select * from tblbranch where id = '$branchname'");									  
+					   while($resultCountry=mysql_fetch_assoc($Country)){
+				?>
+                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                <?php } ?>
+                </select>
+             <?php }?>
   		</div>
         <div class="form-group">
             <label for="exampleInputEmail2">Technician</label>
@@ -105,8 +161,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
                 <?php } ?>
                 </select>
         </div>
-  		<input type="button" name="assign_sim" id="assign_sim" value="Assign Sim" class="btn btn-primary" onClick="ShowByBranch()" />
-        <input type="button" name="view_assign" id="view_assign" value="view Assign" class="btn btn-primary" onClick="ViewAssign()" />
+  		<input type="button" name="assign_sim" id="assign_sim" value="Assign Sim" class="btn btn-primary btn-sm"/>
+        <input type="button" name="view_assign" id="view_assign" value="view Assign" class="btn btn-primary btn-sm"  />
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
@@ -122,10 +178,14 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

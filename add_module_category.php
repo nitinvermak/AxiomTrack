@@ -25,18 +25,18 @@ $displayname = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['display
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblmoduleCategory set moduleCategory='$name', displayname='$displayname' where moduleCatId=" .$_REQUEST['id'];
+$sql="update tblmodulecategory set moduleCategory='$name', displayname='$displayname' where moduleCatId=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Module Category updated successfully';
 header("location:manage_module_category.php?token=".$token);
 exit();
 }
 else{
-$queryArr=mysql_query("select * from tblmoduleCategory where moduleCategory ='$name'");
+$queryArr=mysql_query("select * from tblmodulecategory where moduleCategory ='$name'");
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblmoduleCategory set  moduleCategory='$name', displayname='$displayname' ");
+$query=mysql_query("insert into tblmodulecategory set  moduleCategory='$name', displayname='$displayname' ");
 $_SESSION['sess_msg']='Module Category added successfully';
 header("location:manage_module_category.php?token=".$token);
 exit();
@@ -48,7 +48,7 @@ $msg="Module Category already exists";
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblmoduleCategory where moduleCatId =".$_REQUEST['id']);
+$queryArr=mysql_query("select * from tblmodulecategory where moduleCatId =".$_REQUEST['id']);
 $result=mysql_fetch_assoc($queryArr);
 }
 ?>

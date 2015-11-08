@@ -1,11 +1,11 @@
 <?php
 include("../includes/config.inc.php"); 
 //include("includes/crosssite.inc.php"); 
-$date = $_REQUEST['date'];
-$dateto = $_GET['dateto'];
-$executive = $_GET['executive'];
-$branch = $_GET['branch'];
-$status = $_GET['status'];
+$date = mysql_real_escape_string($_POST['date']);
+$dateto = mysql_real_escape_string($_POST['dateto']);
+$executive = mysql_real_escape_string($_POST['executive']);
+$branch = mysql_real_escape_string($_POST['branch']);
+$status = mysql_real_escape_string($_POST['status']);
 error_reporting(0);
 $linkSQL = "SELECT A.ticket_id as T_Id, A.organization_id as O_Id, A.createddate as Create_date, A.close_date as C_date, A.product as P_id, A.rqst_type as R_type, A.ticket_status as T_status, A.appointment_date as ap_date, C.technician_id as T_name, B.branch_id as B_name
 			FROM tblticket as A 

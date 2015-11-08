@@ -15,12 +15,12 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				 <tr>
-	             <th>Sl. No.</th>                        
-	             <th>Device Model</th>  
-	             <th>Device Id</th>
-	             <th>IMEI No.</th>  
-	             <th>Status</th>
-	             <th>Actions 
+	             <th><small>S. No.</small></th>                        
+	             <th><small>Device Model</small></th>  
+	             <th><small>Device Id</small></th>
+	             <th><small>IMEI No.</small></th>  
+	             <th><small>Status</small></th>
+	             <th><small>Actions</small>
                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                        	&nbsp;&nbsp;
                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>         </th>   
@@ -45,23 +45,23 @@ if(mysql_num_rows($stockArr)>0)
   	
  				?>
                 <tr <?php print $class?>>
-                <td><?php print $kolor++;?>.</td>
-				<td><?php echo getdevicename(stripslashes($row["device_name"]));?></td>
-                <td><?php echo stripslashes($row["id"]);?></td>	
-				<td><?php echo stripslashes($row["imei_no"]);?></td>
-                <td><?php echo stripslashes($row["date_of_purchase"]);?></td>			  
+                <td><small><?php print $kolor++;?>.</small></td>
+				<td><small><?php echo getdevicename(stripslashes($row["device_name"]));?></small></td>
+                <td><small><?php echo stripslashes($row["id"]);?></small></td>	
+				<td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
+                <td><small><?php echo stripslashes($row["date_of_purchase"]);?></small></td>			  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                 </tr>
  				<?php }
 				}
     			else
-   		 			echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3></td><tr/></table><br>";
+   		 			echo "<h3 style='color:red'>No records found!</h3><br>";
 				?> 
                 <form method="post">
                 <table>
                 <tr>
                 <td></td>
-                <td colspan="3"><input type="submit" name="submit" value="Confirm" onClick="return val();" class="btn btn-primary" id="submit" /> </td>
+                <td colspan="3"><input type="submit" name="submit" value="Confirm" onClick="return val();" class="btn btn-primary btn-sm" id="submit" /> </td>
                 <td></td>
                 </tr>
                 </table>

@@ -80,7 +80,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script  src="js/ajax.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script type="text/javascript" src="js/assign_ticket_branch.js"></script>
+<!--<script type="text/javascript" src="js/assign_ticket_branch.js"></script>-->
 <script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
 <script>
  $(function() {
@@ -97,6 +97,27 @@ function confirmdelete(obj)
 			return false;
 		}
 	}
+// send ajax request
+function showUnassignedStock()
+	{   
+	    date = document.getElementById("date").value;
+		/*alert(date);*/
+		url="ajaxrequest/show_ticket_unassigned.php?date="+date+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,date,"getResponseticket");
+	}
+function showAssignedStock()
+	{
+		date = document.getElementById("date").value;
+		/*alert(date);*/
+		url="ajaxrequest/show_ticket_assigned.php?date="+date+"&token=<?php echo $token;?>";
+		/*alert(url);*/
+		xmlhttpPost(url,date,"getResponseticket");
+	} 
+function getResponseticket(str){
+	document.getElementById('divassign').innerHTML=str;
+	}
+// end
 </script>
 </head>
 <body>

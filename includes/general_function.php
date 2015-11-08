@@ -343,7 +343,7 @@ function fnRandomChar ($var_MaxLength = 8,$advanced=false,$loweruppper=0)
 function run_query($sql)
 {
 	$result=doquery($sql);
-	?>
+	?><title>getDeviceAmt</title>
 	<table border="1">
 		<tr>
 		<?php
@@ -969,6 +969,16 @@ function getDeviceAmt($id)
   $result=mysql_fetch_assoc($rs);
   if($result['plan_rate'])
   return $result['plan_rate'];
+  else
+  return NULL;
+}
+function getFrequency($id)
+{
+  $sql="select FrqDescription from tbl_frequency where FrqId=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['FrqDescription'])
+  return $result['FrqDescription'];
   else
   return NULL;
 }

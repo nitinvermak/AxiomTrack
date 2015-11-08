@@ -16,15 +16,15 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table class="table table-hover table-bordered">  ';
 ?>		
                   	   <tr>
-                  	   <th>S. No.</th>     
-                  	   <th>Name</th>  
-                   	   <th>Company Name</th>  
-                  	   <th>Phone</th>
-                   	   <th>Mobile</th>
-                       <th>State</th>
-                       <th>City</th>
-                       <th>Area</th>
-                  	   <th>Actions</th>   
+                  	   <th><small>S. No.</small></th>     
+                  	   <th><small>Name</small></th>  
+                   	   <th><small>Company Name</small></th>  
+                  	   <th><small>Phone</small></th>
+                   	   <th><small>Mobile</small></th>
+                       <th><small>State</small></th>
+                       <th><small>City</small></th>
+                       <th><small>Area</small></th>
+                  	   <th><small>Actions</small></th>   
                        </tr>    
                  
 					   <?php
@@ -46,15 +46,15 @@ if(mysql_num_rows($stockArr)>0)
                         
                       ?>
     	 			 <tr <?php print $class?>>
-                     <td><?php print $kolor++;?>.</td>
-					 <td><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></td>
-				     <td><?php echo stripslashes($row["Company_Name"]);?></td>
-					 <td><?php echo stripslashes($row["Phone"]);?></td>
-					 <td><?php echo stripslashes($row["Mobile"]);?></td>
-                     <td><?php echo getstate(stripslashes($row["State"]));?></td>
-                     <td><?php echo getcities(stripslashes($row["City"]));?></td>
-                     <td><?php echo getarea(stripslashes($row["Area"]));?></td>
-                     <td><a href="telecalling_form.php?id=<?php echo $row["callingdata_id"]; ?>&token=<?=$token?>&cat=<?php echo $callingcategory; ?>">Status</a></td>
+                     <td><small><?php print $kolor++;?>.</small></td>
+					 <td><small><?php echo stripslashes($row["First_Name"]." ".$row["Last_Name"]);?></small></td>
+				     <td><small><?php echo stripslashes($row["Company_Name"]);?></small></td>
+					 <td><small><?php echo stripslashes($row["Phone"]);?></small></td>
+					 <td><small><?php echo stripslashes($row["Mobile"]);?></small></td>
+                     <td><small><?php echo getstate(stripslashes($row["State"]));?></small></td>
+                     <td><small><?php echo getcities(stripslashes($row["City"]));?></small></td>
+                     <td><small><?php echo getarea(stripslashes($row["Area"]));?></small></td>
+                     <td><small><a href="telecalling_form.php?id=<?php echo $row["callingdata_id"]; ?>&token=<?=$token?>&cat=<?php echo $callingcategory; ?>">Status</a></small></td>
                      </tr>
  
 	<?php 
@@ -64,5 +64,5 @@ if(mysql_num_rows($stockArr)>0)
 
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red'>No records found!</h3><br><br>";
 	?> 

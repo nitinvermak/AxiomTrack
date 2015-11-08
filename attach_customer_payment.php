@@ -16,7 +16,6 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 		header("location: home.php?token=".$token);
 }
 $error =0;
-/*echo "ok11";*/
 if(isset($_REQUEST['cust_id']) && $_REQUEST['cust_id']){
 $queryArr=mysql_query("SELECT A.cust_id, A.calling_product, B.Company_Name, B.created FROM tbl_customer_master as A 
 					   INNER JOIN  tblcallingdata as B 
@@ -56,6 +55,7 @@ function getValue1()
 function getValue(a){
     /*alert(a);
 	alert('as');*/
+	
 	elements= '#'+a+'   input';
 	elementsb= '#'+a+'   select'; 
 	jsonArr= [];
@@ -114,6 +114,7 @@ function getValue(a){
 	 url="ajaxrequest/add_vehicle_Plan_Info.php?token=<?php echo $token;?>";	
 	 /*url="ajaxrequest/test.php?token=<?php echo $token;?>";  */               
 		/*alert(url);*/
+	 
 	 postData = {'PostData': jsonArr };
 	 //postData = {'PostData': 1234 };
 	 //alert(postData.PostData);
@@ -122,7 +123,7 @@ function getValue(a){
 
 function getValueHistoryPage(b){
     //alert(b);
-	alert('as');
+	/*alert('as');*/
 	 
 	elements= '#'+b+'   input';
 	elementsb= '#'+b+'   select'; 
@@ -231,6 +232,7 @@ $(document).on("click","#update", function(){
 // --------------------------- End --------------------------------------------------//
 // ---------------- Add Payments Details --------------------------------------- //
 $(document).on("click","#add_vehicle", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/add_vehicle.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -238,13 +240,15 @@ $(document).on("click","#add_vehicle", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
-						
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 						
 				});	 
 })
 // --------------------------- End  -------------------------------------------//
 // --------------------------- Show Edit ------------------------------///
 $(document).on("click","#showEdit", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/edit_payment_details.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -252,11 +256,14 @@ $(document).on("click","#showEdit", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // ------------------------- End ---------------------//
 // ---------------------------- Show History ------------------------//
 $(document).on("click","#showHistory", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/show_plan_history.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -264,23 +271,29 @@ $(document).on("click","#showHistory", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // ------------------------------ End -----------------------------//
 // -------------------------- Add Service Branch ---------------------------//
 $(document).on("click","#manageServiceBranch", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/assign_service.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
 				},
 					function( data){
 						/*alert(data);*/
-						$("#divShow").html(data);
+						$("#divShow").html(data);				
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // ----------------------------- End -------------------------------------//
 // --------------------------- Edit Service Branch -----------------------//
 $(document).on("click","#editServiceBranch", function(){
+	$('.loader').show();
 	$.post("ajaxrequest/edit_service_branch.php?token=<?php echo $token;?>",
 				{
 					cust_id : $('#cust_id').val()
@@ -288,20 +301,34 @@ $(document).on("click","#editServiceBranch", function(){
 					function( data){
 						/*alert(data);*/
 						$("#divShow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 })
 // --------------------------- End -------------------------------//
 // --------------------- History View ------------------------------//
-$(document).on("click","#Save", function(){
+function getDetails(obj)
+{
+	var vehicleId = obj;
+	var id = "#divHistory"+vehicleId;
+	var divId = '#dataDivHistory'+vehicleId;
+	if($('#image').attr('src') === 'images/plus.gif'){ /* check source */
+            $('#image').attr('src','images/minus.gif'); /* change source */
+        }
+        else{
+            $('#image').attr('src','images/plus.gif'); /* change source */
+        }
+	//alert(id);
+	$(id).toggle();
 	$.post("ajaxrequest/show_details.php?token=<?php echo $token;?>",
 				{
-					vehicle_id : $('#vehicle_id').val()
+					vehicle_id : vehicleId
 				},
 					function( data){
 						/*alert(data);*/
-						$("#divHistory").html(data);
+						$(divId).html(data);
 				});	 
-})
+}
 // ------------------------ End ----------------------------------//
 //---------------------- Case Check ---------------------------- //
 $(document).on("change",".device_type", function(){
@@ -313,7 +340,7 @@ $(document).on("change",".device_type", function(){
 	//alert(deviceType);
 	if(deviceType == 1)
 	{
-		/*alert(deviceType);*/
+		//alert(deviceType);
 		$(parentId).find('.device_amt').prop("disabled", false);
 		$(parentId).find('.device_rent').prop("disabled", false);
 		$(parentId).find('.rent_frq').prop("disabled", false);
@@ -323,11 +350,17 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 2)
 	{
-		/*alert(deviceType);*/
-		$(parentId).find(".device_amt option[value='']").attr('selected', true);
-		$(parentId).find('.device_amt').val('0').attr("selected", "selected");
-		$(parentId).find('.device_amt').val("disabled", true);
-		$(parentId).find('.device_amt').prop("disabled", true);
+		//alert(deviceType);
+ 		$(parentId).find('.device_amt').prop("disabled", false);
+		$(parentId).find('.device_amt > option').each(function () {		 
+		   	if ($(this).text() == "0") {
+				
+				$(this).attr("selected", "selected");
+				$(this).prop('selected', true);
+				return;
+			}
+		});			
+  		$(parentId).find('.device_amt').prop("disabled", true);
 		$(parentId).find('.device_rent').prop("disabled", false);
 		$(parentId).find('.rent_frq').prop("disabled", false);
 		$(parentId).find('.installation_charges').prop("disabled", false);
@@ -336,10 +369,18 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 3)
 	{
-		/*alert(deviceType);*/
-		$(parentId).find('.device_amt').prop("disabled", true);
-		$(parentId).find('.device_amt').val('0').attr("selected", "selected");
-		$(parentId).find('.device_amt').val("disabled", true);
+		//alert(deviceType);		
+ 		$(parentId).find('.device_amt').prop("disabled", false);
+		$(parentId).find('.device_amt > option').each(function () {
+		     
+		   	if ($(this).text() == "0") {
+			   
+				$(this).attr("selected", "selected");
+				$(this).prop('selected', true);
+				return;
+			}
+		});			
+  		$(parentId).find('.device_amt').prop("disabled", true);
 		$(parentId).find('.rent_frq').prop("disabled", false);
 		$(parentId).find('.installation_charges').prop("disabled", false);
 		$(parentId).find('.downpayment').prop("disabled", true);
@@ -347,7 +388,7 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 4)
 	{
-		/*alert(deviceType);*/
+		//alert(deviceType);
 		$(parentId).find('.device_amt').prop("disabled", false);
 		$(parentId).find('.device_rent').prop("disabled", false);
 		$(parentId).find('.rent_frq').prop("disabled", false);
@@ -357,7 +398,15 @@ $(document).on("change",".device_type", function(){
 	}	
 });
 // -------------------------- End ------------------------- //
-
+// calculate installment amt
+function calTotal(obj)
+{
+	var deviceAmt = document.getElementById('device_amt'+obj); 
+	var selectedText = deviceAmt.options[deviceAmt.selectedIndex].text;
+	var NoOfInstallation = document.getElementById('NoOfInstallation'+obj).value; 
+   	document.getElementById('installationAmount'+obj).value = selectedText / NoOfInstallation;
+}
+//end
 </script>
 </head>
 <body>
@@ -408,13 +457,10 @@ $(document).on("change",".device_type", function(){
         </td>
         </tr>
       </table>
-      
-      <div id="divShow">
-      </div>
-      <div id="divHistory">
-        	
-      </div>
   	  </div>
+       <div id="divShow">
+      <!-- Show payment history -->
+      </div>
       </form>
       </div>
       <div class="col-md-3">
@@ -429,6 +475,11 @@ $(document).on("change",".device_type", function(){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

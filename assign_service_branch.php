@@ -80,6 +80,9 @@ $(document).on("click","#Search", function(){
         <hr>
     </div>
     <div class="col-md-12">
+    <center>
+    	<div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
+    </center>
       <div class="col-md-6">
         <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Customer Id, Company Name or Mobile">
         <input type="submit" name="Search" id="Search" value="Search"  class="btn btn-primary btn-sm"/>

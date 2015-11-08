@@ -69,17 +69,21 @@ function formvalid()
 <div class="row" id="content">
 	<div class="col-md-12">
     	<center>
-        <form name="login" action="login.php" method="post" onsubmit="formvalid()">
+        <form name="login" action="login.php" method="post" onSubmit="formvalid()">
         <input type="hidden" name="submitForm" value="yes" />
         <input type="hidden" name="encpassword" value="" />
          <table>
              <tr>
                  <td><strong>Username</strong></td>
-                 <td><input name="txtusername" type="text" class="form-control" id="txtusername" value="Enter User Name" onblur="if(this.value=='') this.value='Enter User Name'" onfocus="if(this.value =='Enter User Name' ) this.value=''"/></td>
+                 <td><input name="txtusername" type="text" class="form-control" id="txtusername" value="Enter User Name" onBlur="if(this.value=='') this.value='Enter User Name'" onFocus="if(this.value =='Enter User Name' ) this.value=''"/></td>
              </tr>
              <tr>
                  <td><strong>Password</strong></td>
-                 <td> <input value="Enter Password" class="form-control" onblur="if(this.value=='') this.value='Enter Password'" onfocus="if(this.value =='Enter Password' ) this.value=''" name="txtpassword" type="password" id="txtpassword" /></td>
+                 <td> <input value="Enter Password" class="form-control" onBlur="if(this.value=='') this.value='Enter Password'" onFocus="if(this.value =='Enter Password' ) this.value=''" name="txtpassword" type="password" id="txtpassword" /></td>
+             </tr>
+             <tr>
+               <td></td>
+               <td><a href="">Forgot Password</a></td>
              </tr>
              <tr>
                  <td></td>

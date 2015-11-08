@@ -78,19 +78,25 @@ if(isset($_POST['active']))
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>
-function ShowContacts()
-	{
-		searchText = document.getElementById("searchText").value;
-		/*alert(searchText);*/
-		url="ajaxrequest/show_customer_for_payment.php?searchText="+searchText+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,searchText,"GetResponse");
-	} 
-function GetResponse(str){
-	document.getElementById('divshow').innerHTML=str;
-	}
+// send ajax request
+$(document).ready(function(){
+	$('#Search').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_customer_for_payment.php?token=<?php echo $token;?>",
+				{
+					searchText : $('#searchText').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divshow").html(data);
+						$(".loader").removeAttr("disabled");
+            			$('.loader').fadeOut(1000);
+				});	 
+	});
+});
+//end
 </script>
 </head>
 <body>
@@ -105,11 +111,17 @@ function GetResponse(str){
     	<h3>Customer Profile</h3>
         <hr>
     </div>
-    <div class="col-md-12">
-      <div class="col-md-6">
-        <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Customer Id, Company Name or Mobile">
-        <input type="submit" name="Search" id="Search" value="Search" onClick="ShowContacts()" class="btn btn-primary btn-sm"/>
-        </div>
+    <div class="col-md-12 table-responsive">
+      <table width="437">
+      <tr>
+      <td width="301">
+      <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Customer Id, Company Name or Mobile">
+      </td>
+      <td width="124">
+      <input type="submit" name="Search" id="Search" value="Search" class="btn btn-primary btn-sm"/>
+      </td>
+      </tr>
+      </table>
     </div>
     <div class="clearfix"></div><br>
     <div class="col-md-12">
@@ -128,10 +140,12 @@ function GetResponse(str){
     </div>
 </div>
 <!--end footer-->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

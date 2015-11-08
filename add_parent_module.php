@@ -24,18 +24,18 @@ $moduleCategory = htmlspecialchars(mysql_real_escape_string(trim($_POST['moduleC
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblModuleParentName set parentName='$parentModule', moduleCatId = '$moduleCategory' where parentId=" .$_REQUEST['id'];
+$sql="update tblmoduleparentname set parentName='$parentModule', moduleCatId = '$moduleCategory' where parentId=" .$_REQUEST['id'];
 mysql_query($sql);
 $_SESSION['sess_msg']='Parent Module Name updated successfully';
 header("location:manage_parent_module.php?token=".$token);
 exit();
 }
 else{
-$queryArr=mysql_query("select * from tblModuleParentName where parentName='$parentModule'");
+$queryArr=mysql_query("select * from tblmoduleparentname where parentName='$parentModule'");
 //$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblModuleParentName set parentName='$parentModule', moduleCatId	= '$moduleCategory'");
+$query=mysql_query("insert into tblmoduleparentname set parentName='$parentModule', moduleCatId	= '$moduleCategory'");
 $_SESSION['sess_msg']='Parent Module Name added successfully';
 header("location:manage_parent_module.php?token=".$token);
 exit();
@@ -47,7 +47,7 @@ $msg="Parent Module Name already exists";
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblModuleParentName where parentId =".$_REQUEST['id']);
+$queryArr=mysql_query("select * from tblmoduleparentname where parentId =".$_REQUEST['id']);
 $result=mysql_fetch_assoc($queryArr);
 }
 ?>
@@ -92,7 +92,7 @@ $result=mysql_fetch_assoc($queryArr);
           <td>Module Category*</td>
           <td><select name="moduleCategory" id="moduleCategory" class="form-control input-sm drop_down">
                 <option label="" value="">Select Module Category</option>
-                        <?php $Country=mysql_query("SELECT * FROM tblmoduleCategory ORDER BY moduleCategory ASC ");
+                        <?php $Country=mysql_query("SELECT * FROM tblmodulecategory ORDER BY moduleCategory ASC ");
                                        while($resultCountry=mysql_fetch_assoc($Country)){
                         ?>
                         <option value="<?php echo $resultCountry['moduleCatId']; ?>" <?php if(isset($result['moduleCatId']) && $resultCountry['moduleCatId']==$result['moduleCatId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['moduleCategory'])); ?></option>
