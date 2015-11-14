@@ -40,10 +40,24 @@ if(isset($_POST['submit']))
 		$telecaller = mysql_real_escape_string($_POST['telecaller']);
 		$callingdate = mysql_real_escape_string($_POST['callingdate']);
 		$customerType = mysql_real_escape_string($_POST['customerType']);
-		$UpdateCallingData = "UPDATE tblcallingdata SET First_Name = '$first_name', Last_Name = '$last_name', Company_Name = '$company', Phone = '$phone', Mobile = '$mobile', email = '$email', Country = '$country', State = '$state', District_id = '$district', City = '$city', Area = '$area', Pin_code = '$pin_code', Address = '$Address', data_source = '$datasource' where id =".$_REQUEST['id'];
+		$deviceAmt = mysql_real_escape_string($_POST['deviceAmt']);
+		$deviceRent = mysql_real_escape_string($_POST['deviceRent']);
+		$installationChrg = mysql_real_escape_string($_POST['installationChrg']);
+		$rentFrq = mysql_real_escape_string($_POST['rentFrq']);
+
+		$UpdateCallingData = "UPDATE tblcallingdata SET First_Name = '$first_name', Last_Name = '$last_name', 
+							  Company_Name = '$company', Phone = '$phone', Mobile = '$mobile', email = '$email', 
+							  Country = '$country', State = '$state', District_id = '$district', City = '$city', 
+							  Area = '$area', Pin_code = '$pin_code', Address = '$Address', 
+							  data_source = '$datasource' where id =".$_REQUEST['id'];
 		/*echo $UpdateCallingData;*/
 		$result = mysql_query($UpdateCallingData);
-		$UpdateCustomerMaster = "UPDATE tbl_customer_master SET LeadGenBranchId = '$branch', customer_type = '$customerType', telecaller_id = '$telecaller', confirmation_date = '$callingdate' Where callingdata_id =".$_REQUEST['id'];
+		$UpdateCustomerMaster = "UPDATE tbl_customer_master SET LeadGenBranchId = '$branch', 
+								 customer_type = '$customerType', telecaller_id = '$telecaller', 
+								 confirmation_date = '$callingdate', np_device_amt = '$deviceAmt',  
+								 np_device_rent = '$deviceRent', r_installation_charge = '$installationChrg',
+								 rent_payment_mode = '$rentFrq'
+								 Where callingdata_id =".$_REQUEST['id'];
 		/*echo $UpdateCustomerMaster;*/
 		$result = mysql_query($UpdateCustomerMaster);
 		$_SESSION['sess_msg']='Customer updated successfully';
@@ -60,10 +74,6 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
 	$result=mysql_fetch_assoc($queryArr);
 	
 	}
-/*if(isset($_GET['id']))
-{
- $id = $_GET['id'];
-}*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -265,10 +275,58 @@ function CallPincode()
             <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['id']) && $resultCountry['id']==$result['telecaller_id']){ ?>selected<?php } ?>><?php echo gettelecallername(stripslashes(ucfirst($resultCountry['id']))); ?></option>
             <?php } ?>    
         </select>
-           <!-- <input type="text" name="datasource" id="datasource" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['telecaller_id']; ?>" />-->
-        </td>
+           <!-- <input type="text" name="datasource" id="datasource" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['telecaller_id']; ?>" />-->        </td>
         <td>Data Source*</td>
         <td><input type="text" name="datasource" id="datasource" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['data_source']; ?>" />        </td>
+        </tr>
+        <tr>
+          <td>Device Amt.*</td>
+          <td  valign="top">
+          	<select name="deviceAmt" id="deviceAmt" class="form-control drop_down">
+                    <option value="">Device Amount</option>
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1 order by plan_rate");
+                          while($resultCountry=mysql_fetch_assoc($Country)){
+                    ?>
+                  	  <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['np_device_amt']) && $resultCountry['id']==$result['np_device_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                <?php } ?>
+         	</select>
+          </td>
+          <td>Rent Amt.</td>
+          <td>
+          		<select name="deviceRent" id="deviceRent" class="form-control drop_down" >
+                    <option value="">Device Rent</option>
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 2 order by plan_rate");						
+                          while($resultCountry=mysql_fetch_assoc($Country)){
+                    ?>
+                    <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['np_device_rent']) && $resultCountry['id']==$result['np_device_rent']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                    <?php } ?>
+    			</select>
+        </td>
+        </tr>
+        <tr>
+          <td>Installation Charges</td>
+          <td  valign="top">
+          	<select name="installationChrg" id="installationChrg" class="form-control drop_down" >
+                   <option value="">Installation Charges</option>
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3 order by plan_rate");
+					
+                          while($resultCountry=mysql_fetch_assoc($Country)){
+                    ?>
+                <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['r_installation_charge']) && $resultCountry['id']==$result['r_installation_charge']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                    <?php } ?>
+        	</select>
+          </td>
+          <td>Rent Frq.</td>
+          <td>
+          	<select name="rentFrq" id="rentFrq" class="form-control drop_down" >
+                    <option value="">Rent Frequency</option>
+                    <?php $Country=mysql_query("select * from tbl_frequency");						
+                                   while($resultCountry=mysql_fetch_assoc($Country)){
+                    ?>
+                    <option value="<?php echo $resultCountry['FrqId']; ?>" <?php if(isset($result['rent_payment_mode']) && $resultCountry['FrqId']==$result['rent_payment_mode']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['FrqDescription'])); ?></option>
+                    <?php } ?>
+            </select>
+          </td>
         </tr>
         <tr>
         <td>Customer Type</td>
@@ -280,8 +338,7 @@ function CallPincode()
                 ?>
           <option value="<?php echo $resultCountry['customer_type_id']; ?>" <?php if(isset($result['customer_type']) && $resultCountry['customer_type_id']==$result['customer_type']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['customer_type'])); ?></option>
           <?php } ?>
-    	  </select>
-        </td>
+    	  </select>        </td>
         <td>Calling Date*</td>
         <td><input name="callingdate" id="callingdate" class="form-control text_box" type="text" value="<?php if(isset($result['id'])) echo $result['confirmation_date']; ?>" /></td>
         </tr>

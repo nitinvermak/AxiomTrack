@@ -5,9 +5,11 @@ $search_box = mysql_real_escape_string($_POST['search_box']);
 /*echo "Sim Report"; */
 $branchname = $_SESSION['branch'];
 error_reporting(0);
-if($branchname == 14)
-{
-	$linkSQL = "SELECT * FROM tblsim as A 
+	$linkSQL = "SELECT A.sim_no as simNo, A.company_id as provider, A.mobile_no as mobileNo, A.status_id as statusId, 
+				A.branch_assign_status as branchAssignStatus, D.CompanyName as branchname,
+				B.technician_assign_status as technicianStatus, C.technician_id as technicianId,
+				G.callingdata_id as callingDataId, E.First_Name as fName, E.Last_Name as lName
+				FROM tblsim as A 
 				LEFT OUTER JOIN tbl_sim_branch_assign as B
 				ON A.id = B.sim_id
 				LEFT OUTER JOIN tbl_sim_technician_assign as C
@@ -15,20 +17,12 @@ if($branchname == 14)
 				LEFT OUTER JOIN tblbranch as D 
 				ON B.branch_id = D.id
 				LEFT OUTER JOIN tbluser as E 
-				ON C.technician_id = E.id WHERE A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%'";
-}
-else
-{
-	$linkSQL = "SELECT * FROM tblsim as A 
-				LEFT OUTER JOIN tbl_sim_branch_assign as B
-				ON A.id = B.sim_id
-				LEFT OUTER JOIN tbl_sim_technician_assign as C
-				ON B.sim_id = C.sim_id
-				LEFT OUTER JOIN tblbranch as D 
-				ON B.branch_id = D.id
-				LEFT OUTER JOIN tbluser as E 
-				ON C.technician_id = E.id WHERE (A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%') And B.branch_id = '$branchname'";
-}
+				ON C.technician_id = E.id 
+				LEFT OUTER JOIN tbl_gps_vehicle_master as F 
+				ON A.id = F.mobile_no
+				LEFT OUTER JOIN tbl_customer_master as G 
+				ON F.customer_Id = G.cust_id
+				WHERE A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%'";
 /*echo $linkSQL;*/
 $stockArr = mysql_query($linkSQL);
 /*$total_num_rows = mysql_num_rows($stockArr);*/
@@ -43,11 +37,11 @@ if(mysql_num_rows($stockArr)>0)
               	<th><small>Mobile No.</small></th>
               	<th><small>Company</small></th> 
               	<th><small>Status (Instock/Installed)</small></th>
-              	<th><small>Allocated/ Unallocated</small></th>   
-              	<th><small>Branch Id</small></th>   
+              	<th><small>Allocated/Unallocated</small></th>   
+              	<th><small>Branch</small></th>   
               	<th><small>Branch Status</small></th>
-              	<th><small>Technician Id</small></th>
-              	<th><small>Technician Status</small></th>                          
+              	<th><small>Technician</small></th>
+              	<th><small>Installed Company</small></th>                          
               	</tr>    
 				<?php
 				$kolor=1;
@@ -76,13 +70,13 @@ if(mysql_num_rows($stockArr)>0)
 			 	?>
 	 			<tr <?php print $class?>>
 	 			<td><small><?php print $kolor++;?>.</small></td>
-	 			<td><small><?php echo stripslashes($row["sim_no"]);?></small></td>
-	 			<td><small><?php echo stripslashes($row["mobile_no"]);?></small></td>
-	 			<td><small><?php echo getserviceprovider(stripslashes($row["company_id"]));?></small></td>
+	 			<td><small><?php echo stripslashes($row["simNo"]);?></small></td>
+	 			<td><small><?php echo stripslashes($row["mobileNo"]);?></small></td>
+	 			<td><small><?php echo getserviceprovider(stripslashes($row["provider"]));?></small></td>
 	 			<td>
 				<small>
 					<?php 
-					if($row["status_id"] == 0)
+					if($row["statusId"] == 0)
 						{  
 							echo "<span style='color:red; font-weight:bold;'>Instock</span>";
 						}
@@ -96,7 +90,7 @@ if(mysql_num_rows($stockArr)>0)
                 <td>
                 <small>
 					<?php 
-                    if($row["branch_assign_status"] == 0)
+                    if($row["branchAssignStatus"] == 0)
                         {
                         	echo "<span class='no'>Unallocated</span>";
                         }
@@ -107,11 +101,11 @@ if(mysql_num_rows($stockArr)>0)
                     ?>
                 </small>
                 </td>
-                <td><small><?php echo stripslashes($row["CompanyName"]);?></small></td>
+                <td><small><?php echo stripslashes($row["branchname"]);?></small></td>
                 <td>
                 <small>
 				<?php  
-                if($row["technician_assign_status"] == 0)
+                if($row["technicianStatus"] == 0)
                     {
                     echo "<span class='no'>InStock</span>";
                     }
@@ -125,13 +119,13 @@ if(mysql_num_rows($stockArr)>0)
                 <td>
                 <small>
                 <?php 
-                if($row["technician_id"] == "")
+                if($row["technicianId"] == "")
                     {
                     echo "<span class='no'>N/A</span>";
                     }
                 else
                     {
-                    echo stripslashes($row["First_Name"]." ".$row["Last_Name"] );
+                    echo stripslashes($row["fName"]." ".$row["lName"] );
                     }
                 ?>
                 </small>
@@ -139,13 +133,13 @@ if(mysql_num_rows($stockArr)>0)
                 <td>
                 <small>
                 <?php 
-                if($row["status_id"] == 0)
+                if($row["callingDataId"] == 0)
                     {  
-                    echo "<span style='color:red; font-weight:bold;'>Instock</span>";
+                    echo "N/A";
                     }
                 else
                     {
-                    echo "<span style='color:green; font-weight:bold;'>Installed</span>";
+                    echo getOraganization($row['callingDataId']);
                     }
                 ?>
                 </small>

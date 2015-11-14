@@ -801,6 +801,29 @@ function getcities($id)
   else
   return NULL;
 }
+function BranchLogin($id)
+{
+  //return 'asdasd'; 		
+  $sql = "select branchId from userbranchmapping where userId = ".$id;
+   
+  $rs = mysql_query($sql);
+/*  $result = mysql_fetch_assoc($rs);*/
+  $auth_branch= '';
+  while($row =  mysql_fetch_array($rs)){
+  	if ($auth_branch){
+		$auth_branch = $auth_branch.','.$row['branchId'];
+	}else{
+		$auth_branch = $row['branchId'];		
+	}
+  }
+  if($auth_branch == 0){
+  	return $auth_branch;	
+  }else{
+  	return "(".$auth_branch.")";;
+  
+  }
+
+}
 function getcityname($id)
 {
   $sql="select City_Name from tbl_city_new where City_id=".$id;

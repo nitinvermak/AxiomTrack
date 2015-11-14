@@ -12,17 +12,18 @@ $linkSQL = "SELECT * FROM tblticket as A
 			INNER JOIN tbl_ticket_assign_branch as B 
 			ON A.ticket_id = B.ticket_id
 			INNER JOIN tbl_ticket_assign_technician as C 
-			ON B.ticket_id = C.ticket_id" ;
+			ON B.ticket_id = C.ticket_id ";
 			/*echo $linkSQL;*/ 
 
 if ( ( $dateform !='' and $dateto !='') or ($branch != 0) or ($users !=0) ){
-	$linkSQL  = $linkSQL." WHERE ";	
+	$linkSQL  = $linkSQL." WHERE";	
 }
+
 $counter = 0;
 if ( $dateform !='' and $dateto !='') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
-		$linkSQL  =$linkSQL." DATE(A.appointment_date) BETWEEN '$dateform' AND '$dateto' AND (ticket_status = 0 or ticket_status = 2) " ;
+		$linkSQL  =$linkSQL." DATE(A.appointment_date) BETWEEN '$dateform' AND '$dateto' AND (A.ticket_status = 0 OR A.ticket_status = 2)" ;
 		$counter+=1;
 		/*echo $linkSQL;*/
 }

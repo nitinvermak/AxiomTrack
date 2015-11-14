@@ -101,8 +101,24 @@ if($cust_id != "")
 					order by   C.vehicleId, C.typeOfPaymentId";
 		$oRS1 = mysql_query($linkSQL1); 
 		//echo 'num='.mysql_num_rows($oRS1);
+		
+		// tax query
+		$sql = "Select * from tbltax";
+		$resultSql = mysql_query($sql);
+		while($rowTax = mysql_fetch_array($resultSql))
+		{
+			
+			if($rowTax['taxTypeId'] == 1){
+				$saleTax = $rowTax['taxRate'];
+			}
+			elseif($rowTax['taxTypeId'] == 2){
+				$serviceTax = $rowTax['taxRate'];
+			}
+			 
+		}
+		/*echo 'num='.mysql_num_rows($resultSql);*/
  		?>
-     <!-- <thead>
+      <!-- <thead>
       <tr>
       <th><small>S. No.</small></th>
       <th><small>Vehile Reg. No.</small></th>
@@ -258,6 +274,82 @@ if($cust_id != "")
 		 
     }
     ?>
+    <?php 
+
+	?>
+    <tr>
+	<td></td>
+    <td></td>
+    <?php
+	if($typeB > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeC > 0)
+	{
+    	echo "<td></td>";
+	}
+	if($typeD >0)
+	{
+    echo "<td></td>";
+	}
+	if($typeE >0)
+	{
+    echo "<td></td>";
+	}
+	?>
+    <td><p class="pull-right"><strong>Entity Amount</strong></p></td>
+    <td>
+    	<?php 
+ 			if($row['invoiceType'] == 'A')
+			{
+				$entityAmount= (100 - $serviceTax ) * $orgTotal / 100;
+				$taxAmount = $serviceTax  * $orgTotal / 100;
+				echo 'RS.'.$entityAmount;
+				//echo 'serviceTax='.$serviceTax;
+			}
+			elseif ($row['invoiceType'] == 'B')
+			{
+				$entityAmount= (100 - $saleTax ) * $orgTotal / 100;
+				$taxAmount = $saleTax  * $orgTotal / 100;
+				echo 'RS.'.$entityAmount;
+				//echo '$saleTax='.$saleTax;
+			}
+			
+		?>
+    </td>
+    </tr>
+    
+    <tr>
+	<td></td>
+    <td></td>
+    <?php
+	if($typeB > 0)
+	{
+		echo "<td></td>";
+	}
+	if($typeC > 0)
+	{
+    	echo "<td></td>";
+	}
+	if($typeD >0)
+	{
+    echo "<td></td>";
+	}
+	if($typeE >0)
+	{
+    echo "<td></td>";
+	}
+	?>
+    <td><p class="pull-right"><strong>Tax Amount</strong></p></td>
+    <td>
+    	<?php 
+ 
+			echo 'RS.'.$taxAmount;
+			echo "<input type='hidden' name='total$invoiceId' id='total$invoiceId' value='$orgTotal'>";
+		?>
+    </td>
+    </tr>
     <tr>
 	<td></td>
     <td></td>

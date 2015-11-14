@@ -6,7 +6,12 @@ $searchText = $_REQUEST['searchText'];
 error_reporting(0);
 if($searchText !== '')
 {
-	$linkSQL = "SELECT A.cust_id as Cid, B.Company_Name as cname, A.activeStatus as activestatus , A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id  WHERE A.cust_id like '$searchText%' or B.Company_Name like '$searchText%' ";
+	$linkSQL = "SELECT A.cust_id as Cid, B.Company_Name as cname, A.activeStatus as activestatus , 
+				A.calling_product as P_id, 	A.confirmation_date as Cdate 
+				FROM tbl_customer_master as A 
+				INNER JOIN tblcallingdata as B 
+				ON A.callingdata_id = B.id  
+				WHERE B.Company_Name = '$searchText'";
 				/*echo "cmd" . $linkSQL;*/
 	$stockArr=mysql_query($linkSQL);
 	if(mysql_num_rows($stockArr)>0)
@@ -53,7 +58,7 @@ if($searchText !== '')
 	}
     else
 	{
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No records found!</h3><br><br>";
 	}
  }
 else

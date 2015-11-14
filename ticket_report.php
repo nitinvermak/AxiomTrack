@@ -139,11 +139,6 @@ $(document).ready(function(){
      <td class="col-xs-2"><input type="text" name="date" id="date" class="form-control text_box-sm date"/></td>
      <td class="col-xs-1"><strong>Branch*</strong></td>
 	 <td class="col-xs-2">
-     <?php 
-	 $branchName = $_SESSION['branch'];
-	 if($branchName == 14)
-	 {
-	 ?>
      	<select name="branch" id="branch" class="form-control drop_down-sm">
         <option value="0">All Branch</option>                         
         <?php $Country=mysql_query("SELECT * FROM `tblbranch` ORDER BY CompanyName ASC");								
@@ -155,23 +150,6 @@ $(document).ready(function(){
         <?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
         <?php } ?>
         </select>
-     <?php 
-	 }
-	 else
-	 {
-	 ?>
-     	<select name="branch" id="branch" class="form-control drop_down-sm">                       
-        <?php $Country=mysql_query("SELECT * FROM `tblbranch` where id = '$branchName' ORDER BY CompanyName ASC");								
-              while($resultCountry=mysql_fetch_assoc($Country))
-                   {
-        ?>
-        <option value="<?php echo $resultCountry['id']; ?>" 
-        <?php if(isset( $_SESSION['CompanyName']) && $resultCountry['id']== $_SESSION['CompanyName']){ ?>selected			        <?php } ?>>
-        <?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-        <?php } ?>
-        </select>	
-     <?php 
-	 }?>			
      </td>
      <td class="col-xs-1"><strong>Status*</strong></td>
      <td><select name="status" id="status" class="form-control drop_down-sm">
@@ -187,12 +165,7 @@ $(document).ready(function(){
      <td class="col-xs-1"><strong>Date&nbsp;(To)*</strong></td>
      <td class="col-xs-2"><input type="text" name="dateto" id="dateto" class="form-control text_box-sm date"/></td>
      <td class="col-xs-1"><strong>Executive*</strong></td>
-	 <td class="col-xs-2">
-     <?php 
-	 $branchName = $_SESSION['branch'];
-	 if($branchName == 14)
-	 {
-	 ?>
+	 <td class="col-xs-2">  
      	<select name="executive" id="executive" class="form-control drop_down-sm">
         <option value="0">All Executive</option>                         
         <?php $Country=mysql_query("SELECT * FROM `tbluser`");								
@@ -203,22 +176,6 @@ $(document).ready(function(){
         <?php echo stripslashes(ucfirst($resultCountry['First_Name']." " .$resultCountry['Last_Name'])); ?></option>
         <?php } ?>
         </select>
-     <?php 
-	 }
-	 else
-	 {
-	 ?>
-     	<select name="executive" id="executive" class="form-control drop_down-sm">
-        <option value="0">All Executive</option>                         
-        <?php $Country=mysql_query("SELECT * FROM `tbluser` WHERE branch_id = '$branchName'");								
-              while($resultCountry=mysql_fetch_assoc($Country))
-                   {
-        ?>
-        <option value="<?php echo $resultCountry['id']; ?>">
-        <?php echo stripslashes(ucfirst($resultCountry['First_Name']." " .$resultCountry['Last_Name'])); ?></option>
-        <?php } ?>
-        </select>
-     <?php }?>
      </td>
      <td>&nbsp;</td>
      <td><input type="button" name="assign" value="Submit" id="submit" class="btn btn-primary btn-sm pull-left"/>&nbsp;<input type="button" name="assign" value="Summary" onClick="window.location.replace('ticket_summary.php?token=<?php echo $token;?>')" id="submit" class="btn btn-primary btn-sm" /></td>

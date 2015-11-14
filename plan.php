@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -23,37 +24,41 @@ if(isset($_REQUEST['plan_category']))
 		$plan_category=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_category'])));
 		$service_provider=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['provider'])));
 		$plan_price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_price'])));
-		$taxId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['exclusive'])));
+		$taxId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['taxType'])));
 	}
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 {
-if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblplan set planSubCategory ='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Plan updated successfully';
-header("location:manage_plan.php?token=".$token);
-exit();
+	if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
+		$sql="update tblplan set planSubCategory ='$datasource', plan_description='$plan_description', 			   	         	              productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', 
+		      plan_rate='$plan_price', taxId = '$taxId' where id=" .$_REQUEST['id'];
+		mysql_query($sql);
+		$_SESSION['sess_msg']='Plan updated successfully';
+		header("location:manage_plan.php?token=".$token);
+		exit();
+	}
+	else{
+		$queryArr=mysql_query("select * from tblplan where productCategoryId = '$plan_category' and planSubCategory = '$datasource' 							   and plan_rate = '$plan_price'");
+		$result=mysql_fetch_assoc($queryArr);
+		 if(mysql_num_rows($queryArr)<=0)
+		 {
+			$query=mysql_query("insert into tblplan set planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxId = '$taxId'");
+			$_SESSION['sess_msg']='Plan added successfully';
+			header("location:manage_plan.php?token=".$token);
+			exit();
+		}
+		else
+		{
+		$msg="Plan already exists";
+		}
+	}
 }
-else{
-$queryArr=mysql_query("select * from tblplan where productCategoryId = '$plan_category' and planSubCategory = '$datasource' and plan_rate = '$plan_price'");
-$result=mysql_fetch_assoc($queryArr);
- if(mysql_num_rows($queryArr)<=0)
-{
-$query=mysql_query("insert into tblplan set planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxApplicationId = '$taxId'");
-$_SESSION['sess_msg']='Plan added successfully';
-header("location:manage_plan.php?token=".$token);
-exit();
-}
-else
-{
-$msg="Plan already exists";
-}
-}
-}
+
+
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
 $queryArr=mysql_query("select * from tblplan where id =".$_REQUEST['id']);
 $result=mysql_fetch_assoc($queryArr);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,10 +73,10 @@ $result=mysql_fetch_assoc($queryArr);
 <script type="text/javascript" src="js/manage_plan.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
 <script type="text/javascript">
+// send ajax request when select plan category
     $(function () {
       $('.ddlCountry').change(function () {
         var catId = ($(this).val());
-	/*	alert(catId);*/
 		$.post("ajaxrequest/show_plan_name.php?token=<?php echo $token;?>",
 				{
 					catId : (catId)
@@ -81,6 +86,22 @@ $result=mysql_fetch_assoc($queryArr);
 			});
 		});
     });
+// End 
+
+//  send ajax request when select tax type
+$(document).ready(function(){
+	$('#taxType').change(function(){
+	var catId = ($(this).val());
+	$.post("ajaxrequest/show_tax_rate.php?token=<?php echo $token;?>",
+			{
+				taxType : $("#taxType").val()
+			},
+			function(data){
+				$(".showTaxRate").html(data);
+			});
+	});
+});
+// end 
 </script>
 </head>
 <body>
@@ -110,14 +131,19 @@ $result=mysql_fetch_assoc($queryArr);
         <div id="plan_category">
         <tr >
         <td>Plan Category*</td>
-        <td><select name="plan_category" id="plan_category" class="form-control drop_down ddlCountry">
+        <td>
+        	<select name="plan_category" id="plan_category" class="form-control drop_down ddlCountry">
             <option value="">Select Plan Category</option>
             <?php $Country=mysql_query("select * from tblplancategory");
 						   while($resultCountry=mysql_fetch_assoc($Country)){
 			?>
-            <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['productCategoryId']) && $resultCountry['id']==$result['productCategoryId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['category'])); ?></option>
+            <option value="<?php echo $resultCountry['id']; ?>"
+			<?php if(isset($result['productCategoryId']) && $resultCountry['id']==$result['productCategoryId']){
+			?>selected<?php } ?>>
+			<?php echo stripslashes(ucfirst($resultCountry['category'])); ?></option>
             <?php } ?>
-            </select>        </td>
+            </select>        
+        </td>
         </tr>
         </div>
        <!-- <tr >
@@ -155,6 +181,32 @@ $result=mysql_fetch_assoc($queryArr);
          <tr >
          <td>Price*</td>
          <td><input type="text" name="plan_price" id="plan_price" class="form-control text_box" value="<?php if(isset($result['id'])) echo $result['plan_rate'];?>" />   </td>
+         </tr>
+		 <tr >
+         <td>Tax Type*</td>
+         <td>
+         	<select name="taxType" id="taxType" class="form-control drop_down">
+            <option value="">Select Tax Type</option>
+            <?php $Country=mysql_query("select * from tbltaxtype order by taxType");
+						   while($resultCountry=mysql_fetch_assoc($Country)){
+			?>
+            <option value="<?php echo $resultCountry['taxTypeId']; ?>"
+			<?php if(isset($result['productCategoryId']) && $resultCountry['id']==$result['productCategoryId']){
+			?>selected<?php } ?>>
+			<?php echo stripslashes(ucfirst($resultCountry['taxType'])); ?></option>
+            <?php } ?>
+            </select>
+         </td>
+         </tr>
+		 <tr >
+         <td>Tax Rate*</td>
+         <td>
+         	<div class="showTaxRate">
+            	<select name="taxRate" id="taxRate" class="form-control drop_down">
+                <option value="">Select Tax Rate</option>
+                </select>
+            </div>
+         </td>
          </tr>
          <tr >
          <td>Tax*</td>

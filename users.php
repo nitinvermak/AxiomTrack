@@ -54,7 +54,16 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				{
 					$sql="insert into tbluser set emp_id='$emp_id',First_Name='$first_name',Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), Contact_No='$contact',emailid='$email_id',DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'),Address='$address',countryId='$country',stateId='$state', districtId='$district', cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', branch_id='$branch', User_ID='$user_name', Password='$password',User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
 					/*echo $sql;*/
-					$query=mysql_query($sql);		
+					$query=mysql_query($sql);
+					$usedId =  mysql_insert_id();
+					if ($user_type == 1){
+						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='0' ";								
+					}
+					else {
+						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='$branch' ";						
+					}	
+					$addUserMapping = mysql_query($branchAuth_sql);
+						
 					echo "<script> alert('User Created Successfully!'); </script>";
 					header("location: manage_users.php?token=".$token);
 					exit();

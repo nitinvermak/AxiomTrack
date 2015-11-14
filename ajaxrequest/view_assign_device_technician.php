@@ -1,7 +1,8 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
-$technician_id=$_REQUEST['technician_id']; 
+include("../includes/crosssite.inc.php"); 
+$technician_id = mysql_real_escape_string($_POST['technician_id']); 
+/*echo $technician_id;*/
 error_reporting(0);
 if ($technician_id == 0)
 {
@@ -9,29 +10,29 @@ if ($technician_id == 0)
 				INNER JOIN tbl_device_assign_branch as B
 				ON A.id = B.device_id
 				INNER JOIN tbl_device_assign_technician as C
-				ON B.device_id = C.device_id where A.status='0'";
+				ON B.device_id = C.device_id where A.status='0' order by C.device_id";
 }
 else
 	$linkSQL = "SELECT * FROM tbl_device_master as A
 				INNER JOIN tbl_device_assign_branch as B
 				ON A.id = B.device_id
 				INNER JOIN tbl_device_assign_technician as C
-				ON B.device_id = C.device_id WHERE C.technician_id='{$technician_id}' and A.status='0'";
+				ON B.device_id = C.device_id WHERE C.technician_id='{$technician_id}' and A.status='0' order by C.device_id";
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
-	            <th>S. No.</td>                        
-	            <th>Device Model</th>  
-	            <th>Device Id</th>
-	            <th>IMEI No.</th>  
-	            <th>Branch</th>
-	            <th>Actions 
+	            <th><small>S. No.</small></td>                        
+	            <th><small>Device Model</small></th>  
+	            <th><small>Device Id</small></th>
+	            <th><small>IMEI No.</small></th>  
+	            <th><small>Branch</small></th>
+	            <th><small>Actions 
                 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                 &nbsp;&nbsp;
-                <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>
+                <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a></small>
                 </th>   
                 </tr>   
 				<?php
@@ -52,23 +53,23 @@ if(mysql_num_rows($stockArr)>0)
 								$class="bgcolor='#fff'";	
  				?>
        			<tr <?php print $class?>>
-                <td><?php print $kolor++;?>.</td>
-				<td><?php echo getdevicename(stripslashes($row["device_name"]));?></td>
-                <td><?php echo stripslashes($row["device_id"]);?></td>	
-				<td><?php echo getdeviceimei(stripslashes($row["device_id"]));?></td>	
-				<td><?php echo getBranch(stripslashes($row["branch_id"]));?></td>			  
+                <td><small><?php print $kolor++;?>.</small></td>
+				<td><small><?php echo getdevicename(stripslashes($row["device_name"]));?></small></td>
+                <td><small><?php echo stripslashes($row["device_id"]);?></small></td>	
+				<td><small><?php echo getdeviceimei(stripslashes($row["device_id"]));?></small></td>	
+				<td><small><?php echo getBranch(stripslashes($row["branch_id"]));?></small></td>			  
                 <td><input type='checkbox' name='linkID[]' id="linkID" value='<?php echo $row["device_id"]; ?>'></td>
                 </tr>	
 				<?php }
 				}
     			else
-   		 			echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3></td><tr/></table><br>";
+   		 			echo "<h3 style='color:red;'>No records found!</h3><br>";
 				?> 
                 <form method="post">
                 <table border="0">
                 <tr>
                 <td></td>
-                <td colspan="3"><input type="submit" name="remove" value="Remove" class="btn btn-primary" id="remove" onClick="return val();" /> </td>
+                <td colspan="3"><input type="submit" name="remove" value="Remove" class="btn btn-primary btn-sm" id="remove" onClick="return val();" /> </td>
                 <td></td>
                 </tr>
                 </table>

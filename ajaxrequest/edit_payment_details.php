@@ -104,7 +104,7 @@ if(mysql_num_rows($stockArr)>0)
                     <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3");
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
-                <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($row['r_installation_charge']) && $resultCountry['id']==$row['r_installation_charge']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                <option value="<?php echo $resultCountry['id']; ?>" <?php if($resultCountry['id']==$row['installation_charges']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
                     <?php } ?>
         	  </select>                
     		</td>

@@ -129,11 +129,6 @@ $(document).ready(function(){
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
-                <?php 
-				$branchName = $_SESSION['branch'];
-				if($branchName == 14)
-				{
-				?>
                   <select name="branch" id="branch" class="form-control drop_down">
                   <option label="" selected="selected">Select Branch</option>
                   <option value="0">All Branch</option>
@@ -143,22 +138,6 @@ $(document).ready(function(){
                   <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                   <?php } ?>
                   </select>
-                <?php 
-				}
-				else
-				{
-				?>
-                  <select name="branch" id="branch" class="form-control drop_down">
-                  <option label="" selected="selected">Select Branch</option>
-                  <?php $Country=mysql_query("select * from tblbranch where id = '$branchName'");									  
-				        while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                  <?php } ?>
-                  </select>
-                <?php 
-				}
-				?>
                 </div>
             </div>
         </div>

@@ -122,12 +122,7 @@ $(document).ready(function(){
       <div class="col-md-12">
       	<div class="form-group">
     		<label for="exampleInputName2">Branch</label>
-            <?php 
-			$branchname = $_SESSION['branch'];
-			if($branchname == 14)
-			{
-			?>
-    			<select name="branch" id="branch" class="form-control drop_down">
+            	<select name="branch" id="branch" class="form-control drop_down">
                 <option label="" value="" selected="selected">Select Branch</option>
                 <?php $Country=mysql_query("select * from tblbranch");									  
 					   while($resultCountry=mysql_fetch_assoc($Country)){
@@ -135,20 +130,6 @@ $(document).ready(function(){
                 <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                 <?php } ?>
                 </select>
-             <?php
-			 }
-			 else
-			 {
-			 ?>
-             	<select name="branch" id="branch" class="form-control drop_down">
-                <option label="" value="" selected="selected">Select Branch</option>
-                <?php $Country=mysql_query("select * from tblbranch where id = '$branchname'");									  
-					   while($resultCountry=mysql_fetch_assoc($Country)){
-				?>
-                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                <?php } ?>
-                </select>
-             <?php }?>
   		</div>
         <div class="form-group">
             <label for="exampleInputEmail2">Technician</label>

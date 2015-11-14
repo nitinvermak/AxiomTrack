@@ -182,7 +182,7 @@ function getValueHistoryPage(b){
 		return; 
 	}  
     
-	  alert('a111111111111a');
+	  /*alert('a111111111111a');*/
 /*    alert(cust_id);*/
 	 url="ajaxrequest/add_vehicle_plan_history_info.php?token=<?php echo $token;?>";	                 
 		/*alert(url);*/
@@ -306,6 +306,55 @@ $(document).on("click","#editServiceBranch", function(){
 				});	 
 })
 // --------------------------- End -------------------------------//
+//------------------------- send ajax request when click button Inactive Vehicle-----------//
+$(document).on("click","#inActive", function(){
+	$('.loader').show();
+	$.post("ajaxrequest/vehicle_status.php?token=<?php echo $token;?>",
+			{
+				cust_id : $('#cust_id').val()
+			},
+			function (data)
+			{
+				$("#divShow").html(data);
+				$(".loader").removeAttr("disabled");
+				$('.loader').fadeOut(1000);
+			});
+})
+//-------------------------end------------------------------------------------------//
+//----------------send ajax request when click inactive vehilce -------------------//
+function getInactive(obj)
+{
+	/*alert(obj);*/
+	$('.loader').show();
+	$.post("ajaxrequest/vehicle_inactive.php?token=<?php echo $token;?>",
+			{
+				deviceId : obj
+			},
+			function (data)
+			{
+				$("#divShow").html(data);
+				$(".loader").removeAttr("disabled");
+				$('.loader').fadeOut(1000);
+			});
+}
+//----------------------End----------------------------//
+//----------------send ajax request when click inactive vehilce -------------------//
+function getActive(obj)
+{
+	/*alert(obj);*/
+	$('.loader').show();
+	$.post("ajaxrequest/vehicle_active.php?token=<?php echo $token;?>",
+			{
+				deviceId : obj
+			},
+			function (data)
+			{
+				$("#divShow").html(data);
+				$(".loader").removeAttr("disabled");
+				$('.loader').fadeOut(1000);
+			});
+}
+//----------------------End----------------------------//
 // --------------------- History View ------------------------------//
 function getDetails(obj)
 {
@@ -330,6 +379,7 @@ function getDetails(obj)
 				});	 
 }
 // ------------------------ End ----------------------------------//
+
 //---------------------- Case Check ---------------------------- //
 $(document).on("change",".device_type", function(){
 	parentId= '#'+$(this).closest('tr').attr('id');
@@ -388,10 +438,17 @@ $(document).on("change",".device_type", function(){
 	}
 	if(deviceType == 4)
 	{
-		//alert(deviceType);
+		alert(deviceType);
 		$(parentId).find('.device_amt').prop("disabled", false);
 		$(parentId).find('.device_rent').prop("disabled", false);
-		$(parentId).find('.rent_frq').prop("disabled", false);
+		$(parentId).find('#rent_frq > option').each(function () {		     
+		   	if ($(this).val() == "1") {			   
+				$(this).attr("selected", "selected");
+				$(this).prop('selected', true);
+				return;
+			}
+		});
+		$(parentId).find('#rent_frq').prop("disabled", true);
 		$(parentId).find('.installation_charges').prop("disabled", false);
 		$(parentId).find('.downpayment').prop("disabled", false);
 		$(parentId).find('.NoOfInstallation').prop("disabled", false);
@@ -446,10 +503,8 @@ function calTotal(obj)
         
         <tr>
         <td height="34" colspan="5">
-        <input type="button" name="add_vehicle" id="add_vehicle" value="Add Payment Details" class="btn btn-info btn-sm">            
-        <input type="button" name="showHistory" id="showHistory" value="View Plan & History" class="btn btn-info btn-sm">            
-        <input type="button" name="showEdit" id="showEdit" value="Edit Plan" class="btn btn-info btn-sm">
-        
+        <input type="button" name="add_vehicle" id="add_vehicle" value="Add Payment Details" class="btn btn-info btn-sm">        <input type="button" name="showHistory" id="showHistory" value="View Plan & History" class="btn btn-info btn-sm">        <input type="button" name="showEdit" id="showEdit" value="Edit Plan" class="btn btn-info btn-sm">
+        <input type="button" name="inActive" id="inActive" value="InActive Vehicle" class="btn btn-info btn-sm">
         <input type="button" name="manageServiceBranch" id="manageServiceBranch" value="Add Service Branch" class="btn btn-info btn-sm">
          <input type="button" name="editServiceBranch" id="editServiceBranch" value="Edit Service Branch" class="btn btn-info btn-sm">
         <input type="button" name="back" id="back" value="Back" 

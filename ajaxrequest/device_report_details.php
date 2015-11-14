@@ -5,12 +5,9 @@ $search_box = mysql_real_escape_string($_POST['search_box']);
 /*echo $search_box; */
 $branchName = $_SESSION['branch'];
 error_reporting(0);
-if($branchName == 14)
-{
 	$linkSQL = "SELECT  A.id as DeviceId,A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
-				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name , 
-				D.CompanyName as branch, B.technician_assign_status as technician_asgn_status, 
-				C.technician_id as TechnicianId, E.First_Name as fname, E.Last_Name as lname
+				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, D.CompanyName as branch, 
+				B.technician_assign_status as technician_asgn_status, C.technician_id as TechnicianId, E.First_Name as fname, 			  				E.Last_Name as lname, G.callingdata_id as callingDataId 
 				FROM tbl_device_master as A 
 				LEFT OUTER JOIN tbl_device_assign_branch as B
 				ON A.id = B.device_id
@@ -19,25 +16,11 @@ if($branchName == 14)
 				LEFT OUTER JOIN tblbranch as D 
 				ON B.branch_id = D.id
 				LEFT OUTER JOIN tbluser as E 
-				ON C.technician_id = E.id WHERE A.imei_no LIKE '$search_box%' or A.id LIKE '$search_box%'";
-}
-else
-{
-	$linkSQL = "SELECT  A.id as DeviceId,A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
-				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name , 
-				D.CompanyName as branch, B.technician_assign_status as technician_asgn_status, 
-				C.technician_id as TechnicianId, E.First_Name as fname, E.Last_Name as lname
-				FROM tbl_device_master as A 
-				LEFT OUTER JOIN tbl_device_assign_branch as B
-				ON A.id = B.device_id
-				LEFT OUTER JOIN tbl_device_assign_technician as C
-				ON B.device_id = C.device_id
-				LEFT OUTER JOIN tblbranch as D 
-				ON B.branch_id = D.id
-				LEFT OUTER JOIN tbluser as E 
-				ON C.technician_id = E.id WHERE (A.imei_no LIKE '$search_box%' or A.id LIKE '$search_box%') And B.branch_id = 	            	'$branchName'";
-}
-/*echo $linkSQL ;*/
+				ON C.technician_id = E.id 
+				LEFT OUTER Join tbl_gps_vehicle_master as F 
+				ON A.id = F.device_id
+				LEFT OUTER JOIN tbl_customer_master as G 
+				ON F.customer_Id = G.cust_id WHERE A.imei_no LIKE '$search_box%' or A.id LIKE '$search_box%' Order by DeviceId";
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
@@ -53,7 +36,8 @@ if(mysql_num_rows($stockArr)>0)
               	<th><small>Branch Name</small></th>    
               	<th><small>Branch Status</small></th> 
               	<th><small>Technician Id</small></th> 
-              	<th><small>Technician Status</small></th>                            
+              	<th><small>Technician Status</small></th>
+                <th><small>Installed Company</small></th>                            
               	</tr>   
 	
 				  	<?php
@@ -162,15 +146,27 @@ if(mysql_num_rows($stockArr)>0)
                 <?php 
                 if($row["status"] == 0)
                     {  
-                    echo "<span style='color:red; font-weight:bold;'>Instock</span>";
+                    	echo "<span style='color:red; font-weight:bold;'>Instock</span>";
                     }
                 else
                     {
-                    echo "<span style='color:green; font-weight:bold;'>Installed</span>";
+                    	echo "<span style='color:green; font-weight:bold;'>Installed</span>";
                     }
                 ?>
                 </small>
                 </td>
+                <td><small>
+                <?php 
+				if($row['callingDataId']==0)
+					{
+						echo "N/A";
+					}
+				else
+					{
+						echo getOraganization($row['callingDataId']);
+					}
+				?>
+                </small></td>
                 </tr> 
                 <?php 
                 }

@@ -112,12 +112,21 @@ $(document).ready(function(){
         <hr>
     </div>
     <div class="col-md-12 table-responsive">
-      <table width="437">
+      <table width="333">
       <tr>
-      <td width="301">
-      <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Customer Id, Company Name or Mobile">
+      <td width="240">
+      <select name="searchText" id="searchText" class="form-control drop_down">
+            <option value="">Select Orgranization</option>                         
+            <?php $Country=mysql_query("SELECT * FROM tblcallingdata WHERE STATUS='1' ORDER BY Company_Name ASC");								
+                  while($resultCountry=mysql_fetch_assoc($Country))
+                        {
+            ?>
+            <option value="<?php echo $resultCountry['Company_Name']; ?>">
+            <?php echo stripslashes(ucfirst($resultCountry['Company_Name'])); ?></option>
+            <?php } ?>
+      </select>
       </td>
-      <td width="124">
+      <td width="81">
       <input type="submit" name="Search" id="Search" value="Search" class="btn btn-primary btn-sm"/>
       </td>
       </tr>

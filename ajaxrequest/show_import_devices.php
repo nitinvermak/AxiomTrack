@@ -6,23 +6,32 @@ $searchText = mysql_real_escape_string($_POST['searchText']);
 error_reporting(0);
 if($searchText != "")
 {
-	$linkSQL = "select * from tbl_device_master where (id like '{$searchText}%' or imei_no like '{$searchText}%') and status <> '1'";
-	/*echo $linkSQL;*/
+	$linkSQL = "select * from tbl_device_master where (id like '%{$searchText}%' or imei_no like '%{$searchText}%') and status <> 				
+	'1'";
+	
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+	if ( $authorized_branches != '0'){
+		$linkSQL = $linkSQL.' and branch in  '.$authorized_branches;		
+	}
+
+	echo $linkSQL;
 	$oRS = mysql_query($linkSQL);
 	if(mysql_num_rows($oRS)>0)
 	{
 	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
 ?>		
 		<tr>
-        <th>S. No.</th>     
-      	<th>Device Id</th>    
-      	<th>IMEI No.</th>
-      	<th>Device Model</th>
-        <th>Status</th>
-      	<th>Action              
+        <th><small>S. No.</small></th>     
+      	<th><small>Device Id</small></th>    
+      	<th><small>IMEI No.</small></th>
+      	<th><small>Device Model</small></th>
+        <th><small>Status</small></th>
+      	<th><small>Action              
       	<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       	&nbsp;&nbsp;
-      	<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>        </th>   
+      	<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>
+        </small>
+        </th>   
       	</tr>    
         <?php
 		$kolor=1;
@@ -48,11 +57,12 @@ if($searchText != "")
 					$class="bgcolor='#fff'";
  	  	?>
         <tr <?php print $class?>>
-      	<td><?php print $kolor++;?>.</td>
-	  	<td><?php echo ($row["id"]);?></td>
-      	<td><?php echo stripslashes($row["imei_no"]);?></td>
-	  	<td><?php echo getdevicename(stripslashes($row["device_name"]));?></td>
-        <td><?php
+      	<td><small><?php print $kolor++;?>.</small></td>
+	  	<td><small><?php echo ($row["id"]);?></small></td>
+      	<td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
+	  	<td><small><?php echo getdevicename(stripslashes($row["device_name"]));?></small></td>
+        <td><small>
+			<?php
 		 	if($row["status"] == "0")
 				{
 					echo "<p style='color:green; font-weight:bold;'>InStock</p>";
@@ -66,7 +76,7 @@ if($searchText != "")
 					echo "<p style='color:red; font-weight:bold;'>Damage</p>";
 				}
 			?>
-        	
+        	</small>
         </td>
 	  	<td><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_model.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?><a href="branch_type.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"></a><a href="model.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?>
         <a href="change_device_status.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>">Status</a>

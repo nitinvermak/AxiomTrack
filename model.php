@@ -64,6 +64,7 @@ $msg="IMEI No. already exists";
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
 $queryArr=mysql_query("select * from tbl_device_master where id =".$_REQUEST['id']);
 $result=mysql_fetch_assoc($queryArr);
+echo 'afsa'.$result['dealer_id'];
 }
 ?>
 <!DOCTYPE html>

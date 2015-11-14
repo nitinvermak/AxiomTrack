@@ -142,22 +142,20 @@ if(isset($_POST['savedevice']))
         $where='';
         $linkSQL="";			
         if(!isset($linkSQL) or $linkSQL =='')		
-        	$linkSQL = "SELECT A.id, A.mobile_no, A.device_id, A.imei_no, A.techinician_name, B.callingdata_id, C.Company_Name as C_name, A.vehicle_no as V_no, A.vehicle_odometer as v_odometer 
+        	$linkSQL = "SELECT A.id, A.mobile_no, A.device_id, A.imei_no, A.techinician_name, 
+						A.installation_date, B.callingdata_id, C.Company_Name as C_name, 
+						A.vehicle_no as V_no, A.vehicle_odometer as v_odometer 
 						FROM tbl_gps_vehicle_master as A 
 						INNER JOIN tbl_customer_master as B 
 						ON A.customer_Id = B.cust_id 
 						INNER JOIN tblcallingdata as C 
 						ON B.callingdata_id = C.id WHERE B.callingdata_id = '$company'";
-            $oRS = mysql_query($linkSQL); 
+            			$oRS = mysql_query($linkSQL); 
          ?>
          <form name='fullform' method='post' onSubmit="return confirmdelete()">
          <input type="hidden" name="token" value="<?php echo $token; ?>" />
          <input type='hidden' name='pagename' value='users'>            	        
-         <?php if($_SESSION['sess_msg']!=''){?>
-         	<center>
-            	<div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
-            </center>
-         <?php } ?>
+         
          <table class="table table-hover table-bordered " >
          <tr>
          <th><small>S. No.</small></th>     
@@ -166,7 +164,8 @@ if(isset($_POST['savedevice']))
          <th><small>Mobile</small></th>
          <th><small>Device Id</small></th>
          <th><small>IMEI</small></th> 
-         <th><small>Technician</small></th>    
+         <th><small>Technician</small></th>
+         <th><small>Date of Installation</small></th>    
          <th><small>Action              
          <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
          &nbsp;&nbsp;
@@ -287,7 +286,8 @@ if(isset($_POST['savedevice']))
               <!--end modal popup-->
       	</td>
         <td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
-      	<td><small><?php echo stripslashes($row["techinician_name"]);?></small></td>
+      	<td><small><?php echo gettelecallername(stripslashes($row["techinician_name"]));?></small></td>
+        <td><small><?php echo stripslashes($row["installation_date"]);?></small></td>
 	  	<td><small><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_city.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="add_gps_vehicle.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?></small></td>
       	</tr>
         <?php }

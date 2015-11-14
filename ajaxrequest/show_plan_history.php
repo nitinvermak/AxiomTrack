@@ -2,8 +2,6 @@
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
 $cust_id = $_REQUEST['cust_id']; 
-/*echo 'ajfhasjkfh';*/
-/*echo $searchText;*/
 error_reporting(0);
 if ($cust_id == '')
 	{
@@ -62,7 +60,7 @@ if(mysql_num_rows($stockArr)>0)
 	  		<td><small><?php  if($row['device_amt'] !=0) { echo getDeviceAmt($row['device_amt']); } else { echo 'N/A'; } ?></small></td>
 	  		<td><small><?php if($row['device_rent_amt'] !=0) { echo getDeviceAmt($row['device_rent_amt']); } else { echo 'N/A';} ?></small></td>
             <td><small><?php if($row['RentalFrequencyId'] !=0) { echo getFrequency($row['RentalFrequencyId']); } else { echo 'N/A';} ?></small></td>
-        	<td><small><?php if($row['r_installation_charge'] !=0) { echo getDeviceAmt($row['installation_charges']); } else { echo 'N/A'; } ?></small></td>
+        	<td><small><?php if($row['installation_charges'] == NULL) { echo 'N/A'; } else { echo getDeviceAmt($row['installation_charges']); } ?></small></td>
             <td><small><?php if($row['InstallmentamountID'] !=0){ echo $row['InstallmentamountID'];} else { echo 'N/A';} ?></small></td>
             <td><small><?php if($row['NoOfInstallment'] !=0) { echo stripcslashes(ucfirst($row['NoOfInstallment']));} else { echo 'N/A';}?></small></td>
             <td><small><?php if($row['InstFrequencyID'] !=0) { echo getFrequency($row['InstFrequencyID']); } else { echo 'N/A'; } ?></small></td>
