@@ -123,35 +123,28 @@ $(document).ready(function(){
            <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Telecaller*</label>
                 <div class="col-sm-10">
-                <?php 
-				$branchname = $_SESSION['branch'];
-				if($branchname == 14)
-				{
-				?>
-                  <select name="telecaller" id="telecaller" class="form-control drop_down">
-                  <option label="" value="" selected="selected">Select Telecaller</option>
-                  <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
-						while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
-                  <?php } ?>
-                  </select>
-                <?php 
-				}
-				else
-				{
-				?>
-                  <select name="telecaller" id="telecaller" class="form-control drop_down">
-                  <option label="" value="" selected="selected">Select Telecaller</option>
-                  <?php $Country=mysql_query("select * from tbluser WHERE branch_id = '$branchname' order by First_Name ASC ");
-						while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
-                  <?php } ?>
-                  </select>
-                <?php 
-				}
-				?>
+                <select name="telecaller" id="telecaller" class="form-control drop_down">
+                <option label="" value="" selected="selected">Select Telecaller</option>
+               
+                 <?php 
+                        $branchUsers= "select * from tbluser";
+                        $authorized_branches = BranchLogin($_SESSION['user_id']);
+                        //echo $authorized_branches;
+                        if ( $authorized_branches != '0'){
+                             
+                            $branchUsers = $branchUsers.' where branch_id in '.$authorized_branches;		
+                        }
+                        if($authorized_branches == '0'){
+                            echo'<option value="0">All Branch</option>';	
+                        }
+                        //echo $branch_sql;
+                        $branchUsersSql = mysql_query($branchUsers);					
+                                                      
+                        while($resultCountry=mysql_fetch_assoc($branchUsersSql)){
+                  ?>
+                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
+                <?php } ?>
+                </select>
                 </div>
             </div>	
         </div>

@@ -93,7 +93,7 @@ function ShowbyCategory()
                 <div class="col-sm-10">
                   <select name="callingcat" id="callingcat" onChange="return ShowbyCategory();" class="form-control drop_down">
                   <option label="" value="" selected="selected">Select Category</option>
-                  <?php $Country=mysql_query("select DISTINCT callingcategory_id from  tblassign where status_id ='1'");
+                  <?php $Country=mysql_query("select DISTINCT callingcategory_id from  tblassign");
 				  		while($resultCountry=mysql_fetch_assoc($Country)){
 				  ?>
                   <option value="<?php echo $resultCountry['callingcategory_id']; ?>" ><?php echo getCallingCategory(stripslashes(ucfirst($resultCountry['callingcategory_id']))); ?></option>

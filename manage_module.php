@@ -82,7 +82,9 @@ if(isset($_POST['delete_selected']))
 	 $where='';
 	 $linkSQL="";		
      if(!isset($linkSQL) or $linkSQL =='')		
-     $linkSQL = "SELECT tblmodulename.moduleId, tblmodulename.displayModuleName, tblmoduleparentname.parentName, tblmodulename.moduleName, tblmodulecategory.moduleCategory 
+     $linkSQL = "SELECT tblmodulename.moduleId, tblmodulename.displayModuleName, 
+	 			 tblmoduleparentname.parentName, tblmodulename.moduleName, 
+				 tblmodulecategory.moduleCategory 
 				 FROM tblmodulename
 				 INNER JOIN tblmodulecategory
 				 ON tblmodulename.moduleCatId = tblmodulecategory.moduleCatId

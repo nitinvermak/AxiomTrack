@@ -3,14 +3,14 @@ include("../includes/config.inc.php");
 include("../includes/crosssite.inc.php"); 
 $branch_id=$_REQUEST['branch']; 
 error_reporting(0);
-$linkSQL =  "select * from 
-	           `tbl_sim_branch_assign` as A
-				INNER JOIN `tblsim` as B
-                ON A.sim_id = B.id
-				INNER JOIN `tblserviceprovider` as C
-                ON B.company_id = C.id
-				where A.branch_id = '$branch_id' and A.technician_assign_status='0'";
-$stockArr=mysql_query($linkSQL);
+	$linkSQL =  "select * from 
+				   `tbl_sim_branch_assign` as A
+					INNER JOIN `tblsim` as B
+					ON A.sim_id = B.id
+					INNER JOIN `tblserviceprovider` as C
+					ON B.company_id = C.id
+					where A.branch_id = '$branch_id' and A.technician_assign_status='0'";
+	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	 	echo '  <table class="table table-hover table-bordered">  ';

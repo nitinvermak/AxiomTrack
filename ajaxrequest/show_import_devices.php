@@ -14,7 +14,7 @@ if($searchText != "")
 		$linkSQL = $linkSQL.' and branch in  '.$authorized_branches;		
 	}
 
-	echo $linkSQL;
+	/*echo $linkSQL;*/
 	$oRS = mysql_query($linkSQL);
 	if(mysql_num_rows($oRS)>0)
 	{

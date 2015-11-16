@@ -78,14 +78,28 @@ function ShowbyCategory()
   		</div>
         <div class="form-group">
             <label for="exampleInputEmail2">Executive <span class="red">*</span></label>
-            		<select name="telecaller" id="telecaller" onChange="return ShowbyTelecaller();" class="form-control drop_down">
-                    <option label="" value="" selected="selected">Select Executive</option>
-                    <?php $Country=mysql_query("select * from tbluser ORDER BY First_Name,Last_Name ASC");
-					while($resultCountry=mysql_fetch_assoc($Country)){
-					?>
-                    <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
-              <?php } ?>
-                    </select>
+            	<select name="telecaller" id="telecaller" class="form-control drop_down">
+                <option label="" value="" selected="selected">Select Telecaller</option>
+               
+                 <?php 
+                        $branchUsers= "select * from tbluser";
+                        $authorized_branches = BranchLogin($_SESSION['user_id']);
+                        //echo $authorized_branches;
+                        if ( $authorized_branches != '0'){
+                             
+                            $branchUsers = $branchUsers.' where branch_id in '.$authorized_branches;		
+                        }
+                        if($authorized_branches == '0'){
+                            echo'<option value="0">All Branch</option>';	
+                        }
+                        //echo $branch_sql;
+                        $branchUsersSql = mysql_query($branchUsers);					
+                                                      
+                        while($resultCountry=mysql_fetch_assoc($branchUsersSql)){
+                  ?>
+                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
+                <?php } ?>
+                </select>
         </div>
   		</div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">

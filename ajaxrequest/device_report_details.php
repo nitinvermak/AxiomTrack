@@ -6,8 +6,10 @@ $search_box = mysql_real_escape_string($_POST['search_box']);
 $branchName = $_SESSION['branch'];
 error_reporting(0);
 	$linkSQL = "SELECT  A.id as DeviceId,A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
-				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, D.CompanyName as branch, 
-				B.technician_assign_status as technician_asgn_status, C.technician_id as TechnicianId, E.First_Name as fname, 			  				E.Last_Name as lname, G.callingdata_id as callingDataId 
+				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, 
+				D.CompanyName as branch, B.technician_assign_status as technician_asgn_status, 
+				C.technician_id as TechnicianId, E.First_Name as fname, E.Last_Name as lname, 
+				G.callingdata_id as callingDataId 
 				FROM tbl_device_master as A 
 				LEFT OUTER JOIN tbl_device_assign_branch as B
 				ON A.id = B.device_id
@@ -20,8 +22,14 @@ error_reporting(0);
 				LEFT OUTER Join tbl_gps_vehicle_master as F 
 				ON A.id = F.device_id
 				LEFT OUTER JOIN tbl_customer_master as G 
-				ON F.customer_Id = G.cust_id WHERE A.imei_no LIKE '$search_box%' or A.id LIKE '$search_box%' Order by DeviceId";
-$stockArr=mysql_query($linkSQL);
+				ON F.customer_Id = G.cust_id WHERE (A.imei_no LIKE '$search_box%' 
+				or A.id LIKE '$search_box%')";
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+	if ( $authorized_branches != '0'){
+		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+	}
+	/*echo $linkSQL;*/
+	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	 	echo '  <table border="0" class="table table-hover table-bordered">  ';

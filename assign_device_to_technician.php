@@ -89,6 +89,7 @@ $(document).ready(function(){
 	});
 });
 // end
+//send ajax when click view assign devices
 $(document).ready(function(){
 	$('#view_assign').click(function(){
 		$('.loader').show();
@@ -104,6 +105,22 @@ $(document).ready(function(){
 				});	
 	});
 });
+//end
+
+// send ajax when select branch
+$(document).ready(function(){
+	$("#branch").change(function(){
+		$.post("ajaxrequest/get_branch_technician.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#showTechnician").html(data);
+				});
+	});
+});
+// End
 </script>
 </head>
 <body>
@@ -124,25 +141,33 @@ $(document).ready(function(){
       	<div class="form-group">
     		<label for="exampleInputName2">Branch</label>
             	<select name="branch" id="branch" class="form-control drop_down">
-                <option label="" selected="selected">Select Branch</option>
-                <option value="0">All Branch</option>
-                <?php $Country=mysql_query("select * from tblbranch");									  
-					  while($resultCountry=mysql_fetch_assoc($Country)){
-				?>
+                <option label="" value="" selected="selected">Select Branch</option>
+                
+                  <?php 
+                        $branch_sql= "select * from tblbranch ";
+                        $authorized_branches = BranchLogin($_SESSION['user_id']);
+                        //echo $authorized_branches;
+                        if ( $authorized_branches != '0'){
+                             
+                            $branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+                        }
+                        if($authorized_branches == '0'){
+                            echo'<option value="0">All Branch</option>';	
+                        }
+                        //echo $branch_sql;
+                        $Country = mysql_query($branch_sql);					
+                                                      
+                        while($resultCountry=mysql_fetch_assoc($Country)){
+                  ?>
                 <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
                 <?php } ?>
                 </select>			
   		</div>
-        <div class="form-group">
+        <div class="form-group" id="showTechnician">
             <label for="exampleInputEmail2">Technician</label>
-            <select name="technician_id" id="technician_id" class="form-control drop_down" onChange="return ShowByTechnician();">
-            <option label="" value="" selected="selected">Select Technician</option>
-            <?php $Country=mysql_query("select * from tbluser where  User_Category=5 or User_Category=8");
-			      while($resultCountry=mysql_fetch_assoc($Country)){
-			?>
-            <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
-            <?php } ?>
-            </select>
+            	 <select name="technician_id" id="technician_id" class="form-control drop_down">
+            		<option label="" value="" selected="selected">Select Technician</option>
+            	 </select>
         </div>
   		<input type="button" name="assign_devices" id="assign_devices" class="btn btn-primary btn-sm" value="Assign Devices"/>
         <input type="button" name="view_assign" id="view_assign" class="btn btn-primary btn-sm" value="View Assigned Devices"/>

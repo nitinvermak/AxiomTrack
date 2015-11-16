@@ -5,10 +5,12 @@ $search_box = mysql_real_escape_string($_POST['search_box']);
 /*echo "Sim Report"; */
 $branchname = $_SESSION['branch'];
 error_reporting(0);
-	$linkSQL = "SELECT A.sim_no as simNo, A.company_id as provider, A.mobile_no as mobileNo, A.status_id as statusId, 
-				A.branch_assign_status as branchAssignStatus, D.CompanyName as branchname,
-				B.technician_assign_status as technicianStatus, C.technician_id as technicianId,
-				G.callingdata_id as callingDataId, E.First_Name as fName, E.Last_Name as lName
+	$linkSQL = "SELECT A.sim_no as simNo, A.company_id as provider, A.mobile_no as mobileNo, 
+				A.status_id as statusId, A.branch_assign_status as branchAssignStatus,
+				B.branch_id  as branchId, D.CompanyName as branchname, 
+				B.technician_assign_status as technicianStatus, 
+				C.technician_id as technicianId, G.callingdata_id as callingDataId, 
+				E.First_Name as fName, E.Last_Name as lName
 				FROM tblsim as A 
 				LEFT OUTER JOIN tbl_sim_branch_assign as B
 				ON A.id = B.sim_id
@@ -22,10 +24,14 @@ error_reporting(0);
 				ON A.id = F.mobile_no
 				LEFT OUTER JOIN tbl_customer_master as G 
 				ON F.customer_Id = G.cust_id
-				WHERE A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%'";
-/*echo $linkSQL;*/
-$stockArr = mysql_query($linkSQL);
-/*$total_num_rows = mysql_num_rows($stockArr);*/
+				WHERE (A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%')";
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+	if ( $authorized_branches != '0'){
+		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+	}
+	/*echo $linkSQL;*/
+	$stockArr = mysql_query($linkSQL);
+	/*$total_num_rows = mysql_num_rows($stockArr);*/
 if(mysql_num_rows($stockArr)>0)
 	{
 		/*echo "Total Found Record" .$total_num_rows. "!";*/

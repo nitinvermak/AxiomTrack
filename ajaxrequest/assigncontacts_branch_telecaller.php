@@ -5,16 +5,27 @@ $callingcategory =$_REQUEST['callingcat'];
 error_reporting(0);
 if($callingcategory == '0')
 	{
-	$linkSQL = "select * FROM tblcallingdata as A, tblassign as B WHERE A.id = B.callingdata_id and B.status_id=2 and B.telecaller_id=0";
+		$linkSQL = "select * FROM tblcallingdata as A, 
+					tblassign as B 
+					WHERE A.id = B.callingdata_id 
+					and B.status_id=2 
+					and B.telecaller_id=0";
 	}
 	else
 	{
-	$linkSQL = "select * FROM tblcallingdata as A, tblassign as B WHERE A.id = B.callingdata_id and B.status_id=2 and B.telecaller_id=0 and callingcategory_id='{$callingcategory}'";
+		$linkSQL = "select * FROM tblcallingdata as A, 
+					tblassign as B 
+					WHERE A.id = B.callingdata_id 
+					and B.status_id=2 
+					and B.telecaller_id=0 
+					and callingcategory_id='{$callingcategory}'";
 	}
-	
- 
-$stockArr=mysql_query($linkSQL);
-
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+		if ( $authorized_branches != '0'){
+			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		}
+	/*echo $linkSQL;*/
+	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	
@@ -69,13 +80,12 @@ if(mysql_num_rows($stockArr)>0)
 			<?php }
 		}
     else
-   		echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
+   		echo "<h3 style='color:red'>No records found!</h3><br><br>";
 ?> 
           				<form method="post">
                         <table>
                         <tr>
-                        <td></td>
-                        <td colspan="3"><input type="submit" name="submit" value="Assign" class="btn btn-primary" onClick="return val();" id="submit" /> &nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td colspan="3"><input type="submit" name="submit" value="Assign" class="btn btn-primary btn-sm" onClick="return val();" id="submit" /> &nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td></td>
                         </tr>
                         </table>

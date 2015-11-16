@@ -66,9 +66,9 @@ if(isset($_POST['delete_selected']))
 	</div>
     <div class="col-md-12">
     	<div class="col-md-4 btn_grid">
-   		  <input type='button' name='cancel' class="btn btn-primary" value="Add New" onClick="window.location.replace('role_permission.php?token=<?php echo $token ?>')"/>
+   		  <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('role_permission.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-       	  <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary" value="Delete Selected">
+       	  <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">

@@ -5,11 +5,18 @@ include("../includes/crosssite.inc.php");
 $callingcategory =$_REQUEST['callingcat']; 
 error_reporting(0);
 	/*echo $branch_id;*/
-	$linkSQL = "select * FROM tblcallingdata as A, tblassign as B WHERE A.id = B.callingdata_id and A.calling_status='0' and B.status_id=2 and B.callingcategory_id='{$callingcategory}'";
+	$linkSQL = "select * FROM tblcallingdata as A, 
+				tblassign as B 
+				WHERE A.id = B.callingdata_id 
+				and A.calling_status='0' 
+				and B.status_id=2 
+				and B.callingcategory_id='{$callingcategory}'";
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+		if ( $authorized_branches != '0'){
+			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		}
 	/*echo $linkSQL;*/
- 
-$stockArr=mysql_query($linkSQL);
-
+	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	

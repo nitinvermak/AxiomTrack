@@ -3,7 +3,16 @@ include("../includes/config.inc.php");
 //include("includes/crosssite.inc.php"); 
 $callingcategory =$_REQUEST['callingcat']; 
 error_reporting(0);
-$linkSQL = "select * from tblcallingdata as A, tblassign as B where A.id = B.callingdata_id and B.status_id='1' and B.callingcategory_id='{$callingcategory}'";
+		$linkSQL = "select * from tblcallingdata as A, 
+					tblassign as B 
+					where A.id = B.callingdata_id 
+					and B.status_id='1' and 
+					B.callingcategory_id='{$callingcategory}'";
+		$authorized_branches = BranchLogin($_SESSION['user_id']);
+		if ( $authorized_branches != '0'){
+			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		}
+	    /*echo $linkSQL;*/
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
@@ -70,7 +79,6 @@ if(mysql_num_rows($stockArr)>0)
           				<form method="post">
                           <table>
                           <tr>
-                          <td></td>
                           <td colspan="3"><input type="submit" name="submit" class="btn btn-primary btn-sm" value="Confirm" onClick="return val();" id="submit" /> 						  </td>
                           <td></td>
                           </tr>
