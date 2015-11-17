@@ -1,20 +1,17 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
-
- if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
+if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']))
@@ -41,8 +38,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
    			    }
 			 }  
   		$id="";
-  }
- if(count($_POST['linkID'])>0 && (isset($_POST['remove'])) )
+}
+if(count($_POST['linkID'])>0 && (isset($_POST['remove'])) )
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']))
@@ -96,7 +93,7 @@ if(isset($_POST['export']))
 $(document).ready(function(){
 	$("#submit").click(function(){
 		$('.loader').show();
-		$.post("ajaxrequest/ticket_report.php?token=<?php echo $token;?>",
+		$.post("ajaxrequest/view_ticket_report.php?token=<?php echo $token;?>",
 				{
 					date : $('#date').val(),
 					dateto : $('#dateto').val(),
@@ -113,6 +110,20 @@ $(document).ready(function(){
 	});
 });
 //end
+// send ajax when select branch
+$(document).ready(function(){
+	$("#branch").change(function(){
+		$.post("ajaxrequest/executive.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#showTechnician").html(data);
+				});
+	});
+});
+// End
 </script>
 <!--Datepicker-->
 
@@ -139,17 +150,27 @@ $(document).ready(function(){
      <td class="col-xs-2"><input type="text" name="date" id="date" class="form-control text_box-sm date"/></td>
      <td class="col-xs-1"><strong>Branch*</strong></td>
 	 <td class="col-xs-2">
-     	<select name="branch" id="branch" class="form-control drop_down-sm">
-        <option value="0">All Branch</option>                         
-        <?php $Country=mysql_query("SELECT * FROM `tblbranch` ORDER BY CompanyName ASC");								
-              while($resultCountry=mysql_fetch_assoc($Country))
-                   {
-        ?>
-        <option value="<?php echo $resultCountry['id']; ?>" 
-        <?php if(isset( $_SESSION['CompanyName']) && $resultCountry['id']== $_SESSION['CompanyName']){ ?>selected			        <?php } ?>>
-        <?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-        <?php } ?>
-        </select>
+     	<select name="branch" id="branch" class="form-control drop_down">
+        	<option label="" value="" selected="selected">Select Branch</option>
+            <?php 
+            $branch_sql= "select * from tblbranch ";
+            $authorized_branches = BranchLogin($_SESSION['user_id']);
+            //echo $authorized_branches;
+            if ( $authorized_branches != '0')
+			{
+             	$branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+            }
+            if($authorized_branches == '0')
+			{
+            	echo'<option value="0">All Branch</option>';	
+            }
+            //echo $branch_sql;
+            $Country = mysql_query($branch_sql);					
+            	while($resultCountry=mysql_fetch_assoc($Country)){
+            ?>
+            <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+            <?php } ?>
+      </select>
      </td>
      <td class="col-xs-1"><strong>Status*</strong></td>
      <td><select name="status" id="status" class="form-control drop_down-sm">
@@ -166,16 +187,11 @@ $(document).ready(function(){
      <td class="col-xs-2"><input type="text" name="dateto" id="dateto" class="form-control text_box-sm date"/></td>
      <td class="col-xs-1"><strong>Executive*</strong></td>
 	 <td class="col-xs-2">  
+     <div id="showTechnician">
      	<select name="executive" id="executive" class="form-control drop_down-sm">
-        <option value="0">All Executive</option>                         
-        <?php $Country=mysql_query("SELECT * FROM `tbluser`");								
-              while($resultCountry=mysql_fetch_assoc($Country))
-                   {
-        ?>
-        <option value="<?php echo $resultCountry['id']; ?>">
-        <?php echo stripslashes(ucfirst($resultCountry['First_Name']." " .$resultCountry['Last_Name'])); ?></option>
-        <?php } ?>
+        <option value="">Select Executive</option>                         
         </select>
+     </div>
      </td>
      <td>&nbsp;</td>
      <td><input type="button" name="assign" value="Submit" id="submit" class="btn btn-primary btn-sm pull-left"/>&nbsp;<input type="button" name="assign" value="Summary" onClick="window.location.replace('ticket_summary.php?token=<?php echo $token;?>')" id="submit" class="btn btn-primary btn-sm" /></td>

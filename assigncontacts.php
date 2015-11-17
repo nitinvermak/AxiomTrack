@@ -1,8 +1,8 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -14,21 +14,23 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 
 
- if(count($_POST['linkID'])>0)
-  {
+if(count($_POST['linkID'])>0)
+{
   $dsl="";
-     	for($dsl=0;$dsl<count($_POST['linkID']);$dsl++)
-		  {
-		  $callingdata_id=$_POST['linkID'][$dsl];
-		  $callingcategory_id=$_POST['callingcat'];
-		  $status_id="1";
-		  $branch_id=$_POST['branch'];
-		  $createdby=$_SESSION['user_id'];
-		  $sql="insert into tblassign set callingdata_id='$callingdata_id',callingcategory_id='$callingcategory_id',status_id='$status_id',branch_id='$branch_id',createdby='$createdby',created=CURDATE()";
-		  $results = mysql_query($sql); 
-		  $_SESSION['sess_msg']="State deleted successfully";
-		  }
-		  $id="";  
+  for($dsl=0;$dsl<count($_POST['linkID']);$dsl++)
+  {
+  		$callingdata_id=$_POST['linkID'][$dsl];
+		$callingcategory_id=$_POST['callingcat'];
+		$status_id="1";
+		$branch_id=$_POST['branch'];
+		$createdby=$_SESSION['user_id'];
+		$sql = "insert into tblassign set callingdata_id='$callingdata_id',
+			    callingcategory_id='$callingcategory_id',status_id='$status_id',
+				branch_id='$branch_id',createdby='$createdby',created=CURDATE()";
+	    $results = mysql_query($sql); 
+		$_SESSION['sess_msg']="State deleted successfully";
+  }
+		$id="";  
   }
 //Remove Assign Contact
 if(isset($_POST['remove']))
@@ -42,7 +44,7 @@ if(isset($_POST['remove']))
 				/*echo $sql;*/
 				$results = mysql_query($sql) or die(mysql_error()); 	
    			   }
-			 }  
+		    }  
   		$id="";
   }
 //End
@@ -58,57 +60,62 @@ if(isset($_POST['remove']))
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
-function callCity(state_id){ 
-	url="ajaxrequest/getCity1.php?state_id="+state_id+"&City=<?php echo $result['City'];?>&token=<?php echo $token;?>";
-	//alert(url);
-	xmlhttpPost(url,state_id,"getresponsecity");
-	callcat=document.getElementById('callingcat').value;
-	st=document.getElementById('state').value;
-	ct=document.getElementById('city').value;
-	url="ajaxrequest/getgrid.php?state_id="+st+"&city="+ct+"&callcat="+callcat+"&token=<?php echo $token;?>";
-//	alert(url);
-	xmlhttpPost(url,st,"getresponsegrid");
-	}
-	
-	function getresponsecity(str){
-	//alert(str);
-	document.getElementById('divcity').innerHTML=str;
-	//document.getElementById('area1').
-	//document.getElementById("area1").innerHTML = "";
-	//document.getElementById("divpincode").innerHTML = "";
-	}
-	function callGrid()
-	{
-	callcat=document.getElementById('callingcat').value;
-	st=document.getElementById('state').value;
-	ct=document.getElementById('city').value;
-	url="ajaxrequest/getgrid.php?state_id="+st+"&city="+ct+"&callcat="+callcat+"&token=<?php echo $token;?>";
-//	alert(url);
-	xmlhttpPost(url,st,"getresponsegrid");
-	}
-	
-function getresponsegrid(str){
-	//alert(str);
-	document.getElementById('divassign').innerHTML=str;
-	//document.getElementById('area1').
-	//document.getElementById("area1").innerHTML = "";
-	//document.getElementById("divpincode").innerHTML = "";
-	}
-	//show assign contacts
-	function ShowContact()
-	{
-		branch = document.getElementById("branch").value;	 
-		url="ajaxrequest/show_assigned_contact.php?branch="+branch+"&token=<?php echo $token;?>"; 
-		/*alert(url);*/
-		xmlhttpPost(url,branch,"getResponseAssignContact");
-	}
- 
-	function getResponseAssignContact(str){
-		/*alert(str);*/
-		document.getElementById('divassign').innerHTML=str;
-	}
+//call ajax when select category
+$(document).ready(function(){
+	$('#callingcat').change(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/getgrid.php?token=<?php echo $token;?>",
+				{
+					callingcat : $('#callingcat').val(),
+					state : $('#state').val(),
+					city : $('#city').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+//end
+//call ajax when select State
+$(document).ready(function(){
+	$('#state').change(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/getCity1.php?token=<?php echo $token;?>",
+				{
+					state : $('#state').val(),
+					city : $('#city').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divcity").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+//end
+//call ajax when click View Assigned Contacts
+$(document).ready(function(){
+	$('#view').change(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_assigned_contact.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+//end
 </script>
 </head>
 <body>
@@ -131,7 +138,7 @@ function getresponsegrid(str){
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Category*</label>
                 <div class="col-sm-10">
-                  <select name="callingcat" id="callingcat" onChange="return callGrid();" class="form-control drop_down">
+                  <select name="callingcat" id="callingcat" class="form-control drop_down">
                   <option label="" value="" selected="selected">Select Category</option>
                   <?php $Country=mysql_query("select * from tblcallingcategory");
 						while($resultCountry=mysql_fetch_assoc($Country)){
@@ -147,13 +154,27 @@ function getresponsegrid(str){
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
                   <select name="branch" id="branch" class="form-control drop_down">
-                  <option label="" value="" selected="selected">Select Branch</option>
-                  <?php $Country=mysql_query("select * from tblbranch");
-				  		while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                  <?php } ?>
-                  </select>
+                    <option label="" value="" selected="selected">Select Branch</option>
+                    
+                      <?php 
+                            $branch_sql= "select * from tblbranch ";
+                            $authorized_branches = BranchLogin($_SESSION['user_id']);
+                            //echo $authorized_branches;
+                            if ( $authorized_branches != '0'){
+                                 
+                                $branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+                            }
+                            if($authorized_branches == '0'){
+                                echo'<option value="0">All Branch</option>';	
+                            }
+                            //echo $branch_sql;
+                            $Country = mysql_query($branch_sql);					
+                                                          
+                            while($resultCountry=mysql_fetch_assoc($Country)){
+                      ?>
+                    <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                    <?php } ?>
+                 </select>
                 </div>
             </div>	
         </div>
@@ -162,12 +183,12 @@ function getresponsegrid(str){
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">State*</label>
                 <div class="col-sm-10">
-                  <select name="state" id="state" onChange="return callCity(this.value);" class="form-control drop_down" >
+                  <select name="state" id="state"  class="form-control drop_down" >
                   <option label="" value="" selected="selected">Select State</option>
                   <?php $Country=mysql_query("select * from tblstate order by State_name");
 				        while($resultCountry=mysql_fetch_assoc($Country)){
 				   ?>
-                   <option value="<?php echo $resultCountry['State_name']; ?>" <?php if(isset($State_name) && $resultCountry['State_name']==$State){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['State_name'])); ?></option>
+                   <option value="<?php echo $resultCountry['State_id']; ?>" <?php if(isset($State_name) && $resultCountry['State_name']==$State){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['State_name'])); ?></option>
                    <?php } ?>
                    </select>
                 </div>
@@ -176,7 +197,7 @@ function getresponsegrid(str){
         <div class="col-md-6">
            <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">City*</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" id="divcity">
                   <select name="city" id="city" onChange="return callGrid();" class="form-control drop_down">
                   <option label="" value="" selected="selected">Select City</option>
                   <?php $Country=mysql_query("select distinct city_name from tblcity order by city_name");					  
@@ -191,11 +212,11 @@ function getresponsegrid(str){
         <div class="clearfix"></div>
         
            <div class="col-md-6">
-            <input type="button" name="view" id="view" class="btn btn-primary btn-sm" value="View Assigned Contact" onClick="ShowContact()"/>	
+            <input type="button" name="view" id="view" class="btn btn-primary btn-sm" value="View Assigned Contact"/>	
            </div>
         
-      </div> 
-      <div id="divassign" class="col-md-12 table-responsive assign_grid">
+          </div> 
+          <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <table class="table table-bordered table-hover">
           <?php
 		  $where='';
@@ -283,6 +304,11 @@ function getresponsegrid(str){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

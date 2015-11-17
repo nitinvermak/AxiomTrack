@@ -75,8 +75,7 @@ if(mysql_num_rows($stockArr)>0)
                 <form method="post">
                 <table>
                 <tr>
-                <td></td>
-                <td colspan="3"><input type="submit" name="remove" value="Remove" id="remove" class="btn btn-primary" onClick="return val();" /> </td>
+                <td colspan="3"><input type="submit" name="remove" value="Remove" id="remove" class="btn btn-primary btn-sm" onClick="return val();" /> </td>
                 <td></td>
                 </tr>
                 </table><br />

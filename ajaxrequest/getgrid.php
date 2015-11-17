@@ -1,23 +1,23 @@
 <?php
 include("../includes/config.inc.php"); 
-
-							$where='';
-							
-							if($state_id=$_REQUEST['state_id']!="")
-							{
-							$where.=" and tblcallingdata.State='".$_REQUEST['state_id']."'";
-							}
-							if($state_id=$_REQUEST['city']!="")
-							{
-							$where.=" and tblcallingdata.City='".$_REQUEST['city']."'";
-							}
-							if($state_id=$_REQUEST['callcat']!="")
-							{
-							$where.=" and tblcallingdata.id NOT IN (select callingdata_id from tblassign where 	callingcategory_id='".$_REQUEST['callcat']."') and calling_status=0 ";
-							}
-$linkSQL="";	
-$linkSQL = "select * from tblcallingdata where 1=1 $where ";
-$oRS = mysql_query($linkSQL); 
+include("../includes/crosssite.inc.php");
+$where='';
+if($state=$_REQUEST['state']!="")
+	{
+		$where.=" and tblcallingdata.State='".$_REQUEST['state']."'";
+	}
+if($state=$_REQUEST['city']!="")
+	{
+		$where.=" and tblcallingdata.City='".$_REQUEST['city']."'";
+	}
+if($state=$_REQUEST['callingcat']!="")
+	{
+		$where.= "and tblcallingdata.id NOT IN (select callingdata_id 
+				  from tblassign where callingcategory_id='".$_REQUEST['callingcat']."') and calling_status=0 ";
+	}
+	$linkSQL="";	
+	$linkSQL = "select * from tblcallingdata where 1=1 $where ";
+	$oRS = mysql_query($linkSQL); 
 ?>
 <table class="table table-bordered table-hover">  
 <tr>
@@ -63,18 +63,18 @@ $kolor=1;
 	echo $pagerstring;
 }
 else
-    echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br></td><tr/></table>";
+    echo "<h3 style='color:red;'>No records found!</h3><br>";
 ?> 
-						  <table>
-						  <tr>
-                          <td></td>
-                          <td> </td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td height="50"><input type="submit" onClick="return val();" value="Submit" class="btn btn-primary btn-sm" id="submit" /></td>
-                          </tr>
-                          </table><br />
+<table>
+<tr>
+<td></td>
+<td> </td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td height="50"><input type="submit" onClick="return val();" value="Submit" class="btn btn-primary btn-sm" id="submit" /></td>
+</tr>
+</table><br />

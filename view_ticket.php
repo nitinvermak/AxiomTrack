@@ -1,8 +1,8 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -29,6 +29,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script>
 $(document).ready(function(){
 		$("#Search").click(function(){
+			$('.loader').show();
 			$.post("ajaxrequest/show_create_ticket.php?token=<?php echo $token;?>",
 				{
 					searchText : $('#searchText').val(),
@@ -36,6 +37,8 @@ $(document).ready(function(){
 					function( data){
 						/*alert(data);*/
 						$("#divshow").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				});	 
 		});
 });
@@ -63,9 +66,17 @@ $(document).ready(function(){
         
     </form>
     <div class="col-md-6">
-        <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Ticket Id">
-        <input type="submit" name="Search" id="Search" value="Search"  class="btn btn-primary btn-sm"/>
-        </div>
+    <table>
+    <tr>
+    <td>
+    <input type="text" name="searchText" id="searchText"  class="form-control text_search" Placeholder="Ticket Id">
+    </td>
+    <td>
+    <input type="submit" name="Search" id="Search" value="Search"  class="btn btn-primary btn-sm"/>
+    </td>
+    </tr>
+    </table>
+    </div>
     </div>
     <div class="col-md-12">
     <!--show message when ticket create-->
@@ -101,6 +112,11 @@ $(document).ready(function(){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

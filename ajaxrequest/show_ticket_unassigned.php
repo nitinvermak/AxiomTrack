@@ -9,11 +9,13 @@ if ($date == 0)
 	}
 		else
 			{
-				$linkSQL = "select * from tblticket where branch_assign_status = '0' and appointment_date like'$date%' order by ticket_id";
+				$linkSQL = "select * from tblticket 
+							where branch_assign_status = '0' 
+							and appointment_date like'$date%' 
+							order by ticket_id";
 				/*echo $linkSQL;*/
 			}
-$stockArr=mysql_query($linkSQL);
-
+	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	 	echo '  <table class="table table-hover table-bordered ">  ';
@@ -69,15 +71,14 @@ if(mysql_num_rows($stockArr)>0)
 
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No records found!</h3><br><br>";
 ?> 
-          				<form method="post" onSubmit="return validate(this);">
-                          <table>
-                          <tr>
-                          <td></td>
-                          <td colspan="3"><input type="submit" name="submit" value="Submit" class="btn btn-primary" onClick="return val();" id="submit" /> </td>
-                          <td></td>
-                          </tr>
-                          </table>
-                   	    </form>   
+          	   <form method="post" onSubmit="return validate(this);">
+               <table>
+               <tr>
+               <td colspan="3"><input type="submit" name="submit" value="Submit" class="btn btn-primary btn-sm" onClick="return val();" id="submit" /> </td>
+               <td></td>
+               </tr>
+               </table>
+               </form>   
                 

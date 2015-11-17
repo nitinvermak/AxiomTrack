@@ -56,8 +56,6 @@ if(isset($_POST['remove']))
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
-<!--<script type="text/javascript" src="js/assign_contacts_telecaller.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
 // ajax request call when click assign contact

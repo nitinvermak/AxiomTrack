@@ -1,8 +1,8 @@
 <?php
-
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-include("includes/simpleimage.php");
+/*include("includes/simpleimage.php");*/
+
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
 	{
 	session_destroy();
@@ -20,25 +20,25 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['organization']))
 	{
-	$organization = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['organization'])));
-	$customer_branch = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['customer_branch'])));
-	$vehicle_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_no'])));
-	$vehicle_odo_meter = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_odo_meter'])));
-	$technician = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['technician'])));
-	$mobile_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['mobile_no'])));
-	$device = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device'])));
-	$imei = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['imei'])));
-	$model = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['model'])));
-	$server_details = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['server_details'])));
-	$insatallation_date = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['insatallation_date'])));
-	$ticketId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['ticketId'])));
+		$organization = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['organization'])));
+		$customer_branch = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['customer_branch'])));
+		$vehicle_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_no'])));
+		$vehicle_odo_meter = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_odo_meter'])));
+		$technician = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['technician'])));
+		$mobile_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['mobile_no'])));
+		$device = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device'])));
+		$imei = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['imei'])));
+		$model = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['model'])));
+		$server_details = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['server_details'])));
+		$insatallation_date = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['insatallation_date'])));
+		$ticketId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['ticketId'])));
 	}
 
 	if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 	{
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
-		$sql="update tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date', ticketId = '$ticketId'  where id=" .$_REQUEST['id'];
+			$sql="update tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date', ticketId = '$ticketId'  where id=" .$_REQUEST['id'];
 		mysql_query($sql);
 		echo $sql;
 		$_SESSION['sess_msg']='Vehicle updated successfully';
@@ -161,10 +161,23 @@ $(document).ready(function(){
                 <div class="col-sm-10" id="statediv">
                  <select name="technician" id="technician" onChange="return ShowMobile();" class="form-control drop_down">
                  <option value="">Select Techician</option>
-                 <?php $Country=mysql_query("select * from tbluser where User_Category=5 or User_Category=8");
-					   while($resultCountry=mysql_fetch_assoc($Country)){
+                 <?php 
+				 $authorized_branches = BranchLogin($_SESSION['user_id']);
+                            //echo $authorized_branches;
+                            if ( $authorized_branches != '0'){
+                                $technician = mysql_query("select * from tbluser where User_Category=5 or User_Category=8");
+                                $technician = $technician.' where id in '.$authorized_branches;		
+								
+                            }
+                            if($authorized_branches == '0'){
+                                 $technician = mysql_query("select * from tbluser where User_Category=5 or User_Category=8");	
+                            }
+					   while($resulttechnician=mysql_fetch_assoc($technician)){
 				 ?>
-                 <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($result['techinician_name']) && $resultCountry['id']==$result['techinician_name']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ".$resultCountry['Last_Name'])); ?></option>
+                 <option value="<?php echo $resulttechnician['id']; ?>" 
+				 <?php if(isset($result['techinician_name']) && $resulttechnician['id']==$result['techinician_name']){ ?>selected
+				 <?php } ?>><?php echo stripslashes(ucfirst($resulttechnician['First_Name']." ".$resulttechnician['Last_Name'])); ?>
+                 </option>
                  <?php } ?>
                  </select>
                 </div>

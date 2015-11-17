@@ -9,7 +9,7 @@ error_reporting(0);
 				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, 
 				D.CompanyName as branch, B.technician_assign_status as technician_asgn_status, 
 				C.technician_id as TechnicianId, E.First_Name as fname, E.Last_Name as lname, 
-				G.callingdata_id as callingDataId 
+				G.callingdata_id as callingDataId, F.vehicle_no as vehicleNo
 				FROM tbl_device_master as A 
 				LEFT OUTER JOIN tbl_device_assign_branch as B
 				ON A.id = B.device_id
@@ -45,7 +45,8 @@ if(mysql_num_rows($stockArr)>0)
               	<th><small>Branch Status</small></th> 
               	<th><small>Technician Id</small></th> 
               	<th><small>Technician Status</small></th>
-                <th><small>Installed Company</small></th>                            
+                <th><small>Installed Company</small></th> 
+                <th><small>Vehicle No</small></th>                           
               	</tr>   
 	
 				  	<?php
@@ -175,6 +176,20 @@ if(mysql_num_rows($stockArr)>0)
 					}
 				?>
                 </small></td>
+                <td>
+                <small>
+               	<?php
+				if($row['vehicleNo']== NULL)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo $row['vehicleNo'];
+				}
+				?>
+                </small>
+                </td>
                 </tr> 
                 <?php 
                 }

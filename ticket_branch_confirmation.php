@@ -53,13 +53,15 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script>
 $(document).ready(function(){
 		$("#branch").change(function(){
+			$('.loader').show();
 			$.post("ajaxrequest/show_ticket_branch_confirmation.php?token=<?php echo $token;?>",
 				{
 					branch : $('#branch').val(),
 				},
-					function( data)
-          {
+					function( data){
 						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
 				  });	 
 		});
 });
@@ -84,15 +86,28 @@ $(document).ready(function(){
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
-                  <select name="branch" id="branch" class="form-control drop_down">
-                  <option label="" value="" selected="selected">Select Branch</option>
-                  <option value="0">All Branch</option>
-                  <?php $Country=mysql_query("select * from tblbranch");									  
-					     while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                  <?php } ?>
-                  </select>
+                 <select name="branch" id="branch" class="form-control drop_down">
+                    <option label="" value="" selected="selected">Select Branch</option>
+                    
+                      <?php 
+                            $branch_sql= "select * from tblbranch ";
+                            $authorized_branches = BranchLogin($_SESSION['user_id']);
+                            //echo $authorized_branches;
+                            if ( $authorized_branches != '0'){
+                                 
+                                $branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+                            }
+                            if($authorized_branches == '0'){
+                                echo'<option value="0">All Branch</option>';	
+                            }
+                            //echo $branch_sql;
+                            $Country = mysql_query($branch_sql);					
+                                                          
+                            while($resultCountry=mysql_fetch_assoc($Country)){
+                      ?>
+                    <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                    <?php } ?>
+                 </select>
                 </div>
             </div>
         </div>
@@ -120,6 +135,11 @@ $(document).ready(function(){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

@@ -131,11 +131,25 @@ function ShowbyDate()
         <div class="form-group">
             <label for="exampleInputEmail2">Telecaller*</label>
                 <select name="telecaller" id="telecaller" class="form-control drop_down">
-                <option label="" value="0" selected="selected">Select Telecaller</option>
-                <?php $Country=mysql_query("select * from tbluser where  User_Category='6' or User_Category='9' or User_Category='8'");
-                      while($telecaller=mysql_fetch_assoc($Country)){
-                ?>
-                <option value="<?php echo $telecaller['id']; ?>" ><?php echo stripslashes(ucfirst($telecaller['First_Name']." ". $telecaller["Last_Name"])); ?></option>
+                <option label="" value="" selected="selected">Select Telecaller</option>
+               
+                 <?php 
+                        $branchUsers= "select * from tbluser";
+                        $authorized_branches = BranchLogin($_SESSION['user_id']);
+                        //echo $authorized_branches;
+                        if ( $authorized_branches != '0'){
+                             
+                            $branchUsers = $branchUsers.' where branch_id in '.$authorized_branches;		
+                        }
+                        if($authorized_branches == '0'){
+                            echo'<option value="0">All Branch</option>';	
+                        }
+                        //echo $branch_sql;
+                        $branchUsersSql = mysql_query($branchUsers);					
+                                                      
+                        while($resultCountry=mysql_fetch_assoc($branchUsersSql)){
+                  ?>
+                <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
                 <?php } ?>
                 </select>
         </div>

@@ -1,20 +1,17 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
-
- if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
+if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']))
@@ -24,7 +21,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 					$branch_id=$_POST['branch'];
 					$status_id="1";
 					$createdby=$_SESSION['user_id'];
-					$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_branch WHERE ticket_id='$chckvalue'") or die(mysql_errno());
+					$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_branch WHERE ticket_id='$chckvalue'") 
+									  or die(mysql_errno());
 					if(!$row = mysql_fetch_array($check_ticketId) or die(mysql_error()))
 					{
 						$sql = "update tblticket set branch_assign_status='$status_id' where ticket_id='$chckvalue'";
@@ -41,7 +39,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
    			    }
 			 }  
   		$id="";
-  }
+}
  if(count($_POST['linkID'])>0 && (isset($_POST['remove'])) )
    {			   
   		$dsl="";
@@ -62,8 +60,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
    			   }
 			 }  
   		$id="";
-  
-  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,26 +94,39 @@ function confirmdelete(obj)
 			return false;
 		}
 	}
-// send ajax request
-function showUnassignedStock()
-	{   
-	    date = document.getElementById("date").value;
-		/*alert(date);*/
-		url="ajaxrequest/show_ticket_unassigned.php?date="+date+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,date,"getResponseticket");
-	}
-function showAssignedStock()
-	{
-		date = document.getElementById("date").value;
-		/*alert(date);*/
-		url="ajaxrequest/show_ticket_assigned.php?date="+date+"&token=<?php echo $token;?>";
-		/*alert(url);*/
-		xmlhttpPost(url,date,"getResponseticket");
-	} 
-function getResponseticket(str){
-	document.getElementById('divassign').innerHTML=str;
-	}
+// call ajax when click assign ticket
+$(document).ready(function(){
+	$('#assign').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_ticket_unassigned.php?token=<?php echo $token;?>",
+				{
+					date : $('#date').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
+// end
+// call ajax when click assign ticket
+$(document).ready(function(){
+	$('#view').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_ticket_assigned.php?token=<?php echo $token;?>",
+				{
+					date : $('#date').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});	
+	});
+});
 // end
 </script>
 </head>
@@ -147,22 +157,36 @@ function getResponseticket(str){
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
-                  <select name="branch" id="branch" class="form-control drop_down" >
-                  <option label="" value="" selected="selected">All Branch</option>
-                  <?php $Country=mysql_query("select * from tblbranch");
-					    while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                  <?php } ?>
-                  </select>
+                  <select name="branch" id="branch" class="form-control drop_down">
+                    <option label="" value="" selected="selected">Select Branch</option>
+                    
+                      <?php 
+                            $branch_sql= "select * from tblbranch ";
+                            $authorized_branches = BranchLogin($_SESSION['user_id']);
+                            //echo $authorized_branches;
+                            if ( $authorized_branches != '0'){
+                                 
+                                $branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+                            }
+                            if($authorized_branches == '0'){
+                                echo'<option value="0">All Branch</option>';	
+                            }
+                            //echo $branch_sql;
+                            $Country = mysql_query($branch_sql);					
+                                                          
+                            while($resultCountry=mysql_fetch_assoc($Country)){
+                      ?>
+                    <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+                    <?php } ?>
+                 </select>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
              <div class="col-sm-10 pull-right">
-               <input type="button" name="assign" value="Assign Ticket" id="submit" class="btn btn-primary btn-sm"  onclick="showUnassignedStock()" />
-               <input type="button" name="view" id="view" value="View Assigned Ticket" class="btn btn-primary btn-sm" onClick="showAssignedStock()"/>
+               <input type="button" name="assign" value="Assign Ticket" id="assign" class="btn btn-primary btn-sm"/>
+               <input type="button" name="view" id="view" value="View Assigned Ticket" class="btn btn-primary btn-sm"/>
                </div>
             </div>
         </div>
@@ -188,6 +212,11 @@ function getResponseticket(str){
     </div>
 </div>
 <!--end footer-->
+<!-- hidden loader division -->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
+<!-- end hidden loader division-->
 </div>
 <!--end wraper-->
 <!-------Javascript------->

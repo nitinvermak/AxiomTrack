@@ -6,12 +6,28 @@ error_reporting(0);
 /*echo $branch_id;*/
 if ($branch_id == 0)
 {
-	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B
-WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' and B.technician_assign_status = '0'";
+	$linkSQL = "SELECT * FROM tblticket as A, 
+				tbl_ticket_assign_branch as B
+				WHERE A.ticket_id = B.ticket_id 
+				AND B.branch_confirmation_status = '1' 
+				and B.technician_assign_status = '0'";
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+		if ( $authorized_branches != '0'){
+			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		}
+/*	echo $linkSQL;*/
 }
 else
-	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B
-WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' and B.technician_assign_status = '0' and B.branch_id = '{$branch_id}'";
+	$linkSQL = "SELECT * FROM tblticket as A, 
+				tbl_ticket_assign_branch as B
+				WHERE A.ticket_id = B.ticket_id 
+				AND B.branch_confirmation_status = '1' 
+				and B.technician_assign_status = '0' 
+				and B.branch_id = '{$branch_id}'";
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
+		if ( $authorized_branches != '0'){
+			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		}
  
 $stockArr=mysql_query($linkSQL);
 
@@ -75,7 +91,6 @@ if(mysql_num_rows($stockArr)>0)
           				<form method="post">
                           <table>
                           <tr>
-                          <td></td>
                           <td colspan="3"><input type="submit" name="submit" class="btn btn-primary btn-sm" onClick="return val();" value="Submit" id="submit" /> </td>
                           <td></td>
                           </tr>

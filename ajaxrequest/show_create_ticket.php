@@ -5,17 +5,25 @@ $searchText = $_REQUEST['searchText'];
 error_reporting(0);
 if ($searchText == "")
 	{
-	$linkSQL = "SELECT A.ticket_id as TId, B.Company_Name as Cname, A.organization_type as O_type, A.product as product, A.rqst_type as rqst_type, A.createddate as Cdate, A.appointment_date as meeting_date  
+	$linkSQL = "SELECT A.ticket_id as TId, B.Company_Name as Cname, 
+				A.organization_type as O_type, A.product as product, 
+				A.rqst_type as rqst_type, A.createddate as Cdate, 
+				A.appointment_date as meeting_date  
 				FROM tblticket as A
 				INNER JOIN tblcallingdata as B 
 				ON A.organization_id = B.id";
 	}
 else
 	{
-	$linkSQL = "SELECT A.ticket_id as TId, B.Company_Name as Cname, A.organization_type as O_type, A.product as product, A.rqst_type as rqst_type, A.createddate as Cdate, A.appointment_date as meeting_date  
+	$linkSQL = "SELECT A.ticket_id as TId, B.Company_Name as Cname, 
+				A.organization_type as O_type, A.product as product, 
+				A.rqst_type as rqst_type, A.createddate as Cdate, 
+				A.appointment_date as meeting_date  
 				FROM tblticket as A
 				INNER JOIN tblcallingdata as B 
-				ON A.organization_id = B.id where A.ticket_id like '{$searchText}%' or B.Company_Name like '{$searchText}%' ";
+				ON A.organization_id = B.id 
+				where A.ticket_id like '{$searchText}%' 
+				or B.Company_Name like '{$searchText}%' ";
  	}
 $stockArr=mysql_query($linkSQL);
 

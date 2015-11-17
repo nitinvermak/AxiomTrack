@@ -10,7 +10,7 @@ error_reporting(0);
 				B.branch_id  as branchId, D.CompanyName as branchname, 
 				B.technician_assign_status as technicianStatus, 
 				C.technician_id as technicianId, G.callingdata_id as callingDataId, 
-				E.First_Name as fName, E.Last_Name as lName
+				E.First_Name as fName, E.Last_Name as lName, F.vehicle_no as vehicleNo
 				FROM tblsim as A 
 				LEFT OUTER JOIN tbl_sim_branch_assign as B
 				ON A.id = B.sim_id
@@ -47,7 +47,8 @@ if(mysql_num_rows($stockArr)>0)
               	<th><small>Branch</small></th>   
               	<th><small>Branch Status</small></th>
               	<th><small>Technician</small></th>
-              	<th><small>Installed Company</small></th>                          
+              	<th><small>Installed Company</small></th> 
+                <th><small>Vehicle No.</small></th>                         
               	</tr>    
 				<?php
 				$kolor=1;
@@ -148,6 +149,20 @@ if(mysql_num_rows($stockArr)>0)
                     echo getOraganization($row['callingDataId']);
                     }
                 ?>
+                </small>
+                </td>
+                <td>
+                <small>
+               	<?php
+				if($row['vehicleNo']== NULL)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo $row['vehicleNo'];
+				}
+				?>
                 </small>
                 </td>
                 </tr> 	
