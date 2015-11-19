@@ -18,53 +18,66 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['device_company']))
 {
-$device_company=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device_company'])));
-$device_model=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device_name'])));
-$dateofpurchase=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['date_of_purchase'])));
-$dealername=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['dealer_name'])));
-$imei_no=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['imei_no'])));
-$price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['price'])));
-session_start();
-$_SESSION['dealer_name'] = $device_company;
-$_SESSION['devicecompany'] = $device_company;
-$_SESSION['devicemodel'] = $device_model;
+	$device_company=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device_company'])));
+	$device_model=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device_name'])));
+	$dateofpurchase=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['date_of_purchase'])));
+	$dealername=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['dealer_name'])));
+	$imei_no=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['imei_no'])));
+	$price=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['price'])));
+	session_start();
+	$_SESSION['dealer_name'] = $device_company;
+	$_SESSION['devicecompany'] = $device_company;
+	$_SESSION['devicemodel'] = $device_model;
 if(count($_POST['linkassc'])>0)
 {
-for($i=0; $i<count($_POST['linkassc']); $i++)
+	for($i=0; $i<count($_POST['linkassc']); $i++)
+	{
+		$accessories.=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['linkassc'][$i]))).",";
+	}
+		$accessories=substr($accessories,0,strlen($accessories)-1);
+	}
+}
+if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 {
-$accessories.=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['linkassc'][$i]))).",";
+	if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
+	{
+		$sql = "update tbl_device_master set company_id='$device_company', 
+			  	device_name='$device_model', imei_no='$imei_no', 
+			  	date_of_purchase='$dateofpurchase', dealer_id='$dealername', 
+			  	price='$price',accessories_id='$accessories' 
+			  	where id=".$_REQUEST['id'];
+			  	// Call User Activity Log function
+			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+			  	mysql_query($sql);
+			  	$_SESSION['sess_msg']='Model updated successfully';
+			  	header("location:manage_model.php?token=".$token);
+			  	exit();
+	}
+	else
+	{
+		$queryArr = mysql_query("select * from tbl_device_master where imei_no='$imei_no'");
+ 		if(mysql_num_rows($queryArr)<=0)
+		{
+			$query = "insert into tbl_device_master set company_id='$device_company', 
+					  device_name='$device_model', imei_no='$imei_no', date_of_purchase='$dateofpurchase', 
+					  dealer_id='$dealername', price='$price',accessories_id='$accessories'";
+			/*echo $query;*/
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+			$result =  mysql_query($query);
+			$id = "Device Id :".mysql_insert_id();
+		}
+		else
+		{
+			$msg = "IMEI No. already exists";
+		}
+	}
 }
-$accessories=substr($accessories,0,strlen($accessories)-1);
-}
-}
-if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
-if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbl_device_master set company_id='$device_company', device_name='$device_model', imei_no='$imei_no', date_of_purchase='$dateofpurchase', dealer_id='$dealername', price='$price',accessories_id='$accessories' where id=".$_REQUEST['id'];
-/*echo $sql;*/
-mysql_query($sql);
-$_SESSION['sess_msg']='Model updated successfully';
-header("location:manage_model.php?token=".$token);
-exit();
-}
-else{
-$queryArr=mysql_query("select * from tbl_device_master where imei_no='$imei_no'");
- if(mysql_num_rows($queryArr)<=0)
+if(isset($_REQUEST['id']) && $_REQUEST['id'])
 {
-$query ="insert into tbl_device_master set company_id='$device_company', device_name='$device_model', imei_no='$imei_no', date_of_purchase='$dateofpurchase', dealer_id='$dealername', price='$price',accessories_id='$accessories'";
-/*echo $query;*/
-$result =  mysql_query($query);
-$id = "Device Id :".mysql_insert_id();
-}
-else
-{
-$msg="IMEI No. already exists";
-}
-}
-}
-if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tbl_device_master where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
-echo 'afsa'.$result['dealer_id'];
+	$queryArr = mysql_query("select * from tbl_device_master where id =".$_REQUEST['id']);
+	$result = mysql_fetch_assoc($queryArr);
+	/*echo 'afsa'.$result['dealer_id'];*/
 }
 ?>
 <!DOCTYPE html>

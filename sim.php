@@ -13,29 +13,29 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	header("location: index.php?token=".$token);
 }
 
- /*foreach ($_POST as $key => $value) {
-      
-        echo $key."<br />";
-		}*/
-
   if (!empty($_POST))
 	{
 	
-	$userid=$_SESSION['user_id'];
+		$userid=$_SESSION['user_id'];
 		if ($_REQUEST['sim']!="")
 		{
-	//	echo $_REQUEST['first_name'];
-	//	die;
-		$provider_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['provider']));
-		$sim_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['sim']));
-		$mobile_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
-		$date_of_purchase=htmlspecialchars(mysql_real_escape_string($_REQUEST['date']));
-		$state_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['state1']));
-		$plan=htmlspecialchars(mysql_real_escape_string($_REQUEST['plan1']));
-		$sql="insert into tblsim set company_id='$provider_name', sim_no='$sim_name', mobile_no='$mobile_no', date_of_purchase='$date_of_purchase', state_id='$state_name', plan_categoryid='$plan'";
-		/*echo $sql;*/
-		//die;
-		insertcontact($sql);
+			//	echo $_REQUEST['first_name'];
+			//	die;
+			$provider_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['provider']));
+			$sim_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['sim']));
+			$mobile_no = htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
+			$date_of_purchase = htmlspecialchars(mysql_real_escape_string($_REQUEST['date']));
+			$state_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['state1']));
+			$plan = htmlspecialchars(mysql_real_escape_string($_REQUEST['plan1']));
+			$sql = "insert into tblsim set company_id='$provider_name', 
+				    sim_no='$sim_name', mobile_no='$mobile_no', 
+				    date_of_purchase='$date_of_purchase', state_id='$state_name', 
+				    plan_categoryid='$plan'";
+			/*echo $sql;*/
+			//die;
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+			insertcontact($sql);
 		?>
                 <script language="javascript">
 				alert("Data Added Successfully!");
@@ -46,22 +46,19 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		}
 		else
 		{
-		$provider_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['provider2']));
-		$date_of_purchase =htmlspecialchars(mysql_real_escape_string($_REQUEST['date2']));		
-		$state_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['state3']));
-		$plan=htmlspecialchars(mysql_real_escape_string($_REQUEST['plan2']));
-		$filename=upload_file("contactfile",SITE_FS_PATH."/Upload/","");
-		
-
-		
-		require_once 'excelreader/excel_reader2.php';
-		$data = new Spreadsheet_Excel_Reader(SITE_FS_PATH."/Upload/".$filename);
-		
-		//echo $data->sheets[0]['numRows'];
-		//die;
-		 $chkdata=0;
-		 $msgvalue="";
-		for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
+			$provider_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['provider2']));
+			$date_of_purchase =htmlspecialchars(mysql_real_escape_string($_REQUEST['date2']));		
+			$state_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['state3']));
+			$plan=htmlspecialchars(mysql_real_escape_string($_REQUEST['plan2']));
+			$filename=upload_file("contactfile",SITE_FS_PATH."/Upload/","");		
+			require_once 'excelreader/excel_reader2.php';
+			$data = new Spreadsheet_Excel_Reader(SITE_FS_PATH."/Upload/".$filename);
+			//echo $data->sheets[0]['numRows'];
+			//die;
+		 	$chkdata=0;
+		 	$msgvalue="";
+		for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) 
+		{
 			for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++) 
 			{
 				
@@ -94,12 +91,15 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		$datasource=htmlspecialchars(mysql_real_escape_string($_REQUEST['datasource1']));
 		if($chkdata==0)
 		{
-					$sql="insert into tblsim set company_id='$provider_name', sim_no='$first_name', mobile_no='$last_name', date_of_purchase='$date_of_purchase', state_id='$state_name', plan_categoryid='$plan'";
+					$sql="insert into tblsim set company_id='$provider_name', 
+						  sim_no='$first_name', mobile_no='$last_name', 
+						  date_of_purchase='$date_of_purchase', state_id='$state_name', 
+						  plan_categoryid='$plan'";
 			
-		//	echo $sql;
-		//	die;
-			insertcontact($sql);	
-			}
+					//	echo $sql;
+					//	die;
+					insertcontact($sql);	
+		}
 			$chkdata=0;
 		}
 			if($msgvalue!="")
@@ -119,10 +119,10 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			}
 		}
  	}
-	  	function insertcontact($sql)
-		{
-			$query=mysql_query($sql);
-		}
+function insertcontact($sql)
+	{
+		$query=mysql_query($sql);
+	}
 //$name=htmlspecialchars(mysql_real_escape_string($_REQUEST['name']));
 ?>
 <!DOCTYPE html>

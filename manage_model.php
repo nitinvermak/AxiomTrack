@@ -17,6 +17,8 @@ if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
 		$delete_single_row = "DELETE FROM tbl_device_master WHERE id='$id'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $delete_single_row);
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -30,6 +32,8 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tbl_device_master WHERE id='$chckvalue'";
+				// Call User Activity Log function
+			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -72,7 +76,6 @@ if(isset($_POST['instock']))
 				 
 		});
 	});
-
 </script>
 </head>
 <body>

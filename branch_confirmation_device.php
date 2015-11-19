@@ -26,7 +26,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		  		$createdby=$_SESSION['user_id'];
 	            $sql = "update tbl_device_assign_branch set branch_confirmation_status='$confirmation_status' 
 						where branch_id='$branch_id' and device_id='$chckvalue'";
-				
+				// Call User Activity Log function
+			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+				$sql);
 				$results = mysql_query($sql);
 		  		$_SESSION['sess_msg']="State deleted successfully";
    			   }

@@ -1,8 +1,8 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -12,9 +12,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
-
- if(count($_POST['linkID'])>0)
+if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']) && (isset($_POST['submit'])))
@@ -24,19 +22,21 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$technician_id=$_POST['technician_id'];
 		  		$status_id="1";
 		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_device_assign_technician set device_id='$chckvalue', technician_id ='$technician_id', 		 						assigned_date=Now()";
+				$sql = "insert into tbl_device_assign_technician set device_id='$chckvalue', 
+						technician_id ='$technician_id', assigned_date=Now()";
 				$results = mysql_query($sql);
 				$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' 
 									  where device_id='$chckvalue'";
-				/*echo $assign_technician;*/
+				// Call User Activity Log function
+			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+				$sql."<br>".$assign_technician);
 				$confirm = mysql_query($assign_technician);
    			   }
 			 }  
   		$id="";
-  
-  }
+}
 // Remove Assign Device
- if(count($_POST['linkID'])>0)
+if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']) && (isset($_POST['remove'])))
@@ -49,13 +49,15 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$results = mysql_query($sql);
 	  			$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' 
 									  where device_id='$chckvalue'";
+				// Call User Activity Log function
+			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+				$sql."<br>".$assign_technician);
 				/*echo $assign_technician;*/
 				$confirm = mysql_query($assign_technician);
    			   }
 			 }  
   		$id="";
-  
-  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

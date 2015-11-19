@@ -25,17 +25,20 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
 		             /*  $device_id=$_POST['linkID'][$dsl];*/
 	   	  		     $branch_id=$_POST['branch'];
-		  		       $status_id="0";
-				         $device_model = $_POST['devic_model_id'];
-		  		       $createdby=$_SESSION['user_id'];
-				         $sql = "delete from tbl_device_assign_branch where device_id='$chckvalue'";
-				         /*echo $sql;*/
-				         $results = mysql_query($sql); 	
-				         $assign = "Update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
-				         /*echo $sql;*/
-				         $query = mysql_query($assign);
-				         /* echo $query;*/
-	  			       $_SESSION['sess_msg']="State deleted successfully";
+		  		     $status_id="0";
+				     $device_model = $_POST['devic_model_id'];
+		  		     $createdby=$_SESSION['user_id'];
+				     $sql = "delete from tbl_device_assign_branch where device_id='$chckvalue'";
+				     /*echo $sql;*/
+				     $results = mysql_query($sql); 	
+				     $assign = "Update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
+				     /*echo $sql;*/
+					 // Call User Activity Log function
+			  		 UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+					 $sql. "<br>" .$assign);
+				     $query = mysql_query($assign);
+				     /* echo $query;*/
+	  			     $_SESSION['sess_msg']="State deleted successfully";
    			      }
 			   }  
   		$id="";
@@ -63,7 +66,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
         				$results = mysql_query($sql); 	
         				$assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', 
                        			  branch_id='$branch_id', assigned_date=Now()";
-        				//echo $sql;
+        				// Call User Activity Log function
+			  			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+						$sql. "<br>" .$assign);
         				$query = mysql_query($assign);
         				//echo $query; 
         				$_SESSION['sess_msg']="State deleted successfully";

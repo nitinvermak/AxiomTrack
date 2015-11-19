@@ -822,7 +822,14 @@ function BranchLogin($id)
   	return "(".$auth_branch.")";;
   
   }
-
+}
+function UserActivityLog($userId, $ipAddress, $pageName, $detailsString)
+{
+	$detailsString = str_replace("'", " ", $detailsString);
+	$sql = "Insert into tbluseractivitylog set userId = '$userId', timeStamp = Now(), ipAddress = '$ipAddress', 
+			pageName = '$pageName', detailsString = '$detailsString'";
+	echo $sql;
+	$result = mysql_query($sql);
 }
 function getcityname($id)
 {

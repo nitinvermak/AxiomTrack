@@ -13,8 +13,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	header("location: index.php?token=".$token);
 }
 
-
- if(count($_POST['linkID'])>0)
+if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']) && (isset($_POST['submit'])))
@@ -28,6 +27,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$results = mysql_query($sql);	
 				$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' where sim_id='$chckvalue'";
 				$query = mysql_query($assign_techician);
+				// Call User Activity Log function
+			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+				$sql."<br>".$assign_techician);
 				echo "<script> alert('Techinician Assign Successfully!'); </script>";	 
 				}  		
    			  }
@@ -44,8 +46,12 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		   		$sql = "DELETE FROM tbl_sim_technician_assign WHERE sim_id = '$chckvalue'";
 				/*echo $sql;*/
 				$results = mysql_query($sql);	
-				$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' where sim_id='$chckvalue'";
+				$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' 
+									 where sim_id='$chckvalue'";
 				/*echo $assign_techician;*/
+				// Call User Activity Log function
+			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+				$sql."<br>".$assign_techician);
 				$query = mysql_query($assign_techician);
 				echo "<script> alert('Sim Removed Successfully!'); </script>";	   		
    			   }

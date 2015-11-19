@@ -26,8 +26,10 @@ if(count($_POST['linkID'])>0)
 				$sql = "update tblsim set branch_assign_status='$status_id' where id='$chckvalue'";
 				/*echo $sql;*/
 				$results = mysql_query($sql); 	
-				$assign = "insert into tbl_sim_branch_assign set sim_id='$chckvalue', branch_id='$branch_id', assigned_date=Now()";
-				/*echo $assign;*/
+				$assign = "insert into tbl_sim_branch_assign set sim_id='$chckvalue', 
+						   branch_id='$branch_id', assigned_date=Now()";
+				// Call User Activity Log function
+			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql."<br>".$assign);
 				$query = mysql_query($assign);
 			}
 		  } 
@@ -44,11 +46,13 @@ if(count($_POST['linkID'])>0)
 				$results = mysql_query($sql); 	
 				$assign = "DELETE FROM `tbl_sim_branch_assign` WHERE sim_id='$chckvalue'";
 				/*echo $assign;*/
+				// Call User Activity Log function
+			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql."<br>".$assign);
 				$query = mysql_query($assign);
 			}
 		  }   
   		$id="";
-  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
