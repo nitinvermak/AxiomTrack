@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -22,13 +23,15 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
 		        $status_id="2";
 		  		$createdby=$_SESSION['user_id'];
-	            $sql="Update tblassign set status_id='$status_id' where id='{$chckvalue}'";			
+	            $sql="Update tblassign set status_id='$status_id' where id='{$chckvalue}'";	
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function		
 				$results = mysql_query($sql);
 		  		$_SESSION['sess_msg']="State deleted successfully";
    			   }
 			 }  
   		$id="";
-  
   }
 ?>
 <!DOCTYPE html>

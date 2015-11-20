@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -21,60 +22,54 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   if (!empty($_POST))
 	{
 	
-	$userid=$_SESSION['user_id'];
+		$userid=$_SESSION['user_id'];
 		if ($_REQUEST['first_name']!="")
 		{
-	//	echo $_REQUEST['first_name'];
-	//	die;
-		$first_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['first_name']));
-		$last_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['last_name']));
-		$company=htmlspecialchars(mysql_real_escape_string($_REQUEST['company']));
-		$phone=htmlspecialchars(mysql_real_escape_string($_REQUEST['phone']));
-		$mobile=htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
-		$email=htmlspecialchars(mysql_real_escape_string($_REQUEST['email']));
-		$address=htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
-		$area=htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
-		$city=htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
-		$state=htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
-		$district=htmlspecialchars(mysql_real_escape_string($_REQUEST['district']));
-		$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
-		$pincode=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
-		$datasource=htmlspecialchars(mysql_real_escape_string($_REQUEST['datasource']));
-		$sql="insert into tblcallingdata set First_Name='$first_name',Last_Name='$last_name',Company_Name='$company',Phone='$phone',Mobile='$mobile',email='$email',Address='$address',Area='$area',City='$city',State='$state', District_id = '$district',  Country='$country',Pin_code='$pincode',data_source='$datasource',status='A',created=CURDATE(),createdby='$userid'";
-		//echo $sql;
-		//die;
-		insertcontact($sql);
+	
+			$first_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['first_name']));
+			$last_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['last_name']));
+			$company=htmlspecialchars(mysql_real_escape_string($_REQUEST['company']));
+			$phone=htmlspecialchars(mysql_real_escape_string($_REQUEST['phone']));
+			$mobile=htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
+			$email=htmlspecialchars(mysql_real_escape_string($_REQUEST['email']));
+			$address=htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
+			$area=htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
+			$city=htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
+			$state=htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
+			$district=htmlspecialchars(mysql_real_escape_string($_REQUEST['district']));
+			$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
+			$pincode=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
+			$datasource=htmlspecialchars(mysql_real_escape_string($_REQUEST['datasource']));
+			$sql="insert into tblcallingdata set First_Name='$first_name',Last_Name='$last_name',
+				  Company_Name='$company',Phone='$phone',Mobile='$mobile',email='$email',Address='$address',
+				  Area='$area',City='$city',State='$state', District_id = '$district',  
+				  Country='$country',Pin_code='$pincode',data_source='$datasource',status='A',
+				  created=CURDATE(),createdby='$userid'";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+			// End Activity Log Function
+			insertcontact($sql);
 		?>
-                <script language="javascript">
+            <script language="javascript">
 				alert("Data Added Successfully!");
-				</script>
-                <?php
-				header("location: managecontacts.php?token=".$token);
+			</script>
+        <?php
+			header("location: managecontacts.php?token=".$token);
 				
 		}
 		else
 		{
-	//	echo SITE_FS_PATH;
-	//	die;
-	//	echo $_FILES['contactfile']['name'];
-	//die;
-		$filename=upload_file("contactfile",SITE_FS_PATH."/upload/","");
-		
-
-		
-		require_once 'excelreader/excel_reader2.php';
-		$data = new Spreadsheet_Excel_Reader(SITE_FS_PATH."/upload/".$filename);
-		
-		//echo $data->sheets[0]['numRows'];
-		//die;
-		 $chkdata=0;
-		 $msgvalue="";
-		for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
+			$filename=upload_file("contactfile",SITE_FS_PATH."/upload/","");
+			require_once 'excelreader/excel_reader2.php';
+			$data = new Spreadsheet_Excel_Reader(SITE_FS_PATH."/upload/".$filename);
+			//echo $data->sheets[0]['numRows'];
+			//die;
+		 	$chkdata=0;
+		 	$msgvalue="";
+		for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) 
+		{
 			for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++) 
 			{
-				
-				
-					
 					if($j==1)
 					{
 				
@@ -158,12 +153,16 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		$datasource=htmlspecialchars(mysql_real_escape_string($_REQUEST['datasource1']));
 		if($chkdata==0)
 		{
-					$sql="insert into tblcallingdata set First_Name='$first_name',Last_Name='$last_name',Company_Name='$company',Phone='$phone',Mobile='$mobile',email='$email',Address='$address',Area='$area',City='$city',State='$state', District_id = '$district',Country='$country',Pin_code='$pincode',data_source='$datasource',status='A',created=CURDATE(),createdby='$userid'";
-			
-		//	echo $sql;
-		//	die;
-			insertcontact($sql);	
-			}
+					$sql="insert into tblcallingdata set First_Name='$first_name',Last_Name='$last_name',
+						  Company_Name='$company',Phone='$phone',Mobile='$mobile',email='$email',
+						  Address='$address',Area='$area',City='$city',State='$state', 
+						  District_id ='$district',Country='$country',Pin_code='$pincode',
+						  data_source='$datasource',status='A',created=CURDATE(),createdby='$userid'";
+					// Call User Activity Log function
+					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+					// End Activity Log Function
+					insertcontact($sql);	
+		}
 			$chkdata=0;
 		}
 			if($msgvalue!="")
@@ -460,8 +459,8 @@ function CallPincode()
         <div class="col-md-6 form">
           <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" value="Submit" class="btn btn-primary" id="submit"  />
-                  <input type="button" value="Back" id="Back" class="btn btn-primary" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
+                  <input type="submit" value="Submit" class="btn btn-primary btn-sm" id="submit"  />
+                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
                 </div>
   			</div> 
         </div>

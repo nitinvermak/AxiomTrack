@@ -4,7 +4,8 @@ include("includes/config.inc.php");
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
 session_start();
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -15,7 +16,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
 {
-		header("location: home.php?token=".$token);
+	header("location: home.php?token=".$token);
 }
 $error =0;
 
@@ -39,8 +40,18 @@ if(isset($_POST['submit']))
 		$country = mysql_real_escape_string($_POST['country']);
 		$pincode = mysql_real_escape_string($_POST['pin_code']);
 		$calling_status = '1';
-		$update_records = "Update tblcallingdata set First_Name='$first_name', Last_Name='$last_name', Company_Name='$company', Phone='$phone', Mobile='$mobile', email='$email', Address='$Address', Area='$area', City='$city', State='$state', District_id='$district', Country='$country', Pin_code='$pincode', calling_status='$calling_status' where id='$update_id'";
+		$update_records = "Update tblcallingdata set First_Name='$first_name', 
+						   Last_Name='$last_name', Company_Name='$company', 
+						   Phone='$phone', Mobile='$mobile', email='$email', 
+						   Address='$Address', Area='$area', City='$city', 
+						   State='$state', District_id='$district', 
+						   Country='$country', Pin_code='$pincode', 
+						   calling_status='$calling_status' 
+						   where id='$update_id'";
 		/*echo $update_records;*/
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_records);
+		// End Activity Log Function
 		$query = mysql_query($update_records);
 		/*End Calling Data Update*/
 		
@@ -62,15 +73,32 @@ if(isset($_POST['submit']))
 		$telecaller = mysql_real_escape_string($_POST['telecaller']);
 		if($calling_status == "1")
 		{
-		$insert_calling_status = "insert into tbl_telecalling_status set callingdata_id='$update_id', calling_date='$callingdate', device_model_id='$model', calling_status='$calling_status', no_of_vehicles='$no_of_vehicles', np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', follow_up_date='$follow_date', not_interested_resason='$reason', remark_not_interested='$remarks', customer_type = '$customer_type', downpaymentAmount = '$downpayment', telecaller_id = '$telecaller'";
-		header("location:telecalling.php?token=".$token);
-		$query = mysql_query($insert_calling_status);
+			$insert_calling_status = "insert into tbl_telecalling_status set callingdata_id='$update_id', 
+									  calling_date='$callingdate', device_model_id='$model', 
+									  calling_status='$calling_status', no_of_vehicles='$no_of_vehicles', 		 			 				  								  	  np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', 
+									  rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', 	       	   	 								  follow_up_date='$follow_date', not_interested_resason='$reason', 
+									  remark_not_interested='$remarks', customer_type = '$customer_type', 
+									  downpaymentAmount = '$downpayment', telecaller_id = '$telecaller'";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $insert_calling_status);
+			// End Activity Log Function
+			header("location:telecalling.php?token=".$token);
+			$query = mysql_query($insert_calling_status);
 		}
 		else if($calling_status == "0")
 		{
-		$insert_calling_status = "insert into tbl_telecalling_status set callingdata_id='$update_id', device_model_id='$model', calling_status='$calling_status', no_of_vehicles='$no_of_vehicles', np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', follow_up_date='$follow_date', not_interested_resason='$reason', remark_not_interested='$remarks' customer_type = '$customer_type', downpaymentAmount = '$downpayment', telecaller_id = '$telecaller'";
-		header("location:telecalling.php?token=".$token);
-		$query = mysql_query($insert_calling_status);
+			$insert_calling_status = "insert into tbl_telecalling_status set callingdata_id='$update_id', 
+									  device_model_id='$model', calling_status='$calling_status', 
+									  no_of_vehicles='$no_of_vehicles', np_device_amt='$p_device_amt', 
+									  np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', 			                        		  	  r_installation_charge='$installation_charges', follow_up_date='$follow_date', 
+									  not_interested_resason='$reason', remark_not_interested='$remarks', 
+									  customer_type = '$customer_type', downpaymentAmount = '$downpayment', 
+									  telecaller_id = '$telecaller'";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $insert_calling_status);
+			// End Activity Log Function
+			header("location:telecalling.php?token=".$token);
+			$query = mysql_query($insert_calling_status);
 		}
 		
 		/* end */
@@ -108,13 +136,32 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
 			$customer_type = mysql_real_escape_string($_POST['customer_type']);
 			$downpayment = mysql_real_escape_string($_POST['downpayment']);
 			$installation_charges = mysql_real_escape_string($_POST['installation_charges']);
-			$confirm_client = "insert into tbl_customer_master set 	callingdata_id='$update_id',  calling_product='$calling_products', device_model_id='$model', np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', customer_type='$customer_type', telecaller_id='$telecaller',  confirmation_date=Now() ";
+			$confirm_client = "insert into tbl_customer_master set 	callingdata_id='$update_id',  	    		              			    						   calling_product='$calling_products', device_model_id='$model', 
+							   np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', 
+							   rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', 		            				   customer_type='$customer_type', telecaller_id='$telecaller',  confirmation_date=Now()";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $confirm_client);
+			// End Activity Log Function
 			$result = mysql_query($confirm_client);
-			echo "cnfrm".$confirm_client;
-			$change_status = "UPDATE tblcallingdata SET First_Name='$first_name', Last_Name='$last_name', Company_Name='$company', Address='$Address', Area='$area', City='$city', District_id='$district', State='$state', Pin_code='$pincode', Country='$country', Phone='$phone', Mobile='$mobile', email='$email', status ='1', calling_status='1' where id = '$update_id'";
+			/*echo "cnfrm".$confirm_client;*/
+			$change_status = "UPDATE tblcallingdata SET First_Name='$first_name', Last_Name='$last_name', 
+							  Company_Name='$company', Address='$Address', Area='$area', City='$city', 
+							  District_id='$district', State='$state', Pin_code='$pincode', 
+							  Country='$country', Phone='$phone', Mobile='$mobile', email='$email', 
+							  status ='1', calling_status='1' where id = '$update_id'";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $change_status);
+			// End Activity Log Function
 			$query = mysql_query($change_status);
 			//Save calling status
-			$insert_calling_status = "insert into tbl_telecalling_status set callingdata_id='$update_id', calling_date='$callingdate', device_model_id='$model', calling_status='$calling_status', no_of_vehicles='$no_of_vehicles', np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', follow_up_date='$follow_date', not_interested_resason='$reason', remark_not_interested='$remarks', customer_type = '$customer_type', downpaymentAmount = '$downpayment', telecaller_id = '$telecaller'";
+			$insert_calling_status = "insert into tbl_telecalling_status set callingdata_id='$update_id', 		       	  	           							  calling_date='$callingdate', device_model_id='$model', 
+									  calling_status='$calling_status', no_of_vehicles='$no_of_vehicles', 		    	             						  np_device_amt='$p_device_amt', np_device_rent='$p_device_rent', 
+									  rent_payment_mode='$payment_type', r_installation_charge='$installation_charges', 		     								  follow_up_date='$follow_date', not_interested_resason='$reason', 
+									  remark_not_interested='$remarks', customer_type = '$customer_type', 
+									  downpaymentAmount = '$downpayment', telecaller_id = '$telecaller'";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $insert_calling_status);
+			// End Activity Log Function
 			header("location:telecalling.php?token=".$token);
 			$query = mysql_query($insert_calling_status);
 			//end Save

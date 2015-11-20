@@ -25,13 +25,16 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
       		        /*  $device_id=$_POST['linkID'][$dsl];*/
       	   	  		$branch_id=$_POST['branch'];
-      		  		  $confirmation_status="1";
-      		  		  $createdby=$_SESSION['user_id'];
-      	          $sql = "update tbl_ticket_assign_branch set branch_confirmation_status	='$confirmation_status' 
+      		  		$confirmation_status="1";
+      		  		$createdby=$_SESSION['user_id'];
+      	          	$sql = "update tbl_ticket_assign_branch set branch_confirmation_status = '$confirmation_status' 
       						where ticket_id='$chckvalue'";
-      				    $results = mysql_query($sql);
-     			    }
-			 }  
+					// Call User Activity Log function
+					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+					// End Activity Log Function
+      				$results = mysql_query($sql);
+     		  }
+		    }  
   		$id="";
   
   }

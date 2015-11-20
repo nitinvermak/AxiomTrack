@@ -1,7 +1,8 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -21,7 +22,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
 			  	$telecaller=$_POST['telecaller'];
 		  		$createdby=$_SESSION['user_id'];
-	            $sql="Update tblassign set telecaller_id='$telecaller', telecaller_assign_status='1' where id='{$chckvalue}'";			
+	            $sql = "Update tblassign set telecaller_id='$telecaller', 
+						telecaller_assign_status='1' where id='{$chckvalue}'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function			
 				$results = mysql_query($sql);
    			   }
 			 }  
@@ -37,9 +42,12 @@ if(isset($_POST['remove']))
               {
 				$sql = "delete from tblassign where callingdata_id='$chckvalue'";
 				/*echo $sql;*/
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$results = mysql_query($sql) or die(mysql_error()); 	
-   			   }
-			 }  
+   			  }
+			}  
   		$id="";
   }
 //End

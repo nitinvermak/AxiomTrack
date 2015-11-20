@@ -5,7 +5,8 @@ include("includes/crosssite.inc.php");
 include("includes/simpleimage.php");
  
 
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -38,29 +39,41 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 	
 	if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 	{
-	$sql="update tblticket set 	product='$product', organization_id	='$orgranization', rqst_type='$request', device_model_id='$model_id', 		
-	no_of_installation='$no_of_installation', description='$description', appointment_date='$ap_date_time'), appointment_time='$time', createddate=Now() where id=" .$_REQUEST['id'];
-	mysql_query($sql);
-	$_SESSION['sess_msg']='Ticket updated successfully';
-	header("location:view_ticket.php?token=".$token);
+		$sql = "update tblticket set product = '$product', organization_id = '$orgranization', 
+			    rqst_type='$request', device_model_id='$model_id', no_of_installation='$no_of_installation', 
+				description='$description', appointment_date='$ap_date_time'), appointment_time='$time', 
+				createddate=Now() 
+				where id=" .$_REQUEST['id'];
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+		// End Activity Log Function
+		mysql_query($sql);
+		$_SESSION['sess_msg']='Ticket updated successfully';
+		header("location:view_ticket.php?token=".$token);
     }
-	else{
- 	$query = "insert into tblticket set product='$product', organization_id='$orgranization', organization_type='$orgranizationType', rqst_type='$request', device_model_id='$model_id', no_of_installation='$no_of_installation', description='$description', appointment_date='$ap_date_time', createddate=Now()";
-	
-	mysql_query($query);
-	$ticket = mysql_insert_id();
-	$_SESSION['sess_msg']='Generated Ticket Id: '.'<span style=font-weight:bold;>'.$ticket.'</span>'. ' Successfully';
-	header("location:view_ticket.php?token=".$token);
-	exit();
+	else
+	{
+		$query = "insert into tblticket set product='$product', organization_id='$orgranization', 						             	  organization_type='$orgranizationType', rqst_type='$request', device_model_id='$model_id', 
+				  no_of_installation='$no_of_installation', description='$description', 
+				  appointment_date='$ap_date_time', createddate=Now()";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+		// End Activity Log Function
+		mysql_query($query);
+		$ticket = mysql_insert_id();
+		$_SESSION['sess_msg']='Generated Ticket Id: '.'<span style=font-weight:bold;>'.$ticket.'</span>'. ' Successfully';
+		header("location:view_ticket.php?token=".$token);
+		exit();
 	}
 
 }
-if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblticket where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+if(isset($_REQUEST['id']) && $_REQUEST['id'])
+{
+	$queryArr=mysql_query("select * from tblticket where id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
-$query="SELECT * FROM tblcallingcategory";
-$result=mysql_query($query);
+	$query="SELECT * FROM tblcallingcategory";
+	$result=mysql_query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">

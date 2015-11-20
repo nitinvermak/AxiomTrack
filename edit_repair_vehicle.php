@@ -32,7 +32,8 @@ if(isset($_POST['save']))
 		$updateAssignTechnician = "Update tbl_sim_technician_assign set technician_id = '$technician' where sim_id = '$mobileNo'";
 		$result = mysql_query($updateAssignTechnician);
 		/*echo $updateAssignTechnician;*/
-		$removeMobile = "UPDATE `tbl_gps_vehicle_master` SET mobile_no='0'  WHERE mobile_no='$mobileNo'";
+		$removeMobile = "UPDATE `tbl_gps_vehicle_master` SET mobile_no='0' WHERE mobile_no='$mobileNo'";
+		/*echo $removeMobile;*/
 		$result = mysql_query($removeMobile);
 	}
 //end
@@ -51,7 +52,7 @@ if(isset($_POST['savedevice']))
 		$updateAssignTechnician = "Update tbl_device_assign_technician set technician_id = '$technician' where device_id = '$deviceId'";
 		$result = mysql_query($updateAssignTechnician);
 		/*echo $updateAssignTechnician;*/
-		$removeMobile = "UPDATE `tbl_gps_vehicle_master` SET device_id='0'  WHERE device_id='$deviceId'";
+		$removeMobile = "UPDATE `tbl_gps_vehicle_master` SET device_id='0', imei_no = '0' WHERE device_id='$deviceId'";
 		$result = mysql_query($removeMobile);
 	}
 ?>

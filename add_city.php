@@ -93,7 +93,7 @@ $result=mysql_fetch_assoc($queryArr);
         <td>
         <select name="district" class="form-control input-sm drop_down" id="district" onChange="return callGrid();">
         <option label="" value="">Select District</option>
-         		<?php $Country=mysql_query("select * from tbl_district");
+         		<?php $Country=mysql_query("select * from tbl_district order by District_name");
                                while($resultCountry=mysql_fetch_assoc($Country)){
                 ?>
                 <option value="<?php echo $resultCountry['District_id']; ?>" <?php if(isset($result['District_ID']) && $resultCountry['District_id']==$result['District_ID']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['District_name'])); ?></option>
@@ -109,9 +109,9 @@ $result=mysql_fetch_assoc($queryArr);
         
         <tr>
         <td>&nbsp;</td>
-        <td><input type='submit' name='submit2' class="btn btn-primary" value="Submit"/>
-        <input type='reset' name='reset2' class="btn btn-primary " value="Reset"/>
-        <input type='button' name='cancel2' class="btn btn-primary" value="Back"onclick="window.location='manage_city.php?token=<?php echo $token ?>'"/></td>
+        <td><input type='submit' name='submit2' class="btn btn-primary btn-sm" value="Submit"/>
+        <input type='reset' name='reset2' class="btn btn-primary btn-sm" value="Reset"/>
+        <input type='button' name='cancel2' class="btn btn-primary btn-sm" value="Back"onclick="window.location='manage_city.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>
   		</div>

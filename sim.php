@@ -28,13 +28,12 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			$state_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['state1']));
 			$plan = htmlspecialchars(mysql_real_escape_string($_REQUEST['plan1']));
 			$sql = "insert into tblsim set company_id='$provider_name', 
-				    sim_no='$sim_name', mobile_no='$mobile_no', 
-				    date_of_purchase='$date_of_purchase', state_id='$state_name', 
-				    plan_categoryid='$plan'";
-			/*echo $sql;*/
-			//die;
+				      sim_no='$sim_name', mobile_no='$mobile_no', 
+				      date_of_purchase='$date_of_purchase', state_id='$state_name', 
+				      plan_categoryid='$plan'";
 			// Call User Activity Log function
 			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+			// End User Activity Log function
 			insertcontact($sql);
 		?>
                 <script language="javascript">

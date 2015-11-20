@@ -29,8 +29,8 @@ $result1 = mysql_fetch_array($sql1);
           </tr>
           <tr>
           <td valign="top">&nbsp;</td>
-          <td colspan="2"><input type="reset" id="reset" class="btn btn-primary"  value="Reset"/> 
-          <input type="submit" value="Submit" name="submit" id="submit"  class="btn btn-primary" /> <input type='button' name='cancel' class="btn btn-primary" value="Back" onClick="window.location.replace('manage_users.php?token=<?php echo $token ?>')"/></td>
+          <td colspan="2"><input type="reset" id="reset" class="btn btn-primary btn-sm"  value="Reset"/> 
+          <input type="submit" value="Submit" name="submit" id="submit"  class="btn btn-primary btn-sm" /> <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" onClick="window.location.replace('manage_users.php?token=<?php echo $token ?>')"/></td>
           <td valign="top">&nbsp;</td>
         </tr>
     </table>

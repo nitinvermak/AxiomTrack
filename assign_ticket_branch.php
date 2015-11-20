@@ -27,9 +27,16 @@ if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
 					{
 						$sql = "update tblticket set branch_assign_status='$status_id' where ticket_id='$chckvalue'";
 						/*echo $sql;*/
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+						// End Activity Log Function
 						$results = mysql_query($sql); 	
-						$assign = "insert into tbl_ticket_assign_branch set ticket_id= '$chckvalue', branch_id= '$branch_id', assign_by='$createdby', assign_date=Now()";
+						$assign = "insert into tbl_ticket_assign_branch set ticket_id= '$chckvalue', 
+								   branch_id= '$branch_id', assign_by='$createdby', assign_date=Now()";
 						/*echo $assign;*/
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign);
+						// End Activity Log Function
 						$query = mysql_query($assign);
 					}
 					else
@@ -51,12 +58,17 @@ if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
 		  		$status_id="0";
 		  		$createdby=$_SESSION['user_id'];
 				$sql = "delete from tbl_ticket_assign_branch where 	ticket_id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$results = mysql_query($sql); 	
 				$assign = "update tblticket set branch_assign_status='$status_id' where ticket_id='$chckvalue'";
 				//echo $sql;
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign);
+				// End Activity Log Function
 				$query = mysql_query($assign);
 				/* echo $query;*/
-	  			
    			   }
 			 }  
   		$id="";

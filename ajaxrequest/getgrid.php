@@ -67,14 +67,6 @@ else
 ?> 
 <table>
 <tr>
-<td></td>
-<td> </td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td height="50"><input type="submit" onClick="return val();" value="Submit" class="btn btn-primary btn-sm" id="submit" /></td>
 </tr>
 </table><br />

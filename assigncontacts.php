@@ -28,6 +28,9 @@ if(count($_POST['linkID'])>0)
 			    callingcategory_id='$callingcategory_id',status_id='$status_id',
 				branch_id='$branch_id',createdby='$createdby',created=CURDATE()";
 	    $results = mysql_query($sql); 
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+		// End Activity Log Function
 		$_SESSION['sess_msg']="State deleted successfully";
   }
 		$id="";  
@@ -41,7 +44,9 @@ if(isset($_POST['remove']))
 			  foreach($_POST['linkID'] as $chckvalue)
               {
 				$sql = "delete from tblassign where id=".$chckvalue;
-				/*echo $sql;*/
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$results = mysql_query($sql) or die(mysql_error()); 	
    			   }
 		    }  

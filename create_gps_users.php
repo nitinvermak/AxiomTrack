@@ -17,7 +17,11 @@ if(isset($_POST['submit']))
 		$customerId = mysql_real_escape_string($_POST['customerId']);
 		$user_name = mysql_real_escape_string($_POST['user_name']);
 		$Password = mysql_real_escape_string($_POST['Password']);
-		$sql = "Insert into tbl_userloginmaster set type = '10', userDetailId = '$customerId', username = '$user_name', passsword = '$Password'";
+		$sql = "Insert into tbl_userloginmaster set type = '10', userDetailId = '$customerId', 
+				username = '$user_name', passsword = '$Password'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+		// End Activity Log Function
 		$result = mysql_query($sql);
 		if($result)
 		{

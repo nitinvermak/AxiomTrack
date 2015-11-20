@@ -5,7 +5,8 @@ include("includes/crosssite.inc.php");
 include("includes/simpleimage.php");
  
 
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -20,18 +21,26 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 }
 $error =0;
 $Ticket_id = $_GET['id'];
-if (isset($_POST['submit'])) {
-  $orgranization = mysql_real_escape_string($_POST['orgranization']);
-  $product = mysql_real_escape_string($_POST['product']);
-  $request = mysql_real_escape_string($_POST['request']);
-  $model = mysql_real_escape_string($_POST['model']);
-  $no_of_installation = mysql_real_escape_string($_POST['no_of_installation']);
-  $des = mysql_real_escape_string($_POST['des']);
-  $date_time = mysql_real_escape_string($_POST['date_time']);
-  $update_record = "UPDATE tblticket SET  organization_id = '$orgranization', product = '$product', rqst_type = '$request', device_model_id = '$model', no_of_installation = '$no_of_installation', description = '$des', appointment_date = '$date_time' WHERE ticket_id = '$Ticket_id'";
-  $query = mysql_query($update_record);
-  $_SESSION['sess_msg']='Ticket updated successfully';
-  header("location:view_ticket.php?token=".$token);
+if (isset($_POST['submit'])) 
+{
+	  $orgranization = mysql_real_escape_string($_POST['orgranization']);
+	  $product = mysql_real_escape_string($_POST['product']);
+	  $request = mysql_real_escape_string($_POST['request']);
+	  $model = mysql_real_escape_string($_POST['model']);
+	  $no_of_installation = mysql_real_escape_string($_POST['no_of_installation']);
+	  $des = mysql_real_escape_string($_POST['des']);
+	  $date_time = mysql_real_escape_string($_POST['date_time']);
+	  $update_record = "UPDATE tblticket SET  organization_id = '$orgranization', 
+						product = '$product', rqst_type = '$request', 
+						device_model_id = '$model', no_of_installation = '$no_of_installation', 
+						description = '$des', appointment_date = '$date_time' 
+						WHERE ticket_id = '$Ticket_id'";
+	  // Call User Activity Log function
+	  UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_record);
+	  // End Activity Log Function
+	  $query = mysql_query($update_record);
+	  $_SESSION['sess_msg']='Ticket updated successfully';
+	  header("location:view_ticket.php?token=".$token);
 }
 
 

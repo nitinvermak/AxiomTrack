@@ -5,13 +5,13 @@ include("includes/crosssite.inc.php");
 include("includes/simpleimage.php");
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
 	{
-	session_destroy();
-	header("location: index.php?token=".$token);
+		session_destroy();
+		header("location: index.php?token=".$token);
 	}
 if (isset($_SESSION) && $_SESSION['login']=='') 
 	{
-	session_destroy();
-	header("location: index.php?token=".$token);
+		session_destroy();
+		header("location: index.php?token=".$token);
 	}
 if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
 	{
@@ -20,49 +20,63 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['organization']))
 	{
-	$organization = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['organization'])));
-	$customer_branch = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['customer_branch'])));
-	$vehicle_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_no'])));
-	$vehicle_odo_meter = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_odo_meter'])));
-	$technician = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['technician'])));
-	$mobile_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['mobile_no'])));
-	$device = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device'])));
-	$imei = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['imei'])));
-	$model = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['model'])));
-	$server_details = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['server_details'])));
-	$insatallation_date = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['insatallation_date'])));
+		$organization = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['organization'])));
+		$customer_branch = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['customer_branch'])));
+		$vehicle_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_no'])));
+		$vehicle_odo_meter = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicle_odo_meter'])));
+		$technician = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['technician'])));
+		$mobile_no = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['mobile_no'])));
+		$device = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['device'])));
+		$imei = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['imei'])));
+		$model = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['model'])));
+		$server_details = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['server_details'])));
+		$insatallation_date = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['insatallation_date'])));
 	}
 
 	if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 	{
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
-		$sql="update tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date'  where id=" .$_REQUEST['id'];
-		mysql_query($sql);
-		/*echo $sql;*/
-		$_SESSION['sess_msg']='Vehicle updated successfully';
-		header("location:old_edi_gps_vehicle.php?token=".$token);
-		exit();
+			$sql="update tbl_gps_vehicle_master set customer_Id='$organization', 
+				  customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
+				  vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', 
+				  mobile_no='$mobile_no', device_id='$device', imei_no='$imei', 
+				  model_name='$model', server_details='$server_details', 
+				  installation_date='$insatallation_date'  where id=" .$_REQUEST['id'];
+			mysql_query($sql);
+			/*echo $sql;*/
+			$update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
+			/*echo $update_sim;*/
+			$querysim = mysql_query($update_sim);		
+			$update_Device = "update tbl_device_master set status = '1' where id='$device'";
+			/*echo $update_Device;*/
+			$queryex = mysql_query($update_Device);
+			$_SESSION['sess_msg']='Vehicle updated successfully';
+			header("location:old_edi_gps_vehicle.php?token=".$token);
+			exit();
 		}
 	else 
 		{
-		$query=mysql_query("insert into tbl_gps_vehicle_master set customer_Id='$organization', customer_branch='$customer_branch', vehicle_no='$vehicle_no', vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', server_details='$server_details', installation_date='$insatallation_date', paymentActiveFlag='N'");		
-		$update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
-		/*echo $update_sim;*/
-		$querysim = mysql_query($update_sim);		
-		$update_Device = "update tbl_device_master set status = '1' where id='$device'";
-		/*echo $update_Device;*/
-		$queryex = mysql_query($update_Device);
-		$_SESSION['sess_msg']='Vehicle added successfully';
-		header("location:old_edi_gps_vehicle.php?token=".$token);
-		exit();
+			$query=mysql_query("insert into tbl_gps_vehicle_master set customer_Id='$organization', 					             					customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
+								vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', 
+								mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', 									                                server_details='$server_details', installation_date='$insatallation_date', 
+								paymentActiveFlag='N'");		
+			$update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
+			echo $update_sim;
+			$querysim = mysql_query($update_sim);		
+			$update_Device = "update tbl_device_master set status = '1' where id='$device'";
+			echo $update_Device;
+			$queryex = mysql_query($update_Device);
+			$_SESSION['sess_msg']='Vehicle added successfully';
+			header("location:old_edi_gps_vehicle.php?token=".$token);
+			exit();
 		}
 
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id'])
 	{
-	$queryArr=mysql_query("SELECT * FROM tbl_gps_vehicle_master WHERE id =".$_REQUEST['id']);
-	$result=mysql_fetch_assoc($queryArr);
+		$queryArr=mysql_query("SELECT * FROM tbl_gps_vehicle_master WHERE id =".$_REQUEST['id']);
+		$result=mysql_fetch_assoc($queryArr);
 	}
 	
 ?>

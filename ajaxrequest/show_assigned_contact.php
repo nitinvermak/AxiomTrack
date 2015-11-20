@@ -6,13 +6,14 @@ $branch_id = mysql_real_escape_string($_POST['branch']);
 error_reporting(0);
 if ($branch_id == "")
 	{
-	$linkSQL = "SELECT * FROM tblcallingdata as A, tblassign as B
-WHERE A.id = B.callingdata_id AND A.status='0'";
+		$linkSQL = "SELECT * FROM tblcallingdata as A, tblassign as B
+					WHERE A.id = B.callingdata_id AND A.status='0'";
 	}
 else
 	{
-	$linkSQL = "SELECT * FROM tblcallingdata as A, tblassign as B
-WHERE A.id = B.callingdata_id and A.status='0' and B.branch_id='{$branch_id}'";
+		$linkSQL = "SELECT * FROM tblcallingdata as A, tblassign as B
+					WHERE A.id = B.callingdata_id and A.status='0' 
+					and B.branch_id='{$branch_id}'";
  	}
 $stockArr=mysql_query($linkSQL);
 
@@ -30,8 +31,10 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>City</small></th>
                   <th><small>Area</small></th>
                   <th><small>Actions                  
-                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All 		                  </a>&nbsp;&nbsp;
-                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck                  All</a>
+                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">
+                  Check All</a>&nbsp;&nbsp;
+                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">
+                  Uncheck All</a>
                   </small>
                   </th>  
                   </tr>    
@@ -75,15 +78,16 @@ if(mysql_num_rows($stockArr)>0)
 
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
+   		 echo "<h3 style='color:red'>No records found!</h3><br><br>";
 ?> 
-          				<form method="post">
-                        <table>
-                        <tr>
-                        <td></td>
-                        <td colspan="3"><input type="submit" name="remove" value="Remove" class="btn btn-primary btn-sm" onClick="return val();" id="submit" /> </td>
-                        <td></td>
-                        </tr>
-                        </table><br /><br />
-                   	    </form>   
+<form method="post">
+<table>
+<tr>
+<td colspan="3">
+<input type="submit" name="remove" value="Remove" class="btn btn-primary btn-sm" onClick="return val();" id="submit" /> 
+</td>
+<td></td>
+</tr>
+</table><br /><br />
+</form>   
          

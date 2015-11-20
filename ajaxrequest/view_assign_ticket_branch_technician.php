@@ -7,11 +7,13 @@ error_reporting(0);
 if ($branch_id == 0)
 {
 	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B
-WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' and B.technician_assign_status = '1'";
+				WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' 
+				and B.technician_assign_status = '1'";
 }
 else
 	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B
-WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' and B.technician_assign_status = '1' and B.branch_id = '{$branch_id}'";
+				WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' 
+				and B.technician_assign_status = '1' and B.branch_id = '{$branch_id}'";
  
 $stockArr=mysql_query($linkSQL);
 
@@ -60,8 +62,7 @@ if(mysql_num_rows($stockArr)>0)
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
-                 <td>
-                        <a href="#" onclick="if(confirm('Do you really want to delete this record?')){ window.location.href='transusers_del.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' }" ><img src="images/drop.png" title="Delete" border="0" /></a>     <a href="plan_category.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> &nbsp;&nbsp;<input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </td>
+                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </td>
                  </tr>
 	<?php 
 	      }

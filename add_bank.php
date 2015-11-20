@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -13,7 +14,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
 {
-		header("location: home.php?token=".$token);
+	header("location: home.php?token=".$token);
 }
 $error =0;
 if(isset($_REQUEST['bankName']))
@@ -23,31 +24,36 @@ if(isset($_REQUEST['bankName']))
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblBank set bankName = '$bankName' where bankId=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Bank updated successfully';
-header("location:manage_bank.php?token=".$token);
-exit();
+	$sql="update tblBank set bankName = '$bankName' where bankId=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Bank updated successfully';
+	header("location:manage_bank.php?token=".$token);
+	exit();
 }
 else{
 $queryArr=mysql_query("select * from tblBank where bankName='$bankName'");
 if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblBank set bankName = '$bankName', createdDate = Now()");
-$_SESSION['sess_msg']='Bank added successfully';
-header("location:manage_bank.php?token=".$token);
-exit();
-
+	$query=mysql_query("insert into tblBank set bankName = '$bankName', createdDate = Now()");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Bank added successfully';
+	header("location:manage_bank.php?token=".$token);
+	exit();
 }
 else
 {
-$msg="Bank already exists";
+	$msg="Bank already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblBank where bankId =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tblBank where bankId =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>

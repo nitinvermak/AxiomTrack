@@ -26,10 +26,18 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$technician_id=$_POST['technician_id'];
 		  		$status_id="1";
 		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', technician_id ='$technician_id', assigned_date	=Now()";
+				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', 
+						technician_id = '$technician_id', assigned_date	=Now()";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$results = mysql_query($sql);
-	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-						/*echo $assign_technician;*/
+	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status = '$status_id' 
+									  where ticket_id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign_technician);
+				// End Activity Log Function
+				/*echo $assign_technician;*/
 				$confirm = mysql_query($assign_technician);
    			   }
 			 }  
@@ -48,14 +56,17 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		  		$status_id="0";
 		  		$createdby=$_SESSION['user_id'];
 				$sql = "delete from tbl_ticket_assign_technician where ticket_id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$results = mysql_query($sql); 	
-				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-				
+				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' 
+						   where ticket_id='$chckvalue'";
+				 				
 				$query = mysql_query($assign);
    			   }
 			 }  
   		$id="";
-  
   }
 ?>
 <!DOCTYPE html>
