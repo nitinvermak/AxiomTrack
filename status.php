@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -24,6 +25,9 @@ $Status=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['status'])));
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
 $sql="update tblstatus set Status='$Status' where id=" .$_REQUEST['id'];
+// Call User Activity Log function
+UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+// End Activity Log Function
 mysql_query($sql);
 $_SESSION['sess_msg']='Status updated successfully';
 header("location:manage_status.php?token=".$token);
@@ -35,6 +39,9 @@ $queryArr=mysql_query("select * from tblstatus where Status ='$Status'");
  if(mysql_num_rows($queryArr)<=0)
 {
 $query=mysql_query("insert into tblstatus set  Status='$Status' ");
+// Call User Activity Log function
+UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+// End Activity Log Function
 $_SESSION['sess_msg']='Status added successfully';
 header("location:manage_status.php?token=".$token);
 exit();
@@ -90,7 +97,7 @@ $result=mysql_fetch_assoc($queryArr);
         </tr>
         <tr>
         <td></td>
-        <td><input type='submit' name='submit' class="btn btn-primary" value="Save"/></td>
+        <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Save"/></td>
         </tr>
         </table>
   		</div>

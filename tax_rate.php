@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
@@ -24,6 +25,9 @@ if(isset($_REQUEST['taxType']))
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
 $sql="update tbltax set taxTypeId = '$taxType', taxRate = '$taxRate' where taxId=" .$_REQUEST['id'];
+// Call User Activity Log function
+UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+// End Activity Log Function
 mysql_query($sql);
 $_SESSION['sess_msg']='Tax Rate updated successfully';
 header("location:manage_tax_rate.php?token=".$token);
@@ -34,6 +38,9 @@ $queryArr=mysql_query("select * from tbltax where taxRate = '$taxRate'");
 if(mysql_num_rows($queryArr)<=0)
 {
 $query=mysql_query("insert into tbltax set taxTypeId = '$taxType', taxRate = '$taxRate'");
+// Call User Activity Log function
+UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+// End Activity Log Function
 $_SESSION['sess_msg']='Tax Rate added successfully';
 header("location:manage_tax_rate.php?token=".$token);
 exit();

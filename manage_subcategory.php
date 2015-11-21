@@ -17,6 +17,9 @@ if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
 		$delete_single_row = "DELETE FROM tblplansubcategory WHERE id='$id'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $delete_single_row);
+		// End Activity Log Function
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -30,6 +33,9 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tblplansubcategory WHERE id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -69,9 +75,9 @@ if(isset($_POST['delete_selected']))
        <input type="hidden" name="token" value="<?php echo $token; ?>" />
        <input type='hidden' name='pagename' value='users'>  
     	<div class="col-md-4 btn_grid">
-     		<input type='button' name='cancel' class="btn btn-primary" value="Add New" onClick="window.location.replace('plansub_category.php?token=<?php echo $token ?>')"/>
+     		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('plansub_category.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
-        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary" value="Delete Selected">
+        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
     </div>
     <div class="col-md-12">

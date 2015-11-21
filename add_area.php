@@ -23,20 +23,26 @@ if(isset($_REQUEST['city']))
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbl_area_new set city_id = '$city', Area_name='$area_name' where area_id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Area updated successfully';
-header("location:manage_area.php?token=".$token);
-exit();
+	$sql="update tbl_area_new set city_id = '$city', Area_name='$area_name' where area_id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Area updated successfully';
+	header("location:manage_area.php?token=".$token);
+	exit();
 }
 else{
-$queryArr=mysql_query("select * from tbl_area_new where city_id = '$city' AND Area_name='$area_name'");
+	$queryArr=mysql_query("select * from tbl_area_new where city_id = '$city' AND Area_name='$area_name'");
 if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tbl_area_new set city_id = '$city', Area_name='$area_name'");
-$_SESSION['sess_msg']='Area added successfully';
-header("location:manage_area.php?token=".$token);
-exit();
+	$query=mysql_query("insert into tbl_area_new set city_id = '$city', Area_name='$area_name'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Area added successfully';
+	header("location:manage_area.php?token=".$token);
+	exit();
 
 }
 else
@@ -46,8 +52,8 @@ $msg="Area already exists";
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tbl_area_new where area_id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tbl_area_new where area_id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>
@@ -109,9 +115,9 @@ $result=mysql_fetch_assoc($queryArr);
         
         <tr>
         <td>&nbsp;</td>
-        <td><input type='submit' name='submit2' class="btn btn-primary" value="Submit"/>
-        <input type='reset' name='reset2' class="btn btn-primary " value="Reset"/>
-        <input type='button' name='cancel2' class="btn btn-primary" value="Back"onclick="window.location='manage_area.php?token=<?php echo $token ?>'"/></td>
+        <td><input type='submit' name='submit2' class="btn btn-primary btn-sm" value="Submit"/>
+        <input type='reset' name='reset2' class="btn btn-primary btn-sm" value="Reset"/>
+        <input type='button' name='cancel2' class="btn btn-primary btn-sm" value="Back"onclick="window.location='manage_area.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>
   		</div>

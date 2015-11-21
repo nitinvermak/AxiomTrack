@@ -18,36 +18,42 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['plan_category']))
 {
-$datasource=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_category'])));
+	$datasource=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['plan_category'])));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblplancategory set category='$datasource' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Plan Category updated successfully';
-header("location:manage_plan_category.php?token=".$token);
-exit();
+	$sql="update tblplancategory set category='$datasource' where id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Plan Category updated successfully';
+	header("location:manage_plan_category.php?token=".$token);
+	exit();
 }
 else{
-$queryArr=mysql_query("select * from tblplancategory where category='$datasource'");
-//$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tblplancategory where category='$datasource'");
+	//$result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblplancategory set  category='$datasource' ");
-$_SESSION['sess_msg']='Plan Category added successfully';
-header("location:manage_plan_category.php?token=".$token);
-exit();
+	$query=mysql_query("insert into tblplancategory set  category='$datasource' ");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Plan Category added successfully';
+	header("location:manage_plan_category.php?token=".$token);
+	exit();
 }
 else
 {
-$msg="Plan Category already exists";
+	$msg="Plan Category already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblplancategory where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tblplancategory where id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>
@@ -96,7 +102,7 @@ $result=mysql_fetch_assoc($queryArr);
         </tr>
         <tr>
         <td></td>
-        <td><input type='submit' name='submit' class="btn btn-primary" value="Save"/></td>
+        <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Save"/></td>
         </tr>
         </table>
   		</div>

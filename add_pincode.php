@@ -23,18 +23,23 @@ if(isset($_REQUEST['area']))
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbl_pincode set Area_id = '$area', Pincode='$pincode' where pincode_id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Pincode updated successfully';
-header("location:manage_pincode.php?token=".$token);
-exit();
+	$sql="update tbl_pincode set Area_id = '$area', Pincode='$pincode' where pincode_id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Pincode updated successfully';
+	header("location:manage_pincode.php?token=".$token);
+	exit();
 }
 else{
-
-$query=mysql_query("insert into tbl_pincode set Area_id = '$area', Pincode='$pincode'");
-$_SESSION['sess_msg']='Pincode added successfully';
-header("location:manage_pincode.php?token=".$token);
-exit();
+	$query=mysql_query("insert into tbl_pincode set Area_id = '$area', Pincode='$pincode'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Pincode added successfully';
+	header("location:manage_pincode.php?token=".$token);
+	exit();
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
@@ -203,9 +208,9 @@ function CallPincode()
         
         <tr>
         <td>&nbsp;</td>
-        <td><input type='submit' name='submit2' class="btn btn-primary" value="Submit"/>
-        <input type='reset' name='reset2' class="btn btn-primary " value="Reset"/>
-        <input type='button' name='cancel2' class="btn btn-primary" value="Back"onclick="window.location='manage_pincode.php?token=<?php echo $token ?>'"/></td>
+        <td><input type='submit' name='submit2' class="btn btn-primary btn-sm" value="Submit"/>
+        <input type='reset' name='reset2' class="btn btn-primary btn-sm" value="Reset"/>
+        <input type='button' name='cancel2' class="btn btn-primary btn-sm" value="Back"onclick="window.location='manage_pincode.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>
   		</div>

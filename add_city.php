@@ -23,20 +23,26 @@ if(isset($_REQUEST['district']))
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbl_city_new set District_ID = '$district', City_Name='$city' where City_id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='City updated successfully';
-header("location:manage_city.php?token=".$token);
-exit();
+	$sql="update tbl_city_new set District_ID = '$district', City_Name='$city' where City_id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='City updated successfully';
+	header("location:manage_city.php?token=".$token);
+	exit();
 }
 else{
-$queryArr=mysql_query("select * from tbl_city_new where City_Name='$district'");
+	$queryArr=mysql_query("select * from tbl_city_new where City_Name='$district'");
 if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tbl_city_new set District_ID = '$district', City_Name='$city'");
-$_SESSION['sess_msg']='City added successfully';
-header("location:manage_city.php?token=".$token);
-exit();
+	$query=mysql_query("insert into tbl_city_new set District_ID = '$district', City_Name='$city'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='City added successfully';
+	header("location:manage_city.php?token=".$token);
+	exit();
 
 }
 else

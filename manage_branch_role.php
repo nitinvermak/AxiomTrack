@@ -54,8 +54,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		$linkSQL="";	
     	if(!isset($linkSQL) or $linkSQL =='')		
      	$linkSQL = "SELECT * FROM userBranchMapping order by userId";
- 
- 
   		$oRS = mysql_query($linkSQL); 
   	?>
    <form name='fullform' method='post' onSubmit="return confirmdelete()">

@@ -18,26 +18,34 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['productCategory']))
 {
-$productCategory=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['productCategory'])));
-$planSubCategory=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['planSubCategory'])));
+	$productCategory=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['productCategory'])));
+	$planSubCategory=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['planSubCategory'])));
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblplansubcategory set planCategoryId = '$productCategory', plansubCategory = '$planSubCategory' where planSubid=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Plan Sub Category updated successfully';
-header("location:manage_subcategory.php?token=".$token);
-exit();
+	$sql="update tblplansubcategory set planCategoryId = '$productCategory', 
+		  plansubCategory = '$planSubCategory' where planSubid=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Plan Sub Category updated successfully';
+	header("location:manage_subcategory.php?token=".$token);
+	exit();
 }
 else{
 $queryArr=mysql_query("select * from tblplansubcategory where plansubCategory = '$planSubCategory'");
 $result=mysql_fetch_assoc($queryArr);
  if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblplansubcategory set  planCategoryId = '$productCategory', plansubCategory = '$planSubCategory'");
-$_SESSION['sess_msg']='Plan Sub Category added successfully';
-header("location:manage_subcategory.php?token=".$token);
-exit();
+	$query=mysql_query("insert into tblplansubcategory set  planCategoryId = '$productCategory', 
+						plansubCategory = '$planSubCategory'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Plan Sub Category added successfully';
+	header("location:manage_subcategory.php?token=".$token);
+	exit();
 }
 else
 {

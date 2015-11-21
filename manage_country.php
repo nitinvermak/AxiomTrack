@@ -19,6 +19,9 @@ if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
 		$delete_single_row = "DELETE FROM tblcountry WHERE Country_id='$id'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $delete_single_row);
+		// End Activity Log Function
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -32,6 +35,9 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tblcountry WHERE Country_id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$result = mysql_query($sql);
    			}
 			if($result)

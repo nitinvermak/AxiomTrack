@@ -18,34 +18,49 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['company_name']))
 {
-$company_name = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['company_name'])));
-$country = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['country'])));
-$state = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['state'])));
-$district = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['district'])));
-$city = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['city'])));
-$area = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['area'])));
-$pin_code = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['pin_code'])));
-$company_address=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['address'])));
-$company_person=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['contact_person'])));
-$company_contact=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['contact_no'])));
-$company_type=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['company_type'])));
+	$company_name = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['company_name'])));
+	$country = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['country'])));
+	$state = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['state'])));
+	$district = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['district'])));
+	$city = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['city'])));
+	$area = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['area'])));
+	$pin_code = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['pin_code'])));
+	$company_address=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['address'])));
+	$company_person=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['contact_person'])));
+	$company_contact=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['contact_no'])));
+	$company_type=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['company_type'])));
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblbranch set CompanyName='$company_name', Country = '$country', State = '$state', District_ID = '$district', city = '$city', Area = '$area', pincode = '$pin_code', Address='$company_address', contact_Person='$company_person', contact_no='$company_contact', branchtype='$company_type' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Branch updated successfully';
-header("location:manage_branch.php?token=".$token);
-exit();
+		$sql="update tblbranch set CompanyName='$company_name', 
+			  Country = '$country', State = '$state', District_ID = '$district', 
+			  city = '$city', Area = '$area', pincode = '$pin_code', 
+			  Address='$company_address', contact_Person='$company_person', 
+			  contact_no='$company_contact', branchtype='$company_type' 
+			  where id=" .$_REQUEST['id'];
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+		// End Activity Log Function
+		mysql_query($sql);
+		$_SESSION['sess_msg']='Branch updated successfully';
+		header("location:manage_branch.php?token=".$token);
+		exit();
 }
 else{
 $queryArr=mysql_query("select * from tblbranch where CompanyName ='$company_name'");
 if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblbranch set CompanyName='$company_name', Country = '$country', State = '$state', District_ID = '$district', city = '$city', Area = '$area', pincode = '$pin_code', Address='$company_address', contact_Person='$company_person', contact_no='$company_contact', branchtype='$company_type'");
-$_SESSION['sess_msg']='Branch added successfully';
-header("location:manage_branch.php?token=".$token);
-exit();
+		$query=mysql_query("insert into tblbranch set CompanyName='$company_name', 
+							Country = '$country', State = '$state', District_ID = '$district', 
+							city = '$city', Area = '$area', pincode = '$pin_code', 
+							Address='$company_address', contact_Person='$company_person', 
+							contact_no='$company_contact', branchtype='$company_type'");
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+		// End Activity Log Function
+		$_SESSION['sess_msg']='Branch added successfully';
+		header("location:manage_branch.php?token=".$token);
+		exit();
 
 }
 else
@@ -188,9 +203,9 @@ $result=mysql_fetch_assoc($queryArr);
         </tr>
         <tr>
         <td>&nbsp;</td>
-        <td><input type='submit' name='submit2' class="btn btn-primary" value="Submit"/>
-        <input type='reset' name='reset2' class="btn btn-primary " value="Reset"/>
-        <input type='button' name='cancel2' class="btn btn-primary" value="Back"onclick="window.location='manage_branch.php?token=<?php echo $token ?>'"/></td>
+        <td><input type='submit' name='submit2' class="btn btn-primary btn-sm" value="Submit"/>
+        <input type='reset' name='reset2' class="btn btn-primary btn-sm" value="Reset"/>
+        <input type='button' name='cancel2' class="btn btn-primary btn-sm" value="Back"onclick="window.location='manage_branch.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>
   		</div>

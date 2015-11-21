@@ -31,24 +31,36 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 	if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
 		$sql="update tblplan set planSubCategory ='$datasource', plan_description='$plan_description', 			   	         	              productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', 
 		      plan_rate='$plan_price', taxId = '$taxId' where id=" .$_REQUEST['id'];
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+		// End Activity Log Function
 		mysql_query($sql);
 		$_SESSION['sess_msg']='Plan updated successfully';
 		header("location:manage_plan.php?token=".$token);
 		exit();
 	}
 	else{
-		$queryArr=mysql_query("select * from tblplan where productCategoryId = '$plan_category' and planSubCategory = '$datasource' 							   and plan_rate = '$plan_price'");
+		$queryArr=mysql_query("select * from tblplan where productCategoryId = '$plan_category' 
+							   and planSubCategory = '$datasource' and plan_rate = '$plan_price'");
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $queryArr);
+		// End Activity Log Function
 		$result=mysql_fetch_assoc($queryArr);
 		 if(mysql_num_rows($queryArr)<=0)
 		 {
-			$query=mysql_query("insert into tblplan set planSubCategory='$datasource', plan_description='$plan_description', productCategoryId='$plan_category', serviceprovider_id='$service_provider', plan_status='A', plan_rate='$plan_price', taxId = '$taxId'");
+			$query=mysql_query("insert into tblplan set planSubCategory='$datasource', 
+								plan_description='$plan_description', productCategoryId='$plan_category', 			     			   								serviceprovider_id='$service_provider', plan_status='A', 
+								plan_rate='$plan_price', taxId = '$taxId'");
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+			// End Activity Log Function
 			$_SESSION['sess_msg']='Plan added successfully';
 			header("location:manage_plan.php?token=".$token);
 			exit();
 		}
 		else
 		{
-		$msg="Plan already exists";
+			$msg="Plan already exists";
 		}
 	}
 }

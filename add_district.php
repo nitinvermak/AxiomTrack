@@ -23,31 +23,36 @@ if(isset($_REQUEST['state']))
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbl_district set State_id = '$state', District_name='$district' where District_id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='District updated successfully';
-header("location:manage_district.php?token=".$token);
-exit();
+	$sql="update tbl_district set State_id = '$state', District_name='$district' where District_id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='District updated successfully';
+	header("location:manage_district.php?token=".$token);
+	exit();
 }
 else{
 $queryArr=mysql_query("select * from tbl_district where District_name ='$company_name'");
 if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tbl_district set State_id = '$state', District_name='$district'");
-$_SESSION['sess_msg']='District added successfully';
-header("location:manage_district.php?token=".$token);
-exit();
-
+	$query=mysql_query("insert into tbl_district set State_id = '$state', District_name='$district'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='District added successfully';
+	header("location:manage_district.php?token=".$token);
+	exit();
 }
 else
 {
-$msg="District already exists";
+	$msg="District already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tbl_district where District_id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tbl_district where District_id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>

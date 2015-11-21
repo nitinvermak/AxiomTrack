@@ -43,12 +43,21 @@ if(isset($_REQUEST['organization']))
 				  mobile_no='$mobile_no', device_id='$device', imei_no='$imei', 
 				  model_name='$model', server_details='$server_details', 
 				  installation_date='$insatallation_date'  where id=" .$_REQUEST['id'];
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+			// End Activity Log Function
 			mysql_query($sql);
 			/*echo $sql;*/
 			$update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
 			/*echo $update_sim;*/
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_sim);
+			// End Activity Log Function
 			$querysim = mysql_query($update_sim);		
 			$update_Device = "update tbl_device_master set status = '1' where id='$device'";
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_Device);
+			// End Activity Log Function
 			/*echo $update_Device;*/
 			$queryex = mysql_query($update_Device);
 			$_SESSION['sess_msg']='Vehicle updated successfully';
@@ -60,12 +69,20 @@ if(isset($_REQUEST['organization']))
 			$query=mysql_query("insert into tbl_gps_vehicle_master set customer_Id='$organization', 					             					customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
 								vehicle_odometer='$vehicle_odo_meter', techinician_name='$technician', 
 								mobile_no='$mobile_no', device_id='$device', imei_no='$imei', model_name='$model', 									                                server_details='$server_details', installation_date='$insatallation_date', 
-								paymentActiveFlag='N'");		
+								paymentActiveFlag='N'");
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+			// End Activity Log Function		
 			$update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
-			echo $update_sim;
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_sim);
+			// End Activity Log Function	
 			$querysim = mysql_query($update_sim);		
 			$update_Device = "update tbl_device_master set status = '1' where id='$device'";
-			echo $update_Device;
+			/*echo $update_Device;*/
+			// Call User Activity Log function
+			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_Device);
+			// End Activity Log Function	
 			$queryex = mysql_query($update_Device);
 			$_SESSION['sess_msg']='Vehicle added successfully';
 			header("location:old_edi_gps_vehicle.php?token=".$token);
