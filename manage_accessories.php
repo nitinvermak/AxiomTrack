@@ -17,6 +17,9 @@ if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
 		$delete_single_row = "DELETE FROM tblaccessories WHERE id='$id'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $delete_single_row);
+		// End Activity Log Function
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -30,6 +33,9 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tblaccessories WHERE id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -66,7 +72,7 @@ if(isset($_POST['delete_selected']))
 	</div>
     <div class="col-md-12">
     	<div class="col-md-4 btn_grid">
-   		  <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('role_permission.php?token=<?php echo $token ?>')"/>
+   		  <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('accessories.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
        	  <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
@@ -95,9 +101,9 @@ if(isset($_POST['delete_selected']))
    <?php } ?>
    	  
       <tr>
-      <th>S. No.</th>     
-      <th>Name</th>    
-      <th>Action              
+      <th><small>S. No.</small></th>     
+      <th><small>Name</small></th>    
+      <th><small>Action</small>
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
@@ -126,8 +132,8 @@ if(isset($_POST['delete_selected']))
 					$class="bgcolor='#fff'";
  	  ?>
       <tr <?php print $class?>>
-      <td><?php print $kolor++;?>.</td>
-	  <td><?php echo stripslashes($row["name"]);?></td>
+      <td><small><?php print $kolor++;?>.</small></td>
+	  <td><small><?php echo stripslashes($row["name"]);?></small></td>
 	  <td> <?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_accessories.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="accessories.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?></td>
       </tr>
 <?php }

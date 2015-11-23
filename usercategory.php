@@ -24,31 +24,38 @@ $user_des=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['description'
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblusercategory set User_Category='$User_category', Description='$user_des' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='User Category updated successfully';
-header("location:manage_user_category.php?token=".$token);
-exit();
+	$sql="update tblusercategory set User_Category='$User_category', 
+		  Description='$user_des' where id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='User Category updated successfully';
+	header("location:manage_user_category.php?token=".$token);
+	exit();
 }
 else{
 $queryArr=mysql_query("select * from tblusercategory where User_category ='$User_category'");
 //$result=mysql_fetch_assoc($queryArr);
- if(mysql_num_rows($queryArr)<=0)
+if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tblusercategory set  User_Category='$User_category', Description='$user_des' ");
-$_SESSION['sess_msg']='Status added successfully';
-header("location:manage_user_category.php?token=".$token);
-exit();
+	$query=mysql_query("insert into tblusercategory set  User_Category='$User_category', Description='$user_des' ");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Status added successfully';
+	header("location:manage_user_category.php?token=".$token);
+	exit();
 }
 else
 {
-$msg="User Category already exists";
+	$msg="User Category already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblusercategory where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tblusercategory where id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>
@@ -98,9 +105,9 @@ $result=mysql_fetch_assoc($queryArr);
         </tr>
         <tr>
         <td></td>
-        <td><input type='submit' name='submit' class="btn btn-primary" value="Submit"/>
-        	<input type='reset' name='reset' class="btn btn-primary" value="Reset"/>                        
-            <input type='button' name='cancel' class="btn btn-primary" value="Back" 
+        <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Submit"/>
+        	<input type='reset' name='reset' class="btn btn-primary btn-sm" value="Reset"/>                        
+            <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
 			onclick="window.location='manage_user_category.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>

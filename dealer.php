@@ -19,51 +19,73 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['first_name']))
 {
-$first_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['first_name']));
-$last_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['last_name']));
-$company_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['company']));
-$contact=htmlspecialchars(mysql_real_escape_string($_REQUEST['contact_no']));
-$mobile_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
-$email=htmlspecialchars(mysql_real_escape_string($_REQUEST['email']));
-$pan_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['pan_no']));
-$tin_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['tin_no']));
-$service_tax=htmlspecialchars(mysql_real_escape_string($_REQUEST['service_tax']));
-$other=htmlspecialchars(mysql_real_escape_string($_REQUEST['other']));
-$address=htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
-$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
-$state=htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
-$city=htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
-$area=htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
-$pin_code=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
+	$first_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['first_name']));
+	$last_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['last_name']));
+	$company_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['company']));
+	$contact=htmlspecialchars(mysql_real_escape_string($_REQUEST['contact_no']));
+	$mobile_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
+	$email=htmlspecialchars(mysql_real_escape_string($_REQUEST['email']));
+	$pan_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['pan_no']));
+	$tin_no=htmlspecialchars(mysql_real_escape_string($_REQUEST['tin_no']));
+	$service_tax=htmlspecialchars(mysql_real_escape_string($_REQUEST['service_tax']));
+	$other=htmlspecialchars(mysql_real_escape_string($_REQUEST['other']));
+	$address=htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
+	$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
+	$state=htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
+	$city=htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
+	$area=htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
+	$pin_code=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbldealer set First_Name='$first_name',Last_Name='$last_name',Company_Name='$company_name', Phone='$contact', Mobile='$mobile_no',email='$email',	pan_no='$pan_no',tin_no='$tin_no', servicestax='$service_tax',others='$other',Address='$address', Country='$country',State='$state', City='$city', 	Area='$area', Pin_code='$pin_code' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Dealer updated successfully';
-header("location:manage_dealer.php?token=".$token);
-exit();
+	$sql="update tbldealer set First_Name='$first_name',Last_Name='$last_name',
+		  Company_Name='$company_name', Phone='$contact', Mobile='$mobile_no',
+		  email='$email', pan_no='$pan_no',tin_no='$tin_no', 
+		  servicestax='$service_tax',others='$other',Address='$address', 
+		  Country='$country',State='$state', City='$city', Area='$area', 
+		  Pin_code='$pin_code' 
+		  where id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Dealer updated successfully';
+	header("location:manage_dealer.php?token=".$token);
+	exit();
 }
 else{
-$queryArr=mysql_query("select * from tbldealer where  First_Name='$first_name'and Last_Name='$last_name' and Company_Name='$company_name' and Phone='$contact' and Mobile='$mobile_no' and email='$email' and pan_no='$pan_no' and tin_no='$tin_no' and servicestax='$service_tax' and others='$other' and Address='$address' and Country='$country' and State='$state' and City='$city' and Area='$area' and Pin_code='$pin_code'");
-//$result=mysql_fetch_assoc($queryArr);
- if(mysql_num_rows($queryArr)<=0)
+	$queryArr = mysql_query("select * from tbldealer where  First_Name='$first_name'
+						   and Last_Name='$last_name' and Company_Name='$company_name' 
+						   and Phone='$contact' and Mobile='$mobile_no' and email='$email' 
+						   and pan_no='$pan_no' and tin_no='$tin_no' and servicestax='$service_tax' 
+						   and others='$other' and Address='$address' and Country='$country' 
+						   and State='$state' and City='$city' and Area='$area' and Pin_code='$pin_code'");
+	//$result=mysql_fetch_assoc($queryArr);
+if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tbldealer set First_Name='$first_name',Last_Name='$last_name',Company_Name='$company_name', Phone='$contact', Mobile='$mobile_no',email='$email',	pan_no='$pan_no',tin_no='$tin_no', servicestax='$service_tax',others='$other',Address='$address', Country='$country',State='$state', City='$city', Area='$area', Pin_code='$pin_code'");
-$_SESSION['sess_msg']='Dealer added successfully';
-header("location:manage_dealer.php?token=".$token);
-exit();
+	$query = mysql_query("insert into tbldealer set First_Name='$first_name',
+						  Last_Name='$last_name',Company_Name='$company_name', 
+						  Phone='$contact', Mobile='$mobile_no',email='$email',	
+						  pan_no='$pan_no',tin_no='$tin_no', servicestax='$service_tax',
+						  others='$other',Address='$address', Country='$country',
+						  State='$state', City='$city', Area='$area', Pin_code='$pin_code'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Dealer added successfully';
+	header("location:manage_dealer.php?token=".$token);
+	exit();
 }
 else
 {
-$msg="Dealer already exists";
+	$msg="Dealer already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tbldealer where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tbldealer where id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 
 ?>
@@ -286,8 +308,8 @@ function multiplecontact() {
         </div>
         <div class="clearfix"></div>
         <div class="col-md-6 form">
-        <input type="submit" class="btn btn-primary" value="Submit" id="submit"  />
-        <input type="reset" id="reset" class="btn btn-primary" value="Reset"/> 
+        <input type="submit" class="btn btn-primary btn-sm" value="Submit" id="submit"  />
+        <input type="reset" id="reset" class="btn btn-primary btn-sm" value="Reset"/> 
 		</div>
         </form>
     </div>

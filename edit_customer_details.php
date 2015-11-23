@@ -50,6 +50,9 @@ if(isset($_POST['submit']))
 							  Country = '$country', State = '$state', District_id = '$district', City = '$city', 
 							  Area = '$area', Pin_code = '$pin_code', Address = '$Address', 
 							  data_source = '$datasource' where id =".$_REQUEST['id'];
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $UpdateCallingData);
+		// End Activity Log Function
 		/*echo $UpdateCallingData;*/
 		$result = mysql_query($UpdateCallingData);
 		$UpdateCustomerMaster = "UPDATE tbl_customer_master SET LeadGenBranchId = '$branch', 
@@ -58,6 +61,9 @@ if(isset($_POST['submit']))
 								 np_device_rent = '$deviceRent', r_installation_charge = '$installationChrg',
 								 rent_payment_mode = '$rentFrq'
 								 Where callingdata_id =".$_REQUEST['id'];
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $UpdateCustomerMaster);
+		// End Activity Log Function
 		/*echo $UpdateCustomerMaster;*/
 		$result = mysql_query($UpdateCustomerMaster);
 		$_SESSION['sess_msg']='Customer updated successfully';

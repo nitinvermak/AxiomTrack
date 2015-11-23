@@ -22,9 +22,14 @@ if(isset($_POST['save']))
 		$service_branch = mysql_real_escape_string($_POST['service_branch']);
 		$service_area_mgr = mysql_real_escape_string($_POST['service_area_mgr']);
 		$service_exe = mysql_real_escape_string($_POST['service_exe']);
-		$sql = "Insert into tbl_assign_customer_branch set 	cust_id = '$cust_id', service_branchId = '$service_branch', service_area_manager = '$service_area_mgr', service_executive = '$service_exe'";
+		$sql = "Insert into tbl_assign_customer_branch set 	cust_id = '$cust_id', 
+				service_branchId = '$service_branch', service_area_manager = '$service_area_mgr', 
+				service_executive = '$service_exe'";
 		$query = mysql_query($sql);
 		$update = "UPDATE `tbl_customer_master` SET status = '1' Where cust_id=".$_REQUEST['cust_id'];
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update);
+		// End Activity Log Function
 		/*echo $update;*/
 		$change_status = mysql_query($update);
 		if($query)
@@ -35,18 +40,21 @@ if(isset($_POST['save']))
 	}
 
 if(isset($_REQUEST['cust_id']) && $_REQUEST['cust_id']){
-$queryArr=mysql_query("SELECT A.cust_id, A.calling_product, B.Company_Name, B.Country, B.State, B.District_id, B.City, B.Area, B.Address, B.Pin_code, B.created, A.telecaller_id, C.branch_id
-						FROM tbl_customer_master as A 
-						INNER JOIN  tblcallingdata as B 
-						ON A.callingdata_id = B.id
-						INNER JOIN tblassign as C 
-						ON A.telecaller_id = C.telecaller_id WHERE A.cust_id =".$_REQUEST['cust_id']);
-$result=mysql_fetch_assoc($queryArr);
+		$queryArr=mysql_query("SELECT A.cust_id, A.calling_product, B.Company_Name, B.Country, 
+							   B.State, B.District_id, B.City, B.Area, B.Address, B.Pin_code, 
+							   B.created, A.telecaller_id, C.branch_id
+							   FROM tbl_customer_master as A 
+							   INNER JOIN  tblcallingdata as B 
+							   ON A.callingdata_id = B.id
+							   INNER JOIN tblassign as C 
+							   ON A.telecaller_id = C.telecaller_id 
+							   WHERE A.cust_id =".$_REQUEST['cust_id']);
+		$result=mysql_fetch_assoc($queryArr);
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id'])
 	{
-	$queryArr=mysql_query("SELECT * FROM tbl_assign_customer_branch WHERE service_branchId =".$_REQUEST['id']);
-	$result=mysql_fetch_assoc($queryArr);
+		$queryArr=mysql_query("SELECT * FROM tbl_assign_customer_branch WHERE service_branchId =".$_REQUEST['id']);
+		$result=mysql_fetch_assoc($queryArr);
 	}
 ?>
 <!DOCTYPE html>

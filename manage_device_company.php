@@ -17,6 +17,9 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tbldevicecompany WHERE id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$result = mysql_query($sql);
    			}
 			if($result)

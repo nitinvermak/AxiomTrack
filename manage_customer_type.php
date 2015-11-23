@@ -19,6 +19,9 @@ if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
 		$delete_single_row = "DELETE FROM tbl_customer_type WHERE customer_type_id='$id'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $delete_single_row);
+		// End Activity Log Function
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -32,6 +35,9 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tbl_customer_type WHERE customer_type_id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -97,9 +103,9 @@ if(isset($_POST['delete_selected']))
    <?php } ?>
    	  
       <tr>
-      <th>S. No.</th>     
-      <th>Country</th>    
-      <th>Action              
+      <th><small>S. No.</small></th>     
+      <th><small>Country</small></th>    
+      <th><small>Action</small>              
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
@@ -128,8 +134,8 @@ if(isset($_POST['delete_selected']))
 					$class="bgcolor='#fff'";
  	  ?>
       <tr <?php print $class?>>
-      <td><?php print $kolor++;?>.</td>
-	  <td><?php echo stripslashes($row["customer_type"]);?></td>
+      <td><small><?php print $kolor++;?>.</small></td>
+	  <td><small><?php echo stripslashes($row["customer_type"]);?></small></td>
 	  <td>
       <a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_country.php?id=<?php echo $row["customer_type_id"]; ?>&type=del&token=<?php echo $token ?>' } " >
       <img src="images/drop.png" title="Delete" border="0" />
@@ -147,11 +153,13 @@ if(isset($_POST['delete_selected']))
     else
     echo "<tr><td colspan=6 align=center><h3>No records found!</h3></td><tr/></table>";
 ?> 
+	  </table>
+      </div>
 	</form>
-    </table>
+  
     </div>
     </div>
-</div>
+
 <!--end of the content-->
 <!--open of the footer-->
 <div class="row" id="footer">

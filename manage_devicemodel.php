@@ -17,6 +17,9 @@ if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
 		$delete_single_row = "DELETE FROM tbl_device_master WHERE id='$id'";
+		// Call User Activity Log function
+		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $delete_single_row);
+		// End Activity Log Function
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
@@ -30,6 +33,9 @@ if(isset($_POST['delete_selected']))
 		foreach($_POST['linkID'] as $chckvalue)
         	{
 		    	$sql = "DELETE FROM tbl_device_master WHERE id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$result = mysql_query($sql);
    			}
 			if($result)
@@ -95,9 +101,9 @@ if(isset($_POST['delete_selected']))
    <?php } ?>
    	  
       <tr>
-      <th>S. No.</th>     
-      <th>Company Name</th>    
-      <th>Action              
+      <th><small>S. No.</small></th>     
+      <th><small>Company Name</small></th>    
+      <th><small>Action</small>           
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All</a>
       &nbsp;&nbsp;
       <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>           </th>   
@@ -126,8 +132,8 @@ if(isset($_POST['delete_selected']))
 					$class="bgcolor='#fff'";
  	  ?>
       <tr <?php print $class?>>
-      <td><?php print $kolor++;?>.</td>
-	  <td><span class="txt"><?php echo stripslashes($row["model_name"]);?></span></td>
+      <td><small><?php print $kolor++;?>.</small></td>
+	  <td><small><span class="txt"><?php echo stripslashes($row["model_name"]);?></span></small></td>
 	  <td>
       <a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_devicemodel.php?id=<?php echo $row["device_id"]; ?>&type=del&token=<?php echo $token ?>' } " >
       <img src="images/drop.png" title="Delete" border="0" />

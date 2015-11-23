@@ -13,39 +13,43 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
 {
-		header("location: home.php?token=".$token);
+	header("location: home.php?token=".$token);
 }
 $error =0;
 if(isset($_REQUEST['product']))
 {
-$product=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['product'])));
-$request_type=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['request_type'])));
+	$product=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['product'])));
+	$request_type=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['request_type'])));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tblrqsttype set product_id='$product', rqsttype='$request_type' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Request Type updated successfully';
-header("location:manage_request_type.php?token=".$token);
-exit();
+	$sql = "update tblrqsttype set product_id='$product', rqsttype='$request_type' where id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Request Type updated successfully';
+	header("location:manage_request_type.php?token=".$token);
+	exit();
 }
 else{
-$queryArr=mysql_query("select * from tblrqsttype");
-//$result=mysql_fetch_assoc($queryArr);
-
-$query=mysql_query("insert into tblrqsttype set product_id='$product', rqsttype='$request_type'");
-$_SESSION['sess_msg']='Request Type added successfully';
-header("location:manage_request_type.php?token=".$token);
-exit();
+	$queryArr = mysql_query("select * from tblrqsttype");
+	//$result=mysql_fetch_assoc($queryArr);
+	$query = mysql_query("insert into tblrqsttype set product_id='$product', rqsttype='$request_type'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Request Type added successfully';
+	header("location:manage_request_type.php?token=".$token);
+	exit();
 }
 
 }
 
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tblrqsttype where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
-
+	$queryArr=mysql_query("select * from tblrqsttype where id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>
@@ -101,9 +105,9 @@ $result=mysql_fetch_assoc($queryArr);
         </tr>
         <tr>
         <td> </td>
-        <td><input type='submit' name='submit' class="btn btn-primary" value="Submit"/>
-			<input type='reset' name='reset' class="btn btn-primary" value="Reset"/>                        
-            <input type='button' name='cancel' class="btn btn-primary" value="Back" 
+        <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Submit"/>
+			<input type='reset' name='reset' class="btn btn-primary btn-sm" value="Reset"/>                        
+            <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
 							  onclick="window.location='manage_request_type.php?token=<?php echo $token ?>'"/></td>
         </tr>
         </table>

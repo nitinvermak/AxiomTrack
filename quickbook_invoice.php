@@ -14,6 +14,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if(isset($_POST['submit']))
 	{
+		echo 'asfasfd';
 		$organizationName = mysql_real_escape_string($_POST['organizationName']);
 		$quickBookRefNo = mysql_real_escape_string($_POST['quickBookRefNo']);
 		/*Cash payment*/
@@ -35,68 +36,67 @@ if(isset($_POST['submit']))
 		if(isset($_POST['cash']) && ($_POST['cheque']) && ($_POST['onlineTransfer']))
 			{
 				//Save Data Online payement 
-				$sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', 
+				$sql = "Insert into quickBookPaymentonlinetransfer Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', RefNo = '$refNo', 
 						Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-				/*	$result = mysql_query($sql);*/
+				echo $sql;
+				$result = mysql_query($sql);
 				$OnlineTransferId = mysql_insert_id();
 				
 				//Save Data Cheque
-				$sql = "Insert into PaymentCheque Set customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo', ChequeNo = '$chequeNo', 
+				$sql = "Insert into quickBookPaymentCheque Set ChequeNo = '$chequeNo', 
 						ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', 
 						Amount = '$amountCheque'";
 				/*echo $sql;*/
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 				$ChequeID = mysql_insert_id();
 				
 				
 				//Save Data Cash Payment
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', 
+				$sql = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', 
 						ChequeID = '$ChequeID', OnlineTransferId = '$OnlineTransferId', 
 						RecivedDate = '$revievingDate', Remarks = '$remarks', 
 						RecievedBy = '$recievedby'";
 				/*echo $sql;*/
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 			}
 		else if (isset($_POST['cash']))
 			{
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', 
+				$sql = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', 
 						RecivedDate = '$revievingDate', Remarks = '$remarks', 
 						RecievedBy = '$recievedby'";
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 			}
 		else if(isset($_POST['cheque']))
 			{
-				$sql = "Insert into PaymentCheque Set customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo', ChequeNo = '$chequeNo', 
+				$sql = "Insert into quickBookPaymentCheque Set ChequeNo = '$chequeNo', 
 						ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', 
 						Amount = '$amountCheque'";
-				/*$result = mysql_query($sql);*/
-				/*echo $sql;*/
+				$result = mysql_query($sql);
+				echo $sql;
 				$ChequeID = mysql_insert_id(); 
 				
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo', ChequeID = '$ChequeID', 
-						RecivedDate = '$revievingDate', Remarks = '$remarks', RecievedBy = '$recievedby'";
-				/*echo $sql;*/
+				$sqlmaster = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
+							  quickBookRefNo = '$quickBookRefNo', ChequeID = '$ChequeID', 
+							  RecivedDate = '$revievingDate', Remarks = '$remarks', RecievedBy = '$recievedby'";
+				$resultMaster = mysql_query($sqlmaster);
+				echo $sqlmaster;
 			}
 		else if(isset($_POST['onlineTransfer']))
 			{
-				$sql = "Insert into paymentonlinetransfer Set customerId = '$organizationName', 
+				$sql = "Insert into quickBookpaymentonlinetransfer Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 				$OnlineTransferId = mysql_insert_id();
-				$sql = "Insert into paymentmethoddetailsmaster Set customerId = '$organizationName', 
+				$sql = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', OnlineTransferId = '$OnlineTransferId', 
 						RecivedDate = '$revievingDate', Remarks = '$remarks', 
 						RecievedBy = '$recievedby'";
-				/*$result = mysql_query($sql);*/
+				$result = mysql_query($sql);
 				/*echo $sql;*/
 			}
 		
@@ -138,7 +138,7 @@ if(isset($_POST['submit']))
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3> Payment Recieve</h3>
+    	<h3> Quick Book Invoice</h3>
         <hr>
     </div>
     <div class="col-md-12">

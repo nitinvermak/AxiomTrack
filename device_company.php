@@ -18,36 +18,42 @@ if (isset($_SESSION) && $_SESSION['user_category_id']!=1)
 $error =0;
 if(isset($_REQUEST['name']))
 {
-$company=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['name'])));
+	$company=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['name'])));
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
-$sql="update tbldevicecompany set name='$company' where id=" .$_REQUEST['id'];
-mysql_query($sql);
-$_SESSION['sess_msg']='Country updated successfully';
-header("location:manage_device_company.php?token=".$token);
-exit();
+	$sql = "update tbldevicecompany set name='$company' where id=" .$_REQUEST['id'];
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+	// End Activity Log Function
+	mysql_query($sql);
+	$_SESSION['sess_msg']='Country updated successfully';
+	header("location:manage_device_company.php?token=".$token);
+	exit();
 }
 else{
-$queryArr=mysql_query("select * from tbldevicecompany where name ='$company'");
-//$result=mysql_fetch_assoc($queryArr);
- if(mysql_num_rows($queryArr)<=0)
+	$queryArr = mysql_query("select * from tbldevicecompany where name ='$company'");
+	//$result=mysql_fetch_assoc($queryArr);
+if(mysql_num_rows($queryArr)<=0)
 {
-$query=mysql_query("insert into tbldevicecompany set name='$company' ");
-$_SESSION['sess_msg']='Company added successfully';
-header("location:manage_device_company.php?token=".$token);
-exit();
+	$query = mysql_query("insert into tbldevicecompany set name='$company'");
+	// Call User Activity Log function
+	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
+	// End Activity Log Function
+	$_SESSION['sess_msg']='Company added successfully';
+	header("location:manage_device_company.php?token=".$token);
+	exit();
 }
 else
 {
-$msg="Company already exists";
+	$msg="Company already exists";
 }
 }
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id']){
-$queryArr=mysql_query("select * from tbldevicecompany where id =".$_REQUEST['id']);
-$result=mysql_fetch_assoc($queryArr);
+	$queryArr=mysql_query("select * from tbldevicecompany where id =".$_REQUEST['id']);
+	$result=mysql_fetch_assoc($queryArr);
 }
 ?>
 <!DOCTYPE html>
@@ -93,9 +99,9 @@ $result=mysql_fetch_assoc($queryArr);
         </tr>
         <tr>
         <td> </td>
-        <td><input type='submit' name='submit' class="btn btn-primary" value="Submit"/>
-        	<input type='reset' name='reset' class="btn btn-primary" value="Reset"/>                        
-            <input type='button' name='cancel' class="btn btn-primary" value="Back" 
+        <td><input type='submit' name='submit' class="btn btn-primary btn-sm" value="Submit"/>
+        	<input type='reset' name='reset' class="btn btn-primary btn-sm" value="Reset"/>                        
+            <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Back" 
 			onclick="window.location='manage_device_company.php?token=<?php echo $token ?>'"/>
         </td>
         </tr>
