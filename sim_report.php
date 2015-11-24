@@ -2,7 +2,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }

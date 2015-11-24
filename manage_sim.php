@@ -26,7 +26,8 @@ if(isset($_GET['id']))
 //End
 //Delete  multiple records
 if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
-   {			   
+   {		
+    
 		if(isset($_POST['linkID']))
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
@@ -87,17 +88,18 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
     	<h3>Sim   Details</h3>
         <hr>
     </div>
+    <form name='fullform' method='post' onSubmit="return confirmdelete()">
     <div class="col-md-12">
-     
+    
     	<div class="col-md-4 btn_grid">
        		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('sim.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
         	<input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
-        
+  
     </div>
     <div class="col-md-12">
-        <form name='fullform' method='post' onSubmit="return confirmdelete()">
+       
         <input type="hidden" name="token" value="<?php echo $token; ?>" />
         <input type='hidden' name='pagename' value='users'> 
         <div class="table-responsive">

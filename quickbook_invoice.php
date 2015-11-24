@@ -14,7 +14,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 }
 if(isset($_POST['submit']))
 	{
-		echo 'asfasfd';
+		$userId = $_SESSION['user_id'];
 		$organizationName = mysql_real_escape_string($_POST['organizationName']);
 		$quickBookRefNo = mysql_real_escape_string($_POST['quickBookRefNo']);
 		/*Cash payment*/
@@ -55,19 +55,19 @@ if(isset($_POST['submit']))
 				//Save Data Cash Payment
 				$sql = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', 
-						ChequeID = '$ChequeID', OnlineTransferId = '$OnlineTransferId', 
-						RecivedDate = '$revievingDate', Remarks = '$remarks', 
-						RecievedBy = '$recievedby'";
+						ChequeID = '$ChequeID', OnlineTransferId = '$OnlineTransferId', userId = '$userId' 
+						RecivedDate = '$revievingDate', Remarks = '$remarks'";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
+				header("location:quickbook_invoice_view.php?token=".$token);
 			}
 		else if (isset($_POST['cash']))
 			{
 				$sql = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', 
-						RecivedDate = '$revievingDate', Remarks = '$remarks', 
-						RecievedBy = '$recievedby'";
+						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', userId = '$userId'
+						RecivedDate = '$revievingDate', Remarks = '$remarks'";
 				$result = mysql_query($sql);
+				header("location:quickbook_invoice_view.php?token=".$token);
 				/*echo $sql;*/
 			}
 		else if(isset($_POST['cheque']))
@@ -80,9 +80,10 @@ if(isset($_POST['submit']))
 				$ChequeID = mysql_insert_id(); 
 				
 				$sqlmaster = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
-							  quickBookRefNo = '$quickBookRefNo', ChequeID = '$ChequeID', 
-							  RecivedDate = '$revievingDate', Remarks = '$remarks', RecievedBy = '$recievedby'";
+							  quickBookRefNo = '$quickBookRefNo', ChequeID = '$ChequeID', userId = '$userId'
+							  RecivedDate = '$revievingDate', Remarks = '$remarks'";
 				$resultMaster = mysql_query($sqlmaster);
+				header("location:quickbook_invoice_view.php?token=".$token);
 				echo $sqlmaster;
 			}
 		else if(isset($_POST['onlineTransfer']))
@@ -93,10 +94,10 @@ if(isset($_POST['submit']))
 				/*echo $sql;*/
 				$OnlineTransferId = mysql_insert_id();
 				$sql = "Insert into quickBookpaymentmethoddetailsmaster Set customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo', OnlineTransferId = '$OnlineTransferId', 
-						RecivedDate = '$revievingDate', Remarks = '$remarks', 
-						RecievedBy = '$recievedby'";
+						quickBookRefNo = '$quickBookRefNo', OnlineTransferId = '$OnlineTransferId', userId = '$userId' 
+						RecivedDate = '$revievingDate', Remarks = '$remarks',";
 				$result = mysql_query($sql);
+				header("location:quickbook_invoice_view.php?token=".$token);
 				/*echo $sql;*/
 			}
 		
@@ -188,8 +189,7 @@ if(isset($_POST['submit']))
 			?>
             <option value="<?php echo $resultCountry['bankId']; ?>" <?php if(isset($result['bankId']) && $resultCountry['bankId']==$result['bankId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['bankName'])); ?></option>
             <?php } ?>
-        </select>
-        </td>
+        </select>        </td>
         <td class="col-md-2">Amount</td>
         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box" disabled></td>
         </tr>
@@ -217,12 +217,6 @@ if(isset($_POST['submit']))
         <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="date form-control text_box" ></td>
         <td class="col-md-2">Remarks</td>
         <td class="col-md-4"><input type="text" name="remarks" id="remarks" class="form-control text_box" ></td>
-        </tr>
-        <tr>
-        <td class="col-md-2">Payment Revieved by</td>
-        <td class="col-md-4"><input type="text" name="recievedby" id="recievedby" class="form-control text_box" ></td>
-        <td class="col-md-2">Payment Confirm by</td>
-        <td class="col-md-4"><input type="text" name="confirmby" id="confirmby" class="form-control text_box" ></td>
         </tr>
         <tr>
         <td class="col-md-2">&nbsp;</td>

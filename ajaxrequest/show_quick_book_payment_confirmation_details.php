@@ -6,7 +6,7 @@ error_reporting(0);
 if ($branch_id == 0)
 	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
 				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-				A.Amount as chequeamt, C.Amount as onlineAmt
+				B.status as status, A.Amount as chequeamt, C.Amount as onlineAmt
 				from quickbookpaymentcheque as A 
 				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
 				ON A.Id = B.ChequeID
@@ -15,7 +15,7 @@ if ($branch_id == 0)
 else
 	$linkSQL = "SELECT B.PaymentID as B.PaymentID, B.customerId as customerId, 
 				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-				A.Amount as chequeamt, C.Amount as onlineAmt
+				B.status as status, A.Amount as chequeamt, C.Amount as onlineAmt
 				from quickbookpaymentcheque as A 
 				Left Outer  JOIN quickbookpaymentmethoddetailsmaster as B 
 				ON A.Id = B.ChequeID
@@ -27,13 +27,13 @@ if(mysql_num_rows($stockArr)>0)
 	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				 <tr>
+                 <th><small>S. No.</small></th>
 	             <th><small>Payment Id</small></th>                        
 	             <th><small>Customer Id</small></th>  
 	             <th><small>Quick Book Ref. No.</small></th>
 	             <th><small>Cash Amount</small></th> 
                  <th><small>Cheque Amount</small></th>  
                  <th><small>Online Amount</small></th> 
-	             <th><small>Status</small></th>
 	             <th><small>Actions</small>
                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                        	&nbsp;&nbsp;
@@ -55,9 +55,43 @@ if(mysql_num_rows($stockArr)>0)
 				<td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>
                 <td><small><?php echo stripslashes($row["customerId"]);?></small></td>	
 				<td><small><?php echo stripslashes($row["quickBookRefNo"]);?></small></td>
-                <td><small><?php echo stripslashes($row["CashAmount"]);?></small></td>	
-                <td><small><?php echo stripslashes($row["chequeamt"]);?></small></td>
-                <td><small><?php echo stripslashes($row["onlineAmt"]);?></small></td>				  
+                <td><small>
+				<?php 
+				if($row["CashAmount"] == 0)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo stripslashes($row["CashAmount"]);
+				}
+				?>
+                </small></td>	
+                <td><small>
+				<?php 
+				if($row["chequeamt"] == 0)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo stripslashes($row["chequeamt"]);
+				}
+				?>
+                </small></td>
+                <td><small>
+				<?php
+				if($row["onlineAmt"] == "")
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo stripslashes($row["onlineAmt"]);
+				}
+				?>
+                </small></td>
+               				  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["PaymentID"]; ?>'></td>
                 </tr>
  				<?php }

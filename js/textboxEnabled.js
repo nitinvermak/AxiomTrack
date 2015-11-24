@@ -93,6 +93,11 @@ $(document).ready(function(){
 		    return false;
 			}
 		}
+		if($("#organizationName").val() == "" ){
+		    $("#organizationName").focus();
+		    alert("Please Select Organization");
+		    return false;
+		}
 		if($("#revievingDate").val() == "" ){
 		    $("#revievingDate").focus();
 		    alert("Please Enter Recieving Date");

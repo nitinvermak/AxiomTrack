@@ -16,16 +16,12 @@ if (isset($_SESSION) && $_SESSION['login']=='')
  if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
-		if(isset($_POST['linkID']) &&(isset($_POST['submit'])))
+		if(isset($_POST['linkID']) &&(isset($_POST['depositBank'])))
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-		        $userId = $_SESSION['user_id'];
-		  		$confirmation_status="1";
-		  		$createdby=$_SESSION['user_id'];
-	            $sql = "UPDATE `quickbookpaymentmethoddetailsmaster` SET `status` = '$confirmation_status', 
-						paymentConfirmBy = '$userId' 
-						WHERE `PaymentID` = '$chckvalue'";
+	            $sql = "UPDATE quickbookpaymentcheque SET DepositStatus = 'Y', bankDepositDate = Now() WHERE Id = '$chckvalue'";
+				/*echo $sql;*/
 				$results = mysql_query($sql);
 		  		$_SESSION['sess_msg']="Payment Confirm Successfully!";
    			   }
@@ -43,16 +39,25 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<script type="text/javascript" src="js/checkbox.js"></script>
 <script type="text/javascript">
+ $(function() {
+    $( "#depositDate" ).datepicker({dateFormat: 'yy-mm-dd'});
+  });
 $(document).ready(function(){
-	$('#branch').change(function(){
+	$('#search').click(function(){
 		$('.loader').show();
-		$.post("ajaxrequest/show_quick_book_payment_confirmation_details.php?token=<?php echo $token;?>",
+		$.post("ajaxrequest/cheque_deposit_details.php?token=<?php echo $token;?>",
 				{
-					branch : $('#branch').val()
+					depositDate : $('#depositDate').val(),
+					branch : $('#branch').val(),
+					executive : $('#executive').val()
 				},
 					function(data){
 						/*alert(data);*/
@@ -62,6 +67,20 @@ $(document).ready(function(){
 				});	
 	});
 });
+// send ajax when select branch
+$(document).ready(function(){
+	$("#branch").change(function(){
+		$.post("ajaxrequest/executive.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#showTechnician").html(data);
+				});
+	});
+});
+// End
 </script>
 </head>
 <body>
@@ -73,36 +92,50 @@ $(document).ready(function(){
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Confirm Received Payment</h3>
+    	<h3>Cheque Deposit</h3>
         <hr>
     </div>
     <div class="col-md-12">
     <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
       <div class="col-md-12">
         <div class="form-group">
+            <label for="exampleInputEmail2">Deposit Date</label>
+            <input type="text" name="depositDate" id="depositDate" class="form-control text_box">
+        </div>
+        <div class="form-group">
             <label for="exampleInputEmail2">Branch</label>
             <select name="branch" id="branch" class="form-control drop_down">
-            <option label="" value="" selected="selected">Select Branch</option>
-            
-              <?php 
-			  		$branch_sql= "select * from tblbranch ";
-					$authorized_branches = BranchLogin($_SESSION['user_id']);
-					//echo $authorized_branches;
-					if ( $authorized_branches != '0'){
-						 
-						$branch_sql = $branch_sql.' where id in '.$authorized_branches;		
-					}
-					if($authorized_branches == '0'){
-						echo'<option value="0">All Branch</option>';	
-					}
-					//echo $branch_sql;
-					$Country = mysql_query($branch_sql);					
-			  									  
-					while($resultCountry=mysql_fetch_assoc($Country)){
-			  ?>
+        	<option label="" value="" selected="selected">Select Branch</option>
+            <?php 
+            $branch_sql= "select * from tblbranch ";
+            $authorized_branches = BranchLogin($_SESSION['user_id']);
+            //echo $authorized_branches;
+            if ( $authorized_branches != '0')
+			{
+             	$branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+            }
+            if($authorized_branches == '0')
+			{
+            	echo'<option value="0">All Branch</option>';	
+            }
+            //echo $branch_sql;
+            $Country = mysql_query($branch_sql);					
+            	while($resultCountry=mysql_fetch_assoc($Country)){
+            ?>
             <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
             <?php } ?>
+      		</select>
+        </div>
+         <div class="form-group" >
+            <label for="exampleInputEmail2">Executive</label>
+            <span id="showTechnician">
+            <select name="executive" id="executive" class="form-control drop_down-sm">
+            <option value="">Select Executive</option>                         
             </select>
+           	</span>
+        </div>
+        <div class="form-group" >
+        <input type="button" name="search" id="search" value="Search" class="btn btn-primary btn-sm">
         </div>
   		</div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
