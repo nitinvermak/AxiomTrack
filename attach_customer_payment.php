@@ -1,7 +1,7 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-include("includes/simpleimage.php");
+/*include("includes/simpleimage.php");*/
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
@@ -10,10 +10,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
-}
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-{
-		header("location: home.php?token=".$token);
 }
 $error =0;
 if(isset($_REQUEST['cust_id']) && $_REQUEST['cust_id']){
@@ -119,6 +115,7 @@ function getValue(a){
 	 //postData = {'PostData': 1234 };
 	 //alert(postData.PostData);
 	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA"); 
+
 	}
 
 function getValueHistoryPage(b){

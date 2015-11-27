@@ -11,10 +11,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-{
-		header("location: home.php?token=".$token);
-}
+
 $error =0;
 if(isset($_REQUEST['city']))
 {
@@ -102,7 +99,9 @@ if(isset($_REQUEST['id']) && $_REQUEST['id']){
          		<?php $Country=mysql_query("select * from tbl_city_new");
                                while($resultCountry=mysql_fetch_assoc($Country)){
                 ?>
-                <option value="<?php echo $resultCountry['City_id']; ?>" <?php if(isset($result['city_id']) && $resultCountry['City_id']==$result['city_id']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['City_Name'])); ?></option>
+                <option value="<?php echo $resultCountry['City_id']; ?>" 
+				<?php if(isset($result['city_id']) && $resultCountry['City_id']==$result['city_id']){ ?>selected<?php } ?>>
+				<?php echo stripslashes(ucfirst($resultCountry['City_Name'])); ?></option>
                 <?php } ?> 
         </select>
         </td>

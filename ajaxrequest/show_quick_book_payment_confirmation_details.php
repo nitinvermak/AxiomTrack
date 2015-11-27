@@ -1,26 +1,38 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
+include("../includes/crosssite.inc.php"); 
 $branch_id=$_REQUEST['branch']; 
 error_reporting(0);
 if ($branch_id == 0)
+{
 	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-				B.status as status, A.Amount as chequeamt, C.Amount as onlineAmt
+			    B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
+			    B.status as status, A.chequeAmount as chequeamt, C.onlineAmount as onlineAmt,
+			    A.Id as chequeId, C.Id as onlinepaymentId, D.callingdata_id as callingdataid
 				from quickbookpaymentcheque as A 
 				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
 				ON A.Id = B.ChequeID
 				Left Outer JOIN quickbookpaymentonlinetransfer as C 
-				ON B.OnlineTransferId = C.Id WHERE B.status = '0'";
+				ON B.OnlineTransferId = C.Id 
+				LEFT OUTER JOIN tbl_customer_master as D 
+				ON B.customerId = D.cust_id WHERE B.status = '0'";
+				/*echo $linkSQL;*/
+}
 else
-	$linkSQL = "SELECT B.PaymentID as B.PaymentID, B.customerId as customerId, 
-				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-				B.status as status, A.Amount as chequeamt, C.Amount as onlineAmt
+{
+	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
+			    B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
+			    B.status as status, A.chequeAmount as chequeamt, C.onlineAmount as onlineAmt,
+			    A.Id as chequeId, C.Id as onlinepaymentId, D.callingdata_id as callingdataid
 				from quickbookpaymentcheque as A 
-				Left Outer  JOIN quickbookpaymentmethoddetailsmaster as B 
+				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
 				ON A.Id = B.ChequeID
 				Left Outer JOIN quickbookpaymentonlinetransfer as C 
-				ON B.OnlineTransferId = C.Id WHERE B.status = '0'";
+				ON B.OnlineTransferId = C.Id 
+				LEFT OUTER JOIN tbl_customer_master as D 
+				ON B.customerId = D.cust_id WHERE B.status = '0'";
+	/*echo $linkSQL;*/
+}
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
@@ -53,7 +65,7 @@ if(mysql_num_rows($stockArr)>0)
                 <tr <?php print $class?>>
                 <td><small><?php print $kolor++;?>.</small></td>
 				<td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>
-                <td><small><?php echo stripslashes($row["customerId"]);?></small></td>	
+                <td><small><?php echo getOraganization(stripslashes($row["callingdataid"]));?></small></td>	
 				<td><small><?php echo stripslashes($row["quickBookRefNo"]);?></small></td>
                 <td><small>
 				<?php 
@@ -92,7 +104,11 @@ if(mysql_num_rows($stockArr)>0)
 				?>
                 </small></td>
                				  
-                <td><input type='checkbox' name='linkID[]' value='<?php echo $row["PaymentID"]; ?>'></td>
+                <td>
+                <a href="edit_quickbook_invoice.php?paymentid=<?php echo $row["PaymentID"];?>&chequeId=<?php echo $row["chequeId"];?>&onlinepaymentId=<?php echo $row["onlinepaymentId"];?>&token=<?php echo $token ?>">
+                <img src='images/edit.png'></a>&nbsp;
+                <input type='checkbox' name='linkID[]' value='<?php echo $row["PaymentID"]; ?>'>
+                </td>
                 </tr>
  				<?php }
 				}

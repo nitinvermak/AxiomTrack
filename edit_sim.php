@@ -12,10 +12,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-{
-		header("location: home.php?token=".$token);
-}
+
 $error =0;
 if(isset($_REQUEST['provider']))
 {
@@ -147,7 +144,7 @@ $state_name=$result['City'];
       <td></td>
       <td><input type='submit' name='submit' class="btn btn-primary" value="Submit"/>
           <input type='reset' name='reset' class="btn btn-primary" value="Reset"/>                        
-          <input type='button' name='cancel' class="btn btn-primary" value="Back" onclick="window.location='manage_sim.php?token=<?php echo $token ?>'"/></td>
+          <input type='button' name='cancel' class="btn btn-primary" value="Back" onClick="window.location='manage_sim.php?token=<?php echo $token ?>'"/></td>
       </tr>
       </table>
   	  </div>

@@ -23,6 +23,8 @@ if(isset($_POST['save']))
 			$resultSql = mysql_query($sql);
 			if(mysql_num_rows($resultSql) <= 0)
 				{
+					
+					
 					$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', 
 							usercategoryId = '$Usercategory', created = Now()";
 					/*echo $sql.'<br>';*/

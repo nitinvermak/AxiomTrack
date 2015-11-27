@@ -14,10 +14,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-{
-		header("location: home.php?token=".$token);
-}
+
 $error =0;
 
 $ticket_id = $_GET['ticket_id'];
@@ -29,11 +26,11 @@ if(isset($_POST['submit']))
 		$ticket_status = mysql_real_escape_string($_POST['status']);
 		$remark = mysql_real_escape_string($_POST['des']);
 		$apDate = mysql_real_escape_string($_POST['apDate']);
+		
 		$Update_ticket = "UPDATE tblticket SET ticket_status ='$ticket_status', ticket_remark = '$remark', 
 						  scheduleDate = '$apDate' where ticket_id =".$ticket_id;
-		// Call User Activity Log function
-		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $Update_ticket);
-		// End Activity Log Function
+		/*echo $Update_ticke;*/
+	
 		$query = mysql_query($Update_ticket);
 		/*echo $Update_ticket;*/
 		echo "<script> alert('Ticket Reshedule');</script>";
@@ -48,9 +45,7 @@ if(isset($_POST['close']))
 		$Update_ticket = "UPDATE tblticket SET ticket_status ='$ticket_status', 
 						  ticket_remark = '$remark', close_date = Now() 
 						  where ticket_id =".$ticket_id;
-		// Call User Activity Log function
-		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $Update_ticket);
-		// End Activity Log Function
+		
 		$query = mysql_query($Update_ticket);
 		/*echo $Update_ticket;*/
 		echo "<script> alert('Ticket Closed');</script>";

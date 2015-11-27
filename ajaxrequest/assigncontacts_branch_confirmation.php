@@ -8,10 +8,7 @@ error_reporting(0);
 					where A.id = B.callingdata_id 
 					and B.status_id='1' and 
 					B.callingcategory_id='{$callingcategory}'";
-		$authorized_branches = BranchLogin($_SESSION['user_id']);
-		if ( $authorized_branches != '0'){
-			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
-		}
+		
 	    /*echo $linkSQL;*/
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
@@ -28,6 +25,7 @@ if(mysql_num_rows($stockArr)>0)
                        <th><small>State</small></th>
                        <th><small>City</small></th>
                        <th><small>Area</small></th>
+                       <th><small>Assign Date</small></th>
                   	   <th><small>Actions</small>
                        <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                        &nbsp;&nbsp;
@@ -64,6 +62,7 @@ if(mysql_num_rows($stockArr)>0)
                            <td><small><?php echo getstate(stripslashes($row["State"]));?></small></td>
                            <td><small><?php echo getcities(stripslashes($row["City"]));?></small></td>
                            <td><small><?php echo getarea(stripslashes($row["Area"]));?></small></td>
+                           <td><small><?php echo stripcslashes($row['created']);?></small></td>
                            <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                            </tr>
  

@@ -43,6 +43,14 @@ if(isset($_POST['updateStatus']))
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript" src="js/installed_vehicle_report.js"></script>
 <script type="text/javascript">
+//date function
+$(function() {
+    $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+});
+$(document).on("click","#date", function(){
+	$( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+});
+// end date function
 $(document).ready(function(){
 	$('#search').click(function(){
 		$('.loader').show();
@@ -114,20 +122,11 @@ function getModal(a)
         	<option label="" value="" selected="selected">Select Branch</option>
             <?php 
             $branch_sql= "select * from tblbranch ";
-            $authorized_branches = BranchLogin($_SESSION['user_id']);
-            //echo $authorized_branches;
-            if ( $authorized_branches != '0')
-			{
-             	$branch_sql = $branch_sql.' where id in '.$authorized_branches;		
-            }
-            if($authorized_branches == '0')
-			{
-            	echo'<option value="0">All Branch</option>';	
-            }
             //echo $branch_sql;
             $Country = mysql_query($branch_sql);					
             	while($resultCountry=mysql_fetch_assoc($Country)){
             ?>
+           
             <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
             <?php } ?>
       		</select>

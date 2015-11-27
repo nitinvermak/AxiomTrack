@@ -19,7 +19,7 @@ if(mysql_num_rows($stockArr)>0)
 	             <th><small>Device Model</small></th>  
 	             <th><small>Device Id</small></th>
 	             <th><small>IMEI No.</small></th>  
-	             <th><small>Status</small></th>
+	             <th><small>Assign Date</small></th>
 	             <th><small>Actions</small>
                  <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                        	&nbsp;&nbsp;
@@ -49,7 +49,7 @@ if(mysql_num_rows($stockArr)>0)
 				<td><small><?php echo getdevicename(stripslashes($row["device_name"]));?></small></td>
                 <td><small><?php echo stripslashes($row["id"]);?></small></td>	
 				<td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
-                <td><small><?php echo stripslashes($row["date_of_purchase"]);?></small></td>			  
+                <td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>			  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                 </tr>
  				<?php }

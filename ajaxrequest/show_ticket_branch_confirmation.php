@@ -31,7 +31,8 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Product</small></th>
                   <th><small>Request Type</small></th> 
                   <th><small>Created</small></th>
-                  <th><small>Appointment Date Time</small></th>              
+                  <th><small>Appointment Date Time</small></th>  
+                  <th><small>Assign Date</small></th>            
                   <th><small>Actions</small>
                   <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>&nbsp;&nbsp;<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>             </th>  
                   </tr>    
@@ -63,6 +64,7 @@ if(mysql_num_rows($stockArr)>0)
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
+                 <td><small><?php echo stripcslashes($row['assign_date']);?></small></td>
                  <td><a href="#" onclick="if(confirm('Do you really want to delete this record?')){ window.location.href='transusers_del.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' }" ><img src="images/drop.png" title="Delete" border="0" /></a>     <a href="plan_category.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> &nbsp;&nbsp;<input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> 
                  </td>
                  </tr>

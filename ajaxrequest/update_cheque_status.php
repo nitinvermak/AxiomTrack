@@ -2,7 +2,7 @@
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php");
 $chequeId = mysql_real_escape_string($_POST['chequeId']);
-echo $chequeId; 
+/*echo $chequeId; */
 ?>
 
 <!----------------- Modal ------------------>
@@ -20,7 +20,7 @@ echo $chequeId;
                     <select name="chequeStatus" id="chequeStatus" class="form-control drop_down">
                     	<option value="">Select Status</option>
                     	<option value="Y">Cleared</option>
-                        <option value="N">Bounced</option>
+                        <option value="B">Bounced</option>
                     </select>
                   </div>
                   <div class="form-group">

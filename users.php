@@ -42,18 +42,19 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 			{
 				$update_record ="Update tbluser set emp_id='$emp_id',First_Name='$first_name',
-								 Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), 																																																													 								 Contact_No='$contact',emailid='$email_id', 
-								 DOJ=STR_TO_DATE('$date_of_j','%m/%d/%Y'),Address='$address',
+								 Last_Name='$last_name', DOB = '$emp_dob', 																																																													 								 Contact_No='$contact',emailid='$email_id', 
+								 DOJ = '$date_of_j', Address='$address',
 								 countryId='$country',stateId='$state', districtId='$district', 
 								 cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', 			        						 branch_id='$branch', User_ID='$user_name', Password='$password',
 								 User_Status='A',Created_date=CURDATE(),CreatedBY='$userid' 
 								 where id=".$_REQUEST['id'];
+				/*echo $update_record;*/
 				// Call User Activity Log function
-				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_record);
+				/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_record);*/
 				// End Activity Log Function
 				$sqlquery=mysql_query($update_record);		
 				echo "<script> alert('User Updated Successfully!'); </script>";
-				header("location: manage_users.php?token=".$token);
+				/*header("location: manage_users.php?token=".$token);*/
 			}
 			else
 			{
@@ -62,31 +63,31 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				if(mysql_num_rows($queryArr)<=0)
 				{
 					$sql="insert into tbluser set emp_id='$emp_id',First_Name='$first_name',
-						  Last_Name='$last_name', DOB=STR_TO_DATE('$emp_dob', '%m/%d/%Y'), 		                           		        				  Contact_No='$contact',emailid='$email_id',
-						  DOJ=STR_TO_DATE('$date_of_j', '%m/%d/%Y'), Address='$address',
+						  Last_Name='$last_name', DOB = '$emp_dob', 		                           		        				  						  Contact_No='$contact',emailid='$email_id',
+						  DOJ = '$date_of_j', Address='$address',
 						  countryId='$country',stateId='$state', districtId='$district', 
 						  cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', 
 						  branch_id='$branch', User_ID='$user_name', Password='$password',
 						  User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
 					// Call User Activity Log function
-					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+					/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);*/
 					// End Activity Log Function
 					/*echo $sql;*/
 					$query=mysql_query($sql);
-					$usedId =  mysql_insert_id();
-					if ($user_type == 1){
-						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='0' ";	
+					/*$usedId =  mysql_insert_id();*/
+					/*if ($user_type == 1){
+						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='0' ";	*/
 						// Call User Activity Log function
-						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);
+						/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);*/
 						// End Activity Log Function							
-					}
+					/*}
 					else {
-						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='$branch' ";
+						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='$branch' ";*/
 						// Call User Activity Log function
-						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);
+						/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);*/
 						// End Activity Log Function							
-					}	
-					$addUserMapping = mysql_query($branchAuth_sql);
+					/*}	
+					$addUserMapping = mysql_query($branchAuth_sql);*/
 						
 					echo "<script> alert('User Created Successfully!'); </script>";
 					header("location: manage_users.php?token=".$token);
@@ -307,14 +308,18 @@ function CallPincode()
         </tr>
         <tr>
        <td valign="top">User Type</td>
-       <td valign="top"><select name="user_type" class="form-control drop_down" id="user_type" onChange="hidediv(this.value)">
-            <option label="" value="" selected="selected">Select User </option>
-            <?php $Country=mysql_query("select * from tblusercategory");
-									  while($resultCountry=mysql_fetch_assoc($Country)){
-									  ?>
-                              <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($id) && $resultCountry['id']==$User_Category){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['User_Category'])); ?></option>
-                              <?php } ?>
-          </select></td>
+       <td valign="top">
+       <select name="user_type" class="form-control drop_down" id="user_type" onChange="hidediv(this.value)">
+       	<option label="" value="" selected="selected">Select User </option>
+        <?php $Country=mysql_query("select * from tblusercategory");
+			  while($resultCountry=mysql_fetch_assoc($Country)){
+		?>
+        <option value="<?php echo $resultCountry['id']; ?>" 
+		<?php if(isset($result['User_Category']) && $resultCountry['id']==$result['User_Category']){ ?>selected<?php } ?>>
+		<?php echo stripslashes(ucfirst($resultCountry['User_Category'])); ?></option>
+        <?php } ?>
+       </select>
+       </td>
           <td>Branch</span></td>
           <td>
           <div id="notadmin">
@@ -324,7 +329,9 @@ function CallPincode()
 									  
 									  while($resultCountry=mysql_fetch_assoc($Country)){
 									  ?>
-            <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($id) && $resultCountry['id']==$branch_id){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+            <option value="<?php echo $resultCountry['id']; ?>" 
+			<?php if(isset($result['branch_id']) && $resultCountry['id']==$result['branch_id']){ ?>selected<?php } ?>>
+			<?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
             <?php } ?>
           </select>
           </div>          </td>

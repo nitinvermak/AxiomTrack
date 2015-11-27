@@ -3,7 +3,8 @@ include("../includes/config.inc.php");
 include("..includes/crosssite.inc.php"); 
 $date = mysql_real_escape_string($_POST['date']);
 $executive = mysql_real_escape_string($_POST['executive']);
-
+echo $date."<br>";
+echo $executive;
 error_reporting(0);
 if ($date == "" || $executive =="")
 {
@@ -13,6 +14,7 @@ if ($date == "" || $executive =="")
 				FROM tbluseractivitylog as A
 				INNER JOIN tbluser as B 
 				ON A.userId = B.id";
+ 	echo $linkSQL;
 }
 else
 	$linkSQL = "SELECT A.userId as userId, A.timeStamp as Date, A.ipAddress as Ip, 
@@ -20,7 +22,8 @@ else
 				B.First_Name as fName, B.Last_Name as lName 
 				FROM tbluseractivitylog as A
 				INNER JOIN tbluser as B 
-				ON A.userId = B.id WHERE A.userId = '$date' or A.timeStamp = '$executive'";
+				ON A.userId = B.id WHERE A.userId = '$executive' or A.timeStamp like '%$date%'";
+	echo $linkSQL;
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{

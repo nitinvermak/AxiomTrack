@@ -12,8 +12,10 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if(isset($_POST['submit']))
 	{
+		$paymentid = $_GET['paymentid'];
+		$chequeId = $_GET['paymentid'];
+		$onlinepaymentId = $_GET['onlinepaymentId'];
 		$userId = $_SESSION['user_id'];
 		$ticketId = mysql_real_escape_string($_POST['ticketId']);
 		$organizationName = mysql_real_escape_string($_POST['organizationName']);
@@ -36,77 +38,82 @@ if(isset($_POST['submit']))
 		$confirmby = mysql_real_escape_string($_POST['confirmby']);
 		if(isset($_POST['cash']) && ($_POST['cheque']) && ($_POST['onlineTransfer']))
 			{
-				//Save Data Online payement 
-				$sql = "Insert into quickbookpaymentonlinetransfer Set customerId = '$organizationName', 
+				//Update Data Online payement 
+				$sql = "Update quickbookpaymentonlinetransfer Set customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', RefNo = '$refNo', 
-						onlineAmount = '$onlineTransferAmount'";
+						onlineAmount = '$onlineTransferAmount' Where Id = '$onlinepaymentId'";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
-				$OnlineTransferId = mysql_insert_id();
 				
-				//Save Data Cheque
-				$sql = "Insert into quickbookpaymentcheque Set ChequeNo = '$chequeNo', 
+				//Update Data Cheque
+				$sql = "Update quickbookpaymentcheque Set ChequeNo = '$chequeNo', 
 						ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', 
-						chequeAmount = '$amountCheque'";
+						chequeAmount = '$amountCheque' where Id = '$chequeId'";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
-				$ChequeID = mysql_insert_id();
-				
-				
-				//Save Data Cash Payment
-				$sql = "Insert into quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId',
+								
+				//Update Data Cash Payment
+				$sql = "Update quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId',
 						customerId = '$organizationName', 
 						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', 
-						ChequeID = '$ChequeID', OnlineTransferId = '$OnlineTransferId', userId = '$userId', 
-						RecivedDate = '$revievingDate', Remarks = '$remarks'";
+						userId = '$userId', RecivedDate = '$revievingDate', 
+						Remarks = '$remarks' where PaymentID = '$paymentid'";
 				/*echo $sql;*/
 				$result = mysql_query($sql);
 				
 			}
 		else if (isset($_POST['cash']))
 			{
-				$sql = "Insert into quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId', 
-						customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo', CashAmount = '$cashAmount', userId = '$userId',
-						RecivedDate = '$revievingDate', Remarks = '$remarks'";
+				$sql = "Update quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId', 
+						customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', 
+						CashAmount = '$cashAmount', userId = '$userId', RecivedDate = '$revievingDate', 
+						Remarks = '$remarks' where PaymentID = '$paymentid'";
 				$result = mysql_query($sql);
 				
 				/*echo $sql;*/
 			}
 		else if(isset($_POST['cheque']))
 			{
-				$sql = "Insert into quickbookpaymentcheque Set ChequeNo = '$chequeNo', 
+				$sql = "Update quickbookpaymentcheque Set ChequeNo = '$chequeNo', 
 						ChequeDate = '$chequeDate', Bank = '$bank', DepositDate = '$depositDate', 
-						chequeAmount = '$amountCheque'";
+						chequeAmount = '$amountCheque' where Id = '$chequeId'";
 				$result = mysql_query($sql);
 				/*echo $sql;*/
-				$ChequeID = mysql_insert_id(); 
 				
-				$sqlmaster = "Insert into quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId', 
-							  customerId = '$organizationName', 
-							  quickBookRefNo = '$quickBookRefNo', ChequeID = '$ChequeID', userId = '$userId',
-							  RecivedDate = '$revievingDate', Remarks = '$remarks'";
+				$sqlmaster = "Update quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId', 
+							  customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', 
+							  userId = '$userId', RecivedDate = '$revievingDate', Remarks = '$remarks' 
+							  where PaymentID = '$paymentid'";
 				$resultMaster = mysql_query($sqlmaster);
 				
 				/*echo $sqlmaster;*/
 			}
 		else if(isset($_POST['onlineTransfer']))
 			{
-				$sql = "Insert into quickbookpaymentonlinetransfer Set customerId = '$organizationName', 
-						quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', onlineAmount = '$onlineTransferAmount'";
+				$sql = "Update quickbookpaymentonlinetransfer Set customerId = '$organizationName', 
+						quickBookRefNo = '$quickBookRefNo',RefNo = '$refNo', onlineAmount = '$onlineTransferAmount'
+						Where Id = '$onlinepaymentId'";
 				$result = mysql_query($sql);
 				/*echo $sql;*/
-				$OnlineTransferId = mysql_insert_id();
-				$sql = "Insert into quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId', 
+				
+				$sql = "Update quickbookpaymentmethoddetailsmaster Set ticketId = '$ticketId', 
 						customerId = '$organizationName', quickBookRefNo = '$quickBookRefNo', 
-						OnlineTransferId = '$OnlineTransferId', userId = '$userId', 
-						RecivedDate = '$revievingDate', Remarks = '$remarks',";
+						userId = '$userId', RecivedDate = '$revievingDate', Remarks = '$remarks',
+						where PaymentID = '$paymentid'";
 				$result = mysql_query($sql);
 			
 				/*echo $sql;*/
 			}
 		
 	}
+if(isset($_REQUEST['paymentid']) && $_REQUEST['paymentid']){
+$queryArr=mysql_query("SELECT * FROM quickbookpaymentcheque as A 
+					  LEFT OUTER JOIN quickbookpaymentmethoddetailsmaster as B 
+					  ON A.Id = B.ChequeID 
+					  LEFT OUTER JOIN quickbookpaymentonlinetransfer as C 
+					  ON B.OnlineTransferId = C.Id WHERE B.PaymentID =".$_REQUEST['paymentid']);
+$result=mysql_fetch_assoc($queryArr);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -174,7 +181,7 @@ $(document).ready(function(){
                                while($resultCountry=mysql_fetch_assoc($Country)){
                                  ?>
                         <option value="<?php echo $resultCountry['ticket_id']; ?>" 
-						<?php if(isset($result['ticket_id']) && $resultCountry['ticket_id']==$result['ticket_id']){ ?>selected
+						<?php if(isset($result['ticketId']) && $resultCountry['ticket_id']==$result['ticketId']){ ?>selected
 						<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['ticket_id'])); ?></option>
                         <?php } ?>
             </select>
@@ -193,14 +200,14 @@ $(document).ready(function(){
         </div>
         </td>
         <td width="20%">Quick Book Ref. No.</td>
-        <td width="31%"><input type="text" name="quickBookRefNo" id="quickBookRefNo" class="form-control text_box"> </td>
+        <td width="31%"><input type="text" name="quickBookRefNo" id="quickBookRefNo" Value="<?php echo $result['quickBookRefNo']; ?>" class="form-control text_box"> </td>
         </tr>
         <tr>
         <th colspan="4">Cash <input type="checkbox" name="cash" id="cash"></th>
         </tr>
         <tr>
         <td width="16%">Amount</td>
-        <td width="33%"><input type="text" name="cashAmount" id="cashAmount" class="form-control text_box" disabled></td>
+        <td width="33%"><input type="text" name="cashAmount" id="cashAmount" Value="<?php echo $result['CashAmount']; ?>" class="form-control text_box" disabled></td>
         <td width="20%"></td>
         <td width="31%"></td>
         </tr>
@@ -209,9 +216,9 @@ $(document).ready(function(){
         </tr>
         <tr>
         <td width="16%">Cheque No.</td>
-        <td width="33%"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box" disabled></td>
+        <td width="33%"><input type="text" name="chequeNo" id="chequeNo"  Value="<?php echo $result['ChequeNo']; ?>" class="form-control text_box" disabled></td>
         <td width="20%">Cheque Date</td>
-        <td width="31%"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box" disabled></td>
+        <td width="31%"><input type="text" name="chequeDate" id="chequeDate" Value="<?php echo $result['ChequeDate']; ?>" class="date form-control text_box" disabled></td>
         </tr>
         <tr>
         <td width="16%">Bank</td>
@@ -222,17 +229,17 @@ $(document).ready(function(){
 						   while($resultCountry=mysql_fetch_assoc($Country)){
 			?>
             <option value="<?php echo $resultCountry['bankId']; ?>" 
-			<?php if(isset($result['bankId']) && $resultCountry['bankId']==$result['bankId']){ ?>selected<?php } ?>>
+			<?php if(isset($result['Bank']) && $resultCountry['bankId']==$result['Bank']){ ?>selected<?php } ?>>
 			<?php echo stripslashes(ucfirst($resultCountry['bankName'])); ?></option>
             <?php } ?>
         </select>        </td>
         <td width="20%">Amount</td>
-        <td width="31%"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box" disabled></td>
+        <td width="31%"><input type="text" name="amountCheque" id="amountCheque" Value="<?php echo $result['chequeAmount']; ?>" class="form-control text_box" disabled></td>
         </tr>
         
         <tr>
         <td width="16%">Bank Deposit Date</td>
-        <td width="33%"><input type="text" name="depositDate" id="depositDate" class="date form-control text_box" disabled></td>
+        <td width="33%"><input type="text" name="depositDate" id="depositDate" Value="<?php echo $result['DepositDate']; ?>" class="date form-control text_box" disabled></td>
         <td width="20%"></td>
         <td width="31%"></td>
         </tr>
@@ -241,18 +248,18 @@ $(document).ready(function(){
         </tr>
         <tr>
         <td width="16%">Amount </td>
-        <td width="33%"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" class="form-control text_box" disabled></td>
+        <td width="33%"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" Value="<?php echo $result['onlineAmount']; ?>" class="form-control text_box" disabled></td>
         <td width="20%">Reference No.</td>
-        <td width="31%"><input type="text" name="refNo" id="refNo" class="form-control text_box" disabled></td>
+        <td width="31%"><input type="text" name="refNo" id="refNo" Value="<?php echo $result['RefNo']; ?>" class="form-control text_box" disabled></td>
         </tr>
         <tr>
         <th colspan="4">Other Details</th>
         </tr>
         <tr>
         <td width="16%">Date of Recieving</td>
-        <td width="33%"><input type="text" name="revievingDate" id="revievingDate" class="date form-control text_box" ></td>
+        <td width="33%"><input type="text" name="revievingDate" id="revievingDate" Value="<?php echo $result['RecivedDate']; ?>" class="date form-control text_box" ></td>
         <td width="20%">Remarks</td>
-        <td width="31%"><input type="text" name="remarks" id="remarks" class="form-control text_box" ></td>
+        <td width="31%"><input type="text" name="remarks" id="remarks" Value="<?php echo $result['Remarks']; ?>" class="form-control text_box" ></td>
         </tr>
         <tr>
         <td width="16%">&nbsp;</td>

@@ -15,10 +15,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-{
-		header("location: home.php?token=".$token);
-}
+
 $error =0;
 $Ticket_id = $_GET['id'];
 if (isset($_POST['submit'])) 

@@ -63,7 +63,7 @@ if(mysql_num_rows($perSql)>0){
       if (($resultPer['modCatDisplayName'] != $modCatDisplayNameTemp)&& $firstChange ==0){
         //echo 'Module category changed-----'; 
         echo '<li class="dropdown">
-              <a tabindex="0" data-toggle="dropdown">'.$resultPer['modCatDisplayName'].'
+              <a tabindex="0" data-toggle="dropdown" style="color:#fff">'.$resultPer['modCatDisplayName'].'
               <span class="caret"></span></a>';
         echo '<ul class="dropdown-menu drop_menu" role="menu">';        
         $firstChange =$firstChange+1;
@@ -77,7 +77,7 @@ if(mysql_num_rows($perSql)>0){
         echo '</li>';
        
         //echo 'Module category changed-----'; 
-        echo '<li class="dropdown"><a tabindex="0" data-toggle="dropdown">'.$resultPer['modCatDisplayName'].'
+        echo '<li class="dropdown"><a tabindex="0" data-toggle="dropdown" style="color:#fff">'.$resultPer['modCatDisplayName'].'
            <span class="caret"></span></a>'; 
         echo '<ul class="dropdown-menu drop_menu" role="menu">';    
         $modCatDisplayNameTemp =  $resultPer['modCatDisplayName'];     
@@ -89,7 +89,7 @@ if(mysql_num_rows($perSql)>0){
 
       if ($resultPer['moduleParentId'] == 0){  // print those elements which are not having any parents  
 				
-		echo '<li><a tabindex="0" href="'.$resultPer['modulePageName'].'?token='.$token.'">'.
+		echo '<li><a tabindex="0" style="color:#fff" href="'.$resultPer['modulePageName'].'?token='.$token.'">'.
         $resultPer['displayModuleName'].'</a></li>';
       }
 	  else{ // If the module needs to be printed in a sub parent		
@@ -108,7 +108,7 @@ if(mysql_num_rows($perSql)>0){
 		if (($resultPer['moduleParentId'] != $modParentCatTemp)&& $SecondChange ==0){
 			//echo 'Sub parent starts'; 
 			echo '<li class="dropdown-submenu">
-			<a tabindex="0" data-toggle="dropdown">'.$resultPer['subParentName'].'</a>
+			<a tabindex="0" data-toggle="dropdown" style="color:#fff">'.$resultPer['subParentName'].'</a>
             <ul class="dropdown-menu">';
 			$SecondChange = $SecondChange +1;
 			$modParentCatTemp = $resultPer['moduleParentId'];
@@ -122,13 +122,13 @@ if(mysql_num_rows($perSql)>0){
 			$modParentCatTemp = $resultPer['moduleParentId']; 
 			//echo 'Sub parent ENDS3'; 
 			//echo 'Sub parent starts'; 
-			echo '<li class="dropdown-submenu"><a tabindex="0" data-toggle="dropdown">'.$resultPer['subParentName'].'</a>
+			echo '<li class="dropdown-submenu"><a tabindex="0" data-toggle="dropdown" style="color:#fff">'.$resultPer['subParentName'].'</a>
             <ul class="dropdown-menu">';
 			$closeFlag = 1;
 		}
 		
 		//This will print the elements in the parent
-		echo '<li><a tabindex="0" href="'.$resultPer['modulePageName'].'?token='.$token.'">'.
+		echo '<li><a tabindex="0" style="color:#fff" href="'.$resultPer['modulePageName'].'?token='.$token.'">'.
         $resultPer['displayModuleName'].'</a></li>';	
 		  
 	  }
