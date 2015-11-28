@@ -12,35 +12,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-//Delete single record
-if(isset($_GET['id']))
-	{
-		$id = $_GET['id'];
-		$delete_single_row = "DELETE FROM tblcallingdata WHERE id='$id'";
-		$delete = mysql_query($delete_single_row);
-	}
-	if($delete)
-	{
-		echo "<script> alert('Record Delted Successfully'); </script>";
-	}
-//End
-//Delete multiple records
-if(count($_POST['delete_selected'])>0 && (isset($_POST['delete_selected'])) )
-   {			   
-		if(isset($_POST['linkID']))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
-		       	$sql = "DELETE FROM tblcallingdata WHERE id='$chckvalue'";
-				$result = mysql_query($sql);
-   			   }
-			   if($result)
-			   {
-			   echo "<script> alert('Records Deleted Successfully'); </script>";
-			   }
-			 }    
-   }
-//End
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,21 +25,24 @@ if(count($_POST['delete_selected'])>0 && (isset($_POST['delete_selected'])) )
 <link rel="stylesheet" href="css/custom.css">
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="js/checkbox_validation.js"></script>
-<script type="text/javascript" src="js/checkbox.js"></script>
 <script>
+// send ajax request
 $(document).ready(function(){
-		$("#Search").click(function(){
-			$.post("ajaxrequest/show_contacts.php?token=<?php echo $token;?>",
+	$('#Search').click(function(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_customers_details.php?token=<?php echo $token;?>",
 				{
-					searchText : $('#searchText').val(),
+					searchText : $('#searchText').val()
 				},
 					function( data){
 						/*alert(data);*/
 						$("#divshow").html(data);
+						$(".loader").removeAttr("disabled");
+            			$('.loader').fadeOut(1000);
 				});	 
-		});
+	});
 });
+//end
 </script>
 </head>
 <body>
@@ -80,24 +54,31 @@ $(document).ready(function(){
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Lead  Details</h3>
+    	<h3>Customer Profile</h3>
         <hr>
     </div>
-    <div class="col-md-12">
-    <form method="post" class="form-inline" name="frm_delete">
-    	<div class="col-md-4 btn_grid">
-     		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('contacts.php?token=<?php echo $token ?>')"/>
-       &nbsp;&nbsp;&nbsp;
-        	 <input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
-        </div>
-        
-    </form>
-    <div class="col-md-6">
-        <input type="text" name="searchText" id="searchText" class="form-control text_search" Placeholder="Name, Company Name or Mobile">
-        <input type="submit" name="Search" id="Search" value="Search" class="btn btn-primary btn-sm"/>
-        </div>
+    <div class="col-md-12 table-responsive">
+      <table width="333">
+      <tr>
+      <td width="240">
+      <select name="searchText" id="searchText" class="form-control drop_down">
+            <option value="">Select Orgranization</option>                         
+            <?php $Country=mysql_query("SELECT * FROM tblcallingdata WHERE STATUS='1' ORDER BY Company_Name ASC");								
+                  while($resultCountry=mysql_fetch_assoc($Country))
+                        {
+            ?>
+            <option value="<?php echo $resultCountry['Company_Name']; ?>">
+            <?php echo stripslashes(ucfirst($resultCountry['Company_Name'])); ?></option>
+            <?php } ?>
+      </select>
+      </td>
+      <td width="81">
+      <input type="submit" name="Search" id="Search" value="Search" class="btn btn-primary btn-sm"/>
+      </td>
+      </tr>
+      </table>
     </div>
-    <div class="col-md-12">
+     <div class="col-md-12">
 		 <?php if($_SESSION['sess_msg']!=''){?>
            <div class="alert alert-success" role="alert">
 		   		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -106,10 +87,13 @@ $(document).ready(function(){
            </div>
          <?php } ?>
     </div>
+    <div class="clearfix"></div><br>
     <div class="col-md-12">
+    <form method="post">
     	<div class="table-responsive" id="divshow">
-   			
+   
     	</div>
+    </form>
     </div>
 </div>
 <!--end of the content-->
@@ -120,10 +104,12 @@ $(document).ready(function(){
     </div>
 </div>
 <!--end footer-->
+<div class="loader">
+	<img src="images/loader.gif" alt="loader">
+</div>
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

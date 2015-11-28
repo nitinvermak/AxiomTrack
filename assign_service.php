@@ -48,11 +48,11 @@ if(isset($_REQUEST['cust_id']) && $_REQUEST['cust_id']){
 							   WHERE A.cust_id =".$_REQUEST['cust_id']);
 		$result=mysql_fetch_assoc($queryArr);
 }
-if(isset($_REQUEST['id']) && $_REQUEST['id'])
+/*if(isset($_REQUEST['id']) && $_REQUEST['id'])
 	{
 		$queryArr=mysql_query("SELECT * FROM tbl_assign_customer_branch WHERE service_branchId =".$_REQUEST['id']);
 		$result=mysql_fetch_assoc($queryArr);
-	}
+	}*/
 ?>
 <!DOCTYPE html>
 <html lang="en">

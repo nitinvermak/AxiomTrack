@@ -29,10 +29,16 @@ if(isset($_POST['submit']))
 		$area = mysql_real_escape_string($_POST['area']);
 		$pin_code = mysql_real_escape_string($_POST['pin_code']);
 		$datasource = mysql_real_escape_string($_POST['datasource']);
-		$Update = "UPDATE tblcallingdata SET First_Name = '$first_name', Last_Name = '$last_name', Company_Name	= '$company', Phone = '$phone', Mobile = '$mobile', email = '$email', Address = '$address', Country = '$country', State = '$state', District_id = '$district', City = '$city', Area = '$area', Pin_code = '$pin_code', data_source = '$datasource' WHERE id =".$_REQUEST['id'];
+		$Update = "UPDATE tblcallingdata SET First_Name = '$first_name', 
+				   Last_Name = '$last_name', Company_Name = '$company', 
+				   Phone = '$phone', Mobile = '$mobile', email = '$email', 
+				   Address = '$address', Country = '$country', State = '$state', 
+				   District_id = '$district', City = '$city', Area = '$area', 
+				   Pin_code = '$pin_code', data_source = '$datasource' 
+				   WHERE id =".$_REQUEST['id'];
 		$result = mysql_query($Update);
 		$_SESSION['sess_msg']='Contacts updated successfully';
-		header("location:managecontacts.php?token=".$token);
+		header("location:customer_profile.php?token=".$token);
 		exit();
 	}
 	if(isset($_REQUEST['id']) && $_REQUEST['id'])
@@ -295,7 +301,7 @@ function CallPincode()
           <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <input type="submit" name="submit" value="Submit" class="btn btn-primary btn-sm" id="submit"  />
-                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
+                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='customer_profile.php?token=<?php echo $token ?>'" />
                 </div>
   			</div> 
         </div>
