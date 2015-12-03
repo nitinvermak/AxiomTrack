@@ -6,9 +6,11 @@ error_reporting(0);
 if ($branch_id == 0)
 {
 	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-			    B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-			    B.status as status, A.chequeAmount as chequeamt, C.onlineAmount as onlineAmt,
-			    A.Id as chequeId, C.Id as onlinepaymentId, D.callingdata_id as callingdataid
+				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
+				B.status as status, A.chequeAmount as chequeamt, 
+				C.onlineAmount as onlineAmt,A.Id as chequeId, 
+				C.Id as onlinepaymentId, D.callingdata_id as callingdataid, 
+				A.ChequeNo as cheqNo, A.Bank as bankName 
 				from quickbookpaymentcheque as A 
 				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
 				ON A.Id = B.ChequeID
@@ -21,9 +23,11 @@ if ($branch_id == 0)
 else
 {
 	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-			    B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-			    B.status as status, A.chequeAmount as chequeamt, C.onlineAmount as onlineAmt,
-			    A.Id as chequeId, C.Id as onlinepaymentId, D.callingdata_id as callingdataid
+				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
+				B.status as status, A.chequeAmount as chequeamt, 
+				C.onlineAmount as onlineAmt,A.Id as chequeId, 
+				C.Id as onlinepaymentId, D.callingdata_id as callingdataid, 
+				A.ChequeNo as cheqNo, A.Bank as bankName
 				from quickbookpaymentcheque as A 
 				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
 				ON A.Id = B.ChequeID
@@ -43,6 +47,8 @@ if(mysql_num_rows($stockArr)>0)
 	             <th><small>Payment Id</small></th>                        
 	             <th><small>Customer Id</small></th>  
 	             <th><small>Quick Book Ref. No.</small></th>
+                 <th><small>Bank Name</small></th>
+                 <th><small>Cheque No.</small></th>
 	             <th><small>Cash Amount</small></th> 
                  <th><small>Cheque Amount</small></th>  
                  <th><small>Online Amount</small></th> 
@@ -67,6 +73,8 @@ if(mysql_num_rows($stockArr)>0)
 				<td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>
                 <td><small><?php echo getOraganization(stripslashes($row["callingdataid"]));?></small></td>	
 				<td><small><?php echo stripslashes($row["quickBookRefNo"]);?></small></td>
+                <td><small><?php echo getBankName(stripslashes($row["bankName"]));?></small></td>
+                <td><small><?php echo stripslashes($row["cheqNo"]);?></small></td>
                 <td><small>
 				<?php 
 				if($row["CashAmount"] == 0)

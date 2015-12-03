@@ -9,7 +9,7 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		if(mysql_num_rows($userArr)>0)
 		{
 		  $resultUser=mysql_fetch_assoc($userArr);
-		  $_SESSION['user_id']=$resultUser['id'];
+		  $_SESSION['user_id'] = $resultUser['id'];
 		  $_SESSION['login']=getusercategory($resultUser['User_Category']);
 		  $_SESSION['sess_username']=$resultUser['User_ID'];
 		  $_SESSION['name']=$resultUser['First_Name']." ".$resultUser['Last_Name'];
@@ -19,17 +19,20 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		  $_SESSION['token'] = $token;
 		  $_SESSION['token_time']=time();
 		  
-			 /* if ($resultUser['User_Category']==1)
-			  {*/
+			  if ($resultUser['User_Category'] == 9)
+			  {
+			  	$sql= mysql_query("Select * from tblmodulename");
+				$result = mysql_fetch_assoc($sql);
+				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["moduleCatId"]);
+			  	header("location: pending_works.php?token=".$token);
+			  }
+			  else
+			  {
 			  	$sql= mysql_query("Select * from tblmodulename");
 				$result = mysql_fetch_assoc($sql);
 				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["moduleCatId"]);
 			  	header("location: home.php?token=".$token);
-			 /* }
-			  else
-			  {
-			     header("location: index.php");
-			  }*/
+			  }
 		  } 
 		  else
 		  {

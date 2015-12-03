@@ -881,6 +881,16 @@ function getOraganization($id)
   else
   return NULL;
 }
+function getBankName($id)
+{
+  $sql="select bankName from tblbank where bankId=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['bankName'])
+  return $result['bankName'];
+  else
+  return NULL;
+}
 function getIntervelname($id)
 {
   $sql="select Intervalname from tblesitmateperiod where intervalId=".$id;

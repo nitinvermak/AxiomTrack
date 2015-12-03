@@ -22,7 +22,26 @@ $permissionJoin= 'SELECT
 //echo $permissionJoin; 
 
 $perSql= mysql_query($permissionJoin);
-
+if($_SESSION['user_category_id'] == 9)
+{
+echo '<div class="row" id="nav_bar">
+	<div class="col-md-12">
+    	 <div class="nav navbar-default">
+          <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse">
+          <ul class="nav  navbar-nav">
+          <li style="border:0px;"><a href="pending_works.php?token='.$token.'">Home</a></li>  
+          ';
+}
+else
+{
 echo '<div class="row" id="nav_bar">
 	<div class="col-md-12">
     	 <div class="nav navbar-default">
@@ -38,7 +57,7 @@ echo '<div class="row" id="nav_bar">
           <ul class="nav  navbar-nav">
           <li style="border:0px;"><a href="home.php?token='.$token.'">Home</a></li>  
           ';
-
+}
 $modCatDisplayNameTemp= ' ';
 $modParentCatTemp = ' ';
 

@@ -85,7 +85,7 @@ if(mysql_num_rows($stockArr)>0)
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
-                 <td>
+                 <td><small>
                    <a href="close_ticket.php?ticket_id=<?php echo $row["ticket_id"];?>&token=<?php echo $token ?>" ><img src="images/drop.png" title="Close" border="0" /></a> &nbsp;&nbsp;  <a href="close_ticket.php?ticket_id=<?php echo $row["ticket_id"];?>&token=<?php echo $token ?>"><small><span>Update Status</span></small></a>
                  </td>
                  </tr>

@@ -1,5 +1,4 @@
 <?php
-
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");

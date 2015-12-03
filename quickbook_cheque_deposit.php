@@ -105,7 +105,7 @@ $(document).ready(function(){
         <div class="form-group">
             <label for="exampleInputEmail2">Branch</label>
             <select name="branch" id="branch" class="form-control drop_down">
-        	<option label="" value="" selected="selected">Select Branch</option>
+        	<option label="" value="" selected="selected">All Branch</option>
             <?php 
             $branch_sql= "select * from tblbranch ";
             //echo $branch_sql;

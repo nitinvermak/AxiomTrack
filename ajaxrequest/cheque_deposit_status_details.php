@@ -6,11 +6,12 @@ $branch = mysql_real_escape_string($_POST['branch']);
 $executive = mysql_real_escape_string($_POST['executive']);
 error_reporting(0);
 			$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-						B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-						B.status as status, B.userId as userId, B.paymentConfirmBy as confirmBy, 
-						D.branch_id as Branch, A.chequeAmount as chequeamt, C.onlineAmount as onlineAmt, 
-						A.DepositDate as depositDate, E.callingdata_id as orgId, 
-						A.DepositStatus as DepositStatus, A.Id as chequeId
+						B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount, B.status as status, 
+						B.userId as userId, B.paymentConfirmBy as confirmBy,D.branch_id as Branch, 
+						A.chequeAmount as chequeamt, C.onlineAmount as onlineAmt, 
+						A.bankDepositDate as depositDate, E.callingdata_id as orgId, 
+						A.DepositStatus as DepositStatus, A.Id as chequeId, A.ChequeNo as chqNo, 
+						A.Bank as bankName
 						From quickbookpaymentcheque as A 
 						Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
 						ON A.Id = B.ChequeID
@@ -37,7 +38,7 @@ if ( $executive != 0) {
 if ( $depositDate !='') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
-	$linkSQL =$linkSQL."A.DepositDate = '$depositDate'";
+	$linkSQL =$linkSQL."A.bankDepositDate like '%$depositDate%'";
 	$counter+=1;
 	/*echo $linkSQL;*/
 }
@@ -56,9 +57,11 @@ if(mysql_num_rows($stockArr)>0)
 ?>		
 				<tr>
               	<th><small>S. No.</small></th>     
-              	<!--<th><small>Payment Id</small></th>  
-              	<th><small>Quick Book Ref. No.</small></th>-->
+              	<!--<th><small>Payment Id</small></th>  -->
+              	<th><small>Quick Book Ref. No.</small></th>
               	<th><small>Company</small></th> 
+                <th><small>Bank Name</small></th>
+               	<th><small>Cheque No.</small></th>
               	<th><small>Cheque Amount</small></th>   
               	<!--<th><small>Recieved By</small></th>
               	<th><small>Confirm By</small></th> -->
@@ -100,10 +103,11 @@ if(mysql_num_rows($stockArr)>0)
 					 ?>
                <tr <?php print $class?>>
 	 			<td><small><?php print $kolor++;?>.</small></td>
-	 			<!--<td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>
-	 			<td><small><?php echo stripslashes($row["quickBookRefNo"]);?></small></td>-->
+	 			<!--<td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>-->
+	 			<td><small><?php echo stripslashes($row["quickBookRefNo"]);?></small></td>
 	 			<td><small><?php echo getOraganization(stripcslashes($row['orgId']));?></small></td>
-                
+                <td><small><?php echo getBankName(stripcslashes($row['bankName']));?></small></td>
+                <td><small><?php echo stripcslashes($row['chqNo']);?></small></td>
                 <td><small>
 				<?php 
 				if($row["chequeamt"] == 0)

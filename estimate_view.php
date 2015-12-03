@@ -173,6 +173,7 @@ if(isset($_POST['submit']))
     $( ".date" ).datepicker();
   });
 // End Date
+
 /* Send ajax request*/
 $(document).ready(function(){
 		$("#company").change(function(){
@@ -267,13 +268,16 @@ function getValue(name, iName, iId, amount, iYear)
             <label for="exampleInputEmail2">Company</label>
             <select name="company" id="company" class="form-control drop_down" >
                 <option value="">Select Company</option>
-                <?php $Country=mysql_query("SELECT DISTINCT A.cust_id, A.callingdata_id, B.customerId  
+                <?php $Country=mysql_query("SELECT DISTINCT A.cust_id, 
+											C.Company_Name, A.callingdata_id, B.customerId  
 											FROM tbl_customer_master as A
 											inner join tbl_invoice_master as B
-											on A.cust_id = B.customerId;");
+											on A.cust_id = B.customerId
+											INNER JOIN tblcallingdata as C 
+											ON A.callingdata_id = C.id ORDER BY C.Company_Name;");
 				 	  while($resultCountry=mysql_fetch_assoc($Country)){
 				?>
-                <option value="<?php echo $resultCountry['cust_id']; ?>" ><?php echo getOraganization(stripslashes(ucfirst($resultCountry['callingdata_id']))); ?></option>
+                <option value="<?php echo $resultCountry['cust_id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['Company_Name'])); ?></option>
                 <?php } ?>
             </select>
         </div>

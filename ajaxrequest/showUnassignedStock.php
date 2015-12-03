@@ -9,7 +9,8 @@ if ($model == 0)
 }
 else
 {
-	$linkSQL = "select * from tbl_device_master where assignstatus= '0' and device_name = '{$model}' order by id desc";
+	$linkSQL = "select * from tbl_device_master where assignstatus= '0' and device_name = '{$model}' 
+				order by id desc";
 }
 $stockArr=mysql_query($linkSQL);
 
@@ -24,6 +25,7 @@ if(mysql_num_rows($stockArr)>0)
 	            <th><small>Device Model</small></th>  
 	            <th><small>Device Id</small></th>
 	            <th><small>IMEI NO</small></th>  
+                <th><small>Assign Date</small></th>
 	            <th><small>Status</small></th>
 	            <th><small>Actions</small>                  
 	            <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
@@ -57,6 +59,7 @@ if(mysql_num_rows($stockArr)>0)
                 <input type="hidden" name="devic_model_id" value="<?php echo stripslashes($row["device_name"]);?>" /></td>
                 <td><small><?php echo stripslashes($row["id"]);?></small></td>	
 				<td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
+                <td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>
                 <td><small><?php echo stripslashes($stock);?></small></td>			  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                 </tr>
