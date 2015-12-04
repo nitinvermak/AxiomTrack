@@ -1,12 +1,10 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
@@ -19,29 +17,31 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		$userid=$_SESSION['user_id'];
 		if ($_REQUEST['sim']!="")
 		{
-			//	echo $_REQUEST['first_name'];
-			//	die;
 			$provider_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['provider']));
 			$sim_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['sim']));
 			$mobile_no = htmlspecialchars(mysql_real_escape_string($_REQUEST['mobile']));
 			$date_of_purchase = htmlspecialchars(mysql_real_escape_string($_REQUEST['date']));
 			$state_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['state1']));
 			$plan = htmlspecialchars(mysql_real_escape_string($_REQUEST['plan1']));
-			$sql = "insert into tblsim set company_id='$provider_name', 
-				      sim_no='$sim_name', mobile_no='$mobile_no', 
-				      date_of_purchase='$date_of_purchase', state_id='$state_name', 
-				      plan_categoryid='$plan'";
-			// Call User Activity Log function
-			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
-			// End User Activity Log function
-			insertcontact($sql);
-		?>
-                <script language="javascript">
-				alert("Data Added Successfully!");
-				</script>
-                <?php
+			$queryArr = mysql_query("select * from tblsim where company_id='$provider_name' 
+									 and sim_no = '$sim_name' and mobile_no = '$mobile_no'");
+			if(mysql_num_rows($queryArr)<=0)
+			{
+				$sql = "insert into tblsim set company_id='$provider_name', 
+						sim_no='$sim_name', mobile_no='$mobile_no', 
+						date_of_purchase='$date_of_purchase', state_id='$state_name', 
+						plan_categoryid='$plan'";
+				// Call User Activity Log function
+				/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);*/
+				// End User Activity Log function
+				insertcontact($sql);
+				$_SESSION['sess_msg'] = "Sim Added Successfully!";
 				header("location: manage_sim.php?token=".$token);
-				
+			}
+			else
+			{
+				$msg = "Sim already exists";
+			}	
 		}
 		else
 		{
@@ -109,11 +109,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			}
 			else
 			{
-				?>
-                <script language="javascript">
-				alert("Data Uploaded Successfully!");
-				</script>
-                <?php
+				
+				$_SESSION['sess_msg'] = "Data Uploaded Successfully!";
+				
 				header("location: manage_sim.php?token=".$token);
 			}
 		}
@@ -175,7 +173,10 @@ function insertcontact($sql)
     <form name='myform' action="" class="form-horizontal" method="post" onSubmit="return chkcontactform(this)">
        	<input type="hidden" name="submitForm" value="yes" />
         <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
-    	<div class="col-md-4">
+    	<div class="col-md-12">
+        	<?php if(isset($msg) && $msg !="") echo "<font color=red>".$msg."</font>"; ?> 
+        </div>
+        <div class="col-md-4">
         	<div class="form-group">
                 <label for="Provider" class="col-sm-2 control-label">Provider*</label>
                 <div class="col-sm-10">

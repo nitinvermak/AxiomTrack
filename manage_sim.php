@@ -115,11 +115,13 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
         </div>
          <!--if device details is updated show alert message-->
         <div>
-        		<?php if($_SESSION['sess_msg']!=''){?>
+        	 <?php if($_SESSION['sess_msg']!=''){?>
                 <center>
-                <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
+                    <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;">
+                    <?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?>
+                    </div>
                 </center>
-                <?php } ?>
+  	 		<?php } ?>
         </div>
         
         </form>

@@ -56,7 +56,8 @@ $(document).ready(function(){
 		$('.loader').show();
 		$.post("ajaxrequest/cheque_deposit_status_details.php?token=<?php echo $token;?>",
 				{
-					depositDate : $('#depositDate').val(),
+					depositDate : $('#depositDateFrom').val(),
+					depositDateTo : $('#depositDateTo').val(),
 					branch : $('#branch').val(),
 					executive : $('#executive').val()
 				},
@@ -112,13 +113,13 @@ function getModal(a)
     <div class="col-md-12">
     <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
       <div class="col-md-12">
-        <div class="form-group">
-            <label for="exampleInputEmail2">Deposit Date</label>
-            <input type="text" name="depositDate" id="depositDate" class="form-control text_box date">
-        </div>
-        <div class="form-group">
-            <label for="exampleInputEmail2">Branch</label>
-            <select name="branch" id="branch" class="form-control drop_down">
+       <table>
+       <tr>
+       <td width="97"><strong>Date (From)*</strong></td>
+       <td width="167"><input type="text" name="depositDateFrom" id="depositDateFrom" class="form-control text_box date"></td>
+       <td width="74"><strong>Branch</strong></td>
+       <td width="141">
+       		<select name="branch" id="branch" class="form-control drop_down">
         	<option label="" value="" selected="selected">All Branch</option>
             <?php 
             $branch_sql= "select * from tblbranch ";
@@ -130,19 +131,24 @@ function getModal(a)
             <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
             <?php } ?>
       		</select>
-        </div>
-         <div class="form-group" >
-            <label for="exampleInputEmail2">Executive</label>
-            <span id="showTechnician">
-            <select name="executive" id="executive" class="form-control drop_down-sm">
+       </td>
+       <td width="108"></td>
+       </tr>
+       <tr>
+       <td><strong>Date (To)*</strong></td>
+       <td><input type="text" name="depositDateTo" id="depositDateTo" class="form-control text_box date"></td>
+       <td><strong>Executive</strong></td>
+       <td>
+       	<span id="showTechnician">
+       		<select name="executive" id="executive" class="form-control drop_down-sm">
             <option value="">Select Executive</option>                         
             </select>
-           	</span>
-        </div>
-        <div class="form-group" >
-        <input type="button" name="search" id="search" value="Search" class="btn btn-primary btn-sm">
-        </div>
-  		</div> 
+        </span>
+       </td>
+       <td><input type="button" name="search" id="search" value="Search" class="btn btn-primary btn-sm"></td>
+       </tr>
+       </table> 
+  	  </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
       </div>

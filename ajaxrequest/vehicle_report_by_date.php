@@ -8,12 +8,13 @@ $reffered = $_GET['reffered'];
 $technician = $_GET['technician'];
 /*echo $company;*/
 error_reporting(0);
-$linkSQL = "SELECT A.customer_Id as CustId, C.Company_Name as C_name, B.callingdata_id, A.vehicle_no as V_no, A.mobile_no as Mob, A.device_id as D_id, A.model_name as model, A.installation_date as I_date, B.telecaller_id as TelecallerName, A.techinician_name as T_id 
-			FROM tbl_gps_vehicle_master as A 
-			INNER JOIN tbl_customer_master as B 
-			ON A.customer_Id = B.cust_id
-			INNER JOIN tblcallingdata as C 
-			ON B.callingdata_id = C.id";
+	$linkSQL = "SELECT A.customer_Id as CustId, C.Company_Name as C_name, B.callingdata_id, A.vehicle_no as V_no, A.mobile_no as Mob, A.device_id as D_id, A.model_name as model, A.installation_date as I_date, B.telecaller_id as TelecallerName, A.techinician_name as T_id 
+				FROM tbl_gps_vehicle_master as A 
+				INNER JOIN tbl_customer_master as B 
+				ON A.customer_Id = B.cust_id
+				INNER JOIN tblcallingdata as C 
+				ON B.callingdata_id = C.id";
+echo $linkSQL;
 if ( ($company != 0) or ( $date !='' and $dateto !='') or ($reffered != 0) or ($technician != 0) )
 	{
 		$linkSQL  = $linkSQL." WHERE ";	
@@ -25,14 +26,14 @@ if($company != 0)
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." B.callingdata_id = '$company'" ;
 		$counter+=1;
-		/*echo $linkSQL;*/
+		echo $linkSQL;
 	}
 if ( $date !='' and $dateto !='') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL =$linkSQL."  DATE(A.installation_date) BETWEEN '$date' AND '$dateto' ";
 	$counter+=1;
-	/*echo $linkSQL;*/
+	echo $linkSQL;
 }
 if($reffered != 0)
 	{

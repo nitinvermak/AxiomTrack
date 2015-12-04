@@ -2,6 +2,7 @@
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
 $depositDate = mysql_real_escape_string($_POST['depositDate']);
+$depositDateTo = mysql_real_escape_string($_POST['depositDateTo']);
 $branch = mysql_real_escape_string($_POST['branch']);
 $executive = mysql_real_escape_string($_POST['executive']);
 error_reporting(0);
@@ -21,8 +22,9 @@ error_reporting(0);
 						ON B.userId = D.id
 						LEFT OUTER JOIN tbl_customer_master as E 
 						ON B.customerId = E.cust_id Where A.ClearStatus = 'N'";
+/*echo $linkSQL;*/
 
-if ( ($executive != 0) or ( $depositDate != 0) or ($branch != 0) )
+if ( ($executive != 0) or ( $depositDate != 0) or ($depositDateTo != 0) or ($branch != 0) )
 {
 	$linkSQL  = $linkSQL." And ";	
 	
@@ -38,7 +40,7 @@ if ( $executive != 0) {
 if ( $depositDate !='') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
-	$linkSQL =$linkSQL."A.bankDepositDate like '%$depositDate%'";
+	$linkSQL =$linkSQL."DATE(A.bankDepositDate) BETWEEN '$depositDate' AND '$depositDateTo' ";
 	$counter+=1;
 	/*echo $linkSQL;*/
 }

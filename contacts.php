@@ -40,22 +40,25 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
 			$pincode=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
 			$datasource=htmlspecialchars(mysql_real_escape_string($_REQUEST['datasource']));
-			$sql="insert into tblcallingdata set First_Name='$first_name',Last_Name='$last_name',
-				  Company_Name='$company',Phone='$phone',Mobile='$mobile',email='$email',Address='$address',
-				  Area='$area',City='$city',State='$state', District_id = '$district',  
-				  Country='$country',Pin_code='$pincode',data_source='$datasource',status='A',
-				  created=CURDATE(),createdby='$userid'";
-			// Call User Activity Log function
-			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
-			// End Activity Log Function
-			insertcontact($sql);
-		?>
-            <script language="javascript">
-				alert("Data Added Successfully!");
-			</script>
-        <?php
-			header("location: managecontacts.php?token=".$token);
-				
+			$queryArr = mysql_query("select * from tblcallingdata where Company_Name = '$company'");
+			if(mysql_num_rows($queryArr)<=0)
+			{
+				$sql="insert into tblcallingdata set First_Name='$first_name',Last_Name='$last_name',
+					  Company_Name='$company',Phone='$phone',Mobile='$mobile',email='$email',Address='$address',
+					  Area='$area',City='$city',State='$state', District_id = '$district',  
+					  Country='$country',Pin_code='$pincode',data_source='$datasource',status='A',
+					  created=CURDATE(),createdby='$userid'";
+				// Call User Activity Log function
+				/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);*/
+				// End Activity Log Function
+				insertcontact($sql);
+				$_SESSION['sess_msg'] = "Contact Added Successfully!";
+				header("location: managecontacts.php?token=".$token);
+			}
+			else
+			{
+				$msg = "Contact already exists";
+			}	
 		}
 		else
 		{
@@ -159,7 +162,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 						  District_id ='$district',Country='$country',Pin_code='$pincode',
 						  data_source='$datasource',status='A',created=CURDATE(),createdby='$userid'";
 					// Call User Activity Log function
-					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+					/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);*/
 					// End Activity Log Function
 					insertcontact($sql);	
 		}
@@ -306,6 +309,7 @@ function CallPincode()
     <form name='myform' action="" class="form-horizontal" enctype="multipart/form-data" method="post" onSubmit="return chkcontactform(this)">
        	<input type="hidden" name="submitForm" value="yes" />
         <input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
+        <div class="col-md-12"><?php if(isset($msg) && $msg !="") echo "<font color=red>".$msg."</font>"; ?></div>
         <div class="col-md-6 form">
             <div class="form-group">
                 <label for="provider" class="col-sm-2 control-label">First&nbsp;Name</label>
@@ -497,9 +501,9 @@ function CallPincode()
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" value="Submit" id="submit" class="btn btn-primary" />
-                  <input type="button" value="Download Format" name="download" class="btn btn-primary" onClick="window.location='Samples/Contacts_Import_format.xls'" />
-                  <input type="button" value="Back" id="Back" class="btn btn-primary" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
+                  <input type="submit" value="Submit" id="submit" class="btn btn-primary btn-sm" />
+                  <input type="button" value="Download Format" name="download" class="btn btn-primary btn-sm" onClick="window.location='Samples/Contacts_Import_format.xls'" />
+                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
                 </div>
   			</div> 
         </div>	

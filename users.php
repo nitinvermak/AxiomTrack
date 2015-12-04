@@ -62,17 +62,16 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				//$result=mysql_fetch_assoc($queryArr);
 				if(mysql_num_rows($queryArr)<=0)
 				{
-					$sql="insert into tbluser set emp_id='$emp_id',First_Name='$first_name',
-						  Last_Name='$last_name', DOB = '$emp_dob', 		                           		        				  						  Contact_No='$contact',emailid='$email_id',
-						  DOJ = '$date_of_j', Address='$address',
-						  countryId='$country',stateId='$state', districtId='$district', 
-						  cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', 
-						  branch_id='$branch', User_ID='$user_name', Password='$password',
-						  User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
+					$sql="insert into tbluser set emp_id = '$emp_id', First_Name ='$first_name',
+								 Last_Name = '$last_name', DOB = '$emp_dob', 																																																													 								 Contact_No='$contact', emailid='$email_id', 
+								 DOJ = '$date_of_j', Address='$address',
+								 countryId='$country',stateId='$state', districtId='$district', 
+								 cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', 			        						 branch_id='$branch', User_ID='$user_name', Password='$password',
+								 User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
 					// Call User Activity Log function
 					/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);*/
 					// End Activity Log Function
-					/*echo $sql;*/
+					echo $sql;
 					$query=mysql_query($sql);
 					/*$usedId =  mysql_insert_id();*/
 					/*if ($user_type == 1){
@@ -89,9 +88,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 					/*}	
 					$addUserMapping = mysql_query($branchAuth_sql);*/
 						
-					echo "<script> alert('User Created Successfully!'); </script>";
+					/*echo "<script> alert('User Created Successfully!'); </script>";
 					header("location: manage_users.php?token=".$token);
-					exit();
+					exit();*/
 				}
 				else
 				{
