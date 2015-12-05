@@ -101,19 +101,29 @@ if($cust_id != "")
 		$invoiceId = $row["invoiceId"];
 		/*echo $invoiceId;*/			
  		
-     	$linkSQL1 = "select B.vehicle_no as vehicleNo, A.typeOfPaymentId as paymentType, 
-					 A.amount as amt, A.vehicleId  as vId, C.PlanStartDate  as startDate,
-					 C.PlanendDate as endDate					 
-					 from tbl_payment_breakage as A 
-					 left outer join tbl_gps_vehicle_master as B  
-					 On A.vehicleId = B.id	
-					 left outer Join tbl_gps_vehicle_payment_master as C
-					 On B.customer_Id = C.cust_id			
-					 where A.invoiceId= '$invoiceId'
-					 order by   A.vehicleId, A.typeOfPaymentId";
+     	$linkSQL1 = "select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, C.amount as amt,		                    C.vehicleId  as vId, C.start_date as startDate, C.end_date as endDate					 
+					from  
+					tbl_payment_breakage as C left outer join
+					tbl_gps_vehicle_master as B  
+					On C.vehicleId = B.id					
+					where C.invoiceId= '$invoiceId'
+					order by   C.vehicleId, C.typeOfPaymentId";
 		$oRS1 = mysql_query($linkSQL1); 
-		/*echo $linkSQL1;*/
+		//echo 'num='.mysql_num_rows($oRS1);
  		?>
+     <!-- <thead>
+      <tr>
+      <th><small>S. No.</small></th>
+      <th><small>Vehile Reg. No.</small></th>
+      <th><small>Rent</small></th>
+      <th><small>Device Amount</small></th>
+      <th><small>Installation Charges</small></th> 
+      <th><small>Installment Amount</small></th>
+	  <th><small>DownPayment Amount</small></th>
+      <th><small>Total Amount</small></th> 
+      </tr>    
+      </thead>-->
+  
 	  <?php
 	  $kolor1=1;
 	  if(mysql_num_rows($oRS1)>0)
@@ -191,7 +201,7 @@ if($cust_id != "")
 						echo '<td><small>'.$typeD.'</small></td>';
 						echo '<td><small>'.$typeE.'</small></td>';
 				    }
- 					echo '<td><small>'.$row1['startDate'].'</small></td>';
+					echo '<td><small>'.$row1['startDate'].'</small></td>';
 					echo '<td><small>'.$row1['endDate'].'</small></td>';
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
 					echo '</tr>';
@@ -249,6 +259,8 @@ if($cust_id != "")
 					echo '<td><small>'.$row1['startDate'].'</small></td>';
 					echo '<td><small>'.$row1['endDate'].'</small></td>';
 					echo '<td><small>'.$vehicleTotal.'</small></td>';
+					/*echo '<td><small>'.$vehicleTotal.'</small></td>';
+					echo '<td><small>'.$vehicleTotal.'</small></td>';*/
 					echo '</tr>';
 					$orgTotal = $orgTotal + $vehicleTotal;
 				}
@@ -283,8 +295,6 @@ if($cust_id != "")
     echo "<td></td>";
 	}
 	?>
-    <td></td>
-    <td></td>
     <td><p class="pull-right"><strong>Total Amount</strong></p></td>
     <td>
     	<?php 
@@ -319,8 +329,6 @@ if($cust_id != "")
     echo "<td></td>";
 	}
 	?>
-    <td></td>
-    <td></td>
     <td><p class="pull-right"><strong>Discount</strong></td>
     <td>
         	<?php 
@@ -354,8 +362,6 @@ if($cust_id != "")
     echo "<td></td>";
 	}
 	?>
-    <td></td>
-    <td></td>
     <td><p class="pull-right"><strong>Grand Total</strong></td>
     <td>
     	<?php 
