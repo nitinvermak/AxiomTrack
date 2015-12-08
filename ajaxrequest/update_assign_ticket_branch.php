@@ -53,6 +53,7 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Organization Name</small></th>  
                   <th><small>Product</small></th>
                   <th><small>Request Type</small></th> 
+                  <th><small>Technician</small></th> 
                   <th><small>Created</small></th> 
                   <th><small>Appointment Date Time</small></th>              
                   <th><small>Actions</small></th>   
@@ -83,6 +84,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo getOraganization(stripslashes($row["organization_id"]));?></small></td>
 				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
+                 <td><small><?php echo gettelecallername(stripslashes($row["technician_id"]));?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
                  <td><small>

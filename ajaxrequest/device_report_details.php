@@ -5,7 +5,8 @@ $search_box = mysql_real_escape_string($_POST['search_box']);
 /*echo $search_box; */
 $branchName = $_SESSION['branch'];
 error_reporting(0);
-	$linkSQL = "SELECT  A.id as DeviceId,A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
+	$linkSQL = "SELECT  A.id as DeviceId, A.device_name as modal, A.date_of_purchase as purchaseDate,
+			 	A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
 				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, 
 				D.CompanyName as branch, B.technician_assign_status as technician_asgn_status, 
 				C.technician_id as TechnicianId, E.First_Name as fname, E.Last_Name as lname, 
@@ -36,14 +37,16 @@ if(mysql_num_rows($stockArr)>0)
 ?>		
 				<tr>
 	  			<th><small>S. No.</small></th>     
-	  			<th><small>Device Id.</small></th>  
+	  			<th><small>Device Id.</small></th> 
+                <th><small>Modal</small></th>  
               	<th><small>IMEI No.</small></th> 
               	<th><small>Company</small></th>  
+                <th><small>Date of Purchase</small></th>  
               	<th><small>Status (Instock/Installed)</small></th>
               	<th><small>Allocated/ Unallocated</small></th>   
               	<th><small>Branch Name</small></th>    
               	<th><small>Branch Status</small></th> 
-              	<th><small>Technician Id</small></th> 
+              	<th><small>Technician</small></th> 
               	<th><small>Technician Status</small></th>
                 <th><small>Installed Company</small></th> 
                 <th><small>Vehicle No</small></th>                           
@@ -78,8 +81,10 @@ if(mysql_num_rows($stockArr)>0)
                 <tr <?php print $class?>>
                 <td align="left" class="txt" valign="middle" ><small><?php print $kolor++;?>.</small></td>
                 <td align="left" valign="middle" class="txt" ><small><?php echo stripslashes($row["DeviceId"]);?></small></td>
+                <td align="left" valign="middle"><small><?php echo getdevicename(stripcslashes($row["modal"]));?></small></td>
                 <td align="left" valign="middle" class="txt" ><small><?php echo stripslashes($row["IMEI"]);?></small></td>
                 <td align="left" valign="middle" class="txt" ><small><?php echo getdcompany(stripslashes($row["CompId"]));?></small></td>
+                <td align="left" valign="middle"><small><?php echo stripcslashes($row["purchaseDate"]);?></small></td>
                 <td align="left" valign="middle" class="txt" >
                 <small>
                 <?php 

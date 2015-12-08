@@ -40,6 +40,24 @@ echo '<div class="row" id="nav_bar">
           <li style="border:0px;"><a href="pending_works.php?token='.$token.'">Home</a></li>  
           ';
 }
+else if($_SESSION['user_category_id'] == 5)
+{
+echo '<div class="row" id="nav_bar">
+	<div class="col-md-12">
+    	 <div class="nav navbar-default">
+          <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse">
+          <ul class="nav  navbar-nav">
+          <li style="border:0px;"><a href="pending_works.php?token='.$token.'">Home</a></li>  
+          ';
+}
 else
 {
 echo '<div class="row" id="nav_bar">
