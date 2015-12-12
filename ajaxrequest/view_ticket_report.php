@@ -58,7 +58,12 @@ $stockArr=mysql_query($linkSQL);
 
 if(mysql_num_rows($stockArr)>0)
 	{
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
+	 	echo '<div class="col-md-12">
+			  	<div class="download pull-right">
+					<a href="#" id ="export" role="button" class="red"><span class="glyphicon glyphicon-save"></span></a>
+				</div>
+			  </div>
+				<table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
 	  			<th><small>S. No.</small></th>     
@@ -105,21 +110,7 @@ if(mysql_num_rows($stockArr)>0)
                 <td><small><?php echo getOraganization(stripslashes($row["O_Id"]));?></small></td>
                 <td><small><?php echo getproducts(stripslashes($row["P_id"]));?></small></td>
                 <td><small><?php echo getRequesttype(stripslashes($row["R_type"]));?></small></td>
-                <td><small>
-                <?php 
-                if($row["T_status"] == 0)
-                    {
-                    echo "<span style='color:red; font-weight:bold;'>Pending</span>";
-                    }
-                else if($row["T_status"] == 1)
-                    {
-                    echo "<span style='color:green; font-weight:bold;'>Closed</span>";
-                    }
-				else if($row["T_status"] == 2)
-					{
-					echo "<span style='color:orange; font-weight:bold;'>Reschedule</span>";
-					}
-                ?></td> 
+                <td><small><?php echo getTicketStatus($row["T_status"]); ?></small></td> 
                	<td><small><?php if($row["B_name"] == "") { echo "<span style ='color:orange; font-weight:bold;'>Not Allocated</span>";}else { echo getBranch(stripcslashes($row["B_name"]));}?></small></td>
                 <td><small><?php if($row["T_name"] == "") { echo "<span style ='color:orange; font-weight:bold;'>Not Allocated</span>";}else { echo gettelecallername(stripcslashes($row["T_name"]));}?></small></td>
                 <td><small><?php echo stripslashes($row["ap_date"]);?></small></td>

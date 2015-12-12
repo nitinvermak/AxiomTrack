@@ -19,6 +19,7 @@ if(isset($_POST['updateStatus']))
 	/*echo $chequeId;*/
 	$sql = "UPDATE `quickbookpaymentcheque` SET `ClearStatus` = '$chequeStatus', 
 			`bankDepositDate` = '$date' WHERE `Id` = '$chequeId'";
+	/*echo $sql;*/
 	$result = mysql_query($sql);
 	if($result)
 	{

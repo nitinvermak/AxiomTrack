@@ -871,6 +871,84 @@ function getdistrict($id)
   	 else
   	 return NULL;
 }
+function sendConfigSms($model, $mobile, $cmd)
+{
+	if($model != NULL)
+	{
+		$sql = "SELECT * FROM `tbldevicecommand` where modelId =".$model;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+	//	echo $resultArr['ipCmd'].'ahsfjasf';
+	//	die();
+		sendSms($mobile, $resultArr['ipCmd']);
+		sleep(15);
+		sendSms($mobile, $resultArr['timeZoneCmd']);
+		sleep(5);
+		sendSms($mobile, $resultArr['dataIntervelCmd']);
+		sleep(5);
+		sendSms($mobile, $resultArr['apnCmd']);
+	}
+	else
+	{
+		
+	}
+}
+function sendSms($mobileno, $message)
+{
+		$authKey = "2763A765rdm1CXD561227a2";
+	
+	//Multiple mobiles numbers separated by comma
+	$mobileNumber = $mobileno;
+	$messageText = $message;
+	//Sender ID,While using route4 sender id should be 6 characters long.
+	$senderId = "Indtrk";
+	
+	//Your message to send, Add URL encoding here.
+	$message = urlencode($message);
+	
+	//Define route 
+	$route = "4";
+	//Prepare you post parameters
+	$postData = array(
+		'authkey' => $authKey,
+		'mobiles' => $mobileNumber,
+		'message' => $message,
+		'sender' => $senderId,
+		'route' => $route
+	);
+	
+	//API URL
+	$url="http://sms.bulk24sms.com/sendhttp.php";
+	
+	// init the resource
+	$ch = curl_init();
+	curl_setopt_array($ch, array(
+		CURLOPT_URL => $url,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POST => true,
+		CURLOPT_POSTFIELDS => $postData
+		//,CURLOPT_FOLLOWLOCATION => true
+	));
+	
+	
+	//Ignore SSL certificate verification
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	
+	
+	//get response
+	$output = curl_exec($ch);
+	
+	//Print error if any
+	if(curl_errno($ch))
+	{
+		echo 'error:' . curl_error($ch);
+	}
+	
+	curl_close($ch);
+	
+	echo $output."<br />";
+}
 function getOraganization($id)
 {
   $sql="select Company_Name from tblcallingdata where id=".$id;
@@ -879,7 +957,18 @@ function getOraganization($id)
   if($result['Company_Name'])
   return $result['Company_Name'];
   else
-  return NULL;
+  return 'N/A';
+}
+function getVehicleNo($vehicleNo)
+{
+	if($vehicleNo == NULL)
+	{
+		echo 'N/A';
+	}
+	else
+	{
+		echo $vehicleNo;
+	}
 }
 function getBankName($id)
 {
@@ -929,7 +1018,7 @@ function gettelecallername($id)
   if($result['fullname'])
   return $result['fullname'];
   else
-  return NULL;
+  return 'N/A';
 }
 function getsimprovider($id)
 {
@@ -1121,7 +1210,7 @@ function getvertical($id)
   
 }   
 
- function getusercategory($id)
+function getusercategory($id)
 {
 	//echo $id;
   //die;
@@ -1156,7 +1245,87 @@ $query=mysql_query("select * from business_vertical where business_vertical_id="
 $result=mysql_fetch_assoc($query);
 return (ucfirst($result['business_vertical_name']));
 }
-
+function getStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span style='color:red; font-weight:bold;'>Instock</span>";
+	}
+	else if($statusId == 1)
+	{
+		echo "<span style='color:green; font-weight:bold;'>Installed</span>";
+	}
+}
+function getConfirm($statusId)
+{
+	if($statusId == 2)
+	{
+		echo "<span style='color:green; font-weight:bold;'>Confirmed</span>";
+	}
+	else
+	{
+		echo "<span style='color:red; font-weight:bold;'>Not Confirmed</span>";
+	}
+}
+function getAllocated($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span style='color:red; font-weight:bold;'>Instock</span>";
+	}
+	else
+	{
+		echo "<span style='color:green; font-weight:bold;'>Allocated</span>";
+	}
+}
+function getBranchAllocateStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>Unallocated</span>";
+	}
+	else
+	{
+		echo "<span>Allocated</span>";
+	}
+}
+function getBranchAssignStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>InStock</span>";
+	}
+	else
+	{
+		echo "<span>Assigned</span>";
+	}
+}
+function getCallingStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>No</span>";
+	}
+	else
+	{
+		echo "<span>Yes</span>";
+	}
+}
+function getTicketStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span style='color:red; font-weight:bold;'>Pending</span>";
+	}
+	else if($statusId == 1)
+	{
+		echo "<span style='color:green; font-weight:bold;'>Closed</span>";
+	}
+	else if($statusId == 2)
+	{
+		echo "<span style='color:orange; font-weight:bold;'>Reschedule</span>";
+	}
+}
 function getCompany($id){
 $query=mysql_query("select * from company where company_id=".$id);
 $result=mysql_fetch_assoc($query);

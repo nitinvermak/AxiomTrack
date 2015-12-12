@@ -1,10 +1,7 @@
 <?php
-
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
- 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
 {
 	session_destroy();
@@ -29,6 +26,8 @@ if(isset($_REQUEST['product']))
 	$description=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['des'])));
 	$ap_date_time=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['date_time'])));
 	$time=htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['time'])));
+	$vehicle = htmlspecialchars(mysql_real_escape_string(trim($_POST['vehicle'])));
+	$reason = htmlspecialchars(mysql_real_escape_string(trim($_POST['reason'])));
 	$create_date=htmlspecialchars(mysql_real_escape_string($_POST['create_date']));
 }
 
@@ -38,7 +37,8 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 	{
 		$sql = "update tblticket set product = '$product', organization_id = '$orgranization', 
 			    rqst_type='$request', device_model_id='$model_id', no_of_installation='$no_of_installation', 
-				description='$description', appointment_date='$ap_date_time'), appointment_time='$time', 
+				description='$description', vehicleId = '$vehicle', repairReason ='$reason', 
+				appointment_date='$ap_date_time'), appointment_time='$time', 
 				createddate=Now() 
 				where id=" .$_REQUEST['id'];
 		// Call User Activity Log function
@@ -52,6 +52,7 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 	{
 		$query = "insert into tblticket set product='$product', organization_id='$orgranization', 						             	  organization_type='$orgranizationType', rqst_type='$request', device_model_id='$model_id', 
 				  no_of_installation='$no_of_installation', description='$description', 
+				  vehicleId = '$vehicle', repairReason ='$reason',
 				  appointment_date='$ap_date_time', createddate=Now()";
 		// Call User Activity Log function
 		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
@@ -131,6 +132,19 @@ $(document).ready(function(){
 	});
 });
 //end
+//send ajax request when select organization
+function getVehicle()
+{
+	$.post("ajaxrequest/show_vehicle_no.php?token=<?php echo $token;?>",
+			{
+				orgranization : $('#orgranization').val()
+			},
+				function( data ){
+					$("#showVehicle").html(data);
+			});	
+}
+//end
+
 </script>
 </head>
 <body>
@@ -167,7 +181,7 @@ $(document).ready(function(){
             <div class="form-group">
                 <label for="provider" class="col-sm-2 control-label">Organization*</label>
                 <div class="col-sm-10" id="divOrgranization">
-               	<select name="orgranization" id="orgranization" class="form-control drop_down">
+               	<select name="orgranization" id="orgranization" class="form-control drop_down orgranization">
                 <option value="">Select Orgranization</option>
                 </select>
                 </div>
@@ -196,6 +210,31 @@ $(document).ready(function(){
                  </select>
                 </div>
             </div>
+            
+            <div id="repair" style="display:none;">
+                <div class="form-group">
+                    <label for="Mobile" class="col-sm-2 control-label">Vehicle&nbsp;No.*</label>
+                    <div class="col-sm-10" id="showVehicle">
+                     <select name="vehicle" id="vehicle" class="form-control drop_down">
+                     <option>Select Vehicle</option>                              
+                     </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Reason" class="col-sm-2 control-label">Reason*</label>
+                    <div class="col-sm-10" id="statediv">
+                     <select name="reason" id="reason"  class="form-control drop_down">
+                     <option>Select Reason</option>   
+                     <option value="Battery Disconnected">Battery Disconnected</option>
+                     <option value="No Reply">No Reply</option>
+                     <option value="Re-Installation">Re-Installation</option>
+                     <option value="Others">Others</option>
+                     </select>
+                    </div>
+                </div>
+
+            </div>
+            
             <div id="service_provider" style="display:none">
              <div class="form-group">
                 <label for="dateofpurchase" class="col-sm-2 control-label">Model*</label>

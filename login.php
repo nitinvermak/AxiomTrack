@@ -19,20 +19,20 @@ if(isset ($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		  $_SESSION['token'] = $token;
 		  $_SESSION['token_time']=time();
 		  
-			  if ($resultUser['User_Category'] == 9)
+			  if ( ($resultUser['User_Category'] == 9) || ($resultUser['User_Category'] == 5) || ($resultUser['User_Category'] == 8))
 			  {
 			  	$sql= mysql_query("Select * from tblmodulename");
 				$result = mysql_fetch_assoc($sql);
 				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["moduleCatId"]);
 			  	header("location: pending_works.php?token=".$token);
 			  }
-			  else if($resultUser['User_Category'] == 5)
+			 /* else if($resultUser['User_Category'] == 5)
 			  {
 			  	$sql= mysql_query("Select * from tblmodulename");
 				$result = mysql_fetch_assoc($sql);
 				$_SESSION['permission'] = array("moduleId" => $result["moduleId"], "moduleCategory"=>$result["moduleCatId"]);
 			  	header("location: pending_works.php?token=".$token);
-			  }
+			  }*/
 			  else
 			  {
 			  	$sql= mysql_query("Select * from tblmodulename");

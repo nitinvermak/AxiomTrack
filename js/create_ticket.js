@@ -9,9 +9,21 @@ function divshow(strval)
 	{
 		document.getElementById("service_provider").style.display = "none";
 	}
+	if(strval=="2")
+	{
+		document.getElementById("repair").style.display = "";
+	}
+	else
+	{
+		document.getElementById("repair").style.display = "none";
+	}
 
 }
+/*function divshow(strval)
+{
+	
 
+}*/
 function getXMLHTTP() {
 		var xmlhttp=false;	
 		try{

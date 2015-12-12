@@ -22,10 +22,12 @@ if(count($_POST['linkID'])>0)
               {
 				$technician_id = $_POST['technician_id'];
 				$status = 1;
-				$sql = "insert into tbl_sim_technician_assign set sim_id='$chckvalue', technician_id='$technician_id', assigned_date=Now()";
+				$sql = "insert into tbl_sim_technician_assign set sim_id='$chckvalue', 
+						technician_id='$technician_id', assigned_date=Now()";
 				/*echo $sql;*/
 				$results = mysql_query($sql);	
-				$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' where sim_id='$chckvalue'";
+				$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' 
+									 where sim_id='$chckvalue'";
 				$query = mysql_query($assign_techician);
 				// Call User Activity Log function
 			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 

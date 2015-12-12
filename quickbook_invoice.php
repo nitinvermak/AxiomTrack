@@ -33,7 +33,6 @@ if(isset($_POST['submit']))
 		/*Other Details*/
 		/*$revievingDate = mysql_real_escape_string($_POST['revievingDate']);*/
 		$remarks = mysql_real_escape_string($_POST['remarks']);
-		$recievedby = mysql_real_escape_string($_POST['recievedby']);
 		$confirmby = mysql_real_escape_string($_POST['confirmby']);
 		
 		if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
@@ -134,6 +133,10 @@ if(isset($_POST['submit']))
 				userId = '$userId', RecivedDate = Now(), Remarks = '$remarks'";
 				/*echo $sql;*/
                 $result = mysql_query($sql);
+				if($result)
+				{
+					echo "<script> alert('Payment Added Successfully !')</script>";
+				}
                 $paymentId = mysql_insert_id();
 		
 	}
@@ -149,10 +152,6 @@ if(isset($_POST['submit']))
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation.js"></script>
-<script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/device_branch_confirmation.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="js/textboxEnabled.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -192,7 +191,7 @@ $(document).ready(function(){
         <hr>
     </div>
     <div class="col-md-12">
-    <form name='fullform' class="form-horizontal"  method='post' onSubmit="return validate(this)">
+    <form name='fullform' class="form-horizontal"  method='post'>
     <div class="table-responsive">
 		<table class="formStyle table" border="0" width="100%">
         <tr>

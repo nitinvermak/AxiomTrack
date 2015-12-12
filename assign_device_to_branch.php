@@ -99,7 +99,7 @@ $(document).ready(function(){
 		$.post("ajaxrequest/show_assigned_stock.php?token=<?php echo $token;?>",
 				{
 					branch : $('#branch').val(),
-					model : $('#model').val(),
+					modelname : $('#modelname').val()
 				},
 					function( data){
 						/*alert(data);*/

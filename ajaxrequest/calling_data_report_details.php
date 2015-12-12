@@ -24,7 +24,12 @@ error_reporting(0);
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
+	 	echo '<div class="col-md-12">
+			  	<div class="download pull-right">
+					<a href="#" id ="export" role="button" class="red"><span class="glyphicon glyphicon-save"></span></a>
+				</div>
+			  </div>
+				<table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
 	  			<th><small>S. No.</small></th>     
@@ -71,69 +76,12 @@ if(mysql_num_rows($stockArr)>0)
                 <td align="left" valign="middle"><small><?php echo $row["address"];?></small></td>
                 <td align="left" valign="middle" class="txt" ><small><?php echo $row["mobile"];?>
                 </small></td>
-                <td align="left" valign="middle" class="txt" ><small>
-				<?php
-				if($row["statusId"] == 2)
-				{
-					echo "<span style='color:green; font-weight:bold;'>Confirmed</span>";
-				}
-				else
-				{
-					echo "<span style='color:red; font-weight:bold;'>Not Confirmed</span>";
-				}
-				?>
-                </small></td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php 
-                if($row["status"] == 0)
-                    {  
-                    	echo "<span style='color:red; font-weight:bold;'>Instock</span>";
-                    }
-                    else
-                    {
-                    	echo "<span style='color:green; font-weight:bold;'>Allocated</span>";
-                    }
-                    ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php echo getBranch($row["branchId"]); ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php
-				if($row['status'] == 0)
-				{
-					echo "<span style='color:red;font-weight:bold;'>InStock</span>";
-				}
-				else
-				{
-					echo "<span style='color:green;font-weight:bold;'>Assign</span>";
-				} 
-				?>
-                </small>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php echo gettelecallername($row['telecallerId']); ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php 
-				if($row["callingStatus"] == 0)
-				{
-					echo "<span style='color:green; font-weight:bold;'>Yes</span>";
-				}
-				else
-				{
-					echo "<span style='color:red; font-weight:bold;'>No</span>";
-				}
-				?>
-                </small>
-                </td>
+                <td><small><?php echo getConfirm($row["statusId"]); ?></small></td>
+                <td><small><?php echo getAllocated($row["status"]); ?></small></td>
+                <td><small><?php echo getBranch($row["branchId"]); ?></small></td>
+                <td><small><?php echo getBranchAssignStatus($row['status']); ?> </small></td>
+                <td><small><?php echo gettelecallername($row['telecallerId']); ?></small></td>
+                <td><small><?php echo getCallingStatus($row["callingStatus"]); ?></small></td>
                 </tr> 
                 <?php 
                 }

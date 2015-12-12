@@ -1,6 +1,6 @@
 <?php
 include("../includes/config.inc.php"); 
-//include("includes/crosssite.inc.php"); 
+/*include("../includes/crosssite.inc.php"); */
 $branch_id=$_REQUEST['branch'];
 $sim_provider=$_REQUEST['sim_provider'];
 error_reporting(0);
@@ -8,19 +8,22 @@ if ($branch_id == 0 && $sim_provider==0)
 	{
 	$linkSQL = "select * from tblsim as A, 
 				tbl_sim_branch_assign as B 
-				where A.id = B.sim_id and A.branch_assign_status='1' and A.status_id='0'";
+				where A.id = B.sim_id and A.branch_assign_status='1' and A.status_id='0' and B.technician_assign_status = '0'";
+				echo $linkSQL;
 	}
 	else
 	{
 		if ($branch_id == 0 && $sim_provider != 0 )
 		{
-		  $linkSQL = "select * from tblsim as A, tbl_sim_branch_assign as B where A.id = B.sim_id and A.company_id='{$sim_provider}'
-		   and A.branch_assign_status='1' and A.status_id='0'";
+		  $linkSQL = "select * from tblsim as A, tbl_sim_branch_assign as B where A.id = B.sim_id and 							      				  A.company_id='{$sim_provider}' and A.branch_assign_status='1' and A.status_id='0' 
+		  			  and B.technician_assign_status = '0'";
  		}
 		if ($branch_id != 0 && $sim_provider == 0 )
 		{
-		  $linkSQL = "select * from tblsim as A, tbl_sim_branch_assign as B where A.id = B.sim_id and B.branch_id='{$branch_id}' 
-		   and A.branch_assign_status='1' and A.status_id='0'";
+		  $linkSQL = "select * from tblsim as A, tbl_sim_branch_assign as B where A.id = B.sim_id 
+		  			  and B.branch_id='{$branch_id}' and A.branch_assign_status='1' and A.status_id='0'
+					  and B.technician_assign_status = '0'";
+		   echo $linkSQL;
  		}
 	}
 $stockArr=mysql_query($linkSQL);
@@ -74,7 +77,7 @@ if(mysql_num_rows($stockArr)>0)
 	      			}
 				}
     			else
-   		 			echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
+   		 			echo "<h3 style='color:red'>No records found!</h3><br><br>";
 					?> 
                     	<form method="post">
                           <table>

@@ -8,7 +8,7 @@ $query="SELECT id,rqsttype FROM tblrqsttype WHERE product_id='$productValue'";
 $result=mysql_query($query);
 
 ?>
-<select name="request" onchange="return divshow(this.value)" class="form-control drop_down">
+<select name="request" id="request" onchange="return divshow(this.value)" class="form-control drop_down">
 <option>Select Request Type</option>
 <?php while ($row=mysql_fetch_array($result)) { ?>
 <option value=<?php echo $row['id']?>><?php echo $row['rqsttype']?></option>

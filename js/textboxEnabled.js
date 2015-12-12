@@ -44,6 +44,11 @@
 
 $(document).ready(function(){
 	$('#submit').click(function(){
+		if($("#organizationName").val() == "" ){
+		    $("#organizationName").focus();
+		    alert("Please Select Organization");
+		    return false;
+		}	
 		if($("#cash").prop('checked') == true)
 		{
 			if($("#cashAmount").val() == "" ){
@@ -93,24 +98,13 @@ $(document).ready(function(){
 		    return false;
 			}
 		}
-		if($("#organizationName").val() == "" ){
-		    $("#organizationName").focus();
-		    alert("Please Select Organization");
-		    return false;
+		else
+		{
+			alert('Please Select Payment Type');
 		}
-		if($("#revievingDate").val() == "" ){
-		    $("#revievingDate").focus();
-		    alert("Please Enter Recieving Date");
-		    return false;
-		}
-		
-		if($("#recievedby").val() == "" ){
-		    $("#recievedby").focus();
-		    alert("Please Enter Payment Revieved");
-		    return false;
-		}
-
+		 
 	});
+	
 });
 
 //end

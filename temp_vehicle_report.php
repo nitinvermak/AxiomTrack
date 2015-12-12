@@ -157,7 +157,7 @@ function getModal(a)
 		  </div>
 		</div>
 	  <!-- end modal -->
-      <div id="divassign" class="col-md-12 table-responsive assign_grid">
+      <div id="divassign" class="col-md-12 table-responsive">
 		
       </div>
     </form>

@@ -43,6 +43,7 @@ if(isset($_REQUEST['organization']))
 			mysql_query($sql);
 			echo $sql;
 			$_SESSION['sess_msg']='Vehicle updated successfully';
+			/*sendConfigSms($model, $mobile_no, '');*/
 			/*header("location:manage_vehicle.php?token=".$token);
 			exit();*/
 		}
@@ -56,6 +57,7 @@ if(isset($_REQUEST['organization']))
 			
 			$sql = mysql_query($query);
 			$_SESSION['sess_msg']='Vehicle added successfully';
+			/*sendConfigSms($model, $mobile_no, '');*/
 			/*header("location:manage_vehicle.php?token=".$token);
 			exit();*/
 		}
@@ -128,7 +130,15 @@ $(document).ready(function(){
                 <div class="col-sm-10">
                 	<select name="ticketId" id="ticketId" class="form-control drop_down ticket">
                     	 <option value="">Select Ticket Id</option>
-						 <?php $Country=mysql_query("select ticket_id from tblticket where organization_type='Existing Client'  and ticket_status <> 1 order by ticket_id ASC");
+						 <?php 
+						 		$userId = $_SESSION['user_id'];
+								$Country=mysql_query("select A.ticket_id from tblticket as A
+													 INNER JOIN tbl_ticket_assign_technician as B 
+													 On A.ticket_id = B.ticket_id 
+													 where A.organization_type='Existing Client' 
+													 and B.technician_id = '$userId' 
+													 and A.ticket_status <> 1 
+													 order by A.ticket_id ASC");
                                while($resultCountry=mysql_fetch_assoc($Country)){
                                  ?>
                         <option value="<?php echo $resultCountry['ticket_id']; ?>" <?php if(isset($result['ticket_id']) && $resultCountry['ticket_id']==$result['ticket_id']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['ticket_id'])); ?></option>
@@ -161,10 +171,9 @@ $(document).ready(function(){
                  <select name="technician" id="technician" onChange="return ShowMobile();" class="form-control drop_down">
                  <option value="">Select Techician</option>
                  <?php 
-				 
-                                 $technician = mysql_query("select * from tbluser where User_Category=5 or User_Category=8");	
-                          
-					   while($resulttechnician=mysql_fetch_assoc($technician)){
+				 	$userId = $_SESSION['user_id'];
+				 	$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) and id = '$userId'");	
+                    while($resulttechnician=mysql_fetch_assoc($technician)){
 				 ?>
                  <option value="<?php echo $resulttechnician['id']; ?>" 
 				 <?php if(isset($result['techinician_name']) && $resulttechnician['id']==$result['techinician_name']){ ?>selected

@@ -5,36 +5,37 @@ $branch_id=$_REQUEST['branch'];
 error_reporting(0);
 if ($branch_id == 0)
 {
-	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-				B.status as status, A.chequeAmount as chequeamt, 
-				C.onlineAmount as onlineAmt,A.Id as chequeId, 
-				C.Id as onlinepaymentId, D.callingdata_id as callingdataid, 
-				A.ChequeNo as cheqNo, A.Bank as bankName 
-				from quickbookpaymentcheque as A 
-				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
-				ON A.Id = B.ChequeID
-				Left Outer JOIN quickbookpaymentonlinetransfer as C 
-				ON B.OnlineTransferId = C.Id 
+	$linkSQL = "SELECT A.PaymentID as PaymentID, A.customerId as customerId, 
+	   			A.quickBookRefNo as quickBookRefNo, A.CashAmount as CashAmount,
+	   			A.status as status, B.chequeAmount as chequeamt, B.ChequeNo as cheqNo, 
+				B.Bank as bankName, C.onlineAmount as onlineAmt, B.Id as chequeId, 
+	   			C.Id as onlinepaymentId, D.callingdata_id as callingdataid  
+				FROM quickbookpaymentmethoddetailsmaster as A 
+				LEFT OUTER JOIN quickbookpaymentcheque as B 
+				ON A.ChequeID = B.Id
+				LEFT OUTER JOIN quickbookpaymentonlinetransfer as C 
+				ON A.OnlineTransferId = C.Id
 				LEFT OUTER JOIN tbl_customer_master as D 
-				ON B.customerId = D.cust_id WHERE B.status = '0'";
+				ON A.customerId = D.cust_id where A.status= '0'";
 				/*echo $linkSQL;*/
 }
 else
 {
-	$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-				B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-				B.status as status, A.chequeAmount as chequeamt, 
-				C.onlineAmount as onlineAmt,A.Id as chequeId, 
-				C.Id as onlinepaymentId, D.callingdata_id as callingdataid, 
-				A.ChequeNo as cheqNo, A.Bank as bankName
-				from quickbookpaymentcheque as A 
-				Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
-				ON A.Id = B.ChequeID
-				Left Outer JOIN quickbookpaymentonlinetransfer as C 
-				ON B.OnlineTransferId = C.Id 
+	$linkSQL = "SELECT A.PaymentID as PaymentID, A.customerId as customerId, 
+	   			A.quickBookRefNo as quickBookRefNo, A.CashAmount as CashAmount,
+	   			A.status as status, B.chequeAmount as chequeamt, B.ChequeNo as cheqNo, 
+				B.Bank as bankName, C.onlineAmount as onlineAmt, B.Id as chequeId, 
+	   			C.Id as onlinepaymentId, D.callingdata_id as callingdataid  
+				FROM quickbookpaymentmethoddetailsmaster as A 
+				LEFT OUTER JOIN quickbookpaymentcheque as B 
+				ON A.ChequeID = B.Id
+				LEFT OUTER JOIN quickbookpaymentonlinetransfer as C 
+				ON A.OnlineTransferId = C.Id
 				LEFT OUTER JOIN tbl_customer_master as D 
-				ON B.customerId = D.cust_id WHERE B.status = '0'";
+				ON A.customerId = D.cust_id 
+				LEFT OUTER JOIN tbluser as E 
+				ON D.telecaller_id = E.id
+				where A.status= '0' and E.branch_id = '$branch_id' ";
 	/*echo $linkSQL;*/
 }
 $stockArr=mysql_query($linkSQL);
@@ -72,9 +73,42 @@ if(mysql_num_rows($stockArr)>0)
                 <td><small><?php print $kolor++;?>.</small></td>
 				<td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>
                 <td><small><?php echo getOraganization(stripslashes($row["callingdataid"]));?></small></td>	
-				<td><small><?php echo stripslashes($row["quickBookRefNo"]);?></small></td>
-                <td><small><?php echo getBankName(stripslashes($row["bankName"]));?></small></td>
-                <td><small><?php echo stripslashes($row["cheqNo"]);?></small></td>
+				<td><small>
+				<?php 
+				if($row["quickBookRefNo"] == 0)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo stripslashes($row["quickBookRefNo"]);
+				}
+				?>
+                </small></td>
+                <td><small>
+				<?php
+				if($row["bankName"] == 0)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+				 echo getBankName(stripslashes($row["bankName"]));
+				}
+				?>
+                </small></td>
+                <td><small>
+				<?php 
+				if($row["cheqNo"] == 0)
+				{
+					echo 'N/A';
+				}
+				else
+				{
+					echo stripslashes($row["cheqNo"]);
+				}	
+				?>
+                </small></td>
                 <td><small>
 				<?php 
 				if($row["CashAmount"] == 0)

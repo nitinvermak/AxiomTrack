@@ -16,11 +16,11 @@ error_reporting(0);
 				INNER JOIN tbl_customer_master as B 
 				ON A.customer_Id = B.cust_id
 				INNER JOIN tblcallingdata as C 
-				ON B.callingdata_id = C.id";
+				ON B.callingdata_id = C.id Where A.techinician_name =".$_SESSION['user_id'];
 echo $linkSQL;
 if ( ($company != 0) or ( $date !='' and $dateto !='') or ($reffered != 0) or ($technician != 0) )
 	{
-		$linkSQL  = $linkSQL." WHERE ";	
+		$linkSQL  = $linkSQL." AND ";	
 	}
 $counter = 0;
 if($company != 0)

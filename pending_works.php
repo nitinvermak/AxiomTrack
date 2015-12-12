@@ -11,60 +11,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
-   {			   
-  		$dsl="";
-		if(isset($_POST['linkID']))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-             	{
-					$branch_id=$_POST['branch'];
-					$status_id="1";
-					$createdby=$_SESSION['user_id'];
-					$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_branch WHERE ticket_id='$chckvalue'") or die(mysql_errno());
-					if(!$row = mysql_fetch_array($check_ticketId) or die(mysql_error()))
-					{
-						$sql = "update tblticket set branch_assign_status='$status_id' where ticket_id='$chckvalue'";
-						/*echo $sql;*/
-						$results = mysql_query($sql); 	
-						$assign = "insert into tbl_ticket_assign_branch set ticket_id= '$chckvalue', branch_id= '$branch_id', assign_by='$createdby', assign_date=Now()";
-						/*echo $assign;*/
-						$query = mysql_query($assign);
-					}
-					else
-					{
-						header("location: assign_ticket_branch.php?token=".$token);
-					}
-   			    }
-			 }  
-  		$id="";
-}
-if(count($_POST['linkID'])>0 && (isset($_POST['remove'])) )
-   {			   
-  		$dsl="";
-		if(isset($_POST['linkID']))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
-	   	  		$branch_id=$_POST['branch'];
-		  		$status_id="0";
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "delete from tbl_ticket_assign_branch where 	ticket_id='$chckvalue'";
-				$results = mysql_query($sql); 	
-				$assign = "update tblticket set branch_assign_status='$status_id' where ticket_id='$chckvalue'";
-				//echo $sql;
-				$query = mysql_query($assign);
-				/* echo $query;*/
-	  			
-   			   }
-			 }  
-  		$id="";
-  
-  }
-if(isset($_POST['export']))
-{
-	echo "afhsafhsajkfh";
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

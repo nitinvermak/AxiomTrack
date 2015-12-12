@@ -2,18 +2,25 @@
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
 $branch_id = mysql_real_escape_string($_POST['branch']);
-$model = mysql_real_escape_string($_POST['model']);
-
+$model = mysql_real_escape_string($_POST['modelname']);
 error_reporting(0);
 
 if ($model == 0)
+{
 	$linkSQL = "select * from tbl_device_master as A, 
 				tbl_device_assign_branch as B 
-				where A.id = B.device_id and B.branch_id='{$branch_id}' and A.status='0'";
+				where A.id = B.device_id and B.branch_id='{$branch_id}' and 
+				A.status='0' and technician_assign_status = '0'";
+	/*echo $linkSQL;*/
+}
 else
+{
 	$linkSQL = "select * from tbl_device_master as A, 
 				tbl_device_assign_branch as B 
-				where A.id = B.device_id and B.branch_id='{$branch_id}' and A.device_name='{$model}' and A.status='0'"; 
+				where A.id = B.device_id and B.branch_id='{$branch_id}' and 
+				A.device_name='{$model}' and A.status='0' and technician_assign_status = '0'"; 
+	/*echo $linkSQL;*/
+}
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{

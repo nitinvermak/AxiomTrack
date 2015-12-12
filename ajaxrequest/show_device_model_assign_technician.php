@@ -12,7 +12,7 @@ if(mysql_num_rows($stockArr)>0)
 
            <select name="model" id="model" class="form-control drop_down">
          	<?php while ($row = mysql_fetch_array($stockArr)) { ?>
-            <option value="<?php echo getdevicename($row['device_name']); ?>"><?php echo getdevicename(stripslashes(ucfirst($row['device_name']))); ?></option>
+            <option value="<?php echo $row['device_name']; ?>"><?php echo getdevicename(stripslashes(ucfirst($row['device_name']))); ?></option>
             <?php 	} ?>
             </select>
             

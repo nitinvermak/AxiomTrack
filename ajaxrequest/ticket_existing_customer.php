@@ -5,7 +5,7 @@ $existingClient = mysql_real_escape_string($_POST['existingClient']);
 
 error_reporting(0);
 ?>
-<select name="orgranization" id="orgranization" class="form-control drop_down">
+<select name="orgranization" id="orgranization" class="form-control drop_down orgranization" onchange="getVehicle();">
 	<option value="">Select Orgranization</option>                         
 	<?php $Country=mysql_query("SELECT * FROM tblcallingdata WHERE STATUS='1' ORDER BY Company_Name ASC");								
        	  while($resultCountry=mysql_fetch_assoc($Country))

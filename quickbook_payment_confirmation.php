@@ -11,8 +11,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
-
  if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
@@ -27,7 +25,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 						paymentConfirmBy = '$userId' 
 						WHERE `PaymentID` = '$chckvalue'";
 				$results = mysql_query($sql);
-		  		$_SESSION['sess_msg']="Payment Confirm Successfully!";
+		  		$msg = "Payment Confirmation Successfully!";
    			   }
 			 }  
   		$id="";
@@ -96,6 +94,7 @@ $(document).ready(function(){
         </div>
   		</div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
+      <?php if(isset($msg) && $msg !="") echo "<font color=green>".$msg."</font>"; ?>
           <!---- this division shows the Data of devices from Ajax request --->
       </div>
     </form>
