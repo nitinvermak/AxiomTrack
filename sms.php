@@ -122,7 +122,7 @@ function chkcontactform(obj)
 	?>
     <form method="post" name="smsform" action="" onSubmit="return chkcontactform(this)">
     	<div class="form-group">
-            <label for="To">To</label>
+            <label for="To">Mobile No.</label>
             <input type="text" name="mobileno" id="mobileno" class="form-control text_box" />
         </div>
         <div class="form-group">

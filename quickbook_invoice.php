@@ -203,7 +203,8 @@ $(document).ready(function(){
 											INNER JOIN tbl_ticket_assign_branch as B 
 											ON A.ticket_id = B.ticket_id 
 											where A.organization_type = 'Existing Client'  
-											and A.ticket_status <> 1 AND B.technician_assign_status = 1 
+											and A.ticket_status <> 1 and A.rqst_type = '7'
+											AND B.technician_assign_status = 1 
 											order by ticket_id ASC");
                        while($resultCountry=mysql_fetch_assoc($Country)){
                 ?>

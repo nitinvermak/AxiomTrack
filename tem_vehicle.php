@@ -33,7 +33,7 @@ if(isset($_REQUEST['organization']))
 	{
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
-			$sql = "update tempVehicleData set customer_Id='$organization', 
+			$sql = "update tempvehicledata set customer_Id='$organization', 
 				    customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
 				    techinician_name='$technician', mobile_no='$mobile_no', 
 					device_id='$device', imei_no='$imei', model_name='$model', 
@@ -41,23 +41,24 @@ if(isset($_REQUEST['organization']))
 					configStatus = 'N' where id=" .$_REQUEST['id'];
 			
 			mysql_query($sql);
-			echo $sql;
-			$_SESSION['sess_msg']='Vehicle updated successfully';
-			/*sendConfigSms($model, $mobile_no, '');*/
+			/*echo $sql;*/
+			echo "<script> alert('Vehicle updated successfully');</script>";
+			sendConfigSms($model, $mobile_no, '');
 			/*header("location:manage_vehicle.php?token=".$token);
 			exit();*/
 		}
 	else 
 		{
-			$query = "insert into tempVehicleData set customer_Id='$organization', 
+			$query = "insert into tempvehicledata set customer_Id='$organization', 
 					  customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
 					  techinician_name='$technician', mobile_no='$mobile_no', 
 					  device_id='$device', imei_no='$imei', model_name='$model', 
 					  installation_date=Now(), ticketId = '$ticketId', configStatus = 'N'";
-			
+			/*echo $query;*/
 			$sql = mysql_query($query);
-			$_SESSION['sess_msg']='Vehicle added successfully';
-			/*sendConfigSms($model, $mobile_no, '');*/
+			/*$_SESSION['sess_msg']='Vehicle added successfully';*/
+			echo "<script> alert('Vehicle added successfully');</script>";
+			sendConfigSms($model, $mobile_no, '');
 			/*header("location:manage_vehicle.php?token=".$token);
 			exit();*/
 		}
@@ -65,7 +66,7 @@ if(isset($_REQUEST['organization']))
 }
 if(isset($_REQUEST['id']) && $_REQUEST['id'])
 	{
-		$queryArr=mysql_query("SELECT * FROM tempVehicleData WHERE id =".$_REQUEST['id']);
+		$queryArr=mysql_query("SELECT * FROM tempvehicledata WHERE id =".$_REQUEST['id']);
 		$result=mysql_fetch_assoc($queryArr);
 	}
 	
@@ -80,7 +81,7 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/custom.css">
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/add_gps_vehicle.js"></script>
+<script type="text/javascript" src="js/tempVehicle.js".js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <!--Ajax request Call-->
 <script  src="js/ajax.js"></script>
@@ -132,13 +133,25 @@ $(document).ready(function(){
                     	 <option value="">Select Ticket Id</option>
 						 <?php 
 						 		$userId = $_SESSION['user_id'];
-								$Country=mysql_query("select A.ticket_id from tblticket as A
+								if($userId == 1)
+								{
+									$Country=mysql_query("select A.ticket_id from tblticket as A
+														 INNER JOIN tbl_ticket_assign_technician as B 
+														 On A.ticket_id = B.ticket_id 
+														 where A.organization_type='Existing Client' 
+														 and A.ticket_status <> 1 and A.rqst_type = '1'
+														 order by A.ticket_id ASC");
+								}
+								else
+								{
+									$Country=mysql_query("select A.ticket_id from tblticket as A
 													 INNER JOIN tbl_ticket_assign_technician as B 
 													 On A.ticket_id = B.ticket_id 
 													 where A.organization_type='Existing Client' 
 													 and B.technician_id = '$userId' 
-													 and A.ticket_status <> 1 
+													 and A.ticket_status <> 1 and A.rqst_type = '1'
 													 order by A.ticket_id ASC");
+								}
                                while($resultCountry=mysql_fetch_assoc($Country)){
                                  ?>
                         <option value="<?php echo $resultCountry['ticket_id']; ?>" <?php if(isset($result['ticket_id']) && $resultCountry['ticket_id']==$result['ticket_id']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['ticket_id'])); ?></option>
@@ -172,7 +185,15 @@ $(document).ready(function(){
                  <option value="">Select Techician</option>
                  <?php 
 				 	$userId = $_SESSION['user_id'];
-				 	$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) and id = '$userId'");	
+					if($userId == 1)
+					{
+				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8)");	
+					}
+					else
+					{
+						$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
+												   and id = '$userId'");
+					}
                     while($resulttechnician=mysql_fetch_assoc($technician)){
 				 ?>
                  <option value="<?php echo $resulttechnician['id']; ?>" 

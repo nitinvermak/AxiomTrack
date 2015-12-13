@@ -1012,7 +1012,7 @@ function getRequesttype($id)
 }
 function gettelecallername($id)
 {
-  $sql="select CONCAT(First_Name,' ',Last_Name) As fullname from tbluser where id=".$id;
+  $sql="select  CONCAT(First_Name,' ',Last_Name) As fullname from tbluser where id='$id' ORDER BY First_Name";
   $rs=mysql_query($sql);
   $result=mysql_fetch_assoc($rs);
   if($result['fullname'])
