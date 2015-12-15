@@ -29,6 +29,7 @@ if(isset($_REQUEST['product']))
 	$vehicle = htmlspecialchars(mysql_real_escape_string(trim($_POST['vehicle'])));
 	$reason = htmlspecialchars(mysql_real_escape_string(trim($_POST['reason'])));
 	$create_date=htmlspecialchars(mysql_real_escape_string($_POST['create_date']));
+	$userId = $_SESSION['user_id'];
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
@@ -39,8 +40,9 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 			    rqst_type='$request', device_model_id='$model_id', no_of_installation='$no_of_installation', 
 				description='$description', vehicleId = '$vehicle', repairReason ='$reason', 
 				appointment_date='$ap_date_time'), appointment_time='$time', 
-				createddate=Now() 
+				ModifyDate = Now(), ModifyBy = '$userId' 
 				where id=" .$_REQUEST['id'];
+		echo $sql;
 		// Call User Activity Log function
 		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 		// End Activity Log Function
@@ -53,7 +55,7 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
 		$query = "insert into tblticket set product='$product', organization_id='$orgranization', 						             	  organization_type='$orgranizationType', rqst_type='$request', device_model_id='$model_id', 
 				  no_of_installation='$no_of_installation', description='$description', 
 				  vehicleId = '$vehicle', repairReason ='$reason',
-				  appointment_date='$ap_date_time', createddate=Now()";
+				  appointment_date='$ap_date_time', createddate=Now(), CreateBy = '$userId'";
 		// Call User Activity Log function
 		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
 		// End Activity Log Function

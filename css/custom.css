@@ -368,3 +368,18 @@ font-size:15px;
 .download{
 padding-bottom:25px;
 }
+.report{
+margin-top:10px;
+}
+.small-title{
+color:#bc0a1f;
+font-weight:bold;
+padding:0px 0px 10px 0px;
+}
+.success-msg{
+	padding:15px 0px 15px 0px;
+	color:#006600;
+	font-weight:bold;
+	font-size:13px;
+}
+

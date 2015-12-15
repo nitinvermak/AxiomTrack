@@ -8,7 +8,8 @@ if ($searchText == "")
 	$linkSQL = "SELECT A.ticket_id as TId, B.Company_Name as Cname, 
 				A.organization_type as O_type, A.product as product, 
 				A.rqst_type as rqst_type, A.createddate as Cdate, 
-				A.appointment_date as meeting_date  
+				A.appointment_date as meeting_date, A.CreateBy as createBy, 
+				A.ModifyBy as modifyBy, A.ModifyDate as modifyDate  
 				FROM tblticket as A
 				INNER JOIN tblcallingdata as B 
 				ON A.organization_id = B.id";
@@ -18,7 +19,8 @@ else
 	$linkSQL = "SELECT A.ticket_id as TId, B.Company_Name as Cname, 
 				A.organization_type as O_type, A.product as product, 
 				A.rqst_type as rqst_type, A.createddate as Cdate, 
-				A.appointment_date as meeting_date  
+				A.appointment_date as meeting_date, A.CreateBy as createBy, 
+				A.ModifyBy as modifyBy, A.ModifyDate as modifyDate  
 				FROM tblticket as A
 				INNER JOIN tblcallingdata as B 
 				ON A.organization_id = B.id 
@@ -40,6 +42,8 @@ if(mysql_num_rows($stockArr)>0)
         <th><small>Request Type</small></th> 
         <th><small>Created</small></th>
         <th><small>Appointment Date Time</small></th>
+        <th><small>Generate by</small></th>
+        <th><small>Modify by</small></th>
         <th><small>Actions</small></th> 
         </tr>    
 	  	<?php
@@ -76,6 +80,11 @@ if(mysql_num_rows($stockArr)>0)
         <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 		<td><small><?php echo stripslashes(date('l jS \of F Y h:i:s A',strtotime($row["Cdate"])));?></small></td>
         <td><small><?php echo stripslashes(date('l jS \of F Y h:i:s A',strtotime($row["meeting_date"])));?></small></td>
+        <td><small><?php echo gettelecallername(stripslashes($row["createBy"]));?></small><br />
+        	<?php echo "<span style='color:#7e4303; font-size:8px;'>". $row["Cdate"]. "</span>";?></td>
+        <td><small><?php echo gettelecallername(stripslashes($row["modifyBy"]));?></small><br />
+        	<?php echo "<span style='color:#7e4303; font-size:8px;'>". $row["modifyDate"]. "</span>";?>
+        </td> 
         <td><a href="edit_ticket.php?id=<?php echo $row["TId"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> &nbsp;&nbsp; </td>
         </tr>
  

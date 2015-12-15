@@ -27,10 +27,12 @@ if (isset($_POST['submit']))
 	  $no_of_installation = mysql_real_escape_string($_POST['no_of_installation']);
 	  $des = mysql_real_escape_string($_POST['des']);
 	  $date_time = mysql_real_escape_string($_POST['date_time']);
+	  $userId = $_SESSION['user_id']; 
 	  $update_record = "UPDATE tblticket SET  organization_id = '$orgranization', 
 						product = '$product', rqst_type = '$request', 
 						device_model_id = '$model', no_of_installation = '$no_of_installation', 
-						description = '$des', appointment_date = '$date_time' 
+						description = '$des', appointment_date = '$date_time', 
+						ModifyDate = Now(), ModifyBy = '$userId' 
 						WHERE ticket_id = '$Ticket_id'";
 	  // Call User Activity Log function
 	  UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_record);

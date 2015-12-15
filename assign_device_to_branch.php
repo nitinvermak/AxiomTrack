@@ -1,21 +1,16 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 //echo count($_POST['linkID']);
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
-
  if(count($_POST['linkID'])>0 && (isset($_POST['remove'])) )
    {			   
   		$dsl="";
@@ -38,7 +33,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 					 $sql. "<br>" .$assign);
 				     $query = mysql_query($assign);
 				     /* echo $query;*/
-	  			     $_SESSION['sess_msg']="State deleted successfully";
+	  			     $_SESSION['sess_msg']="Device Remove Successfully";
    			      }
 			   }  
   		$id="";
@@ -64,14 +59,14 @@ if (isset($_SESSION) && $_SESSION['login']=='')
         				$sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
         				//echo $sql;
         				$results = mysql_query($sql); 	
-        				$assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', 
+        				$assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', assign_by = '$createdby', 
                        			  branch_id='$branch_id', assigned_date=Now()";
         				// Call User Activity Log function
 			  			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
 						$sql. "<br>" .$assign);
         				$query = mysql_query($assign);
         				//echo $query; 
-        				$_SESSION['sess_msg']="State deleted successfully";
+        				$_SESSION['sess_msg']="Device Branch Assign Successfully";
 					}
    			  }
 		 }  
@@ -88,6 +83,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/assign_device_to_branch.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -164,20 +160,11 @@ $(document).ready(function(){
             
               <?php 
 			  		$branch_sql= "select * from tblbranch ";
-					$authorized_branches = BranchLogin($_SESSION['user_id']);
-					//echo $authorized_branches;
-					if ( $authorized_branches != '0'){
-						 
-						$branch_sql = $branch_sql.' where id in '.$authorized_branches;		
-					}
-					if($authorized_branches == '0'){
-						echo'<option value="0">All Branch</option>';	
-					}
-					//echo $branch_sql;
-					$Country = mysql_query($branch_sql);					
-			  									  
+					
+					$Country = mysql_query($branch_sql);								  
 					while($resultCountry=mysql_fetch_assoc($Country)){
 			  ?>
+              <option value="0">All Branch</option>
             <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
             <?php } ?>
             </select>
@@ -185,6 +172,19 @@ $(document).ready(function(){
   		<input type="button" name="assign" value="Assign Devices" id="assignDevices" class="btn btn-primary btn-sm" />
         <input type="button" name="view" id="viewAssignedDevices" value="View Assigned Devices" class="btn btn-primary btn-sm"/>
       </div> 
+	  <!-- Show Assign Success message -->
+	  <div class="col-md-12"> 
+        <!--  <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>-->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+       <!--   </div>-->
+	  </div>
+	  <!----- End --->
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request -->
       </div>

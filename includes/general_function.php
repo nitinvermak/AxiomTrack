@@ -1020,6 +1020,21 @@ function gettelecallername($id)
   else
   return 'N/A';
 }
+function getRepairType($repair)
+{
+	if($repair == 1)
+	{
+		echo "Sim";
+	}
+	else if($repair == 2)
+	{
+		echo "Device";
+	}
+	else if($repair == 3)
+	{
+		echo "Both";
+	}
+}
 function getsimprovider($id)
 {
   $sql="select serviceprovider from tblserviceprovider where id=".$id;
