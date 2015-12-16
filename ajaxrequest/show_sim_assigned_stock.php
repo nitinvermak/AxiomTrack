@@ -9,7 +9,7 @@ if ($branch_id == 0 && $sim_provider==0)
 	$linkSQL = "select * from tblsim as A, 
 				tbl_sim_branch_assign as B 
 				where A.id = B.sim_id and A.branch_assign_status='1' and A.status_id='0' and B.technician_assign_status = '0'";
-				echo $linkSQL;
+				/*echo $linkSQL;*/
 	}
 	else
 	{
@@ -23,7 +23,7 @@ if ($branch_id == 0 && $sim_provider==0)
 		  $linkSQL = "select * from tblsim as A, tbl_sim_branch_assign as B where A.id = B.sim_id 
 		  			  and B.branch_id='{$branch_id}' and A.branch_assign_status='1' and A.status_id='0'
 					  and B.technician_assign_status = '0'";
-		   echo $linkSQL;
+		   /*echo $linkSQL;*/
  		}
 	}
 $stockArr=mysql_query($linkSQL);
@@ -37,6 +37,7 @@ if(mysql_num_rows($stockArr)>0)
 	                  <th><small>Provider</small></th>
 	                  <th><small>Sim No.</small></th>
 	                  <th><small>Mobile No.</small></th>
+					  <th><small>Assign by</small></th>
 	                  <th><small>Date of Assigned</small></th>
                       <th><small>Status</small></th>
 	                  <th><small>Actions
@@ -68,7 +69,9 @@ if(mysql_num_rows($stockArr)>0)
                    <td><small><?php echo stripslashes($row["sim_no"]);?>
                    <input type="hidden" name="sim_no" value="<?php echo stripslashes($row["sim_no"]);?>" /></small></td>	
 				   <td><small><?php echo stripslashes($row["mobile_no"]);?>
-                   <input type="hidden" name="mob_no" value="<?php echo stripslashes($row["mobile_no"]);?>" /></small></td>				   					 				   <td><small><?php echo stripslashes($row["assigned_date"]);?></td>
+                   <input type="hidden" name="mob_no" value="<?php echo stripslashes($row["mobile_no"]);?>" /></small></td>
+				   <td><small><?php echo gettelecallername(stripslashes($row["assign_by"]));?></td>
+				   <td><small><?php echo stripslashes($row["assigned_date"]);?></td>
                    <td><small><?php echo stripslashes($stock);?></small></td>			  
                    <td>
                    <input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
@@ -83,7 +86,7 @@ if(mysql_num_rows($stockArr)>0)
                           <table>
                           <tr>
                           
-                          <td colspan="3"><input type="submit" name="remove" class="btn btn-primary btn-sm" value="Remove" onClick="return val();" id="submit" /> </td>
+                          <td colspan="3"><input type="submit" name="remove" class="btn btn-primary btn-sm" value="Remove" onclick="return val();" id="submit" /> </td>
                           <td></td>
                           </tr>
                           </table><br />

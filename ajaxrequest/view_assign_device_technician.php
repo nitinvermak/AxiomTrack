@@ -29,6 +29,8 @@ if(mysql_num_rows($stockArr)>0)
 	            <th><small>Device Id</small></th>
 	            <th><small>IMEI No.</small></th>  
 	            <th><small>Branch</small></th>
+				<th><small>Assign by</small></th>
+				<th><small>Assign Date</small></th>
 	            <th><small>Actions 
                 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                 &nbsp;&nbsp;
@@ -57,7 +59,9 @@ if(mysql_num_rows($stockArr)>0)
 				<td><small><?php echo getdevicename(stripslashes($row["device_name"]));?></small></td>
                 <td><small><?php echo stripslashes($row["device_id"]);?></small></td>	
 				<td><small><?php echo getdeviceimei(stripslashes($row["device_id"]));?></small></td>	
-				<td><small><?php echo getBranch(stripslashes($row["branch_id"]));?></small></td>			  
+				<td><small><?php echo getBranch(stripslashes($row["branch_id"]));?></small></td>
+				<td><small><?php echo gettelecallername(stripslashes($row["assigned_by"]));?></small></td>				
+				<td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>
                 <td><input type='checkbox' name='linkID[]' id="linkID" value='<?php echo $row["device_id"]; ?>'></td>
                 </tr>	
 				<?php }
@@ -68,7 +72,7 @@ if(mysql_num_rows($stockArr)>0)
                 <form method="post">
                 <table border="0">
                 <tr>
-                <td></td>
+                
                 <td colspan="3"><input type="submit" name="remove" value="Remove" class="btn btn-primary btn-sm" id="remove" onClick="return val();" /> </td>
                 <td></td>
                 </tr>

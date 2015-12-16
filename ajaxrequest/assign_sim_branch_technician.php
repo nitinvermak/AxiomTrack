@@ -1,8 +1,20 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$branch_id=$_REQUEST['branch']; 
+$branch_id = $_REQUEST['branch']; 
 error_reporting(0);
+if($branch_id == 0)
+{
+	$linkSQL =  "select * from 
+				 tbl_sim_branch_assign as A
+				 INNER JOIN tblsim as B
+				 ON A.sim_id = B.id
+				 INNER JOIN tblserviceprovider as C
+				 ON B.company_id = C.id
+				 where A.technician_assign_status='0'";
+}
+else
+{
 	$linkSQL =  "select * from 
 				 tbl_sim_branch_assign as A
 				 INNER JOIN tblsim as B
@@ -10,6 +22,7 @@ error_reporting(0);
 				 INNER JOIN tblserviceprovider as C
 				 ON B.company_id = C.id
 				 where A.branch_id = '$branch_id' and A.technician_assign_status='0'";
+}
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
@@ -20,6 +33,7 @@ if(mysql_num_rows($stockArr)>0)
                 <th><small>Provider</small></th>  
                 <th><small>Sim No.</small></th>
                 <th><small>Mobile No.</small></th>  
+				<th><small>Confirm By</small></th>
                 <th><small>Branch Assigned Date</small></th>
                 <th><small>Status</small></th>
                 <th><small>Actions
@@ -45,7 +59,8 @@ if(mysql_num_rows($stockArr)>0)
                     <td><small><?php print $kolor++;?>.</td>
                     <td><small><?php echo stripslashes($row["serviceprovider"]);?></small></td>	
                     <td><small><?php echo getSimNO(stripslashes($row["sim_id"]));?></small></td>	
-                    <td><small><?php echo getMobile(stripslashes($row["sim_id"]));?></small></td>                           	
+                    <td><small><?php echo getMobile(stripslashes($row["sim_id"]));?></small></td> 
+					<td><small><?php echo gettelecallername(stripslashes($row["confirmBy"]));?></small></td> 
                     <td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>
                     <td><small><?php echo stripslashes($stock);?></small></td>			  
                     <td><input type='checkbox' name='linkID[]' value='<?php echo $row["sim_id"]; ?>'></td>

@@ -35,7 +35,8 @@ if(mysql_num_rows($stockArr)>0)
 	            <th><small>S. No.</small></th>                   
 	            <th><small>Provider</small></th>  
 	            <th><small>Sim No.</small></th>
-	            <th><small>Mobile No.</small></th>  
+	            <th><small>Mobile No.</small></th>
+				<th><small>Assign By </small></th>
 	            <th><small>Branch Assigned Date</small></th>
                 <th><small>Status</small></th>
 	            <th><small>Actions 
@@ -61,7 +62,8 @@ if(mysql_num_rows($stockArr)>0)
                 <td><small><?php print $kolor++;?>.</td>
 				<td><small><?php echo stripslashes($row["serviceprovider"]);?></small></td>	
                 <td><small><?php echo getSimNO(stripslashes($row["sim_id"]));?></small></td>	
-				<td><small><?php echo getMobile(stripslashes($row["sim_id"]));?></small></td>                           	
+				<td><small><?php echo getMobile(stripslashes($row["sim_id"]));?></small></td>
+				<td><small><?php echo gettelecallername(stripslashes($row["assigned_by"]));?></small></td> 
 				<td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>
                 <td><small><?php echo stripslashes($stock);?></small></td>			  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["sim_id"]; ?>'></td>

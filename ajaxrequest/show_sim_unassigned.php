@@ -56,7 +56,7 @@ if(mysql_num_rows($stockArr)>0)
 				   <td><small><?php echo stripslashes($row["date_of_purchase"]);?></small></td>
                    <td><small><?php echo stripslashes($stock);?></small></td>			  
                    <td>
-                   <input type='checkbox' class="chk" name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
+                   <input type='checkbox' class="chk" name='linkID[]' value='<?php echo $row["id"]; ?>' ></td>
                    </tr>
  
 	<?php 
@@ -71,8 +71,8 @@ if(mysql_num_rows($stockArr)>0)
           				<form method="post">
                           <table>
                           <tr>
-                          <td></td>
-                          <td colspan="3"><input type="submit" name="submit" id="assignSim" class="btn btn-primary btn-sm"  value="Assign"  /> </td>
+                         
+                          <td colspan="3"><input type="submit" name="submit" id="assignSim" class="btn btn-primary btn-sm"  value="Assign" onclick="return val();" /> </td>
                           <td></td>
                           </tr>
                           </table><br /><br />

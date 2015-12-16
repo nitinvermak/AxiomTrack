@@ -19,18 +19,27 @@ if(count($_POST['linkID'])>0)
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-				$technician_id=$_POST['technician_id'];
-		  		$status_id="1";
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_device_assign_technician set device_id='$chckvalue', 
-						technician_id ='$technician_id', assigned_date=Now()";
-				$results = mysql_query($sql);
-				$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' 
-									  where device_id='$chckvalue'";
-				// Call User Activity Log function
-			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
-				$sql."<br>".$assign_technician);
-				$confirm = mysql_query($assign_technician);
+					$technician_id = $_POST['technician_id'];
+					$status_id = "1";
+					$createdby = $_SESSION['user_id'];
+					$check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_technician WHERE device_id='$chckvalue'"); 
+					if(mysql_num_rows($check_deviceId) <= 0)
+					{
+						$sql = "insert into tbl_device_assign_technician set device_id='$chckvalue', 
+								technician_id ='$technician_id', assigned_by = '$createdby',  assigned_date=Now()";
+						$results = mysql_query($sql);
+						$assign_technician = "update tbl_device_assign_branch set technician_assign_status='$status_id' 
+											  where device_id='$chckvalue'";
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+						$sql."<br>".$assign_technician);
+						$confirm = mysql_query($assign_technician);
+						$_SESSION['sess_msg']="<span style='color:#006600;'>Device Branch Assign Successfully</span>";
+					}
+					else
+					{
+						$_SESSION['sess_msg']="<span style='color:red;'>Device already Assign</span>";
+					}
    			   }
 			 }  
   		$id="";
@@ -54,6 +63,7 @@ if(count($_POST['linkID'])>0)
 				$sql."<br>".$assign_technician);
 				/*echo $assign_technician;*/
 				$confirm = mysql_query($assign_technician);
+				$_SESSION['sess_msg']="<span style='color:#006600;'>Device Remove Successfully</span>";
    			   }
 			 }  
   		$id="";
@@ -69,7 +79,7 @@ if(count($_POST['linkID'])>0)
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/assign_device_to_technician.js"></script>
@@ -174,6 +184,17 @@ $(document).ready(function(){
   		<input type="button" name="assign_devices" id="assign_devices" class="btn btn-primary btn-sm" value="Assign Devices"/>
         <input type="button" name="view_assign" id="view_assign" class="btn btn-primary btn-sm" value="View Assigned Devices"/>
       </div> 
+	  <div class="col-md-12"> 
+       <!--<div id="messages" class="hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>--->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+      <!-- </div>--->
+	  </div>
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
       </div>

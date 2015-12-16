@@ -1,11 +1,8 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$assignedStatus = mysql_real_escape_string($_POST['assignedStatus']);
-$branch = mysql_real_escape_string($_POST['branch']);
-$finalStatus = mysql_real_escape_string($_POST['finalStatus']);
-$executive = mysql_real_escape_string($_POST['executive']);
-echo $assignedStatus; 
+$search_box = mysql_real_escape_string($_POST['search_box']);
+/*echo $search_box; */
 $branchName = $_SESSION['branch'];
 error_reporting(0);
 	$linkSQL = "SELECT  A.id as DeviceId, A.device_name as modal, A.date_of_purchase as purchaseDate,
@@ -26,49 +23,13 @@ error_reporting(0);
 				LEFT OUTER Join tbl_gps_vehicle_master as F 
 				ON A.id = F.device_id
 				LEFT OUTER JOIN tbl_customer_master as G 
-				ON F.customer_Id = G.cust_id";
-	/*$authorized_branches = BranchLogin($_SESSION['user_id']);
+				ON F.customer_Id = G.cust_id WHERE (A.imei_no LIKE '$search_box%' 
+				or A.id LIKE '$search_box%')";
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
 	if ( $authorized_branches != '0'){
 		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
-	}*/
-	echo $linkSQL;
-if ( ($assignedStatus != 0) or ($branch != 0) or ($finalStatus != 0) or ($executive != 0) )
-	{
-		$linkSQL  = $linkSQL." WHERE ";	
 	}
-$counter = 0;
-if($assignedStatus != 0)
-	{
-		if ($counter > 0 )
-	 	$linkSQL =$linkSQL.' AND ';
-		$linkSQL  =$linkSQL." A.assignstatus = '$assignedStatus'" ;
-		$counter+=1;
-		echo $linkSQL;
-	}
-if($branch != 0)
-	{
-		if ($counter > 0 )
-	 	$linkSQL =$linkSQL.' AND ';
-		$linkSQL  =$linkSQL." B.branch_id = '$branch'" ;
-		$counter+=1;
-		echo $linkSQL;
-	}
-if($finalStatus != 0)
-	{
-		if ($counter > 0 )
-	 	$linkSQL =$linkSQL.' AND ';
-		$linkSQL  =$linkSQL." A.status = '$finalStatus'" ;
-		$counter+=1;
-		echo $linkSQL;
-	}
-if($executive != 0)
-	{
-		if ($counter > 0 )
-	 	$linkSQL =$linkSQL.' AND ';
-		$linkSQL  =$linkSQL." C.technician_id = '$executive'" ;
-		$counter+=1;
-		echo $linkSQL;
-	}
+	/*echo $linkSQL;*/
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{

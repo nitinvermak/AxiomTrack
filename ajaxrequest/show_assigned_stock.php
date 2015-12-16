@@ -35,6 +35,7 @@ if(mysql_num_rows($stockArr)>0)
 	              <th><small>IMEI NO</small></th>  
 	              <th><small>Status</small></th>
                   <th><small>Date of Assigned </small></th>
+				  <th><small>Assign by</small></th>
 	              <th><small>Actions</small>                 
 	              <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
                   &nbsp;&nbsp;
@@ -66,6 +67,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo stripslashes($row["imei_no"]);?></small></td>                           	
 				 <td><small><?php echo stripslashes($stock);?></small></td>	
                  <td><small><?php echo stripslashes($row["assigned_date"]);?></small></td>  
+				 <td><small><?php echo gettelecallername(stripslashes($row["assign_by"]));?></small></td>  
                  <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                  </tr>
 				 <?php }

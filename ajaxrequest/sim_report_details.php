@@ -24,10 +24,10 @@ error_reporting(0);
 				LEFT OUTER JOIN tbl_customer_master as G 
 				ON F.customer_Id = G.cust_id
 				WHERE (A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%')";
-	/*$authorized_branches = BranchLogin($_SESSION['user_id']);
+	$authorized_branches = BranchLogin($_SESSION['user_id']);
 	if ( $authorized_branches != '0'){
 		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
-	}*/
+	}
 	/*echo $linkSQL;*/
 	$stockArr = mysql_query($linkSQL);
 	/*$total_num_rows = mysql_num_rows($stockArr);*/

@@ -165,7 +165,7 @@ $(document).ready(function(){
                  <option value="">Select Techician</option>
                  <?php 
 				 	$userId = $_SESSION['user_id'];
-					if($userId == 1)
+					if($userId == 1 || 12)
 					{
 				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
 													Order By First_Name");	

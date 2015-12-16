@@ -104,7 +104,7 @@ if(mysql_num_rows($stockArr)>0)
                 <td><small><?php echo stripslashes($row["ticketId"]);?></small></td>
 	 			<td><small><?php echo stripcslashes($row['CompanyName']);?></small></td>
                 <td><small><?php echo stripcslashes($row['vehicle_no']);?></small></td>
-                <td><small><?php echo getMobile(stripcslashes($row['mobile']));?></small></td>
+                <td><small><?php echo stripcslashes($row['mobile']);?></small></td>
                 <td><small><?php echo stripcslashes($row['deviceId']); ?></small></td>
                 <td><small><?php echo getdevicename(stripcslashes($row['model'])); ?></small></td>
                 <td><small><?php echo gettelecallername(stripcslashes($row['technician'])); ?></small></td>

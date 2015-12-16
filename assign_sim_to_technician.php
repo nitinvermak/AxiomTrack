@@ -22,17 +22,26 @@ if(count($_POST['linkID'])>0)
               {
 				$technician_id = $_POST['technician_id'];
 				$status = 1;
-				$sql = "insert into tbl_sim_technician_assign set sim_id='$chckvalue', 
-						technician_id='$technician_id', assigned_date=Now()";
-				/*echo $sql;*/
-				$results = mysql_query($sql);	
-				$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' 
-									 where sim_id='$chckvalue'";
-				$query = mysql_query($assign_techician);
-				// Call User Activity Log function
-			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
-				$sql."<br>".$assign_techician);
-				echo "<script> alert('Techinician Assign Successfully!'); </script>";	 
+				$assignby = $_SESSION['user_id'];
+				$check_deviceId = mysql_query("SELECT * FROM tbl_sim_technician_assign WHERE sim_id='$chckvalue'"); 
+                if(mysql_num_rows($check_deviceId) <= 0)
+					{
+						$sql = "insert into tbl_sim_technician_assign set sim_id='$chckvalue', assigned_by = '$assignby', 
+								technician_id='$technician_id', assigned_date=Now()";
+						/*echo $sql;*/
+						$results = mysql_query($sql);	
+						$assign_techician = "update tbl_sim_branch_assign set technician_assign_status= '$status' 
+											 where sim_id='$chckvalue'";
+						$query = mysql_query($assign_techician);
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+						$sql."<br>".$assign_techician);
+						$_SESSION['sess_msg']="<span style='color:#006600;'>Sim Assign Successfully</span>";	
+					}
+					else
+					{
+						$_SESSION['sess_msg']="<span style='color:red;'>Sim already Assign</span>";
+					}
 				}  		
    			  }
 			}  
@@ -55,7 +64,7 @@ if(count($_POST['linkID'])>0)
 			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
 				$sql."<br>".$assign_techician);
 				$query = mysql_query($assign_techician);
-				echo "<script> alert('Sim Removed Successfully!'); </script>";	   		
+				$_SESSION['sess_msg']="<span style='color:red;'>Sim Removed</span>";   		
    			   }
 			 }  
   		$id="";
@@ -73,7 +82,7 @@ if(count($_POST['linkID'])>0)
 <link rel="stylesheet" href="css/custom.css">
 <script  src="js/ajax.js"></script>
 <!--<script type="text/javascript" src="js/assign_sim_to_technician.js"></script>-->
-<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
@@ -175,8 +184,19 @@ $(document).ready(function(){
                 </select>
         </div>
   		<input type="button" name="assign_sim" id="assign_sim" value="Assign Sim" class="btn btn-primary btn-sm"/>
-        <input type="button" name="view_assign" id="view_assign" value="view Assign" class="btn btn-primary btn-sm"  />
+        <input type="button" name="view_assign" id="view_assign" value="View Assign" class="btn btn-primary btn-sm"  />
       </div> 
+	 <div class="col-md-12"> 
+     <!--<div id="messages" class="hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>--->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+      <!-- </div>--->
+	  </div>
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
       </div>

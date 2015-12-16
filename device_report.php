@@ -61,10 +61,7 @@ $(document).ready(function(){
 		$('.loader').show();
 		$.post("ajaxrequest/device_report_details.php?token=<?php echo $token;?>",
 				{
-					assignedStatus : $('#assignedStatus').val(),
-					branch	:	$('#branch').val(),
-					finalStatus	:	$('#finalStatus').val(),
-					executive	:	$('#executive').val()
+					search_box : $('#search_box').val()
 				},
 					function(data){
 						/*alert(data);*/
@@ -91,64 +88,11 @@ $(document).ready(function(){
     <div class="col-md-12">
     <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
       <div class="col-md-12">
-      	<table>
-        <tr>
-        <td width="116"><strong>Assigned Status</strong></td>
-        <td width="144">
-        <select name="assignedStatus" id="assignedStatus" class="form-control drop_down">
-        <option value="">All</option>
-        <option value="1">Assign</option>
-        <option value="0">Instock</option>
-        </select>
-        </td>
-        <td width="68"><strong>Branch</strong></td>
-        <td width="166">
-        <select name="branch" id="branch" class="form-control drop_down">
-            <option label="" value="" selected="selected">Select Branch</option>
-            
-              <?php 
-			  		$branch_sql= "select * from tblbranch ";
-					$Country = mysql_query($branch_sql);					
-					while($resultCountry=mysql_fetch_assoc($Country)){
-			  ?>
-            <option value="0">All Branch</option>
-            <option value="<?php echo $resultCountry['id']; ?>" >
-			<?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?>
-            </option>
-            <?php } ?>
-        </select>
-        </td>
-        <td width="417"></td>
-        </tr>
-        <tr>
-        <td><strong>Final Status</strong></td>
-        <td>
-        <select name="finalStatus" id="finalStatus" class="form-control drop_down">
-        	<option value="0">All</option>
-            <option value="0">Instock</option>
-            <option value="1">Installed</option>
-        </select>
-        </td>
-        <td><strong>Executive</strong></td>
-        <td>
-         <select name="executive" id="executive" class="form-control drop_down">
-            <option label="" value="" selected="selected">Select Executive</option>
-            
-              <?php 
-			  		$sqlUsers = "select * from tbluser";
-					$result = mysql_query($sqlUsers);					
-					while($resultArr = mysql_fetch_assoc($result)){
-			  ?>
-            <option value="0">All Executive</option>
-            <option value="<?php echo $resultArr['id']; ?>" >
-			<?php echo $resultArr['First_Name']." ".$resultArr['Last_Name'];  ?>
-            </option>
-            <?php } ?>
-        </select>
-        </td>
-        <td><input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" /></td>
-        </tr>
-        </table>
+      	<div class="form-group">
+    	<input type="text" name="search_box" id="search_box" class="form-control text_box" Placeholder="Ex. Device Id or IMEI No."/>  		</div>
+        <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" />
+        <input type="button" name="view" id="view" value="Summary" class="btn btn-primary btn-sm" onClick="window.location.replace('device_summary.php?token=<?php echo $token;?>')" />
+        <input type="button" name="advanceFilter" id="advanceFilter" value="Advance Filter" class="btn btn-primary btn-sm" onClick="window.location.replace('device_advance_filter.php?token=<?php echo $token;?>')" />
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
 

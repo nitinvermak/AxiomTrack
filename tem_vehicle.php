@@ -133,7 +133,7 @@ $(document).ready(function(){
                     	 <option value="">Select Ticket Id</option>
 						 <?php 
 						 		$userId = $_SESSION['user_id'];
-								if($userId == 1)
+								if($userId == 1 || 12)
 								{
 									$Country=mysql_query("select A.ticket_id from tblticket as A
 														 INNER JOIN tbl_ticket_assign_technician as B 
@@ -185,7 +185,7 @@ $(document).ready(function(){
                  <option value="">Select Techician</option>
                  <?php 
 				 	$userId = $_SESSION['user_id'];
-					if($userId == 1)
+					if($userId == 1 || 12)
 					{
 				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8)");	
 					}

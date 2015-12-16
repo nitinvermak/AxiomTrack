@@ -1,12 +1,10 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
@@ -23,14 +21,23 @@ if(count($_POST['linkID'])>0)
 	   	  		$branch_id=$_POST['branch'];
 		  		$status_id="1";
 		  		$createdby=$_SESSION['user_id'];
-				$sql = "update tblsim set branch_assign_status='$status_id' where id='$chckvalue'";
-				/*echo $sql;*/
-				$results = mysql_query($sql); 	
-				$assign = "insert into tbl_sim_branch_assign set sim_id='$chckvalue', 
-						   branch_id='$branch_id', assigned_date=Now()";
-				// Call User Activity Log function
-			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql."<br>".$assign);
-				$query = mysql_query($assign);
+				$check_deviceId = mysql_query("SELECT * FROM tbl_sim_branch_assign WHERE sim_id='$chckvalue'"); 
+                if(mysql_num_rows($check_deviceId) <= 0)
+				{
+					$sql = "update tblsim set branch_assign_status='$status_id' where id='$chckvalue'";
+					/*echo $sql;*/
+					$results = mysql_query($sql); 	
+					$assign = "insert into tbl_sim_branch_assign set sim_id='$chckvalue', assign_by = '$createdby',
+							   branch_id='$branch_id', assigned_date=Now()";
+					// Call User Activity Log function
+					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql."<br>".$assign);
+					$query = mysql_query($assign);
+					$_SESSION['sess_msg']="<span style='color:#006600;'>Device Branch Assign Successfully</span>";
+				}
+				else
+				{
+					$_SESSION['sess_msg']="<span style='color:red;'>Device already Assign</span>";
+				}
 			}
 		  } 
 		  //Remove to Branch
@@ -49,6 +56,7 @@ if(count($_POST['linkID'])>0)
 				// Call User Activity Log function
 			    UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql."<br>".$assign);
 				$query = mysql_query($assign);
+				$_SESSION['sess_msg']="<span style='color:red;'>Sim Removed</span>";
 			}
 		  }   
   		$id="";
@@ -64,7 +72,7 @@ if(count($_POST['linkID'])>0)
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/assign_sim_to_branch.js"></script>
@@ -109,7 +117,7 @@ $(document).on("click","#assignSim", function(){
   		</div>
         <div class="form-group">
             <label for="exampleInputEmail2">Branch</label>
-            	<select name="branch" id="branch" class="form-control drop_down">
+            <select name="branch" id="branch" class="form-control drop_down">
             <option label="" value="" selected="selected">Select Branch</option>
             
               <?php 
@@ -135,6 +143,17 @@ $(document).on("click","#assignSim", function(){
   		<input type="button" name="assign" value="Assign Sim" id="submit" class="btn btn-primary btn-sm" onClick="showUnassignedStock()" />
         <input type="button" name="view" id="view" value="View Assigned Sim" class="btn btn-primary btn-sm" onClick="showAssignedStock()"/>
       </div> 
+	  <div class="col-md-12"> 
+       <!--<div id="messages" class="hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>--->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+      <!-- </div>--->
+	  </div>
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
       </div>

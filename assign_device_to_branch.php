@@ -33,7 +33,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 					 $sql. "<br>" .$assign);
 				     $query = mysql_query($assign);
 				     /* echo $query;*/
-	  			     $_SESSION['sess_msg']="Device Remove Successfully";
+	  			     $_SESSION['sess_msg']="<span style='color:#006600;'>Device Remove Successfully</span>";
    			      }
 			   }  
   		$id="";
@@ -52,9 +52,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
       		  		$status_id="1";
       				/*$device_model = $_POST['devic_model_id'];*/
       		  		$createdby=$_SESSION['user_id']; 
-      	          	$check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'") 
-                  	or die(mysql_error());
-					if(!$row = mysql_fetch_array($check_deviceId) or die(mysql_error()))
+					
+      	          	$check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'"); 
+                    if(mysql_num_rows($check_deviceId) <= 0)
 					{
         				$sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
         				//echo $sql;
@@ -66,7 +66,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 						$sql. "<br>" .$assign);
         				$query = mysql_query($assign);
         				//echo $query; 
-        				$_SESSION['sess_msg']="Device Branch Assign Successfully";
+        				$_SESSION['sess_msg']="<span style='color:#006600;'>Device Branch Assign Successfully</span>";
+					}
+					else
+					{
+						$_SESSION['sess_msg']="<span style='color:red;'>Device already Assign</span>";
 					}
    			  }
 		 }  
@@ -123,6 +127,10 @@ $(document).ready(function(){
 	});
 });
 // end
+/*$(document).on("submit","#fullform", function(e){
+  $('#messages').removeClass('hide').addClass('alert alert-success alert-dismissible').slideDown().show();
+    e.preventDefault();
+})*/
 </script>
 </head>
 <body>
@@ -138,7 +146,7 @@ $(document).ready(function(){
       <hr>
     </div>
     <div class="col-md-12">
-    <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
+    <form name='fullform' id="fullform" class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
       <div class="col-md-12">
       	<div class="form-group">
     		<label for="exampleInputName2">Device Name</label>
@@ -157,14 +165,14 @@ $(document).ready(function(){
             <label for="exampleInputEmail2">Branch</label>
            	<select name="branch" id="branch" class="form-control drop_down">
             <option label="" value="" selected="selected">Select Branch</option>
-            
+            <option value="0">All Branch</option>
               <?php 
 			  		$branch_sql= "select * from tblbranch ";
 					
 					$Country = mysql_query($branch_sql);								  
 					while($resultCountry=mysql_fetch_assoc($Country)){
 			  ?>
-              <option value="0">All Branch</option>
+              
             <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
             <?php } ?>
             </select>
@@ -174,15 +182,15 @@ $(document).ready(function(){
       </div> 
 	  <!-- Show Assign Success message -->
 	  <div class="col-md-12"> 
-        <!--  <div class="alert alert-success alert-dismissible" role="alert">
+       <!--<div id="messages" class="hide" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-            </button>-->
+            </button>--->
              <?php if($_SESSION['sess_msg']!='')
                 {
                     echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
                 } 
              ?>
-       <!--   </div>-->
+      <!-- </div>--->
 	  </div>
 	  <!----- End --->
       <div id="divassign" class="col-md-12 table-responsive assign_grid">

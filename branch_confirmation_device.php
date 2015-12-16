@@ -21,16 +21,17 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			  foreach($_POST['linkID'] as $chckvalue)
               {
 		        /*  $device_id=$_POST['linkID'][$dsl];*/
-	   	  		$branch_id=$_POST['branch'];
-		  		$confirmation_status="1";
-		  		$createdby=$_SESSION['user_id'];
-	            $sql = "update tbl_device_assign_branch set branch_confirmation_status='$confirmation_status' 
-						where branch_id='$branch_id' and device_id='$chckvalue'";
+	   	  		$branch_id = $_POST['branch'];
+		  		$confirmation_status = "1";
+		  		$confirmBy = $_SESSION['user_id'];
+	            $sql = "update tbl_device_assign_branch set branch_confirmation_status='$confirmation_status', 
+						confirmBy = '$confirmBy' where device_id='$chckvalue'";
+				$results = mysql_query($sql);
+		  		$_SESSION['sess_msg']="<span style='color:#006600;'>Branch Confirmation Successfully</span>";
 				// Call User Activity Log function
 			  	UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
 				$sql);
-				$results = mysql_query($sql);
-		  		$_SESSION['sess_msg']="State deleted successfully";
+				
    			   }
 			 }  
   		$id="";
@@ -108,6 +109,17 @@ $(document).ready(function(){
             </select>
         </div>
   		</div> 
+	   <div class="col-md-12"> 
+       <!--<div id="messages" class="hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>--->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+      <!-- </div>--->
+	  </div>
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->
       </div>
