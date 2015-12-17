@@ -11,7 +11,8 @@ if ($branch == 0)
 else
 	{
 		$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
-WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0' and B.branch_id='$branch'";
+					WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0' 
+					and B.branch_id='$branch'";
 	}
 	
  
@@ -33,7 +34,8 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Created</small></th>
                   <th><small>Appointment Date Time</small></th>  
                   <th><small>Assign Date</small></th>            
-                  <th><small>Actions</small>
+				  <th><small>Assign By</small></th>  
+                  <th><small>Actions</small><br>
                   <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>&nbsp;&nbsp;<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>             </th>  
                   </tr>    
 	
@@ -65,6 +67,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
                  <td><small><?php echo stripcslashes($row['assign_date']);?></small></td>
+				 <td><small><?php echo gettelecallername(stripcslashes($row['assign_by']));?></small></td>
                  <td><a href="#" onclick="if(confirm('Do you really want to delete this record?')){ window.location.href='transusers_del.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' }" ><img src="images/drop.png" title="Delete" border="0" /></a>     <a href="plan_category.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> &nbsp;&nbsp;<input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> 
                  </td>
                  </tr>

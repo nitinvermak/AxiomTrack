@@ -5,7 +5,7 @@ $date=$_REQUEST['date'];
 error_reporting(0);
 if ($date == 0)
 	{
-	$linkSQL = "select * from tblticket where branch_assign_status = '1' order by ticket_id";
+		$linkSQL = "select * from tblticket where branch_assign_status = '1' order by ticket_id";
 	}
 		else
 			{
@@ -24,9 +24,10 @@ if(mysql_num_rows($stockArr)>0)
                 <th><small>Organization Name</small></th>
                 <th><small>Product</small></th>
                 <th><small>Request Type</small></th> 
-                <th><small>Created</small></th>
+                <th><small>Created Date</small></th>
+				<th><small>Created By</small></th>
                 <th><small>Appointment Date Time</small></th>           
-                <th><small>Actions</small>
+                <th><small>Actions</small><br>
                 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All 
                 </a>&nbsp;&nbsp;
                 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All 				</a>                              
@@ -58,6 +59,7 @@ if(mysql_num_rows($stockArr)>0)
 				<td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
                 <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 				<td><small><?php echo stripslashes($row["createddate"]);?></small></td>
+				<td><small><?php echo gettelecallername(stripslashes($row["CreateBy"]));?></small></td>
                 <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </td>
                 </tr>

@@ -22,13 +22,13 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 			  foreach($_POST['linkID'] as $chckvalue)
               {
 		        $status_id="2";
-		  		$createdby=$_SESSION['user_id'];
-	            $sql="Update tblassign set status_id='$status_id' where id='{$chckvalue}'";	
+		  		$createdby = $_SESSION['user_id'];
+	            $sql="Update tblassign set status_id='$status_id', confirmBy = '$createdby' where id='{$chckvalue}'";	
 				// Call User Activity Log function
 				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 				// End Activity Log Function		
 				$results = mysql_query($sql);
-		  		$_SESSION['sess_msg']="State deleted successfully";
+		  		$_SESSION['sess_msg']="<span style='color:#006600;'> Lead Confirmation Successfully </span>";
    			   }
 			 }  
   		$id="";
@@ -44,10 +44,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/assigncontact_confirmation.js"></script>
 <script type="text/javascript">
 function ShowbyCategory()
 	{   
@@ -127,7 +126,18 @@ function ShowbyCategory()
    		$oRS = mysql_query($linkSQL); 
   		?>
 		<input type="hidden" name="token" value="<?php echo $token; ?>" />
-    	<input type='hidden' name='pagename' value='assigncontacts'>            	
+    	<input type='hidden' name='pagename' value='assigncontacts'> 
+		 <div class="col-md-12"> 
+		   <!--<div id="messages" class="hide" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>--->
+				 <?php if($_SESSION['sess_msg']!='')
+					{
+						echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+					} 
+				 ?>
+		  <!-- </div>--->
+		  </div>
         <div id="divassign" class="col-md-12 table-responsive assign_grid">
        		<!-- Ajaxrequest-->
       	</div>

@@ -18,43 +18,44 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	$userid=$_SESSION['user_id'];
 	if(isset($_REQUEST['empId']))
 		{
-			$emp_id=htmlspecialchars(mysql_real_escape_string($_REQUEST['empId']));
-			$first_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['first_name']));
-			$last_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['last_name']));
-			$emp_dob=htmlspecialchars(mysql_real_escape_string($_REQUEST['dob']));
-			$contact=htmlspecialchars(mysql_real_escape_string($_REQUEST['contact_no']));
-			$email_id=htmlspecialchars(mysql_real_escape_string($_REQUEST['email']));
-			$date_of_j=htmlspecialchars(mysql_real_escape_string($_REQUEST['doj']));
-			$address=htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
-			$country=htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
-			$state=htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
-			$district=htmlspecialchars(mysql_real_escape_string($_REQUEST['district']));
-			$city=htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
-			$area=htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
-			$pincode=htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
-			$user_type=htmlspecialchars(mysql_real_escape_string($_REQUEST['user_type']));
-			$branch=htmlspecialchars(mysql_real_escape_string($_REQUEST['branch_id']));
-			$user_name=htmlspecialchars(mysql_real_escape_string($_REQUEST['user_name']));
-			$password=htmlspecialchars(mysql_real_escape_string($_REQUEST['Password']));
+			$emp_id = htmlspecialchars(mysql_real_escape_string($_REQUEST['empId']));
+			$first_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['first_name']));
+			$last_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['last_name']));
+			$emp_dob = htmlspecialchars(mysql_real_escape_string($_REQUEST['dob']));
+			$contact = htmlspecialchars(mysql_real_escape_string($_REQUEST['contact_no']));
+			$email_id = htmlspecialchars(mysql_real_escape_string($_REQUEST['email']));
+			$date_of_j = htmlspecialchars(mysql_real_escape_string($_REQUEST['doj']));
+			$address = htmlspecialchars(mysql_real_escape_string($_REQUEST['address']));
+			$country = htmlspecialchars(mysql_real_escape_string($_REQUEST['country']));
+			$state = htmlspecialchars(mysql_real_escape_string($_REQUEST['state']));
+			$district = htmlspecialchars(mysql_real_escape_string($_REQUEST['district']));
+			$city = htmlspecialchars(mysql_real_escape_string($_REQUEST['city']));
+			$area = htmlspecialchars(mysql_real_escape_string($_REQUEST['area']));
+			$pincode = htmlspecialchars(mysql_real_escape_string($_REQUEST['pin_code']));
+			$user_type = htmlspecialchars(mysql_real_escape_string($_REQUEST['user_type']));
+			$branch = htmlspecialchars(mysql_real_escape_string($_REQUEST['branch_id']));
+			$user_name = htmlspecialchars(mysql_real_escape_string($_REQUEST['user_name']));
+			$password = htmlspecialchars(mysql_real_escape_string($_REQUEST['Password']));
+			$createdby = $_SESSION['user_id'];
 		}
 	if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
 		{
 			if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 			{
-				$update_record ="Update tbluser set emp_id='$emp_id',First_Name='$first_name',
-								 Last_Name='$last_name', DOB = '$emp_dob', 																																																													 								 Contact_No='$contact',emailid='$email_id', 
-								 DOJ = '$date_of_j', Address='$address',
-								 countryId='$country',stateId='$state', districtId='$district', 
-								 cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', 			        						 branch_id='$branch', User_ID='$user_name', Password='$password',
-								 User_Status='A',Created_date=CURDATE(),CreatedBY='$userid' 
-								 where id=".$_REQUEST['id'];
+				$update_record ="Update tbluser set emp_id = '$emp_id', First_Name = '$first_name', 
+						  Last_Name = '$last_name', DOB = '$emp_dob', Contact_No = '$contact', 
+						  emailid = '$email_id', DOJ = '$date_of_j', Address = '$address', 
+						  areaId = '$area', cityId = '$city', stateId = '$state', districtId = '$district', countryId = '$country', Pin_code = '$pincode', User_ID = '$user_name', 
+						  Password = '$password', User_Status = 'A', Modified_date = Now(),  
+						  ModifiedBY = '$createdby', User_Category = '$user_type', branch_id = '$branch' 
+						  where id=".$_REQUEST['id'];
 				/*echo $update_record;*/
 				// Call User Activity Log function
-				/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_record);*/
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $update_record);
 				// End Activity Log Function
 				$sqlquery=mysql_query($update_record);		
-				echo "<script> alert('User Updated Successfully!'); </script>";
-				/*header("location: manage_users.php?token=".$token);*/
+				$_SESSION['sess_msg'] = "<span style='color:#006600;'>User Updated Successfully!";
+				header("location: manage_users.php?token=".$token);
 			}
 			else
 			{
@@ -62,35 +63,36 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				//$result=mysql_fetch_assoc($queryArr);
 				if(mysql_num_rows($queryArr)<=0)
 				{
-					$sql="insert into tbluser set emp_id = '$emp_id', First_Name ='$first_name',
-								 Last_Name = '$last_name', DOB = '$emp_dob', 																																																													 								 Contact_No='$contact', emailid='$email_id', 
-								 DOJ = '$date_of_j', Address='$address',
-								 countryId='$country',stateId='$state', districtId='$district', 
-								 cityId='$city', areaId='$area',Pin_code='$pincode', User_Category='$user_type', 			        						 branch_id='$branch', User_ID='$user_name', Password='$password',
-								 User_Status='A',Created_date=CURDATE(),CreatedBY='$userid'";
+					$sql="INSERT INTO  tbluser set emp_id = '$emp_id', First_Name = '$first_name', 
+						  Last_Name = '$last_name', DOB = '$emp_dob', Contact_No = '$contact', 
+						  emailid = '$email_id', DOJ = '$date_of_j', Address = '$address', 
+						  areaId = '$area', cityId = '$city', stateId = '$state', districtId = '$district', countryId = '$country', Pin_code = '$pincode', User_ID = '$user_name', 
+						  Password = '$password', User_Status = 'A', Created_date = Now(),  
+						  CreatedBY = '$createdby', User_Category = '$user_type', branch_id = '$branch'";
+					
 					// Call User Activity Log function
-					/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);*/
+					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 					// End Activity Log Function
-					echo $sql;
+					/*echo $sql;*/
 					$query=mysql_query($sql);
-					/*$usedId =  mysql_insert_id();*/
-					/*if ($user_type == 1){
-						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='0' ";	*/
+					$usedId =  mysql_insert_id();
+					if ($user_type == 1){
+						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='0' ";	
 						// Call User Activity Log function
-						/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);*/
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);
 						// End Activity Log Function							
-					/*}
+					}
 					else {
-						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='$branch' ";*/
+						$branchAuth_sql = "insert into userbranchmapping set userId ='$usedId', branchId='$branch'";
 						// Call User Activity Log function
 						/*UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $branchAuth_sql);*/
 						// End Activity Log Function							
-					/*}	
-					$addUserMapping = mysql_query($branchAuth_sql);*/
+					}	
+					$addUserMapping = mysql_query($branchAuth_sql);
 						
-					/*echo "<script> alert('User Created Successfully!'); </script>";
+					$_SESSION['sess_msg'] = "<span style='color:#006600;'>User Created Successfully</span>";
 					header("location: manage_users.php?token=".$token);
-					exit();*/
+					exit();
 				}
 				else
 				{
@@ -262,7 +264,12 @@ function CallPincode()
           <td>
           	 <div id="Divstate">
                  	<select name="state" id="state" onChange="return CallDistrict(this.value)" class="form-control drop_down">
-                      <option value="">Select State</option>
+						<?php $Country=mysql_query("select * from tblstate");						  
+							  while($resultCountry=mysql_fetch_assoc($Country)){
+						?>
+						<option value="<?php echo $resultCountry['State_id']; ?>" <?php if(isset($result['stateId']) && $resultCountry['State_id']==$result['stateId']){ ?>selected<?php } ?>>
+						<?php echo stripslashes(ucfirst($resultCountry['State_name'])); ?></option>
+						<?php } ?>
                    </select>
               </div>          </td>
         </tr>
@@ -274,6 +281,12 @@ function CallPincode()
          <div  id="divdistrict">
          	<select name="district" id="district"  class="form-control drop_down" onChange="return CallCity(this.value)">
             	<option value="">Select District</option>
+				<?php $Country=mysql_query("select * from tbl_district");						  
+					  while($resultCountry=mysql_fetch_assoc($Country)){
+				?>
+				<option value="<?php echo $resultCountry['District_id']; ?>" <?php if(isset($result['districtId']) && $resultCountry['District_id']==$result['districtId']){ ?>selected<?php } ?>>
+				<?php echo stripslashes(ucfirst($resultCountry['District_name'])); ?></option>
+				<?php } ?>
             </select>
          </div>        </td>
         </tr>
@@ -283,6 +296,12 @@ function CallPincode()
         <div id="divcity">
         	<select name="city" id="city" onChange="return CallArea(this.value)" class="form-control drop_down" >
             	<option value="">Select City</option>
+				<?php $Country=mysql_query("select * from tbl_city_new");						  
+					  while($resultCountry=mysql_fetch_assoc($Country)){
+				?>
+				<option value="<?php echo $resultCountry['City_id']; ?>" <?php if(isset($result['cityId']) && $resultCountry['City_id']==$result['cityId']){ ?>selected<?php } ?>>
+				<?php echo stripslashes(ucfirst($resultCountry['City_Name'])); ?></option>
+				<?php } ?>
             </select>
         </div>        </td>
         </tr>
@@ -297,6 +316,12 @@ function CallPincode()
            <div  id="divarea">
              <select name="area" id="area" onChange="return CallPincode(this.value)" class="form-control drop_down">
                <option value="">Select Area</option>
+				<?php $Country=mysql_query("select * from tbl_area_new");						  
+					  while($resultCountry=mysql_fetch_assoc($Country)){
+				?>
+				<option value="<?php echo $resultCountry['area_id']; ?>" <?php if(isset($result['areaId']) && $resultCountry['area_id']==$result['areaId']){ ?>selected<?php } ?>>
+				<?php echo stripslashes(ucfirst($resultCountry['Area_name'])); ?></option>
+				<?php } ?>
              </select>
            </div>          </td>
           <td>Pin Code</td>

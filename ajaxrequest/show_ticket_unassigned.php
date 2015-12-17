@@ -28,9 +28,10 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Organization Name</small></th>
                   <th><small>Product</small></th>
                   <th><small>Request Type</small></th> 
-                  <th><small>Created</small></th> 
+                  <th><small>Created Date</small></th> 
+				  <th><small>Created By</small></th> 
                   <th><small>Appointment Date Time</small></th>             
-                  <th><small>Actions
+                  <th><small>Actions<br>
                   <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>&nbsp;&nbsp;<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>  </small>           </th>
                   </tr>    
 	
@@ -60,6 +61,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
+				 <td><small><?php echo gettelecallername(stripslashes($row["CreateBy"]));?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
                  <td><small><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </small></td>
                  </tr>

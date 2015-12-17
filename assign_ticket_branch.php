@@ -18,12 +18,12 @@ if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
              	{
-					$branch_id=$_POST['branch'];
-					$status_id="1";
-					$createdby=$_SESSION['user_id'];
-					$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_branch WHERE ticket_id='$chckvalue'") 
-									  or die(mysql_errno());
-					if(!$row = mysql_fetch_array($check_ticketId) or die(mysql_error()))
+					$branch_id = $_POST['branch'];
+					$status_id = "1";
+					$createdby = $_SESSION['user_id'];
+					$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_branch 
+												   WHERE ticket_id='$chckvalue'");
+					if(mysql_num_rows($check_ticketId) <= 0)
 					{
 						$sql = "update tblticket set branch_assign_status='$status_id' where ticket_id='$chckvalue'";
 						/*echo $sql;*/
@@ -38,10 +38,11 @@ if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
 						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign);
 						// End Activity Log Function
 						$query = mysql_query($assign);
+						$_SESSION['sess_msg'] = "<span style='color:#006600;'>Ticket Branch Assign Successfully</span>";
 					}
 					else
 					{
-						header("location: assign_ticket_branch.php?token=".$token);
+						$_SESSION['sess_msg'] = "<span style='color:red;'>Ticket already Assign</span>";
 					}
    			    }
 			 }  
@@ -69,6 +70,7 @@ if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
 				// End Activity Log Function
 				$query = mysql_query($assign);
 				/* echo $query;*/
+				$_SESSION['sess_msg']="<span style='color:red;'>Ticket Removed</span>";
    			   }
 			 }  
   		$id="";
@@ -90,7 +92,7 @@ if(count($_POST['linkID'])>0 && (isset($_POST['submit'])) )
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <!--<script type="text/javascript" src="js/assign_ticket_branch.js"></script>-->
-<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script>
  $(function() {
     $( "#date" ).datepicker({dateFormat: 'yy-mm-dd'});
@@ -209,7 +211,18 @@ $(document).ready(function(){
    		$oRS = mysql_query($linkSQL); 
   		?>
 		<input type="hidden" name="token" value="<?php echo $token; ?>" />
-    	<input type='hidden' name='pagename' value='assigncontacts'>            	
+    	<input type='hidden' name='pagename' value='assigncontacts'>
+		<div class="col-md-12"> 
+        <!--<div id="messages" class="hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>--->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+       <!-- </div>--->
+	   </div>
         <div id="divassign" class="col-md-12 table-responsive assign_grid">
        		<!-- Ajaxrequest-->
       	</div>

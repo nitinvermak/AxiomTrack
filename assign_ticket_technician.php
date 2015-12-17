@@ -23,22 +23,33 @@ if (isset($_SESSION) && $_SESSION['login']=='')
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-				$technician_id=$_POST['technician_id'];
-		  		$status_id="1";
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', 
-						technician_id = '$technician_id', assigned_date	=Now()";
-				// Call User Activity Log function
-				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
-				// End Activity Log Function
-				$results = mysql_query($sql);
-	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status = '$status_id' 
-									  where ticket_id='$chckvalue'";
-				// Call User Activity Log function
-				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign_technician);
-				// End Activity Log Function
-				/*echo $assign_technician;*/
-				$confirm = mysql_query($assign_technician);
+				$technician_id = $_POST['technician_id'];
+		  		$status_id = "1";
+		  		$createdby = $_SESSION['user_id'];
+				$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_technician 
+												   WHERE ticket_id='$chckvalue'");
+					if(mysql_num_rows($check_ticketId) <= 0)
+					{
+						$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', 
+								technician_id = '$technician_id', assigned_by = '$createdby', 
+								assigned_date	=Now()";
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+						// End Activity Log Function
+						$results = mysql_query($sql);
+						$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status = '$status_id' 
+											  where ticket_id='$chckvalue'";
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign_technician);
+						// End Activity Log Function
+						/*echo $assign_technician;*/
+						$confirm = mysql_query($assign_technician);
+						$_SESSION['sess_msg'] = "<span style='color:#006600;'>Ticket Assign Successfully</span>";
+					}
+					else
+					{
+						$_SESSION['sess_msg'] = "<span style='color:red;'>Ticket already Assign</span>";
+					}
    			   }
 			 }  
   		$id="";
@@ -64,6 +75,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 						   where ticket_id='$chckvalue'";
 				 				
 				$query = mysql_query($assign);
+				$_SESSION['sess_msg']="<span style='color:red;'>Ticket Removed</span>";
    			   }
 			 }  
   		$id="";
@@ -79,7 +91,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/ticket_assign_technician.js"></script>
@@ -203,7 +215,18 @@ $(document).ready(function(){
 		 $linkSQL="";
   		 ?>
 		 <input type="hidden" name="token" value="<?php echo $token; ?>" />
-    	 <input type='hidden' name='pagename' value='assigncontacts'>               	
+    	 <input type='hidden' name='pagename' value='assigncontacts'> 
+		<div class="col-md-12"> 
+		   <!--<div id="messages" class="hide" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>--->
+				 <?php if($_SESSION['sess_msg']!='')
+					{
+						echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+					} 
+				 ?>
+		  <!-- </div>--->
+		  </div>
         <div id="divassign" class="col-md-12 table-responsive assign_grid">
        		<!-- Ajaxrequest-->
       	</div>

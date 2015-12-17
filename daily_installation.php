@@ -116,14 +116,28 @@ $(document).ready(function(){
 // End
 // send ajax when select branch
 $(document).ready(function(){
-	$("#branch").change(function(){
+	$("#branchNew").change(function(){
 		$.post("ajaxrequest/executive.php?token=<?php echo $token;?>",
 				{
-					branch : $('#branch').val()
+					branch : $('#branchNew').val()
 				},
 					function(data){
 						/*alert(data);*/
-						$("#showTechnician").html(data);
+						$("#showTechnicianNew").html(data);
+				});
+	});
+});
+// End
+// send ajax when select branch
+$(document).ready(function(){
+	$("#branchRepair").change(function(){
+		$.post("ajaxrequest/executive.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branchRepair').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#showTechnicianRepair").html(data);
 				});
 	});
 });
@@ -251,7 +265,7 @@ $(document).ready(function () {
       <td width="173"><input type="text" name="depositDateFrom" id="depositDateFrom" class="form-control text_box date"></td>
       <td width="114"><strong>Branch</strong></td>
       <td width="230">
-      	<select name="branch" id="branch" class="form-control drop_down">
+      	<select name="branch" id="branchNew" class="form-control drop_down">
         	<option label="" value="" selected="selected">All Branch</option>
             <?php 
             $branch_sql= "select * from tblbranch ";
@@ -270,7 +284,7 @@ $(document).ready(function () {
       <td><input type="text" name="depositDateTo" id="depositDateTo" class="form-control text_box date"></td>
       <td><strong>Executive</strong></td>
       <td>
-      		<span id="showTechnician">
+      		<span id="showTechnicianNew">
             <select name="executive" id="executive" class="form-control drop_down-sm">
             <option value="">Select Executive</option>                         
             </select>
@@ -304,7 +318,7 @@ $(document).ready(function () {
       <td width="173"><input type="text" name="depositDateFrom" id="depositDateFrom" class="form-control text_box date"></td>
       <td width="114"><strong>Branch</strong></td>
       <td width="230">
-      	<select name="branch" id="branch" class="form-control drop_down">
+      	<select name="branch" id="branchRepair" class="form-control drop_down">
         	<option label="" value="" selected="selected">All Branch</option>
             <?php 
             $branch_sql= "select * from tblbranch ";
@@ -323,7 +337,7 @@ $(document).ready(function () {
       <td><input type="text" name="depositDateTo" id="depositDateTo" class="form-control text_box date"></td>
       <td><strong>Executive</strong></td>
       <td>
-      		<span id="showTechnician">
+      		<span id="showTechnicianRepair">
             <select name="executive" id="executive" class="form-control drop_down-sm">
             <option value="">Select Executive</option>                         
             </select>

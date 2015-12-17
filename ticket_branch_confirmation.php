@@ -1,6 +1,4 @@
 <?php
-//echo("hi");
-//die;
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 
@@ -33,6 +31,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 					// End Activity Log Function
       				$results = mysql_query($sql);
+					$_SESSION['sess_msg']="<span style='color:#006600;'>Ticket Confirmation Successfully</span>";
      		  }
 		    }  
   		$id="";
@@ -49,7 +48,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation.js"></script>
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -123,7 +122,18 @@ $(document).ready(function(){
  		//echo $pagerstring;		
   		?>
 		<input type="hidden" name="token" value="<?php echo $token; ?>" />
-    	<input type='hidden' name='pagename' value='assigncontacts'>          	
+    	<input type='hidden' name='pagename' value='assigncontacts'> 
+		<div class="col-md-12"> 
+        <!--<div id="messages" class="hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>--->
+             <?php if($_SESSION['sess_msg']!='')
+                {
+                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+                } 
+             ?>
+        <!-- </div>--->
+	    </div>
         <div id="divassign" class="col-md-12 table-responsive assign_grid">
        		<!-- Ajaxrequest-->
       	</div>

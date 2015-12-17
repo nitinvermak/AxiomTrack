@@ -29,6 +29,7 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Product</small></th>
                   <th><small>Request Type</small></th>
                   <th><small>Created</small></th>
+				  <th><small>Assign By</small></th>
                   <th><small>Appointment Date Time</small></th>              
                   <th><small>Actions                  
                   <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>&nbsp;&nbsp;<a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a></small>            </div>                  
@@ -61,6 +62,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
+				 <td><small><?php echo gettelecallername(stripslashes($row["assign_by"]));?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
                  <td><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </td>
                  </tr>

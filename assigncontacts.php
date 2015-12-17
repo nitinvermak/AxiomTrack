@@ -19,19 +19,26 @@ if(count($_POST['linkID'])>0)
   $dsl="";
   for($dsl=0;$dsl<count($_POST['linkID']);$dsl++)
   {
-  		$callingdata_id=$_POST['linkID'][$dsl];
-		$callingcategory_id=$_POST['callingcat'];
-		$status_id="1";
-		$branch_id=$_POST['branch'];
-		$createdby=$_SESSION['user_id'];
-		$sql = "insert into tblassign set callingdata_id='$callingdata_id',
-			    callingcategory_id='$callingcategory_id',status_id='$status_id',
-				branch_id='$branch_id',createdby='$createdby',created=CURDATE()";
-	    $results = mysql_query($sql); 
-		// Call User Activity Log function
-		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
-		// End Activity Log Function
-		$_SESSION['sess_msg']="State deleted successfully";
+  		$callingdata_id = $_POST['linkID'][$dsl];
+		$callingcategory_id = $_POST['callingcat'];
+		$status_id = "1";
+		$branch_id = $_POST['branch'];
+		$createdby = $_SESSION['user_id'];
+		$checkDuplicate = mysql_query("SELECT * FROM tblassign WHERE callingdata_id='$chckvalue'"); 
+                if(mysql_num_rows($checkDuplicate) <= 0)
+				{
+					$sql = "insert into tblassign set callingdata_id='$callingdata_id', assign_by = '$createdby',
+							callingcategory_id='$callingcategory_id', status_id='$status_id',
+							branch_id='$branch_id',createdby='$createdby',created=CURDATE()";
+					$results = mysql_query($sql); 
+					// Call User Activity Log function
+					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+					// End Activity Log Function
+					$_SESSION['sess_msg'] = "<span style='color:#006600;'>Lead Assign Successfully</span>";
+				}
+				else{
+					$_SESSION['sess_msg']="<span style='color:red;'>Lead already Assign</span>";
+				}
   }
 		$id="";  
   }
@@ -47,7 +54,8 @@ if(isset($_POST['remove']))
 				// Call User Activity Log function
 				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 				// End Activity Log Function
-				$results = mysql_query($sql) or die(mysql_error()); 	
+				$results = mysql_query($sql) or die(mysql_error()); 
+				$_SESSION['sess_msg']="<span style='color:red;'>Lead Remove Successfully</span>";
    			   }
 		    }  
   		$id="";
@@ -106,7 +114,7 @@ $(document).ready(function(){
 //end
 //call ajax when click View Assigned Contacts
 $(document).ready(function(){
-	$('#view').change(function(){
+	$('#view').click(function(){
 		$('.loader').show();
 		$.post("ajaxrequest/show_assigned_contact.php?token=<?php echo $token;?>",
 				{
@@ -221,6 +229,17 @@ $(document).ready(function(){
            </div>
         
           </div> 
+		   <div class="col-md-12"> 
+		   <!--<div id="messages" class="hide" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>--->
+				 <?php if($_SESSION['sess_msg']!='')
+					{
+						echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+					} 
+				 ?>
+		  <!-- </div>--->
+		  </div>
           <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <table class="table table-bordered table-hover">
           <?php

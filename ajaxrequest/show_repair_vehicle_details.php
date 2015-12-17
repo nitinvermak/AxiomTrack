@@ -24,7 +24,7 @@ $ticket = mysql_real_escape_string($_POST['ticket']);
     <div class="col-sm-10">
     	<select name="vehcileNo" id="vehicleNo" class="form-control drop_down" onChange="getValue();">
           	<option value="">Select Vehicle No.</option>
-             <?php $Country=mysql_query("SELECT B.id as vehicleId, b.vehicle_no as vehicleNo 
+             <?php $Country=mysql_query("SELECT B.id as vehicleId, B.vehicle_no as vehicleNo 
 			 							 FROM tblticket as A 
 										 INNER JOIN tbl_gps_vehicle_master as B 
 										 ON A.vehicleId = B.id 
