@@ -42,22 +42,22 @@ if(isset($_POST['singleSave']))
 if(isset($_POST['importFile']))
   {
   	 $provider2 = mysql_real_escape_string($_POST['provider2']);
-	 $date2 = mysql_real_escape_string($_POST['date2']);
-	 $plan2 = mysql_real_escape_string($_POST['plan2']);
-	 $state3 = mysql_real_escape_string($_POST['state3']);
+	   $date2 = mysql_real_escape_string($_POST['date2']);
+	   $plan2 = mysql_real_escape_string($_POST['plan2']);
+	   $state3 = mysql_real_escape_string($_POST['state3']);
      $contactfile = $_FILES['contactfile'] ['tmp_name'];
 	/* echo $contactfile;*/
-	 $handle = fopen($contactfile, "r");
+	   $handle = fopen($contactfile, "r");
 	 while(($fileOp = fgetcsv($handle, 1000, ",")) !== false)
 	 {
-	 	$simNo = $fileOp[0];
-		$mobileNo = $fileOp[1];
-		$sql = "INSERT INTO tblsim set company_id = '$provider2', plan_categoryid = '$plan2', 
-  			    state_id = '$state3', date_of_purchase = '$date2', sim_no = '$simNo', mobile_no = '$mobileNo'";
-		echo $sql;
+  	 	$simNo = $fileOp[0];
+  		$mobileNo = $fileOp[1];
+  		$sql = "INSERT INTO tblsim set company_id = '$provider2', plan_categoryid = '$plan2', 
+    			    state_id = '$state3', date_of_purchase = '$date2', sim_no = '$simNo', mobile_no = '$mobileNo'";
+  		echo $sql;
   		$resultSql = mysql_query($sql);
-        $_SESSION['sess_msg'] = "Sim added Successfully ";
-        header("location:manage_sim.php?token=".$token);
+      $_SESSION['sess_msg'] = "Sim added Successfully ";
+      header("location:manage_sim.php?token=".$token);
 	 }
   }
 // End 
@@ -191,7 +191,7 @@ if(isset($_POST['importFile']))
     </div> 
     <!--end single sim  form--> 
     
-    <div id="contactUpload"  style="" class="col-md-12"> <!--open of the multiple sim form-->
+    <div id="contactUpload"  style="display:none" class="col-md-12"> <!--open of the multiple sim form-->
     <form name="contact1" method="post" enctype="multipart/form-data" class="form-horizontal" onSubmit="return chkupload(this)">
     	<div class="col-md-5">
          	<div class="form-group">

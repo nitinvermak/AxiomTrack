@@ -13,7 +13,7 @@ $linkSQL = "SELECT * FROM tblticket as A
 			ON A.ticket_id = B.ticket_id
 			INNER JOIN tbl_ticket_assign_technician as C 
 			ON B.ticket_id = C.ticket_id Where A.ticket_status <> 1 ";
-			echo $linkSQL; 
+		//	echo $linkSQL; 
 
 if ( ( $dateform !='' and $dateto !='') or ($branch != 0) or ($users !=0) ){
 	$linkSQL  = $linkSQL." And";	
@@ -25,21 +25,21 @@ if ( $dateform !='' and $dateto !='') {
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." DATE(A.appointment_date) BETWEEN '$dateform' AND '$dateto'" ;
 		$counter+=1;
-		echo $linkSQL;
+		//echo $linkSQL;
 }
 if ( $branch != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." B.branch_id = '$branch'" ;
 	$counter+=1;
-	echo $linkSQL;
+	//echo $linkSQL;
 }
 if ( $users != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." C.technician_id = '$users'" ;
 	$counter+=1;
-	echo $linkSQL;
+	//echo $linkSQL;
 }
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
@@ -98,7 +98,7 @@ if(mysql_num_rows($stockArr)>0)
 
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No records found!</h3>";
 ?> 
 
  	

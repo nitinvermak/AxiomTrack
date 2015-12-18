@@ -92,7 +92,7 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
     <div class="col-md-12">
     
     	<div class="col-md-4 btn_grid">
-       		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('sim.php?token=<?php echo $token ?>')"/>
+       		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('1_old_15-10-2015_sim.php?token=<?php echo $token ?>')"/>
        &nbsp;&nbsp;&nbsp;
         	<input type="submit" name="delete_selected" onClick="return val();" class="btn btn-primary btn-sm" value="Delete Selected">
         </div>
@@ -140,7 +140,7 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
 </div>
 </div>
 <!--end wraper-->
-<!-------Javascript------->
+<!-------Javascript-->
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>

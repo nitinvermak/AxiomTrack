@@ -292,11 +292,7 @@ $(document).ready(function () {
         <td>&nbsp;</td>
       </tr>
      </table>
-      <?php
-		$where='';
-		$linkSQL="";	
-   		$oRS = mysql_query($linkSQL); 
-  		?>
+      
 		<input type="hidden" name="token" value="<?php echo $token; ?>" />
     	<input type='hidden' name='pagename' value='assigncontacts'>            	
         <div id="divassign" class="col-md-12 table-responsive assign_grid">

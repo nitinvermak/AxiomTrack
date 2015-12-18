@@ -17,20 +17,22 @@ if (isset($_SESSION) && $_SESSION['login']=='')
  if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
-		if(isset($_POST['linkID']) && (isset($_POST['submit'])))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
-				$technician_id=$_POST['technician_id'];
-		  		$status_id="1";
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', technician_id ='$technician_id', assigned_date	=Now()";
-				$results = mysql_query($sql);
-	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-				/*echo $assign_technician;*/
-				$confirm = mysql_query($assign_technician);
-   			   }
-			 }  
+		  if(isset($_POST['linkID']) && (isset($_POST['submit'])))
+     	{
+			   foreach($_POST['linkID'] as $chckvalue)
+          {
+  				  $technician_id=$_POST['technician_id'];
+  		  		$status_id="1";
+  		  		$createdby=$_SESSION['user_id'];
+  				  $sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', 
+                    technician_id ='$technician_id', assigned_date	=Now()";
+  				  $results = mysql_query($sql);
+  	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status='$status_id' 
+                                  where ticket_id='$chckvalue'";
+  				  /*echo $assign_technician;*/
+  				  $confirm = mysql_query($assign_technician);
+   			  }
+			}  
   		$id="";
   
   }
@@ -38,23 +40,22 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   if(count($_POST['linkID'])>0 && (isset($_POST['remove'])) )
    {			   
   		$dsl="";
-		if(isset($_POST['linkID']))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
+		  if(isset($_POST['linkID']))
+     	{
+			   foreach($_POST['linkID'] as $chckvalue)
+         {
 	   	  		$technician_id=$_POST['technician_id'];
-		  		$status_id="0";
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "delete from tbl_ticket_assign_technician where ticket_id='$chckvalue'";
-				$results = mysql_query($sql); 	
-				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-				
-				$query = mysql_query($assign);
-   			   }
-			 }  
+		  		  $status_id="0";
+		  		  $createdby=$_SESSION['user_id'];
+				    $sql = "delete from tbl_ticket_assign_technician where ticket_id='$chckvalue'";
+				    $results = mysql_query($sql); 	
+				    $assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' 
+                       where ticket_id='$chckvalue'";
+				    $query = mysql_query($assign);
+   			 }
+			}  
   		$id="";
-  
-  }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -129,9 +130,10 @@ $(document).ready(function(){
 	<table class="form-field" width="100%">
      <tr>
      <td class="col-xs-1"><strong>Executive*</strong></td>
-     <td class="col-xs-2"><select name="users" id="users" class="form-control drop_down-sm" style="max-width:140px;">
+     <td class="col-xs-2">
+     <select name="users" id="users" class="form-control drop_down-sm" style="max-width:140px;">
        <option value="0">All Executive</option>
-       <?php
+          <?php
                 $branch = $_SESSION['branch']; 
                 $Country=mysql_query("select * from tbluser where branch_id = '$branch' ORDER BY First_Name, Last_Name ASC");
                     while($resultCountry=mysql_fetch_assoc($Country)){
@@ -139,7 +141,7 @@ $(document).ready(function(){
        <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
        <?php } ?>
      </select></td>
-     <td class="col-xs-1"><input type="button" name="search" id="search" value="Submit" class="btn btn-primary btn-sm" onClick="return ShowRecords()"/></td>
+     <td class="col-xs-1"><input type="button" name="search" id="search" value="Submit" class="btn btn-primary btn-sm" /></td>
      <td class="col-xs-2">&nbsp;</td>
      <td class="col-xs-1">&nbsp;</td>
      <td>&nbsp;</td>
@@ -188,7 +190,6 @@ $(document).ready(function(){
 <!--end footer-->
 </div>
 <!--end wraper-->
-<!-------Javascript------->
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -158,7 +158,7 @@ $(document).ready(function(){
                   <?php 
                         $branch_sql= "select * from tblbranch ";
                         $authorized_branches = BranchLogin($_SESSION['user_id']);
-                        //echo $authorized_branches;
+                        echo $authorized_branches;
                         if ( $authorized_branches != '0'){
                              
                             $branch_sql = $branch_sql.' where id in '.$authorized_branches;		

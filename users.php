@@ -327,7 +327,7 @@ function CallPincode()
           <td>Pin Code</td>
           <td>
           <div  id="divpincode">
-              <input name="pin_code" id="pin_code" class="form-control text_box"  value="<?php if(isset($result['id'])) echo $result['Pin_code']; ?>" type="text" />
+              <input name="pin_code" id="pin_code" class="form-control text_box"  value="<?php if(isset($result['id'])) echo getpincode($result['Pin_code']); ?>" type="text" />
           </div>          </td>
         </tr>
         <tr>
@@ -386,7 +386,7 @@ function CallPincode()
 <!--end footer-->
 </div>
 <!--end wraper-->
-<!-------Javascript------->
+<!-------Javascript-->
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

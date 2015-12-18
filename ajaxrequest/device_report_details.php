@@ -2,9 +2,8 @@
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
 $search_box = mysql_real_escape_string($_POST['search_box']);
-/*echo $search_box; */
-$branchName = $_SESSION['branch'];
 error_reporting(0);
+
 	$linkSQL = "SELECT  A.id as DeviceId, A.device_name as modal, A.date_of_purchase as purchaseDate,
 			 	A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
 				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, 
@@ -25,11 +24,11 @@ error_reporting(0);
 				LEFT OUTER JOIN tbl_customer_master as G 
 				ON F.customer_Id = G.cust_id WHERE (A.imei_no LIKE '$search_box%' 
 				or A.id LIKE '$search_box%')";
+
 	$authorized_branches = BranchLogin($_SESSION['user_id']);
 	if ( $authorized_branches != '0'){
 		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
 	}
-	/*echo $linkSQL;*/
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
@@ -51,158 +50,143 @@ if(mysql_num_rows($stockArr)>0)
                 <th><small>Installed Company</small></th> 
                 <th><small>Vehicle No</small></th>                           
               	</tr>   
-	
-				  	<?php
-					$kolor=1;
-					if(isset($_GET['page']) and is_null($_GET['page']))
+			  	<?php
+				
+				if(mysql_num_rows($stockArr)>0)
+				{
+					while ($row = mysql_fetch_array($stockArr))
 					{ 
-					$kolor = 1;
-					}
-					elseif(isset($_GET['page']) and $_GET['page']==1)
-					{ 
-					$kolor = 1;
-					}
-					elseif(isset($_GET['page']) and $_GET['page']>1)
-					{
-					$kolor = ((int)$_GET['page']-1)* PER_PAGE_ROWS+1;
-					}
-					
-						if(mysql_num_rows($stockArr)>0)
-						{
-					  while ($row = mysql_fetch_array($stockArr))
-					  {
-					 
 					  if($kolor%2==0)
 						$class="bgcolor='#ffffff'";
 						else
-						$class="bgcolor='#fff'";
-						
-					 ?>
-                <tr <?php print $class?>>
-                <td align="left" class="txt" valign="middle" ><small><?php print $kolor++;?>.</small></td>
-                <td align="left" valign="middle" class="txt" ><small><?php echo stripslashes($row["DeviceId"]);?></small></td>
-                <td align="left" valign="middle"><small><?php echo getdevicename(stripcslashes($row["modal"]));?></small></td>
-                <td align="left" valign="middle" class="txt" ><small><?php echo stripslashes($row["IMEI"]);?></small></td>
-                <td align="left" valign="middle" class="txt" ><small><?php echo getdcompany(stripslashes($row["CompId"]));?></small></td>
-                <td align="left" valign="middle"><small><?php echo stripcslashes($row["purchaseDate"]);?></small></td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php 
-                if($row["status"] == 0)
-                    {  
-                    echo "<span style='color:red; font-weight:bold;'>Instock</span>";
-                    }
-                    else
-                    {
-                    echo "<span style='color:green; font-weight:bold;'>Installed</span>";
-                    }
-                    ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php 
-                if($row["branch_asgn_status"] == 0)
-                    {
-                    echo "<span class='no'>Unallocated</span>";
-                    }
-                else
-                    {
-                    echo "<span class='yes'>Allocated</span>";
-                    }
-                ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php
-                if($row['Branch_name']>0)
-                    {
-                         echo stripslashes($row["branch"]);
-                    }
-                    else
-                    {
-                        echo "<span class='no'>N/A</span>";
-                    }
-                ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php  
-                if($row["technician_asgn_status"] ==0)
-                    {
-                    echo "<span class='no'>N/A</span>";
-                    }
-                else
-                    {
-                    echo "<span class='yes'>Assigned</span>";
-                    }
-                ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php 
-                if($row["TechnicianId"] == "")
-                    {
-                    echo "<span class='no'>N/A</span>";
-                    }
-                else
-                    {
-                    echo stripslashes($row["fname"]." ".$row["lname"] );
-                    }
-                ?>
-                </small>
-                </td>
-                <td align="left" valign="middle" class="txt" >
-                <small>
-                <?php 
-                if($row["status"] == 0)
-                    {  
-                    	echo "<span style='color:red; font-weight:bold;'>Instock</span>";
-                    }
-                else
-                    {
-                    	echo "<span style='color:green; font-weight:bold;'>Installed</span>";
-                    }
-                ?>
-                </small>
-                </td>
-                <td><small>
-                <?php 
-				if($row['callingDataId']==0)
-					{
-						echo "N/A";
-					}
-				else
-					{
-						echo getOraganization($row['callingDataId']);
-					}
+						$class="bgcolor='#fff'";	
 				?>
-                </small></td>
-                <td>
-                <small>
-               	<?php
-				if($row['vehicleNo']== NULL)
-				{
-					echo 'N/A';
-				}
-				else
-				{
-					echo $row['vehicleNo'];
-				}
-				?>
-                </small>
-                </td>
-                </tr> 
-                <?php 
-                }
-                echo $pagerstring;
+                        <tr <?php print $class?>>
+                        <td><small><?php print $kolor++;?>.</small></td>
+                        <td><small><?php echo stripslashes($row["DeviceId"]);?></small></td>
+                        <td><small><?php echo getdevicename(stripcslashes($row["modal"]));?></small></td>
+                        <td><small><?php echo stripslashes($row["IMEI"]);?></small></td>
+                        <td><small><?php echo getdcompany(stripslashes($row["CompId"]));?></small></td>
+                        <td><small><?php echo stripcslashes($row["purchaseDate"]);?></small></td>
+                        <td>
+                        <small>
+                        <?php 
+                        if($row["status"] == 0)
+                            {  
+                            echo "<span style='color:red; font-weight:bold;'>Instock</span>";
+                            }
+                            else
+                            {
+                            echo "<span style='color:green; font-weight:bold;'>Installed</span>";
+                            }
+                            ?>
+                        </small>
+                        </td>
+                        <td>
+                        <small>
+                        <?php 
+                        if($row["branch_asgn_status"] == 0)
+                            {
+                            echo "<span class='no'>Unallocated</span>";
+                            }
+                        else
+                            {
+                            echo "<span class='yes'>Allocated</span>";
+                            }
+                        ?>
+                        </small>
+                        </td>
+                        <td>
+                        <small>
+                        <?php
+                        if($row['Branch_name']>0)
+                            {
+                                 echo stripslashes($row["branch"]);
+                            }
+                            else
+                            {
+                                echo "<span class='no'>N/A</span>";
+                            }
+                        ?>
+                        </small>
+                        </td>
+                        <td>
+                        <small>
+                        <?php  
+                        if($row["technician_asgn_status"] ==0)
+                            {
+                            echo "<span class='no'>N/A</span>";
+                            }
+                        else
+                            {
+                            echo "<span class='yes'>Assigned</span>";
+                            }
+                        ?>
+                        </small>
+                        </td>
+                        <td>
+                        <small>
+                        <?php 
+                        if($row["TechnicianId"] == "")
+                            {
+                            echo "<span class='no'>N/A</span>";
+                            }
+                        else
+                            {
+                            echo stripslashes($row["fname"]." ".$row["lname"] );
+                            }
+                        ?>
+                        </small>
+                        </td>
+                        <td>
+                        <small>
+                        <?php 
+                        if($row["status"] == 0)
+                            {  
+                            	echo "<span style='color:red; font-weight:bold;'>Instock</span>";
+                            }
+                        else
+                            {
+                            	echo "<span style='color:green; font-weight:bold;'>Installed</span>";
+                            }
+                        ?>
+                        </small>
+                        </td>
+                        <td><small>
+                        <?php 
+        				if($row['callingDataId']==0)
+        					{
+        						echo "N/A";
+        					}
+        				else
+        					{
+        						echo getOraganization($row['callingDataId']);
+        					}
+        				?>
+                        </small></td>
+                        <td>
+                        <small>
+                       	<?php
+        				if($row['vehicleNo']== NULL)
+        				{
+        					echo 'N/A';
+        				}
+        				else
+        				{
+        					echo $row['vehicleNo'];
+        				}
+        				?>
+                        </small>
+                        </td>
+                        </tr> 
+
+                    <?php 
+                    }
+                    echo $pagerstring;
                 
-                        }
-                    else
+                }
+                else
                     echo "<h3><font color=red>No records found !</h3></font>";
-					}
-                ?>
+			}
+?>
               

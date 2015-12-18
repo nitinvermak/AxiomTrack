@@ -2,21 +2,39 @@
 include("../includes/config.inc.php"); 
 //include("includes/crosssite.inc.php"); 
 $branch_id = mysql_real_escape_string($_POST['branch']); 
+$executive = mysql_real_escape_string($_POST['executive']);
+/*echo $executive.'<br>';
+echo $branch_id;*/
 error_reporting(0);
-	/*echo $branch_id;*/
-if ($branch_id == 0)
+$linkSQL = "SELECT * FROM tblticket as A 
+			INNER JOIN tbl_ticket_assign_branch as B 
+			ON A.ticket_id = B.ticket_id
+			INNER JOIN tbl_ticket_assign_technician as C 
+			ON B.ticket_id = C.ticket_id 
+			WHERE B.branch_confirmation_status = '1' 
+			AND B.technician_assign_status = '1' 
+			AND  A.ticket_status = '0'";
+//echo $linkSQL;
+if ( ($executive != 0) or ($branch != 0) )
 {
-	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B
-				WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' 
-				and B.technician_assign_status = '1'";
+	$linkSQL  = $linkSQL." AND ";	
 }
-else
-	$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B
-				WHERE A.ticket_id = B.ticket_id AND B.branch_confirmation_status = '1' 
-				and B.technician_assign_status = '1' and B.branch_id = '{$branch_id}'";
- 
+$counter = 0;
+if ( $executive != 0) {
+	if ($counter > 0 )
+		$linkSQL =$linkSQL.' AND ';
+		$linkSQL  =$linkSQL." C.technician_id = '$executive'" ;
+		$counter+=1;
+		//echo $linkSQL;
+}
+if ( $branch_id != 0) {
+	if ($counter > 0 )
+		$linkSQL =$linkSQL.' AND ';
+		$linkSQL  =$linkSQL." B.branch_id = '$branch_id'" ;
+		$counter+=1;
+		//echo $linkSQL;
+}
 $stockArr=mysql_query($linkSQL);
-
 if(mysql_num_rows($stockArr)>0)
 	{
 	
@@ -75,14 +93,12 @@ if(mysql_num_rows($stockArr)>0)
     else
    		 echo "<h3 style='color:red'>No records found!</h3><br><br>";
 ?> 
-                    
-          				<form method="post">
-                          <table>
-                          <tr>
-                          <td></td>
-                          <td colspan="3"><input type="submit" name="remove" class="btn btn-primary btn-sm" onClick="return val();" value="Remove" id="submit" /> </td>
-                          <td></td>
-                          </tr>
-                          </table>
-                   	    </form>   
+<form method="post">
+<table>
+<tr>
+<td colspan="3"><input type="submit" name="remove" class="btn btn-primary btn-sm" onClick="return val();" value="Remove" id="submit" /> </td>
+<td></td>
+</tr>
+</table>
+</form>   
                 
