@@ -20,20 +20,20 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
 		             /*  $device_id=$_POST['linkID'][$dsl];*/
 	   	  		     $branch_id=$_POST['branch'];
-		  		     $status_id="0";
-				     $device_model = $_POST['devic_model_id'];
-		  		     $createdby=$_SESSION['user_id'];
-				     $sql = "delete from tbl_device_assign_branch where device_id='$chckvalue'";
-				     /*echo $sql;*/
-				     $results = mysql_query($sql); 	
-				     $assign = "Update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
-				     /*echo $sql;*/
-					 // Call User Activity Log function
-			  		 UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
-					 $sql. "<br>" .$assign);
-				     $query = mysql_query($assign);
-				     /* echo $query;*/
-	  			     $_SESSION['sess_msg']="<span style='color:#006600;'>Device Remove Successfully</span>";
+		  		       $status_id="0";
+				         $device_model = $_POST['devic_model_id'];
+		  		       $createdby=$_SESSION['user_id'];
+				         $sql = "delete from tbl_device_assign_branch where device_id='$chckvalue'";
+				         /*echo $sql;*/
+				         $results = mysql_query($sql); 	
+				         $assign = "Update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
+				         /*echo $sql;*/
+    					   // Call User Activity Log function
+    			  		 UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+    					   $sql. "<br>" .$assign);
+    				     $query = mysql_query($assign);
+    				     /* echo $query;*/
+    	  			   $_SESSION['sess_msg']="<span style='color:#006600;'>Device Remove Successfully</span>";
    			      }
 			   }  
   		$id="";
@@ -49,29 +49,28 @@ if (isset($_SESSION) && $_SESSION['login']=='')
               {
       		        /*  $device_id=$_POST['linkID'][$dsl];*/
       	   	  		$branch_id=$_POST['branch'];
-      		  		$status_id="1";
-      				/*$device_model = $_POST['devic_model_id'];*/
-      		  		$createdby=$_SESSION['user_id']; 
-					
-      	          	$check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'"); 
-                    if(mysql_num_rows($check_deviceId) <= 0)
-					{
-        				$sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
-        				//echo $sql;
-        				$results = mysql_query($sql); 	
-        				$assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', assign_by = '$createdby', 
-                       			  branch_id='$branch_id', assigned_date=Now()";
-        				// Call User Activity Log function
-			  			UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
-						$sql. "<br>" .$assign);
-        				$query = mysql_query($assign);
-        				//echo $query; 
-        				$_SESSION['sess_msg']="<span style='color:#006600;'>Device Branch Assign Successfully</span>";
-					}
-					else
-					{
-						$_SESSION['sess_msg']="<span style='color:red;'>Device already Assign</span>";
-					}
+      		  		  $status_id="1";
+      				    /*$device_model = $_POST['devic_model_id'];*/
+      		  		  $createdby=$_SESSION['user_id']; 
+					        $check_deviceId = mysql_query("SELECT * FROM tbl_device_assign_branch WHERE device_id='$chckvalue'"); 
+                  if(mysql_num_rows($check_deviceId) <= 0)
+					        {
+              				$sql = "update tbl_device_master set assignstatus='$status_id' where id='$chckvalue'";
+              				//echo $sql;
+              				$results = mysql_query($sql); 	
+              				$assign = "insert into tbl_device_assign_branch set device_id='$chckvalue', 
+                                 assign_by = '$createdby', branch_id='$branch_id', assigned_date=Now()";
+              				// Call User Activity Log function
+      			  			  UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], 
+      						    $sql. "<br>" .$assign);
+              				$query = mysql_query($assign);
+              				//echo $query; 
+              				$_SESSION['sess_msg']="<span style='color:#006600;'>Device Branch Assign Successfully</span>";
+					         }
+        					 else
+        					 {
+        						  $_SESSION['sess_msg']="<span style='color:red;'>Device already Assign</span>";
+        					 }
    			  }
 		 }  
   		$id="";

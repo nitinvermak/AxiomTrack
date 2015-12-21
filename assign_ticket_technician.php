@@ -1,22 +1,17 @@
 <?php
-//echo("hi");
-//die;
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
 
-
- if(count($_POST['linkID'])>0)
+if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']) && (isset($_POST['submit'])))
@@ -26,30 +21,43 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$technician_id = $_POST['executive'];
 		  		$status_id = "1";
 		  		$createdby = $_SESSION['user_id'];
+		  		$ticketId = mysql_real_escape_string($_POST['ticketId']);
+		  		$companyName = mysql_real_escape_string($_POST['companyName']);
+		  		$requestType = mysql_real_escape_string($_POST['requestType']);
+		  		$organizationContact = mysql_real_escape_string($_POST['organizationContact']);
+		  		$description = mysql_real_escape_string($_POST['description']);
+
+		  		$mssg = 'T Id: '.$ticketId.' '.'Cmpny: '.$companyName.' '.'Rqst.: '.$requestType.' '.'Mob.: '.$organizationContact.' '.'Rmrk. '.$description;
+		  		//echo $mssg.'<br>'.$technician_id;
 				$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_technician 
 											   WHERE ticket_id='$chckvalue'");
 					if(mysql_num_rows($check_ticketId) <= 0)
-					{
+					{ 
 						$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', 
 								technician_id = '$technician_id', assigned_by = '$createdby', 
-								assigned_date	=Now()";
+								assigned_date	= Now()";
 						// Call User Activity Log function
 						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
 						// End Activity Log Function
 						$results = mysql_query($sql);
+
 						$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status = '$status_id' 
 											  where ticket_id='$chckvalue'";
+						$confirm = mysql_query($assign_technician);
+						$_SESSION['sess_msg'] = "<span style='color:#006600;'>Ticket Assign Successfully</span>";
+						
 						// Call User Activity Log function
 						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign_technician);
 						// End Activity Log Function
-						/*echo $assign_technician;*/
-						$confirm = mysql_query($assign_technician);
-						$_SESSION['sess_msg'] = "<span style='color:#006600;'>Ticket Assign Successfully</span>";
+						
+						// Call sms send function
+						sendTicketAlert($technician_id, $mssg);
+						
 					}
 					else
 					{
 						$_SESSION['sess_msg'] = "<span style='color:red;'>Ticket already Assign</span>";
-					}
+					} 
    			   }
 			 }  
   		$id="";
@@ -135,7 +143,7 @@ $(document).ready(function(){
 // send ajax when select branch
 $(document).ready(function(){
 	$("#branch").change(function(){
-		$.post("ajaxrequest/executive.php?token=<?php echo $token;?>",
+		$.post("ajaxrequest/executive_ticket.php?token=<?php echo $token;?>",
 				{
 					branch : $('#branch').val()
 				},

@@ -828,7 +828,7 @@ function UserActivityLog($userId, $ipAddress, $pageName, $detailsString)
 	$detailsString = str_replace("'", " ", $detailsString);
 	$sql = "Insert into tbluseractivitylog set userId = '$userId', timeStamp = Now(), ipAddress = '$ipAddress', 
 			pageName = '$pageName', detailsString = '$detailsString'";
-	echo $sql;
+	/*echo $sql;*/
 	$result = mysql_query($sql);
 }
 function getcityname($id)
@@ -893,6 +893,19 @@ function sendConfigSms($model, $mobile, $cmd)
 		
 	}
 }
+// This function send message when assign ticket to technician
+function sendTicketAlert($technician_id, $mssg)
+{
+	if($technician_id !=NULL)
+	{
+		$sql = "SELECT 	Contact_No FROM `tbluser` where 	id =".$technician_id;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+		//echo $resultArr['Contact_No'];
+		sendSms($resultArr['Contact_No'], $mssg);
+	}
+}
+// End function
 function sendSms($mobileno, $message)
 {
 		$authKey = "2763A765rdm1CXD561227a2";

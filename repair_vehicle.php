@@ -24,6 +24,8 @@ if(isset($_REQUEST['organization']))
 		$repairType = mysql_real_escape_string($_POST['repairType']);
 		$mobileNo = mysql_real_escape_string($_POST['mobileNo']);
 		$deviceId = mysql_real_escape_string($_POST['deviceId']);
+    $oldModal = mysql_real_escape_string($_POST['oldModal']);
+    $newModal = mysql_real_escape_string($_POST['newModal']);
 	}
 
 	if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
@@ -31,10 +33,10 @@ if(isset($_REQUEST['organization']))
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
 			$sql = "update tempvehicledatarepair set customerId='$organization', 
-					  techinicianId	='$technician', oldMobileId='$oldmobileNo', 
-					  oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-					  repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo' 
-					where id=" .$_REQUEST['id'];
+					    techinicianId	='$technician', oldMobileId='$oldmobileNo', 
+					    oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
+					    repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo' 
+					    where id=" .$_REQUEST['id'];
 			
 			mysql_query($sql);
 			echo $sql;
@@ -45,17 +47,74 @@ if(isset($_REQUEST['organization']))
 		}
 	else 
 		{
-			$query = "insert into tempvehicledatarepair set customerId='$organization', 
-					  techinicianId	='$technician', oldMobileId='$oldmobileNo', 
-					  oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-					  repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
-			/*echo $query;*/
-			$sql = mysql_query($query);
-			echo "<script> alert('Vehicle added successfully'); </script>";
-			/*$_SESSION['sess_msg']='Vehicle added successfully';*/
-			/*sendConfigSms($model, $mobile_no, '');*/
-			/*header("location:manage_vehicle.php?token=".$token);
-			exit();*/
+        if($mobileNo != NULL && $deviceId == NULL){
+          $returnCode = 1;
+        }
+        elseif ($mobileNo == NULL && $deviceId != NULL) {
+          $returnCode = 2;
+        }
+        elseif ($mobileNo != NULL && $deviceId != NULL) {
+          $returnCode = 3;
+        }
+        else{
+          $returnCode = 4;
+        }
+          
+        switch($returnCode) {
+            // if change mobile Number
+            case 1:
+            $query = "insert into tempvehicledatarepair set customerId='$organization', 
+                      techinicianId ='$technician', oldMobileId='$oldmobileNo', 
+                      oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
+                      repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
+            /*echo $query;*/
+            $sql = mysql_query($query);
+            $_SESSION['sess_msg']='Vehicle added successfully';
+            sendConfigSms($oldModal, $mobileNo, '');
+            header("location:daily_installation.php?token=".$token);
+            break;
+
+            // if change device
+            case 2:
+              $query = "insert into tempvehicledatarepair set customerId='$organization', 
+                        techinicianId ='$technician', oldMobileId='$oldmobileNo', 
+                        oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
+                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
+              /*echo $query;*/
+              $sql = mysql_query($query);
+              $_SESSION['sess_msg']='Vehicle added successfully';
+              sendConfigSms($newModal, $oldmobileNo, '');
+              header("location:daily_installation.php?token=".$token);
+              break;
+             
+            // if change mobile number and device
+            case 3:
+              $query = "insert into tempvehicledatarepair set customerId='$organization', 
+                        techinicianId ='$technician', oldMobileId='$oldmobileNo', 
+                        oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
+                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
+              /*echo $query;*/
+              $sql = mysql_query($query);
+              $_SESSION['sess_msg']='Vehicle added successfully';
+              sendConfigSms($newModal, $mobileNo, '');
+              header("location:daily_installation.php?token=".$token);
+              break;
+
+            // if old mobile number
+            case 4:
+              $query = "insert into tempvehicledatarepair set customerId='$organization', 
+                        techinicianId ='$technician', oldMobileId='$oldmobileNo', 
+                        oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
+                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
+              /*echo $query;*/
+              $sql = mysql_query($query);
+              /*echo "<script> alert('Vehicle added successfully'); </script>";*/
+              $_SESSION['sess_msg']='Vehicle add successfully';
+              sendConfigSms($oldModal, $oldmobileNo, '');
+              header("location:daily_installation.php?token=".$token);
+              break;
+        }
+      
 		}
 
 }
@@ -120,6 +179,19 @@ function getValue()
 				});
 }
 //end
+// Select Old Modal
+function getOldDeviceModal()
+{
+  $.post("ajaxrequest/device_old_modal_details.php?token=<?php echo $token;?>",
+        {
+          olddeviceId : $("#olddeviceId").val()
+        },
+          function( data ){
+            $("#oldModal").html(data);
+        });
+}
+// End
+// send ajax request when select repair type
 $(document).ready(function(){
     $("#repairType").change(function(){
       $.post("ajaxrequest/show_repair_type.php?token=<?php echo $token;?>",
@@ -133,6 +205,19 @@ $(document).ready(function(){
 		
     });
 });
+//End
+// send ajax request when select device id
+function getNewModal()
+{
+  $.post("ajaxrequest/device_modal_details.php?token=<?php echo $token;?>",
+        {
+          deviceId : $("#deviceId").val()
+        },
+          function( data ){
+            $("#newModal").html(data);
+        });
+}
+// End
 </script>
 
 </head>
@@ -249,8 +334,12 @@ $(document).ready(function(){
                        <option value="">Select Device</option>
                        </select>
                   </div>
-                </div>                
-            </div>
+                </div>  
+                             
+              </div>
+              <div id="oldModal">
+                    <!-- Show Old Device Modal from ajax page --> 
+              </div> 
               <div class="form-group">
                     <label for="repairType" class="col-sm-2 control-label">Repair&nbsp;Type <span class="red">*</span></label>
                   <div class="col-sm-10">
@@ -265,7 +354,9 @@ $(document).ready(function(){
             <div id="divShowRepair">
             	
             </div>
-                  
+            <div id="newModal"> 
+            <!-- Show Device modal from ajax page -->
+            </div> 
             <div class="clearfix"></div>
              <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10" style="margin:10px 0px 10px 170px;">

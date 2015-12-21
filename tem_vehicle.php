@@ -34,12 +34,12 @@ if(isset($_REQUEST['organization']))
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
 			$sql = "update tempvehicledata set customer_Id='$organization', 
-				    customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
-				    techinician_name='$technician', mobile_no='$mobile_no', 
-					device_id='$device', imei_no='$imei', model_name='$model', 
-					installation_date= Now(), ticketId = '$ticketId', 
-					configStatus = 'N' where id=" .$_REQUEST['id'];
-			
+				      customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
+				      techinician_name='$technician', mobile_no='$mobile_no', 
+    					device_id='$device', imei_no='$imei', model_name='$model', 
+    					installation_date= Now(), ticketId = '$ticketId', 
+    					configStatus = 'N' where id=" .$_REQUEST['id'];
+			echo $sql;
 			mysql_query($sql);
 			/*echo $sql;*/
 			echo "<script> alert('Vehicle updated successfully');</script>";
@@ -50,11 +50,11 @@ if(isset($_REQUEST['organization']))
 	else 
 		{
 			$query = "insert into tempvehicledata set customer_Id='$organization', 
-					  customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
-					  techinician_name='$technician', mobile_no='$mobile_no', 
-					  device_id='$device', imei_no='$imei', model_name='$model', 
-					  installation_date=Now(), ticketId = '$ticketId', configStatus = 'N'";
-			/*echo $query;*/
+    					  customer_branch='$customer_branch', vehicle_no='$vehicle_no', 
+    					  techinician_name='$technician', mobile_no='$mobile_no', 
+    					  device_id='$device', imei_no='$imei', model_name='$model', 
+    					  installation_date=Now(), ticketId = '$ticketId', configStatus = 'N'";
+			echo $query;
 			$sql = mysql_query($query);
 			/*$_SESSION['sess_msg']='Vehicle added successfully';*/
 			echo "<script> alert('Vehicle added successfully');</script>";
@@ -136,21 +136,22 @@ $(document).ready(function(){
 								if($userId == 1 || 12)
 								{
 									$Country=mysql_query("select A.ticket_id from tblticket as A
-														 INNER JOIN tbl_ticket_assign_technician as B 
-														 On A.ticket_id = B.ticket_id 
-														 where A.organization_type='Existing Client' 
-														 and A.ticket_status <> 1 and A.rqst_type = '1'
-														 order by A.ticket_id ASC");
+          														 INNER JOIN tbl_ticket_assign_technician as B 
+          														 On A.ticket_id = B.ticket_id 
+          														 where A.organization_type='Existing Client' 
+          														 and A.ticket_status <> 1 and A.rqst_type = '1'
+          														 order by A.ticket_id ASC");
 								}
 								else
 								{
 									$Country=mysql_query("select A.ticket_id from tblticket as A
-													 INNER JOIN tbl_ticket_assign_technician as B 
-													 On A.ticket_id = B.ticket_id 
-													 where A.organization_type='Existing Client' 
-													 and B.technician_id = '$userId' 
-													 and A.ticket_status <> 1 and A.rqst_type = '1'
-													 order by A.ticket_id ASC");
+            													 INNER JOIN tbl_ticket_assign_technician as B 
+            													 On A.ticket_id = B.ticket_id 
+            													 where A.organization_type='Existing Client' 
+            													 and B.technician_id = '$userId' 
+            													 and A.ticket_status <> 1 and A.rqst_type = '1'
+            													 order by A.ticket_id ASC");
+                
 								}
                                while($resultCountry=mysql_fetch_assoc($Country)){
                                  ?>

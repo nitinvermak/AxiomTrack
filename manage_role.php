@@ -16,35 +16,26 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 if(isset($_POST['save']))
 	{
 		$Usercategory = mysql_real_escape_string($_POST['Usercategory']);
-		foreach($_POST['list'] as $checkvalue)
+		$checkUserCat = mysql_query("SELECT * FROM tblusercategorymodulemapping 
+									 WHERE usercategoryId='$Usercategory'");
+		if(mysql_num_rows($Usercategory) >= 0)
 		{
-			$sql = "select * from tblusercategorymodulemapping  where moduleId = '$checkvalue' and usercategoryId =".$Usercategory;
-			/*echo $sql;*/
-			$resultSql = mysql_query($sql);
-			if(mysql_num_rows($resultSql) <= 0)
-				{
-					
-					
-					$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', 
+			$sqlDel = "DELETE FROM tblusercategorymodulemapping WHERE usercategoryId =".$Usercategory;
+			//echo $sqlDel.'asfasf';
+			mysql_query($sqlDel);
+			
+			foreach($_POST['list'] as $checkvalue)
+			{
+				$sql = "Insert into tblusercategorymodulemapping set moduleId = '$checkvalue', 
 							usercategoryId = '$Usercategory', created = Now()";
 					/*echo $sql.'<br>';*/
-					$result = mysql_query($sql);
-					if($result)
-					{
-						$msg = "Setting Saved !";
-					}
-				}
-			else
+				$result = mysql_query($sql);
+				if($result)
 				{
-					$sql = "Update tblusercategorymodulemapping set moduleId = '$checkvalue'  			 								                  			Where moduleId = '$checkvalue' and usercategoryId = '$Usercategory'";
-							/*echo $sql.'<br>';*/
-					$result = mysql_query($sql);
-					if($result)
-					{
-						$msg = "Setting Updated !";
-					}
+					$msg = "Setting Saved !";
 				}
-		}
+			}
+		} 
 	}
 ?>
 <!DOCTYPE html>
@@ -135,7 +126,7 @@ function checkPermission(classA){
 				echo "<p style='color:green; font-weight:bold;'>".$msg ."</p>";
 			}
 	  ?>
-          <!---- this division shows the Data of devices from Ajax request --->
+          <!-- this division shows the Data of devices from Ajax request -->
       </div>
     </form>
     </div>
@@ -150,7 +141,7 @@ function checkPermission(classA){
 <!--end footer-->
 </div>
 <!--end wraper-->
-<!-------Javascript------->
+<!--Javascript-->
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>

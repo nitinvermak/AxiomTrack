@@ -1,43 +1,16 @@
 <?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
-if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
+if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) 
+{
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
-
- if(count($_POST['linkID'])>0)
-   {			   
-  		$dsl="";
-		if(isset($_POST['linkID']) &&(isset($_POST['submit'])))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
-      		        /*  $device_id=$_POST['linkID'][$dsl];*/
-      	   	  		$branch_id=$_POST['branch'];
-        		  		$confirmation_status="1";
-        		  		$createdby=$_SESSION['user_id'];
-        	        $sql = "update tbl_ticket_assign_branch set branch_confirmation_status = '$confirmation_status' 
-        						      where ticket_id='$chckvalue'";
-                          echo $sql;
-        					// Call User Activity Log function
-        					UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
-        					// End Activity Log Function
-          				$results = mysql_query($sql);
-  					      $_SESSION['sess_msg']="<span style='color:#006600;'>Ticket Confirmation Successfully</span>";
-     		  }
-		    }  
-  		$id="";
-  
-  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,25 +22,23 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkValidation.js"></script>
-<script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-		$("#branch").change(function(){
-			$('.loader').show();
-			$.post("ajaxrequest/show_ticket_branch_confirmation.php?token=<?php echo $token;?>",
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+function getEmployeeDetails(){
+	$('.loader').show();
+		$.post("ajaxrequest/employee_details.php?token=<?php echo $token;?>",
 				{
-					branch : $('#branch').val(),
+					branch : $('#branch').val()
 				},
-					function( data){
+					function(data){
+						/*alert(data);*/
 						$("#divassign").html(data);
 						$(".loader").removeAttr("disabled");
 						$('.loader').fadeOut(1000);
-				  });	 
-		});
-});
+				});	
+}
 </script>
 </head>
 <body>
@@ -79,17 +50,17 @@ $(document).ready(function(){
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Confirm Received Ticket </h3>
+    	<h3>Employee Details</h3>
         <hr>
     </div>
     <div class="col-md-12">
-    <form name='fullform' class="form-horizontal"  method='post' onSubmit="return confirmdelete(this)">
+    <form name='fullform' class="form-horizontal"  method='post' onSubmit="return confirmdelete(this);">
       <div class="col-md-12">
-     	<div class="col-md-6">
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
-                 <select name="branch" id="branch" class="form-control drop_down">
+                  <select name="branch" id="branch" class="form-control drop_down" onchange="getEmployeeDetails();">
                     <option label="" value="" selected="selected">Select Branch</option>
                     
                       <?php 
@@ -114,27 +85,8 @@ $(document).ready(function(){
                 </div>
             </div>
         </div>
-        
+       
         </div>
-        <?php
-		$where='';
-		$linkSQL="";  
-		$oRS = mysql_query($linkSQL);  
- 		//echo $pagerstring;		
-  		?>
-		<input type="hidden" name="token" value="<?php echo $token; ?>" />
-    	<input type='hidden' name='pagename' value='assigncontacts'> 
-		<div class="col-md-12"> 
-        <!--<div id="messages" class="hide" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-            </button>--->
-             <?php if($_SESSION['sess_msg']!='')
-                {
-                    echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
-                } 
-             ?>
-        <!-- </div>--->
-	    </div>
         <div id="divassign" class="col-md-12 table-responsive assign_grid">
        		<!-- Ajaxrequest-->
       	</div>
@@ -157,7 +109,7 @@ $(document).ready(function(){
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
+
 </html>

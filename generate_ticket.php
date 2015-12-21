@@ -30,6 +30,7 @@ if(isset($_REQUEST['product']))
 	$reason = htmlspecialchars(mysql_real_escape_string(trim($_POST['reason'])));
 	$create_date=htmlspecialchars(mysql_real_escape_string($_POST['create_date']));
 	$userId = $_SESSION['user_id'];
+  $branchId = $_SESSION['branch'];
 }
 
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
@@ -52,15 +53,22 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
     }
 	else
 	{
+    // store data tblticket table
 		$query = "insert into tblticket set product='$product', organization_id='$orgranization', 						             	  organization_type='$orgranizationType', rqst_type='$request', device_model_id='$model_id', 
     				  no_of_installation='$no_of_installation', description='$description', 
-    				  vehicleId = '$vehicle', repairReason ='$reason',
+    				  vehicleId = '$vehicle', repairReason ='$reason', branch_assign_status ='1',
     				  appointment_date='$ap_date_time', createddate=Now(), CreateBy = '$userId'";
           		// Call User Activity Log function
           		UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $query);
           		// End Activity Log Function
           		mysql_query($query);
           		$ticket = mysql_insert_id();
+
+    // store data tbl_ticket_assign_branch
+    $queryBranch = "insert into tbl_ticket_assign_branch SET ticket_id = '$ticket', branch_id = '$branchId', 
+                    assign_by = '$userId', branch_confirmation_status = '1', assign_date = Now()";
+              
+              $resultBranch = mysql_query($queryBranch);
           		$_SESSION['sess_msg']='Generated Ticket Id: '.'<span style=font-weight:bold;>'.$ticket.'</span>'. ' Successfully';
           		header("location:view_ticket.php?token=".$token);
           		exit();

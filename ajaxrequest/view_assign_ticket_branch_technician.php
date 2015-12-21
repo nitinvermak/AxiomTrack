@@ -6,11 +6,21 @@ $executive = mysql_real_escape_string($_POST['executive']);
 /*echo $executive.'<br>';
 echo $branch_id;*/
 error_reporting(0);
-$linkSQL = "SELECT * FROM tblticket as A 
+$linkSQL = "SELECT A.ticket_id as tId,D.Company_Name as CompanyName, 
+			F.category as product, E.rqsttype as requestType, 
+			A.createddate as cDate, B.assign_by as assignBy, 
+			A.appointment_date as appiontmentDate 
+			FROM tblticket as A 
 			INNER JOIN tbl_ticket_assign_branch as B 
 			ON A.ticket_id = B.ticket_id
 			INNER JOIN tbl_ticket_assign_technician as C 
 			ON B.ticket_id = C.ticket_id 
+			INNER JOIN tblcallingdata as D 
+			On A.organization_id = D.id
+			INNER JOIN tblrqsttype as E 
+			ON A.rqst_type = E.id
+			INNER JOIN tblcallingcategory as F 
+			ON A.product = F.id
 			WHERE B.branch_confirmation_status = '1' 
 			AND B.technician_assign_status = '1' 
 			AND  A.ticket_status = '0'";
@@ -58,15 +68,6 @@ if(mysql_num_rows($stockArr)>0)
 	  $kolor =1;
 	  while ($row = mysql_fetch_array($stockArr))
   		{
- 		   if($row["assignstatus"]==0)
-				{
-					$stock ='In Stock';
-				}
-		   if($row["assignstatus"]==1)
-				{
-					$stock = 'Assigned';
-				}
-  
  		   if($kolor%2==0)
 				$class="bgcolor='#ffffff'";
 		   else
@@ -75,14 +76,26 @@ if(mysql_num_rows($stockArr)>0)
  	?>
        			 <tr <?php print $class?>>
                  <td><small><?php print $kolor++;?>.</small></td>
-                 <td><small><?php echo stripslashes($row["ticket_id"]);?></small></td>
-				 <td><small><?php echo getOraganization(stripslashes($row["organization_id"]));?></small></td>
-				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
-                 <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
-				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
-				 <td><small><?php echo gettelecallername(stripslashes($row["assign_by"]));?></small></td>
-                 <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
-                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </td>
+                 <td><small>
+                 <?php echo stripslashes($row["tId"]);?>
+                 <input type="hidden" name="ticketId" id="ticketId" value="<?php echo stripslashes($row["tId"]);?>">
+                 </small></td>
+				 <td><small>
+				 <?php echo stripslashes($row["CompanyName"]);?>
+				 <input type="hidden" name="companyName" id="companyName" value="<?php echo stripslashes($row["CompanyName"]);?>">
+				 </small></td>
+				 <td><small>
+				 <?php echo stripslashes($row["product"]);?>
+				 <input type="hidden" name="product" id="product" value=" <?php echo stripslashes($row["product"]);?>">
+				 </small></td>
+                 <td><small>
+                 <?php echo stripslashes($row["requestType"]);?>
+                 <input type="hidden" name="requestType" id="requestType" value="<?php echo stripslashes($row["requestType"]);?>">
+                 </small></td>
+				 <td><small><?php echo stripslashes($row["cDate"]);?></small></td>
+				 <td><small><?php echo gettelecallername(stripslashes($row["assignBy"]));?></small></td>
+                 <td><small><?php echo stripslashes($row["appiontmentDate"]);?></small></td>
+                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["tId"]; ?>'> </td>
                  </tr>
 	<?php 
 	      }

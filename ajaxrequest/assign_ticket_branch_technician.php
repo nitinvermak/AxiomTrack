@@ -6,22 +6,42 @@ error_reporting(0);
 /*echo $branch_id;*/
 if ($branch_id == 0)
 {
-	$linkSQL = "SELECT * FROM tblticket as A, 
-				tbl_ticket_assign_branch as B
-				WHERE A.ticket_id = B.ticket_id 
-				AND B.branch_confirmation_status = '1' 
+	$linkSQL = "SELECT A.ticket_id as tId, C.Company_Name as CompanyName, A.description as description, 
+				C.Mobile as mobile, F.category as product, 
+				E.rqsttype as requestType, A.createddate as cDate, 
+				B.assign_by as assignBy, A.appointment_date as appiontmentDate 
+				FROM tblticket as A 
+				INNER JOIN tbl_ticket_assign_branch as B 
+				ON A.ticket_id = B.ticket_id 
+				INNER JOIN tblcallingdata as C 
+				On A.organization_id = C.id 
+				INNER JOIN tblrqsttype as E 
+				ON A.rqst_type = E.id 
+				INNER JOIN tblcallingcategory as F 
+				ON A.product = F.id
+				Where B.branch_confirmation_status = '1' 
 				and B.technician_assign_status = '0'";
 	$authorized_branches = BranchLogin($_SESSION['user_id']);
 		if ( $authorized_branches != '0'){
 			$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
 		}
-/*	echo $linkSQL;*/
+//echo $linkSQL;
 }
 else
-	$linkSQL = "SELECT * FROM tblticket as A, 
-				tbl_ticket_assign_branch as B
-				WHERE A.ticket_id = B.ticket_id 
-				AND B.branch_confirmation_status = '1' 
+	$linkSQL = "SELECT A.ticket_id as tId, C.Company_Name as CompanyName, A.description as description,
+				C.Mobile as mobile, F.category as product, 
+				E.rqsttype as requestType, A.createddate as cDate, 
+				B.assign_by as assignBy, A.appointment_date as appiontmentDate 
+				FROM tblticket as A 
+				INNER JOIN tbl_ticket_assign_branch as B 
+				ON A.ticket_id = B.ticket_id 
+				INNER JOIN tblcallingdata as C 
+				On A.organization_id = C.id 
+				INNER JOIN tblrqsttype as E 
+				ON A.rqst_type = E.id 
+				INNER JOIN tblcallingcategory as F 
+				ON A.product = F.id
+				WHERE B.branch_confirmation_status = '1' 
 				and B.technician_assign_status = '0' 
 				and B.branch_id = '{$branch_id}'";
 	$authorized_branches = BranchLogin($_SESSION['user_id']);
@@ -53,15 +73,6 @@ if(mysql_num_rows($stockArr)>0)
 	  $kolor =1;
 	  while ($row = mysql_fetch_array($stockArr))
   		{
- 		   if($row["assignstatus"]==0)
-				{
-					$stock ='In Stock';
-				}
-		   if($row["assignstatus"]==1)
-				{
-					$stock = 'Assigned';
-				}
-  
  		   if($kolor%2==0)
 				$class="bgcolor='#ffffff'";
 		   else
@@ -70,13 +81,24 @@ if(mysql_num_rows($stockArr)>0)
  	?>
        			 <tr <?php print $class?>>
                  <td><small><?php print $kolor++;?>.</small></td>
-                 <td><small><?php echo stripslashes($row["ticket_id"]);?></small></td>
-				 <td><small><?php echo getOraganization(stripslashes($row["organization_id"]));?></small></td>
-				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
-                 <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
-				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
-                 <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
-                 <td><small><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'></small> </td>
+                 <td><small>
+                 <?php echo stripslashes($row["tId"]);?>
+                 <input type="hidden" name="ticketId" id="ticketId" value="<?php echo stripslashes($row["tId"]);?>">
+                 </small></td>
+				 <td><small>
+				 <?php echo stripslashes($row["CompanyName"]);?>
+				 <input type="hidden" name="companyName" id="companyName" value="<?php echo stripslashes($row["CompanyName"]);?>">
+				 </small></td>
+				 <td><small><?php echo stripslashes($row["product"]);?></small></td>
+                 <td><small>
+                 <?php echo stripslashes($row["requestType"]);?>
+                 <input type="hidden" name="requestType" id="requestType" value="<?php echo stripslashes($row["requestType"]);?>">
+                 <input type="hidden" name="organizationContact" id="organizationContact" value="<?php echo stripslashes($row["mobile"]);?>">
+                  <input type="hidden" name="description" id="description" value="<?php echo stripslashes($row["description"]);?>">
+                 </small></td>
+				 <td><small><?php echo stripslashes($row["cDate"]);?></small></td>
+                 <td><small><?php echo stripslashes($row["appiontmentDate"]);?></small></td>
+                 <td><small><input type='checkbox' name='linkID[]' value='<?php echo $row["tId"]; ?>'></small> </td>
                  </tr>
 	<?php 
 	      }
