@@ -5,14 +5,34 @@ $branch = $_REQUEST['branch'];
 error_reporting(0);
 if ($branch == 0)
 	{
-		$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
-					WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0'";
+		$linkSQL = "SELECT A.ticket_id as tId, A.organization_id as OrgId, 
+					A.product as prdct, A.rqst_type as rquestType, 
+					A.repairReason as reason, A.createddate as createdDate, 
+					B.assign_by as assignBy, A.appointment_date as apointDate, 
+					B.assign_date as assignDate, C.vehicle_no as vehicleNo 
+					FROM tblticket as A 
+					INNER JOIN tbl_ticket_assign_branch as B 
+					ON A.ticket_id = B.ticket_id
+					LEFT OUTER JOIN tbl_gps_vehicle_master as C 
+					ON A.vehicleId = C.id
+					WHERE A.ticket_id =  B.ticket_id 
+					AND B.branch_confirmation_status='0'";
 	}
 else
 	{
-		$linkSQL = "SELECT * FROM tblticket as A, tbl_ticket_assign_branch as B 
-					WHERE A.ticket_id =  B.ticket_id AND B.branch_confirmation_status='0' 
-					and B.branch_id='$branch'";
+		$linkSQL = "SELECT A.ticket_id as tId, A.organization_id as OrgId, 
+					A.product as prdct, A.rqst_type as rquestType, 
+					A.repairReason as reason, A.createddate as createdDate, 
+					B.assign_by as assignBy, A.appointment_date as apointDate, 
+					B.assign_date as assignDate, C.vehicle_no as vehicleNo 
+					FROM tblticket as A 
+					INNER JOIN tbl_ticket_assign_branch as B 
+					ON A.ticket_id = B.ticket_id
+					LEFT OUTER JOIN tbl_gps_vehicle_master as C 
+					ON A.vehicleId = C.id
+					WHERE A.ticket_id =  B.ticket_id 
+					AND B.branch_confirmation_status='0' 
+					AND B.branch_id = '$branch'";
 	}
 	
  
@@ -31,6 +51,8 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Organization Name</small></th>  
                   <th><small>Product</small></th>
                   <th><small>Request Type</small></th> 
+                  <th><small>Reason</small></th>
+                  <th><small>Vehicle No.</small></th>
                   <th><small>Created</small></th>
                   <th><small>Appointment Date Time</small></th>  
                   <th><small>Assign Date</small></th>            
@@ -43,14 +65,6 @@ if(mysql_num_rows($stockArr)>0)
 	  $kolor =1;
 	  while ($row = mysql_fetch_array($stockArr))
   		{
- 		   if($row["assignstatus"]==0)
-			{
-				$stock ='In Stock';
-			}
-			if($row["assignstatus"]==1)
-			{
-				$stock = 'Assigned';
-			}
   
  			if($kolor%2==0)
 				$class="bgcolor='#ffffff'";
@@ -60,15 +74,39 @@ if(mysql_num_rows($stockArr)>0)
  	?>
           		 <tr <?php print $class?>>
                  <td><small><?php print $kolor++;?>.</small></td>
-                 <td><small><?php echo stripslashes($row["ticket_id"]);?></small></td>
-				 <td><small><?php echo getOraganization(stripslashes($row["organization_id"]));?></small></td>
-				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
-                 <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
-				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
-                 <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
-                 <td><small><?php echo stripcslashes($row['assign_date']);?></small></td>
-				 <td><small><?php echo gettelecallername(stripcslashes($row['assign_by']));?></small></td>
-                 <td><a href="#" onclick="if(confirm('Do you really want to delete this record?')){ window.location.href='transusers_del.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' }" ><img src="images/drop.png" title="Delete" border="0" /></a>     <a href="plan_category.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> &nbsp;&nbsp;<input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> 
+                 <td><small><?php echo stripslashes($row["tId"]);?></small></td>
+				 <td><small><?php echo getOraganization(stripslashes($row["OrgId"]));?></small></td>
+				 <td><small><?php echo getproducts(stripslashes($row["prdct"]));?></small></td>
+                 <td><small><?php echo getRequesttype(stripslashes($row["rquestType"]));?></small></td>
+                 <td><small>
+				 <?php 
+				 if($row["reason"] == NULL)
+				 {
+				 	echo "N/A";
+				 }
+				 else
+				 {
+				 	echo stripslashes($row["reason"]);
+				 }
+				 ?>
+                 </small></td>
+                 <td><small>
+				 <?php 
+				 if($row["vehicleNo"] == NULL)
+				 {
+				 	echo "N/A";
+				 }
+				 else
+				 {
+				 	echo stripslashes($row["vehicleNo"]);
+				 }
+				 ?>
+                 </small></td>
+				 <td><small><?php echo stripslashes($row["createdDate"]);?></small></td>
+                 <td><small><?php echo stripslashes($row["apointDate"]);?></small></td>
+                 <td><small><?php echo stripcslashes($row['assignDate']);?></small></td>
+				 <td><small><?php echo gettelecallername(stripcslashes($row['assignBy']));?></small></td>
+                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["tId"]; ?>'> 
                  </td>
                  </tr>
  

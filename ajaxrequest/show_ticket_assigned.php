@@ -5,12 +5,16 @@ $date=$_REQUEST['date'];
 error_reporting(0);
 if ($date == 0)
 	{
-		$linkSQL = "select * from tblticket where branch_assign_status = '1' order by ticket_id";
+		$linkSQL = "select * from tblticket 
+					where branch_assign_status = '1' 
+					order by ticket_id";
 	}
 		else
 			{
 				$linkSQL = "select * from tblticket 
-							where branch_assign_status = '1' and appointment_date='$date' order by ticket_id";
+							where branch_assign_status = '1' 
+							and appointment_date='$date' 
+							order by ticket_id";
 			}
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
@@ -23,7 +27,9 @@ if(mysql_num_rows($stockArr)>0)
                 <th><small>Ticket Id</small></th> 
                 <th><small>Organization Name</small></th>
                 <th><small>Product</small></th>
-                <th><small>Request Type</small></th> 
+                <th><small>Request Type</small></th>
+                <th><small>Reason</small></th>
+                <th><small>Vehicle No.</small></th> 
                 <th><small>Created Date</small></th>
 				<th><small>Created By</small></th>
                 <th><small>Appointment Date Time</small></th>           
@@ -37,15 +43,6 @@ if(mysql_num_rows($stockArr)>0)
 				  $kolor =1;
 				  while ($row = mysql_fetch_array($stockArr))
 					{
-					   if($row["assignstatus"]==0)
-						{
-							$stock ='In Stock';
-						}
-						if($row["assignstatus"]==1)
-						{
-							$stock = 'Assigned';
-						}
-			  
 						if($kolor%2==0)
 							$class="bgcolor='#ffffff'";
 						else
@@ -58,9 +55,33 @@ if(mysql_num_rows($stockArr)>0)
 				<td><small><?php echo getOraganization(stripslashes($row["organization_id"]));?></small></td>
 				<td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
                 <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
+                <td><small>
+				<?php 
+				if($row["repairReason"] == NULL)
+				{
+					echo "N/A";
+				}
+				else
+				{
+					echo stripslashes($row["repairReason"]);
+				}
+				?>
+                </small></td>
+                <td><small>
+				<?php 
+				if($row["vehicleId"] == NULL)
+				{
+					echo "N/A";
+				}
+				else
+				{
+					echo getVehicleNumber(stripslashes($row["vehicleId"]));
+				}
+				?>
+                </small></td>
 				<td><small><?php echo stripslashes($row["createddate"]);?></small></td>
 				<td><small><?php echo gettelecallername(stripslashes($row["CreateBy"]));?></small></td>
-                <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
+                <td><small><?php echo stripslashes($row["appointment_date"]);?></small></td>
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["ticket_id"]; ?>'> </td>
                 </tr>
  

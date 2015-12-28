@@ -12,31 +12,31 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-$sql = "select * from tbl_device_master where status=0";
-$result = mysql_query($sql);
-$inStock = mysql_num_rows($result);
-$totalInstock = $inStock;
+  $sql = "select * from tbl_device_master where status=0";
+  $result = mysql_query($sql);
+  $inStock = mysql_num_rows($result);
+  $totalInstock = $inStock;
 
-$sql = "select * from tbl_device_master where status=1";
-$result = mysql_query($sql);
-$installed = mysql_num_rows($result);
-$totalInstalled = $installed;
+  $sql = "select * from tbl_device_master where status=1";
+  $result = mysql_query($sql);
+  $installed = mysql_num_rows($result);
+  $totalInstalled = $installed;
 
-$sql = "select * from tbl_device_master where status=2";
-$result = mysql_query($sql);
-$reIssue = mysql_num_rows($result);
-$totalreIssue = $reIssue;
+  $sql = "select * from tbl_device_master where status=2";
+  $result = mysql_query($sql);
+  $reIssue = mysql_num_rows($result);
+  $totalreIssue = $reIssue;
 
 
-$sql = "select * from tbl_device_master where status=3";
-$result = mysql_query($sql);
-$Close = mysql_num_rows($result);
-$totalClose = $Close;
+  $sql = "select * from tbl_device_master where status=3";
+  $result = mysql_query($sql);
+  $Close = mysql_num_rows($result);
+  $totalClose = $Close;
 
-$sql = "select * from tbl_device_master";
-$result = mysql_query($sql);
-$total = mysql_num_rows($result);
-$totaldevice = $total;
+  $sql = "select * from tbl_device_master";
+  $result = mysql_query($sql);
+  $total = mysql_num_rows($result);
+  $totaldevice = $total;
 
 ?>
 <!DOCTYPE html>

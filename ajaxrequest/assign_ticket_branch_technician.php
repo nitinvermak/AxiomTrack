@@ -7,7 +7,7 @@ error_reporting(0);
 if ($branch_id == 0)
 {
 	$linkSQL = "SELECT A.ticket_id as tId, C.Company_Name as CompanyName, A.description as description, 
-				C.Mobile as mobile, F.category as product, 
+				C.Mobile as mobile, F.category as product, A.vehicleId as vehicleId,  A.repairReason as reason, 
 				E.rqsttype as requestType, A.createddate as cDate, 
 				B.assign_by as assignBy, A.appointment_date as appiontmentDate 
 				FROM tblticket as A 
@@ -29,7 +29,7 @@ if ($branch_id == 0)
 }
 else
 	$linkSQL = "SELECT A.ticket_id as tId, C.Company_Name as CompanyName, A.description as description,
-				C.Mobile as mobile, F.category as product, 
+				C.Mobile as mobile, F.category as product, A.vehicleId as vehicleId, A.repairReason as reason,
 				E.rqsttype as requestType, A.createddate as cDate, 
 				B.assign_by as assignBy, A.appointment_date as appiontmentDate 
 				FROM tblticket as A 
@@ -63,6 +63,8 @@ if(mysql_num_rows($stockArr)>0)
                   <th><small>Organization Name</small></th> 
                   <th><small>Product</small></th>
                   <th><small>Request Type</small></th> 
+                  <th><small>Reason</small></th>
+                  <th><small>Vehicle No.</small></th>
                   <th><small>Created</small></th> 
                   <th><small>Appointment Date Time</small></th>              
                   <th><small>Actions
@@ -95,6 +97,29 @@ if(mysql_num_rows($stockArr)>0)
                  <input type="hidden" name="requestType" id="requestType" value="<?php echo stripslashes($row["requestType"]);?>">
                  <input type="hidden" name="organizationContact" id="organizationContact" value="<?php echo stripslashes($row["mobile"]);?>">
                   <input type="hidden" name="description" id="description" value="<?php echo stripslashes($row["description"]);?>">
+                 </small></td>
+                 <td><small>
+				 <?php 
+				 if($row["reason"] == NULL)
+				 {
+				 	echo "N/A";
+				 }
+				 {
+				 	echo stripslashes($row["reason"]);
+				 }
+				 ?>
+                 </small></td>
+                 <td><small>
+				 <?php 
+				 if($row["vehicleId"] == NULL)
+				 {
+				 	echo "N/A";
+				 }
+				 else
+				 {
+				 	echo getVehicleNumber(stripslashes($row["vehicleId"]));
+				 }
+				 ?>
                  </small></td>
 				 <td><small><?php echo stripslashes($row["cDate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appiontmentDate"]);?></small></td>

@@ -972,6 +972,16 @@ function getOraganization($id)
   else
   return 'N/A';
 }
+function getVehicleNumber($id)
+{
+  $sql="SELECT vehicle_no FROM tbl_gps_vehicle_master where id=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['vehicle_no'])
+  return $result['vehicle_no'];
+  else
+  return 'N/A';
+}
 function getVehicleNo($vehicleNo)
 {
 	if($vehicleNo == NULL)

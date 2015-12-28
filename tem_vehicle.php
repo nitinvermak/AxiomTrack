@@ -133,7 +133,7 @@ $(document).ready(function(){
                     	 <option value="">Select Ticket Id</option>
 						 <?php 
 						 		$userId = $_SESSION['user_id'];
-								if($userId == 1 || 12)
+								if($userId == 1 || $userId == 15 || $userId == 17)
 								{
 									$Country=mysql_query("select A.ticket_id from tblticket as A
           														 INNER JOIN tbl_ticket_assign_technician as B 
@@ -185,21 +185,24 @@ $(document).ready(function(){
                  <select name="technician" id="technician" onChange="return ShowMobile();" class="form-control drop_down">
                  <option value="">Select Techician</option>
                  <?php 
-				 	$userId = $_SESSION['user_id'];
-					if($userId == 1 || 12)
-					{
-				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8)");	
-					}
-					else
-					{
-						$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
-												   and id = '$userId'");
-					}
-                    while($resulttechnician=mysql_fetch_assoc($technician)){
-				 ?>
+        				 	$userId = $_SESSION['user_id'];
+        					if($userId == 1 || $userId == 15 || $userId == 17)
+        					{
+        				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8)");	
+								echo "select * from tbluser where (User_Category=5 or User_Category=8)";
+        					}
+        					else
+        					{
+        						$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
+        												   and id = '$userId'");
+								echo "select * from tbluser where (User_Category=5 or User_Category=8) 
+        												   and id = '$userId'";
+        					}
+                            while($resulttechnician=mysql_fetch_assoc($technician)){
+        				 ?>
                  <option value="<?php echo $resulttechnician['id']; ?>" 
-				 <?php if(isset($result['techinician_name']) && $resulttechnician['id']==$result['techinician_name']){ ?>selected
-				 <?php } ?>><?php echo stripslashes(ucfirst($resulttechnician['First_Name']." ".$resulttechnician['Last_Name'])); ?>
+        				 <?php if(isset($result['techinician_name']) && $resulttechnician['id']==$result['techinician_name']){ ?>selected
+        				 <?php } ?>><?php echo stripslashes(ucfirst($resulttechnician['First_Name']." ".$resulttechnician['Last_Name'])); ?>
                  </option>
                  <?php } ?>
                  </select>

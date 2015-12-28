@@ -12,31 +12,31 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-$sql = "select * from tblsim where status_id=0";
-$result = mysql_query($sql);
-$inStock = mysql_num_rows($result);
-$totalInstock = $inStock;
+  $sql = "select * from tblsim where status_id=0";
+  $result = mysql_query($sql);
+  $inStock = mysql_num_rows($result);
+  $totalInstock = $inStock;
 
-$sql = "select * from tblsim where status_id=1";
-$result = mysql_query($sql);
-$installed = mysql_num_rows($result);
-$totalInstalled = $installed;
+  $sql = "select * from tblsim where status_id=1";
+  $result = mysql_query($sql);
+  $installed = mysql_num_rows($result);
+  $totalInstalled = $installed;
 
-$sql = "select * from tblsim where status_id=2";
-$result = mysql_query($sql);
-$reIssue = mysql_num_rows($result);
-$totalreIssue = $reIssue;
+  $sql = "select * from tblsim where status_id=2";
+  $result = mysql_query($sql);
+  $reIssue = mysql_num_rows($result);
+  $totalreIssue = $reIssue;
 
 
-$sql = "select * from tblsim where status_id=3";
-$result = mysql_query($sql);
-$Close = mysql_num_rows($result);
-$totalClose = $Close;
+  $sql = "select * from tblsim where status_id=3";
+  $result = mysql_query($sql);
+  $Close = mysql_num_rows($result);
+  $totalClose = $Close;
 
-$sql = "select * from tblsim";
-$result = mysql_query($sql);
-$total = mysql_num_rows($result);
-$totalSim = $total;
+  $sql = "select * from tblsim";
+  $result = mysql_query($sql);
+  $total = mysql_num_rows($result);
+  $totalSim = $total;
 
 ?>
 <!DOCTYPE html>

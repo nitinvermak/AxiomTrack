@@ -18,14 +18,15 @@ if(isset($_REQUEST['organization']))
 		$technician = mysql_real_escape_string($_POST['technician']);
 		$ticketId = mysql_real_escape_string($_POST['ticketId']);
 		$organization = mysql_real_escape_string($_POST['organization']);
-		$vehicleNo = mysql_real_escape_string($_POST['vehicleNo']);
+		$vehicleNo = mysql_real_escape_string($_POST['vehcileNo']);
 		$oldmobileNo = mysql_real_escape_string($_POST['oldmobileNo']);
 		$olddeviceId = mysql_real_escape_string($_POST['olddeviceId']);
 		$repairType = mysql_real_escape_string($_POST['repairType']);
 		$mobileNo = mysql_real_escape_string($_POST['mobileNo']);
 		$deviceId = mysql_real_escape_string($_POST['deviceId']);
-    $oldModal = mysql_real_escape_string($_POST['oldModal']);
-    $newModal = mysql_real_escape_string($_POST['newModal']);
+		$oldModal = mysql_real_escape_string($_POST['oldModal']);
+		$newModal = mysql_real_escape_string($_POST['newModal']);
+		echo $$vehicleNo.'dfadfafds';
 	}
 
 	if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes')
@@ -33,17 +34,18 @@ if(isset($_REQUEST['organization']))
 		if(isset($_REQUEST['cid']) && $_REQUEST['cid']!='')
 		{
 			$sql = "update tempvehicledatarepair set customerId='$organization', 
-					    techinicianId	='$technician', oldMobileId='$oldmobileNo', 
-					    oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-					    repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo' 
-					    where id=" .$_REQUEST['id'];
+					techinicianId = '$technician', oldMobileId='$oldmobileNo', 
+					oldDeviceId = '$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
+					repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo', 
+					vehicleId = '$vehicleNo' 
+					where id=" .$_REQUEST['id'];
 			
 			mysql_query($sql);
 			echo $sql;
 			$_SESSION['sess_msg']='Vehicle updated successfully';
-			/*sendConfigSms($model, $mobile_no, '');*/
-			/*header("location:manage_vehicle.php?token=".$token);
-			exit();*/
+			sendConfigSms($model, $mobile_no, '');
+			header("location:manage_vehicle.php?token=".$token);
+			exit();
 		}
 	else 
 		{
@@ -66,8 +68,9 @@ if(isset($_REQUEST['organization']))
             $query = "insert into tempvehicledatarepair set customerId='$organization', 
                       techinicianId ='$technician', oldMobileId='$oldmobileNo', 
                       oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-                      repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
-            /*echo $query;*/
+                      repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo', 
+					  vehicleId = '$vehicleNo'";
+           /* echo $query;*/
             $sql = mysql_query($query);
             $_SESSION['sess_msg']='Vehicle added successfully';
             sendConfigSms($oldModal, $mobileNo, '');
@@ -79,7 +82,8 @@ if(isset($_REQUEST['organization']))
               $query = "insert into tempvehicledatarepair set customerId='$organization', 
                         techinicianId ='$technician', oldMobileId='$oldmobileNo', 
                         oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
+                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo',
+						vehicleId = '$vehicleNo'";
               /*echo $query;*/
               $sql = mysql_query($query);
               $_SESSION['sess_msg']='Vehicle added successfully';
@@ -92,8 +96,9 @@ if(isset($_REQUEST['organization']))
               $query = "insert into tempvehicledatarepair set customerId='$organization', 
                         techinicianId ='$technician', oldMobileId='$oldmobileNo', 
                         oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
-              /*echo $query;*/
+                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo', 
+						vehicleId = '$vehicleNo'";
+             /* echo $query;*/
               $sql = mysql_query($query);
               $_SESSION['sess_msg']='Vehicle added successfully';
               sendConfigSms($newModal, $mobileNo, '');
@@ -105,7 +110,8 @@ if(isset($_REQUEST['organization']))
               $query = "insert into tempvehicledatarepair set customerId='$organization', 
                         techinicianId ='$technician', oldMobileId='$oldmobileNo', 
                         oldDeviceId='$olddeviceId', repairDate=Now(), ticketId='$ticketId', 
-                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo'";
+                        repairType='$repairType', newDeviceId='$deviceId', newMobileId='$mobileNo', 
+						vehicleId = '$vehicleNo'";
               /*echo $query;*/
               $sql = mysql_query($query);
               /*echo "<script> alert('Vehicle added successfully'); </script>";*/
@@ -249,19 +255,21 @@ function getNewModal()
                  <select name="technician" id="technician" class="form-control drop_down">
                  <option value="">Select Techician</option>
                  <?php 
-				 	$userId = $_SESSION['user_id'];
-					if($userId == 1 || 12)
-					{
-				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
-													Order By First_Name");	
-					}
-					else
-					{
-						$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
-													Where id ='$userId' ");
-					}
-                    while($resulttechnician=mysql_fetch_assoc($technician)){
-				 ?>
+        				 	$userId = $_SESSION['user_id'];
+        					if($userId == 1 || 15 || 17)
+        					{
+        				 		$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
+        													Order By First_Name");	
+                    
+        					}
+        					else
+        					{
+        						$technician = mysql_query("select * from tbluser where (User_Category=5 or User_Category=8) 
+        													and id =".$userId);
+                    
+        					}
+                            while($resulttechnician=mysql_fetch_assoc($technician)){
+        				 ?>
                  <option value="<?php echo $resulttechnician['id']; ?>">
 				 <?php echo $resulttechnician['First_Name']." ".$resulttechnician['Last_Name'];?>
                  </option>
@@ -290,7 +298,7 @@ function getNewModal()
               	 <div class="form-group">
                     <label for="vehicleNo" class="col-sm-2 control-label">Vehicle No.</label>
                     <div class="col-sm-10" id="divOrgranization">
-                      <select name="vehicleNo" id="vehicleNo" class="form-control drop_down">
+                      <select name="vehicle" id="vehicle" class="form-control drop_down">
                         <option value="">Select Vehicle No.</option>
                       </select>
                     </div>

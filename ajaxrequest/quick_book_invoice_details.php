@@ -8,55 +8,52 @@ $depositStatus = mysql_real_escape_string($_POST['depositStatus']);
 $clearanceStatus = mysql_real_escape_string($_POST['clearanceStatus']);
 /*echo $confirmationStatus;*/
 error_reporting(0);
-$linkSQL = "SELECT B.PaymentID as PaymentID, B.customerId as customerId, 
-			B.quickBookRefNo as quickBookRefNo, B.CashAmount as CashAmount,
-			B.status as status, A.chequeAmount as chequeamt, B.status as confirmationStatus,
-			C.onlineAmount as onlineAmt, A.Id as chequeId, A.ClearStatus as clearStatus, 
-			C.Id as onlinepaymentId, D.callingdata_id as callingdataid, B.paymentConfirmBy as confrmBy,
-			A.ChequeNo as cheqNo, A.Bank as bankName, A.bankDepositDate as depositDate 
-			from quickbookpaymentcheque as A 
-			Left Outer JOIN quickbookpaymentmethoddetailsmaster as B 
-			ON A.Id = B.ChequeID
-			Left Outer JOIN quickbookpaymentonlinetransfer as C 
-			ON B.OnlineTransferId = C.Id 
-			LEFT OUTER JOIN tbl_customer_master as D 
-			ON B.customerId = D.cust_id ";
-	echo $linkSQL;
-if ( ($confirmationStatus != 0) or ( $date !='' and $dateto !='') or ($depositStatus != 0) or ($clearanceStatus != 0) )
+$linkSQL = "SELECT B.PaymentID as paymentId, C.callingdata_id as callingDataId, 
+			A.chequeAmount as chequeAmt, A.Bank as bankId, A.ChequeNo as chequeNo, 
+			B.status as confirmationStatus, B.paymentConfirmBy as confrmBy, 
+			A.bankDepositDate as depositDate, A.DepositStatus as DepositStatus,
+			 A.ClearStatus as clearStatus   
+			FROM quickbookpaymentcheque as A 
+			INNER JOIN quickbookpaymentmethoddetailsmaster as B 
+			ON A.Id = B.PaymentID
+			INNER JOIN tbl_customer_master as C 
+			ON B.customerId = C.cust_id";
+	/*echo $linkSQL;*/
+if ( ($confirmationStatus != NULL) or ( $date !='' and $dateto !='') or ($depositStatus != NULL) or ($clearanceStatus != NULL) )
 	{
 		$linkSQL  = $linkSQL." WHERE ";	
 	}
 $counter = 0;
-if($confirmationStatus != 0)
+if($confirmationStatus != NULL)
 	{
 		if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." B.status = '$confirmationStatus'" ;
 		$counter+=1;
-		echo $linkSQL;
+		/*echo $linkSQL;*/
 	}
 if ( $date !='' and $dateto !='') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL =$linkSQL."  DATE(A.bankDepositDate) BETWEEN '$date' AND '$dateto' ";
 	$counter+=1;
-	echo $linkSQL;
+	/*echo $linkSQL;*/
 }
-if($depositStatus != 0)
+if($depositStatus != NULL)
 	{
 		if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." A.DepositStatus = '$depositStatus'" ;
 		$counter+=1;
-		echo $linkSQL;
+		/*echo $linkSQL;*/
 	}
-if($clearanceStatus != 0)
+if($clearanceStatus != NULL)
 	{
 		if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." A.ClearStatus = '$clearanceStatus'" ;
 		$counter+=1;
-		echo $linkSQL;
+		/*echo $linkSQL;*/
 	}
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
@@ -67,8 +64,6 @@ if(mysql_num_rows($stockArr)>0)
 	  			<th><small>S.&nbsp;No.</small></th>     
 	  			<th><small>Payment&nbsp;ID</small></th>  
               	<th><small>Organization Name</small></th>
-                <th><small>Cash Amount</small></th>   
-              	<th><small>Online Amt.</small></th>  
               	<th><small>Cheque Amt.</small></th>
               	<th><small>Bank</small></th>   
               	<th><small>Cheque No.</small></th> 
@@ -103,47 +98,11 @@ if(mysql_num_rows($stockArr)>0)
 				?>   
 	            <tr <?php print $class?>>
                 <td><small><?php print $kolor++;?>.</small></td>
-                <td><small><?php echo stripslashes($row["PaymentID"]);?></small></td>
-                <td><small><?php echo getOraganization(stripslashes($row["callingdataid"]));?></small></td>
-                <td><small>
-				<?php 
-				if($row["CashAmount"] == 0)
-				{
-					echo "N/A";
-				}
-				else
-				{
-					echo stripslashes($row["CashAmount"]);
-				}
-				?>
-                </small></td>
-                <td><small>
-				<?php
-				if($row["onlineAmt"] == "")
-				{
-					echo "N/A";
-				}
-				else
-				{
-				 	echo stripslashes($row["onlineAmt"]);
-                }
-                ?>
-                
-                </small></td>
-                <td><small>
-				<?php 
-				if($row["chequeamt"] == 0)
-				{
-					echo "N/A";
-				}
-				else
-				{
-					echo stripslashes($row["chequeamt"]);
-				}
-				?>
-                </small></td>
-                <td><small><?php echo getBankName(stripslashes($row["bankName"]));?></small></td>
-                <td><small><?php echo stripslashes($row["cheqNo"]);?></small></td>
+                <td><small><?php echo stripslashes($row["paymentId"]);?></small></td>
+                <td><small><?php echo getOraganization(stripslashes($row["callingDataId"]));?></small></td>
+                <td><small><?php echo stripslashes($row["chequeAmt"]); ?></small></td>
+                <td><small><?php echo getBankName(stripslashes($row["bankId"]));?></small></td>
+                <td><small><?php echo stripslashes($row["chequeNo"]);?></small></td>
                 <td><small>
 				<?php 
 				if($row["confirmationStatus"] == 0)
