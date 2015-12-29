@@ -972,6 +972,16 @@ function getOraganization($id)
   else
   return 'N/A';
 }
+function getCustomerType($id)
+{
+  $sql="select customer_type from tbl_customer_type where customer_type_id=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['customer_type'])
+  return $result['customer_type'];
+  else
+  return 'N/A';
+}
 function getVehicleNumber($id)
 {
   $sql="SELECT vehicle_no FROM tbl_gps_vehicle_master where id=".$id;
@@ -1176,6 +1186,16 @@ function getPlanCategory($id)
   $result=mysql_fetch_assoc($rs);
   if($result['category'])
   return $result['category'];
+  else
+  return NULL;
+}
+function getPlanAmt($id)
+{
+  $sql="select plan_rate from tblplan where id = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['plan_rate'])
+  return $result['plan_rate'];
   else
   return NULL;
 }

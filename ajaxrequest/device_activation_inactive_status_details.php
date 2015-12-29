@@ -31,7 +31,7 @@ $counter = 0;
 if ( $companyInactive != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
-	$linkSQL  =$linkSQL." B.service_branchId = '$companyInactive'";
+	$linkSQL  =$linkSQL." D.id = '$companyInactive'";
 	$counter+=1;
 	echo $linkSQL;
 }

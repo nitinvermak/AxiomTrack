@@ -93,7 +93,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     $Unassigned = mysql_num_rows($resultUnAssigned);
     $totalUnAssigned = $Unassigned;
 
-    $sqlTotalTicket = "select * from tblticket";
+    $sqlTotalTicket = "select * from tblticket Where createddate = CURDATE()";
     $resultTotalTicket = mysql_query($sqlTotalTicket);
     $totalTicket = mysql_num_rows($resultTotalTicket);
     $ticketTotal = $totalTicket;
@@ -184,8 +184,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
             <p><b>Today Reschedule</b><span class="pull-right"><?php echo $totalReschedule; ?></span>
             <p><b>Today Closed</b> <span class="pull-right"><?php echo $totalClosed; ?></span></p>
             <p><b>Today Un-Assigned</b> <span class="pull-right"><?php echo $totalUnAssigned; ?></span>
-            <p><b>Total Ticket</b><span class="pull-right"><?php echo $ticketTotal; ?></span></p>
-        </div>
+            <p><b>Today Total </b><span class="pull-right"><?php echo $ticketTotal; ?></span></p>
+      </div>
         <div class="col-md-3 report_grid color1">
             <h4>Payment Collection</h4>
             <p><b>Today Cash Amt.</b><span class="pull-right" >

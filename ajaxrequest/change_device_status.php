@@ -1,4 +1,6 @@
 <?php 
+include("../includes/config.inc.php"); 
+include("../includes/crosssite.inc.php");
 $vehicleId = mysql_real_escape_string($_POST['vehicleId']);
 ?>
 <div class="modal-header">
