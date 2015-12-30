@@ -28,7 +28,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script>
 // send ajax request
 $(document).ready(function(){
-	$('#Search').click(function(){
+	$('#searchText').change(function(){
 		$('.loader').show();
 		$.post("ajaxrequest/show_customers_details.php?token=<?php echo $token;?>",
 				{
@@ -63,17 +63,22 @@ $(document).ready(function(){
       <td width="240">
       <select name="searchText" id="searchText" class="form-control drop_down">
             <option value="">Select Orgranization</option>                         
-            <?php $Country=mysql_query("SELECT * FROM tblcallingdata WHERE STATUS='1' ORDER BY Company_Name ASC");								
-                  while($resultCountry=mysql_fetch_assoc($Country))
+            <?php $sqlQuery = mysql_query("SELECT A.Company_Name as companyName 
+                                        FROM tblcallingdata as A 
+                                        INNER JOIN tbl_customer_master as B 
+                                        ON A.id = B.callingdata_id 
+                                        ORDER BY A.Company_Name");								
+                  while($resultQuery = mysql_fetch_assoc($sqlQuery))
                         {
             ?>
-            <option value="<?php echo $resultCountry['Company_Name']; ?>">
-            <?php echo stripslashes(ucfirst($resultCountry['Company_Name'])); ?></option>
+            <option value = "<?php echo $resultQuery['companyName']; ?>">
+            <?php echo stripslashes(ucfirst($resultQuery['companyName'])); ?></option>
             <?php } ?>
       </select>
       </td>
       <td width="81">
-      <input type="submit" name="Search" id="Search" value="Search" class="btn btn-primary btn-sm"/>
+      <!--<input type="submit" name="Search" id="Search" value="Search" 
+      class="btn btn-primary btn-sm"/>-->
       </td>
       </tr>
       </table>
@@ -109,7 +114,7 @@ $(document).ready(function(){
 </div>
 </div>
 <!--end wraper-->
-<!-------Javascript------->
+<!--Javascript-->
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

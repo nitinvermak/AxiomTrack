@@ -33,33 +33,38 @@ if ( $companyInactive != 0) {
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." D.id = '$companyInactive'";
 	$counter+=1;
-	echo $linkSQL;
+	/*echo $linkSQL;*/
 }
 if ( $branchInactive != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." B.service_branchId = '$branchInactive'";
 	$counter+=1;
-	echo $linkSQL;
+	/*echo $linkSQL;*/
 }
 if ( $serviceAreaMgr != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." B.service_area_manager = '$serviceAreaMgr'";
 	$counter+=1;
-	echo $linkSQL;
+	/*echo $linkSQL;*/
 }
 if ( $executive != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." B.service_executive = '$executive'";
 	$counter+=1;
-	echo $linkSQL;
+	/*echo $linkSQL;*/
 }
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
+	 	echo '<div class="col-md-12">
+			  	<div class="download pull-right">
+					<a href="#" id ="export" role="button" class="red"><span class="glyphicon glyphicon-save"></span></a>
+				</div>
+			  </div> 
+	 	  		<table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
                 <th><small>S. No.</small></th>  

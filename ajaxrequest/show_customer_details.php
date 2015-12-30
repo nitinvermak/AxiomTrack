@@ -5,11 +5,11 @@ $organization = $_REQUEST['organization'];
 
 error_reporting(0);
 $linkSQL = "SELECT B.id, B.Company_Name, B.First_Name, B.Last_Name, B.Phone, B.Mobile, 
-			B.data_source, B.Address,A.telecaller_id, A.confirmation_date 
-			FROM tbl_customer_master as A 
-			INNER JOIN tblcallingdata as B 
-			ON A.callingdata_id = B.id 
-			WHERE A.callingdata_id='$organization'";
+      			B.data_source, B.Address,A.telecaller_id, A.confirmation_date 
+      			FROM tbl_customer_master as A 
+      			INNER JOIN tblcallingdata as B 
+      			ON A.callingdata_id = B.id 
+      			WHERE A.callingdata_id='$organization'";
 /*echo "cmd" . $linkSQL;*/
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)

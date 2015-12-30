@@ -17,10 +17,10 @@ if($searchText !== '')
 				FROM tbl_customer_master as A 
 				INNER JOIN  tblcallingdata as B 
 				ON A.callingdata_id = B.id
-				INNER JOIN tblassign as C 
+				INNER JOIN  tblassign as C 
 				ON A.callingdata_id = C.callingdata_id 
 				WHERE B.Company_Name = '$searchText' ";
-				/*echo "cmd" . $linkSQL;*/
+				echo "cmd" . $linkSQL;
 	$stockArr=mysql_query($linkSQL);
 	if(mysql_num_rows($stockArr)>0)
 		{	
@@ -58,7 +58,7 @@ if($searchText !== '')
     <td><small><?php echo gettelecallername(stripslashes($row["technician"]));?></small></td>
     <td><small><?php echo getBranch(stripslashes($row["branch"]));?></small></td>
     <td><small><a href="edit_customer_profile.php?id=<?php echo $row["Id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><a href="edit_contacts.php?id=<?php echo $row["Id"] ?>&token=<?php echo $token ?>"></a></small></td>
-</tr>
+	</tr>
 	<?php 
 	  }
 	}

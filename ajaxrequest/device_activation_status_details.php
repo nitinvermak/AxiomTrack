@@ -32,7 +32,12 @@ else
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
+	 	echo '<div class="col-md-12">
+			  	<div class="download pull-right">
+					<a href="#" id ="export" role="button" class="red"><span class="glyphicon glyphicon-save"></span></a>
+				</div>
+			  </div>  
+	 			<table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
                 <th><small>S. No.</small></th>  

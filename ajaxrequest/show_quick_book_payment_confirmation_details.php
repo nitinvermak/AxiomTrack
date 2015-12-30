@@ -6,37 +6,42 @@ error_reporting(0);
 if ($branch_id == 0)
 {
 	$linkSQL = "SELECT A.PaymentID as PaymentID, A.customerId as customerId, 
-	   			A.quickBookRefNo as quickBookRefNo, A.CashAmount as CashAmount,
-	   			A.status as status, B.chequeAmount as chequeamt, B.ChequeNo as cheqNo, 
+				A.quickBookRefNo as quickBookRefNo, A.CashAmount as CashAmount, 
+				A.status as status, B.chequeAmount as chequeamt, B.ChequeNo as cheqNo, 
 				B.Bank as bankName, C.onlineAmount as onlineAmt, B.Id as chequeId, 
-	   			C.Id as onlinepaymentId, D.callingdata_id as callingdataid  
+				C.Id as onlinepaymentId, D.callingdata_id as callingdataid 
 				FROM quickbookpaymentmethoddetailsmaster as A 
 				LEFT OUTER JOIN quickbookpaymentcheque as B 
-				ON A.ChequeID = B.Id
+				ON A.ChequeID = B.Id 
 				LEFT OUTER JOIN quickbookpaymentonlinetransfer as C 
-				ON A.OnlineTransferId = C.Id
+				ON A.OnlineTransferId = C.Id 
 				LEFT OUTER JOIN tbl_customer_master as D 
-				ON A.customerId = D.cust_id where A.status= '0'";
+				ON A.customerId = D.cust_id 
+				LEFT OUTER JOIN tbl_assign_customer_branch as E 
+				ON D.cust_id = E.cust_id 
+				where A.status= '0' 
+				and E.service_branchId = '0'";
 				/*echo $linkSQL;*/
 }
 else
 {
 	$linkSQL = "SELECT A.PaymentID as PaymentID, A.customerId as customerId, 
-	   			A.quickBookRefNo as quickBookRefNo, A.CashAmount as CashAmount,
-	   			A.status as status, B.chequeAmount as chequeamt, B.ChequeNo as cheqNo, 
+				A.quickBookRefNo as quickBookRefNo, A.CashAmount as CashAmount, 
+				A.status as status, B.chequeAmount as chequeamt, B.ChequeNo as cheqNo, 
 				B.Bank as bankName, C.onlineAmount as onlineAmt, B.Id as chequeId, 
-	   			C.Id as onlinepaymentId, D.callingdata_id as callingdataid  
+				C.Id as onlinepaymentId, D.callingdata_id as callingdataid 
 				FROM quickbookpaymentmethoddetailsmaster as A 
 				LEFT OUTER JOIN quickbookpaymentcheque as B 
-				ON A.ChequeID = B.Id
+				ON A.ChequeID = B.Id 
 				LEFT OUTER JOIN quickbookpaymentonlinetransfer as C 
-				ON A.OnlineTransferId = C.Id
+				ON A.OnlineTransferId = C.Id 
 				LEFT OUTER JOIN tbl_customer_master as D 
 				ON A.customerId = D.cust_id 
-				LEFT OUTER JOIN tbluser as E 
-				ON D.telecaller_id = E.id
-				where A.status= '0' and E.branch_id = '$branch_id' ";
-	/*echo $linkSQL;*/
+				LEFT OUTER JOIN tbl_assign_customer_branch as E 
+				ON D.cust_id = E.cust_id 
+				where A.status= '0' 
+				and E.service_branchId = '$branch_id' ";
+				/*echo $linkSQL;*/
 }
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
