@@ -160,54 +160,115 @@ if (isset($_SESSION) && $_SESSION['login']=='')
     	<h1>Dashboard</h1>
         <hr>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-3 report_grid color1">
-            <h4>Sim</h4>
-            <p><b>InStock</b><span class="pull-right"><?php echo $totalInstock; ?></span></p>
-            <p><b>Installed</b><span class="pull-right"><?php echo $totalInstalled; ?></span>
-            <p><b>Re-issue</b> <span class="pull-right"><?php echo $totalreIssue; ?></span>
-            <p><b>Damage</b><span class="pull-right"><?php echo $totalClose; ?></span>
-            <p><b>Total Sim</b><span class="pull-right"><?php echo $totalSim; ?></span></p>
-        </div>
-        <div class="col-md-3 report_grid color1">
-            <h4>Device</h4>
-            <p><b>InStock</b><span class="pull-right"><?php echo $totalInstockDevice; ?></span></p>
-            <p><b>Installed</b><span class="pull-right"><?php echo $totalInstalledDevice; ?></span></p>
-            <p><b>Re-Issue</b><span class="pull-right"><?php echo $totalreIssue; ?></span></p>
-            <p><b>Damage</b><span class="pull-right"><?php echo $totalClose; ?></span>
-            <p><b>Total Sim</b><span class="pull-right"><?php echo $totaldevice; ?></span></p>
-        </div>
-        <div class="col-md-3 report_grid color1">
-            <h4>Ticket</h4>
-            <p><b>Pending</b><span class="pull-right"><?php echo $totalPendingTkt; ?></span></p>
-            <p><b>Today Pending</b><span class="pull-right"><?php echo $totalTodayPending; ?></span></p>
-            <p><b>Today Reschedule</b><span class="pull-right"><?php echo $totalReschedule; ?></span>
-            <p><b>Today Closed</b> <span class="pull-right"><?php echo $totalClosed; ?></span></p>
-            <p><b>Today Un-Assigned</b> <span class="pull-right"><?php echo $totalUnAssigned; ?></span>
-            <p><b>Today Total </b><span class="pull-right"><?php echo $ticketTotal; ?></span></p>
-      </div>
-        <div class="col-md-3 report_grid color1">
-            <h4>Payment Collection</h4>
-            <p><b>Today Cash Amt.</b><span class="pull-right" >
-			<?php if($todayCashTotal == NULL){ echo 'N/A';} else { echo $todayCashTotal; } ?>
-            <input type="hidden" id="cash" value="<?php echo $todayCashTotal; ?>">
-            </span></p>
-            <p><b>Today Chq. Amt.</b><span class="pull-right">
-			<?php if($totalChequeAmt == NULL){ echo 'N/A'; } else { echo $totalChequeAmt;} ?>
-            <input type="hidden" value="<?php echo $totalChequeAmt; ?>" id="chq">
-            </span>
-            <p><b>Today NEFT Amt.</b><span class="pull-right">
-			<?php if($TotalNeft == NULL){ echo 'N/A'; } else { echo $TotalNeft; } ?>
-            <input type="hidden" value="<?php echo $TotalNeft; ?>" id="neft">
-            </span>
-            <p><b>Total</b><span class="pull-right" id="totalcollection"></span></p>
-        </div>
-        <div class="col-md-3 report_grid color1">
-            <h4>Leads</h4>
-            <p><b>Pending</b><span class="pull-right"><?php echo $totalPending; ?></span></p>
-            <p><b>Confirm</b><span class="pull-right"><?php echo $totalleadconfirm; ?></span></p>
-            <p><b>Total</b><span class="pull-right"><?php echo $totalLead; ?></span></p>
-        </div>
+    <div class="col-md-12 table-responsive">
+    	<!-- Sim Details -->
+        <table class="table table_light table-bordered">
+        <tr>
+        <th colspan="5"><center><strong>Sim</strong></center></th>
+        </tr>
+        <tr>
+        <td><center><strong>InStock</strong></center></td>
+        <td><center><strong>Installed</strong></center></td>
+        <td><center><strong>Re-issue</strong></center></td>
+        <td><center><strong>Damage</strong></center></td>
+        <td><center><strong>Total Sim</strong></center></td>
+        </tr>
+        <tr>
+        <td><center><?php echo $totalInstock; ?></center></td>
+        <td><center><?php echo $totalInstalled; ?></center></td>
+        <td><center><?php echo $totalreIssue; ?></center></td>
+        <td><center><?php echo $totalClose; ?></center></td>
+        <td><center><?php echo $totalSim; ?></center></td>
+        </tr>
+        </table>
+        <hr>
+       	<!-- End -->
+        <!-- Device Details -->
+        <table class="table table_light table-bordered">
+        <tr>
+        <th colspan="5"><center><strong>Device</strong></center></th>
+        </tr>
+        <tr>
+        <td><center><strong>InStock</strong></center></td>
+        <td><center><strong>Installed</strong></center></td>
+        <td><center><strong>Re-issue</strong></center></td>
+        <td><center><strong>Damage</strong></center></td>
+        <td><center><strong>Total Sim</strong></center></td>
+        </tr>
+        <tr>
+        <td><center><?php echo $totalInstockDevice; ?></center></td>
+        <td><center><?php echo $totalInstalledDevice; ?></center></td>
+        <td><center><?php echo $totalreIssue; ?></center></td>
+        <td><center><?php echo $totalClose; ?></center></td>
+        <td><center><?php echo $totaldevice; ?></center></td>
+        </tr>
+        </table>
+        <hr>
+        <!-- End -->    
+        <!-- Ticket Details -->
+        <table class="table table_light table-bordered">
+        <tr>
+        <th colspan="6"><center><strong>Ticket</strong></center></th>
+        </tr>
+        <tr>
+        <td><center><strong>Pending</strong></center></td>
+        <td><center><strong>Today Pending</strong></center></td>
+        <td><center><strong>Today Reschedule</strong></center></td>
+        <td><center><strong>Today Closed</strong></center></td>
+        <td><center><strong>Today Un-Assigned</strong></center></td>
+        <td><center><strong>Today Total</strong></center></td>
+        </tr>
+        <tr>
+        <td><center><?php echo $totalPendingTkt; ?></center></td>
+        <td><center><?php echo $totalTodayPending; ?></center></td>
+        <td><center><?php echo $totalReschedule; ?></center></td>
+        <td><center><?php echo $totalClosed; ?></center></td>
+        <td><center><?php echo $totalUnAssigned; ?></center></td>
+        <td><center><?php echo $ticketTotal; ?></center></td>
+        </tr>
+        </table>
+        <hr>
+        <!-- End -->    
+        <!-- Payment Collection -->
+        <table class="table table_light table-bordered">
+        <tr>
+        <th colspan="4"><center><strong>Payment Collection</strong></center></th>
+        </tr>
+        <tr>
+        <td><center><strong>Today Cash Amt.</strong></center></td>
+        <td><center><strong>Today Chq. Amt.</strong></center></td>
+        <td><center><strong>Today NEFT Amt.</strong></center></td>
+        <td><center><strong>Total</strong></center></td>
+        </tr>
+        <tr>
+        <td><center><?php if($todayCashTotal == NULL){ echo '0';} else { echo $todayCashTotal; } ?>
+            		<input type="hidden" id="cash" value="<?php echo $todayCashTotal; ?>"></center></td>
+        <td><center><?php if($totalChequeAmt == NULL){ echo '0'; } else { echo $totalChequeAmt;} ?>
+            		<input type="hidden" value="<?php echo $totalChequeAmt; ?>" id="chq"></center></td>
+        <td><center><?php if($TotalNeft == NULL){ echo '0'; } else { echo $TotalNeft; } ?>
+            		<input type="hidden" value="<?php echo $TotalNeft; ?>" id="neft"></center></td>
+        <td><center><span id="totalcollection"></span></center></td>
+        </tr>
+        </table>
+        <hr>
+        <!-- end -->
+        <!-- leads -->
+        <table class="table table_light table-bordered">
+        <tr>
+        <th colspan="3"><center><strong>Leads</strong></center></th>
+        </tr>
+        <tr>
+        <td><center><strong>Pending</strong></center></td>
+        <td><center><strong>Confirm</strong></center></td>
+        <td><center><strong>Total</strong></center></td>
+        </tr>
+        <tr>
+        <td><center><?php echo $totalPending; ?></center></td>
+        <td><center><?php echo $totalleadconfirm; ?></center></td>
+        <td><center><?php echo $totalLead; ?></center></td>
+        </tr>
+        </table>
+        <!-- End -->
     </div>
 </div>
 <!--end of the content-->

@@ -1,9 +1,11 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$search_box = mysql_real_escape_string($_POST['search_box']);
-/*echo "Sim Report"; */
-$branchname = $_SESSION['branch'];
+$branch = mysql_real_escape_string($_POST['branch']);
+$installedStatus = mysql_real_escape_string($_POST['installedStatus']);
+$executive = mysql_real_escape_string($_POST['executive']);
+/*$assignStatus = mysql_real_escape_string($_POST['assignStatus']);*/
+/*echo $executive.'asfas<br>';*/
 error_reporting(0);
 	$linkSQL = "SELECT A.sim_no as simNo, A.date_of_purchase as purchaseDate, A.company_id as provider, 
 				A.mobile_no as mobileNo, A.status_id as statusId, A.branch_assign_status as branchAssignStatus,
@@ -22,12 +24,49 @@ error_reporting(0);
 				LEFT OUTER JOIN tbl_gps_vehicle_master as F 
 				ON A.id = F.mobile_no
 				LEFT OUTER JOIN tbl_customer_master as G 
-				ON F.customer_Id = G.cust_id
-				WHERE (A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%')";
-	$authorized_branches = BranchLogin($_SESSION['user_id']);
+				ON F.customer_Id = G.cust_id";
+	/*$authorized_branches = BranchLogin($_SESSION['user_id']);
 	if ( $authorized_branches != '0'){
-		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		$linkSQL = $linkSQL.' Where and B.branch_id in  '.$authorized_branches;		
+	}*/
+	/*echo $linkSQL;*/
+	if( ($branch != 0) or ( $installedStatus != NULL) or ($executive != 0) or ($assignStatus != NULL) )
+	{
+		$linkSQL  = $linkSQL." Where ";
 	}
+	$counter = 0;
+	if($branch != 0)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." B.branch_id = '$branch'" ;
+			$counter+=1;
+			/*echo $linkSQL;*/
+		}
+	if($installedStatus != NULL)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." A.status_id = '$installedStatus'" ;
+			$counter+=1;
+			/*echo $linkSQL;*/
+		}
+	if($executive != 0)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." C.technician_id = '$executive'" ;
+			$counter+=1;
+			/*echo $linkSQL;*/
+		}
+	/*if($assignStatus != NULL)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." A.branch_assign_status = '$assignStatus'" ;
+			$counter+=1;
+			echo $linkSQL;
+		}*/
 	/*echo $linkSQL;*/
 	$stockArr = mysql_query($linkSQL);
 	/*$total_num_rows = mysql_num_rows($stockArr);*/

@@ -18,6 +18,7 @@ error_reporting(0);
 						ON B.ticket_id = C.ticket_id
 						LEFT OUTER JOIN tbluser as D 
 						ON C.technician_id = D.id";
+						echo $linkSQL;
 if ( ($executive != 0) or ( $dateto !='' and $date !='') or ($branch != 0) or ($status !='') )
 {
 	$linkSQL  = $linkSQL." WHERE ";	
@@ -28,28 +29,28 @@ if ( $executive != 0) {
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." C.technician_id = '$executive'" ;
 	$counter+=1;
-	//echo $linkSQL;
+	echo $linkSQL;
 }
 if ( $dateto !='' and $date !='') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL =$linkSQL."  DATE(A.appointment_date) BETWEEN '$date' AND '$dateto' ";
 	$counter+=1;
-	//echo $linkSQL;
+	echo $linkSQL;
 }
 if ( $branch != 0) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." B.branch_id ='$branch'" ;
 	$counter+=1;
-	//echo $linkSQL;
+	echo $linkSQL;
 }	
 if ( $status != '') {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 	$linkSQL  =$linkSQL." A.ticket_status ='$status'" ;
 	$counter+=1;
-	//echo $linkSQL;
+	echo $linkSQL;
 }	 			
 			
 			 

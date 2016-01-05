@@ -192,61 +192,95 @@ function getNewInstallation()
     <!--open of the content-->
 <div class="row" id="content">
 	<div class="col-md-12">
-    	<h3>Dashboard</h3>
+    	<h3>Pending Ticket</h3>
       <hr>
     </div>
     <div class="col-md-12">
-      <div class="row">
+        
+    <div class="table-responsive">
+      <table class="table table_light table-hover table-bordered ">
+      <?php
+		$where='';
+		$linkSQL="";			
+  		if(!isset($linkSQL) or $linkSQL =='')		
+     	$linkSQL = "SELECT A.ticket_id as T_Id, A.organization_id as O_Id, 
+					A.createddate as Create_date, A.close_date as C_date, 
+					A.product as P_id, A.rqst_type as R_type, A.ticket_status as T_status, 
+					A.appointment_date as ap_date, C.technician_id as T_name, B.branch_id as B_name
+					FROM tblticket as A 
+					LEFT OUTER JOIN tbl_ticket_assign_branch as B 
+					ON A.ticket_id = B.ticket_id
+					LEFT OUTER JOIN tbl_ticket_assign_technician as C 
+					ON B.ticket_id = C.ticket_id
+					LEFT OUTER JOIN tbluser as D 
+					ON C.technician_id = D.id WHERE A.ticket_status <> 1 
+					AND C.technician_id =".$_SESSION['user_id'];
+   		$pagerstring = Pages($linkSQL,PER_PAGE_ROWS,'manage_area.php?',$token);
+ 		if(isset($_SESSION['linkSQL']))
+ 		$mSQL=$_SESSION['linkSQL']." ".$_SESSION['limit'];
+ 		$oRS = mysql_query($mSQL); 
+ 		?>
+       <tr>
+	   <th><small>S. No.</small></th>     
+	   <th><small>Ticket Id.</small></th>  
+       <th><small>Organization</small></th> 
+       <th><small>Products</small></th> 
+       <th><small>Purpose</small></th>  
+       <th><small>Appointment Date</small></th> 
+       <th><small>Action</small></th>                       
+       </tr>  
+	  <?php
+		$kolor=1;
+		if(isset($_GET['page']) and is_null($_GET['page']))
+			{ 
+				$kolor = 1;
+			}
+		elseif(isset($_GET['page']) and $_GET['page']==1)
+			{ 
+				$kolor = 1;
+			}
+		elseif(isset($_GET['page']) and $_GET['page']>1)
+			{
+				$kolor = ((int)$_GET['page']-1)* PER_PAGE_ROWS+1;
+			}
+	  if(mysql_num_rows($oRS)>0)
+	  	{
+  			while ($row = mysql_fetch_array($oRS))
+  			{
+  				if($kolor%2==0)
+					$class="bgcolor='#ffffff'";
+				else
+					$class="bgcolor='#fff'";
+ 	  ?>
+       <tr <?php print $class?>>
+       <td><small><?php print $kolor++;?>.</small></td>
+       <td><small><?php echo stripslashes($row["T_Id"]);?></small></td>
+       <td><small><?php echo getOraganization(stripslashes($row["O_Id"]));?></small></td>
+       <td><small><?php echo getproducts(stripslashes($row["P_id"]));?></small></td>
+       <td><small><?php echo getRequesttype(stripslashes($row["R_type"]));?></small></td>
+       <td><small><?php echo $row["ap_date"];?></small></td>
+       <td><small> 
+       <a href="ticket_status_update.php?ticket_id=<?php echo $row["T_Id"];?>&token=<?php echo $token ?>" >Update Status</a>
+       </small></td>            
+       </tr> 
+<?php }
+		echo $pagerstring;
+	  }
+    else
+    echo "<tr><td colspan=7 align=center><h3 style='color:red'>No records found!</h3><br></td><tr/></table>";
+?>
+    </table>
+    </div>
+    <div class="row">
     	<div class="col-md-12 table-responsive">
-        	<?php if($_SESSION['user_category_id'] == 9)
-			{
-				echo "<table class='table table_light table-bordered' style='max-width:200px;'>
-					  <tr>
-						<th><center><strong>Ticket</strong></center></th>
-					  </tr>           
-					  <tr>
-					  <td><center><strong>Payment Collection</strong></center></td>
-					  </tr>
-					  <tr>
-						<td><center> $totalInstockPayment </center></td>
-					  </tr> 
-					  </table>";
-			}
-			else
-			{
-				echo "<table class='table table_light table-bordered'>
-					  <tr>
-						<th colspan='2'><center><strong>Stock</strong></center></th>
-						<th colspan='3'><center><strong>Ticket</strong></center></th>
-					  </tr>           
-					  <tr>
-						<td><center><strong>Sim</strong></center></td>
-						<td><center><strong>Device</strong></center></td>
-						<td><center><strong>New Installation</strong></center></td>
-						<td><center><strong>Repair</strong></center></td>
-						<td><center><strong>Payment Collection</strong></center></td>
-					  </tr> 
-					  <tr>
-						<td><center><a data-toggle='modal' data-target='.bs-example-modal-lg' onClick='getSimTable();'>
-									 $totalInstock</a></center></td>
-						<td><center><a data-toggle='modal' data-target='.bs-example-modal-lg' onClick='getDeviceTable();'>
-					  	$totalInstockDevice</a></center></td>
-						<td><center>
-					 	 $totalInstockNewInst</center></td>
-						<td><center> $totalInstockRepair </center></td>
-						<td><center> $totalInstockPayment </center></td>
-					  </tr> 
-					  </table>";
-			}
-			?>
-         	<!-- Show Table in Modal --->
-            	<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    	  <!-- Show Table in Modal --->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                   <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                       
                     </div><!-- End Modal Content -->
                   </div>
-                </div>
+          </div>
             <!-- End -->
         </div>
     </div>
@@ -272,5 +306,4 @@ function getNewInstallation()
 <!-------Javascript------->
 <script src="js/bootstrap.min.js"></script>
 </body>
-
 </html>

@@ -1,9 +1,12 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$search_box = mysql_real_escape_string($_POST['search_box']);
-error_reporting(0);
+$branch = mysql_real_escape_string($_POST['branch']);
+$installedStatus = mysql_real_escape_string($_POST['installedStatus']);
+$executive = mysql_real_escape_string($_POST['executive']);
+/*$assignStatus = mysql_real_escape_string($_POST['assignStatus']);*/
 
+error_reporting(0);
 	$linkSQL = "SELECT  A.id as DeviceId, A.device_name as modal, A.date_of_purchase as purchaseDate,
 			 	A.imei_no as IMEI, A.company_id as CompId, B.branch_id as Branch_name, 
 				A.status as status, A.assignstatus as branch_asgn_status, B.branch_id as Branch_name, 
@@ -22,17 +25,59 @@ error_reporting(0);
 				LEFT OUTER Join tbl_gps_vehicle_master as F 
 				ON A.id = F.device_id
 				LEFT OUTER JOIN tbl_customer_master as G 
-				ON F.customer_Id = G.cust_id WHERE (A.imei_no LIKE '$search_box%' 
-				or A.id LIKE '$search_box%')";
+				ON F.customer_Id = G.cust_id";
 
-	$authorized_branches = BranchLogin($_SESSION['user_id']);
+	/*$authorized_branches = BranchLogin($_SESSION['user_id']);
 	if ( $authorized_branches != '0'){
-		$linkSQL = $linkSQL.' and B.branch_id in  '.$authorized_branches;		
+		$linkSQL = $linkSQL.' Where B.branch_id in  '.$authorized_branches;		
+	}*/
+		/*echo $linkSQL;*/
+	if( ($branch != 0) or ( $installedStatus != NULL) or ($executive != 0) or ($assignStatus != NULL) )
+	{
+		$linkSQL  = $linkSQL." Where ";
 	}
+	$counter = 0;
+	if($branch != 0)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." B.branch_id = '$branch'" ;
+			$counter+=1;
+			/*echo $linkSQL;*/
+		}
+	if($installedStatus != NULL)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." A.status = '$installedStatus'" ;
+			$counter+=1;
+			/*echo $linkSQL;*/
+		}
+	if($executive != 0)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." C.technician_id = '$executive'" ;
+			$counter+=1;
+			/*echo $linkSQL;*/
+		}
+	/*if($assignStatus != NULL)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." A.assignstatus = '$assignStatus'" ;
+			$counter+=1;
+			echo $linkSQL;
+		}*/
 	$stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
+	 	echo '<div class="col-md-12">
+			  	<div class="download pull-right">
+					<a href="#" id ="export" role="button" class="red"><span class="glyphicon glyphicon-save"></span></a>
+				</div>
+			  </div>
+				<table border="0" class="table table-hover table-bordered">  ';
 ?>		
 				<tr>
 	  			<th><small>S. No.</small></th>     
@@ -54,6 +99,7 @@ if(mysql_num_rows($stockArr)>0)
 				
 				if(mysql_num_rows($stockArr)>0)
 				{
+					$kolor = 1;
 					while ($row = mysql_fetch_array($stockArr))
 					{ 
 					  if($kolor%2==0)
@@ -183,10 +229,10 @@ if(mysql_num_rows($stockArr)>0)
                     <?php 
                     }
                     echo $pagerstring;
-                
                 }
-                else
-                    echo "<h3><font color=red>No records found !</h3></font>";
-			}
+               else
+					echo "<tr><td colspan=6 align=center><h3><font color=red>No records found !</h3></font></td><tr/></table>";
+				}
+				
 ?>
               

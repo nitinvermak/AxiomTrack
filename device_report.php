@@ -12,35 +12,6 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-//Delete single record
-if(isset($_GET['id']))
-	{
-		$id = $_GET['id'];
-		$delete_single_row = "DELETE FROM tblsim WHERE id='$id'";
-		$delete = mysql_query($delete_single_row);
-	}
-	if($delete)
-	{
-		echo "<script> alert('Record Delted Successfully'); </script>";
-	}
-//End
-//Delete  multiple records
-if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
-   {			   
-		if(isset($_POST['linkID']))
-     		{
-			  foreach($_POST['linkID'] as $chckvalue)
-              {
-		       	$sql = "DELETE FROM tblsim WHERE id='$chckvalue'";
-				$result = mysql_query($sql);
-			  }
-			  if($result)
-			  {
-			    echo "<script> alert('Records Deleted Successfully'); </script>";
-			  }
-			}    
-  }
-//end
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,21 +27,139 @@ if(count($_POST['linkID'])>0 && (isset($_POST['delete_selected'])) )
 <script type="text/javascript" src="js/checkbox.js"></script>
 <script  src="js/ajax.js"></script>
 <script type="text/javascript">
+// send ajax request when select branch
 $(document).ready(function(){
-	$('#submit').click(function(){
-		$('.loader').show();
-		$.post("ajaxrequest/device_report_details.php?token=<?php echo $token;?>",
+	$("#branch").change(function(){
+		$.post("ajaxrequest/executive.php?token=<?php echo $token;?>",
 				{
-					search_box : $('#search_box').val()
+					branch : $('#branch').val()
 				},
 					function(data){
 						/*alert(data);*/
-						$("#divassign").html(data);
-						$(".loader").removeAttr("disabled");
-						$('.loader').fadeOut(1000);
-				});	
+						$("#showTechnician").html(data);
+				});
 	});
 });
+// End
+// send ajax request when select branch
+/*$(document).ready(function(){
+	$("#installedStatus").change(function(){
+		$.post("ajaxrequest/branch_assign_status.php?token=<?php echo $token;?>",
+				{
+					installedStatus : $('#installedStatus').val()
+				},
+					function(data){
+						alert(data);
+						$("#showStatus").html(data);
+				});
+	});
+});*/
+// End
+// send ajax request when click submit
+function getReport()
+{
+	$('.loader').show();
+	$.post("ajaxrequest/device_report_details.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val(),
+					installedStatus : $('#installedStatus').val(),
+					executive : $('#executive').val()
+					/*assignStatus : $('#assignStatus').val(),*/
+				},
+					function(data){
+						/*alert(data);*/
+						$("#dvData").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});
+}
+// end
+// export CSV
+$(document).ready(function () {
+	 console.log("HELLO")
+            function exportTableToCSV($table, filename) {
+				console.log("HELLO")
+                var $headers = $table.find('tr:has(th)')
+                    ,$rows = $table.find('tr:has(td)')
+
+                    // Temporary delimiter characters unlikely to be typed by keyboard
+                    // This is to avoid accidentally splitting the actual contents
+                    ,tmpColDelim = String.fromCharCode(11) // vertical tab character
+                    ,tmpRowDelim = String.fromCharCode(0) // null character
+
+                    // actual delimiter characters for CSV format
+                    ,colDelim = '","'
+                    ,rowDelim = '"\r\n"';
+
+                    // Grab text from table into CSV formatted string
+                    var csv = '"';
+                    csv += formatRows($headers.map(grabRow));
+                    csv += rowDelim;
+                    csv += formatRows($rows.map(grabRow)) + '"';
+
+                    // Data URI
+                    var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+                // For IE (tested 10+)
+                if (window.navigator.msSaveOrOpenBlob) {
+                    var blob = new Blob([decodeURIComponent(encodeURI(csv))], {
+                        type: "text/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, filename);
+                } else {
+                    $(this)
+                        .attr({
+                            'download': filename
+                            ,'href': csvData
+                            //,'target' : '_blank' //if you want it to open in a new window
+                    });
+                }
+
+                //------------------------------------------------------------
+                // Helper Functions 
+                //------------------------------------------------------------
+                // Format the output so it has the appropriate delimiters
+                function formatRows(rows){
+                    return rows.get().join(tmpRowDelim)
+                        .split(tmpRowDelim).join(rowDelim)
+                        .split(tmpColDelim).join(colDelim);
+                }
+                // Grab and format a row from the table
+                function grabRow(i,row){
+                     
+                    var $row = $(row);
+                    //for some reason $cols = $row.find('td') || $row.find('th') won't work...
+                    var $cols = $row.find('td'); 
+                    if(!$cols.length) $cols = $row.find('th');  
+
+                    return $cols.map(grabCol)
+                                .get().join(tmpColDelim);
+                }
+                // Grab and format a column from the table 
+                function grabCol(j,col){
+                    var $col = $(col),
+                        $text = $col.text();
+
+                    return $text.replace('"', '""'); // escape double quotes
+
+                }
+            }
+
+
+            // This must be a hyperlink
+          $(document).on("click","#export", function(){
+                // var outputFile = 'export'
+                var outputFile = window.prompt("Please Enter the name your output file.") || 'deviceReport';
+                outputFile = outputFile.replace('.csv','') + '.csv'
+                 
+                // CSV
+                exportTableToCSV.apply(this, [$('#dvData > table'), outputFile]);
+                
+                // IF CSV, don't do event.preventDefault() or return false
+                // We actually need this to be a typical hyperlink
+            });
+         })
+//end
 </script>
 </head>
 <body>
@@ -88,14 +177,79 @@ $(document).ready(function(){
     <div class="col-md-12">
     <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
       <div class="col-md-12">
-      	<div class="form-group">
-    	<input type="text" name="search_box" id="search_box" class="form-control text_box" Placeholder="Ex. Device Id or IMEI No."/>  		</div>
-        <input type="button" name="assign" value="Search" id="submit" class="btn btn-primary btn-sm" />
-        <input type="button" name="view" id="view" value="Summary" class="btn btn-primary btn-sm" onClick="window.location.replace('device_summary.php?token=<?php echo $token;?>')" />
-        <input type="button" name="advanceFilter" id="advanceFilter" value="Advance Filter" class="btn btn-primary btn-sm" onClick="window.location.replace('device_advance_filter.php?token=<?php echo $token;?>')" />
+      	<table class="form-field" width="100%">
+         <tr>
+         <td width="9%"><strong>Branch*</strong></td>
+         <td width="20%">
+             <select name="branch" id="branch" class="form-control drop_down-sm">
+               <option label="" value="" selected="selected">Select Branch</option>
+               <?php 
+                    $branch_sql= "select * from tblbranch ";
+                    $authorized_branches = BranchLogin($_SESSION['user_id']);
+                    //echo $authorized_branches;
+                    if ( $authorized_branches != '0')
+                    {
+                        $branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+                    }
+                    if($authorized_branches == '0')
+                    {
+                        echo'<option value="0">All</option>';	
+                    }
+                    //echo $branch_sql;
+                    $Country = mysql_query($branch_sql);					
+                        while($resultCountry=mysql_fetch_assoc($Country)){
+                    ?>
+               <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
+               <?php } ?>
+             </select>
+         </td>
+         <td width="7%"><strong>Status*</strong></td>
+         <td width="12%">
+             <select name="installedStatus" id="installedStatus" class="form-control drop_down-sm">
+               <option value="" selected>All</option>
+               <option value="0">Instock</option>
+               <option value="1">Installed</option>
+             </select>
+         </td>
+         <td width="11%" class="col-xs-1">&nbsp;</td>
+         <td width="13%">&nbsp;</td>
+         <td width="13%">&nbsp;</td>
+         <td width="15%"></td>
+         </tr>
+      	 <tr>
+         <td><strong>Executive*</strong></td>
+         <td><div id="showTechnician">
+           <select name="executive" id="executive" class="form-control drop_down-sm">
+             <option value="">Select Executive</option>
+           </select>
+         </div></td>
+         <td><strong><!--Assign Status*--></strong></td>
+         <td>
+         <div id="showStatus">
+         	<!--<select name="assignStatus" id="assignStatus" class="form-control drop_down-sm">
+               <option value="" selected>All</option>
+            </select>-->
+         </div>
+         </td>
+         <td><input type="button" name="submit" value="Submit" onClick="getReport();" class="btn btn-primary btn-sm pull-left"/></td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+      	 <td>&nbsp;</td>
+      	 </tr>
+      	 <tr>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         <td>&nbsp;</td>
+         </tr>
+         </table>
       </div> 
-      <div id="divassign" class="col-md-12 table-responsive assign_grid">
-
+      <div id="dvData" class="col-md-12 table-responsive assign_grid">
+      	
       </div>
     </form>
     </div>
