@@ -1,4 +1,6 @@
 <?php
+
+/* test */
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
