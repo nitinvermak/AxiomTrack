@@ -3,6 +3,7 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
+session_set_cookie_params(3600,"/");
 session_start();
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();

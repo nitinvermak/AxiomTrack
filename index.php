@@ -1,5 +1,9 @@
 <?php 
 include("includes/config.inc.php"); 
+if (isset($_SESSION['login']) && $_SESSION['login'] !="") {
+  header("location: home.php?token=".$_SESSION['token']);
+  exit;
+}
 $token = md5(uniqid(rand(), true));
     $_SESSION['token'] = $token;
     $_SESSION['token_time']=time();
@@ -11,105 +15,142 @@ if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
     header("location: index.php");
 }
 ?>
-<!Doctype html>
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--bootstrap css-->
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="css/custom.css">
-<title><?=SITE_PAGE_TITLE?></title>
-<script type="text/javascript" src="js/Nibbler.js"></script>
-<script language="javascript">
-base64 = new Nibbler({
-    dataBits: 8,
-    codeBits: 6,
-    keyString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
-    pad: '='
-});
-function formvalid()
-{
-    if (document.login.txtusername.value=='')
-    {
-        alert("Please enter User Name");
-        document.login.txtusername.focus()
-        return false;
-    }
-    if (document.login.txtpassword.value=='')
-    {
-        alert("Please enter Password");
-        document.login.txtpassword.focus()
-        return false;
-    }   
-//  alert(base64.encode(document.login.txtpassword.value));
-//alert(base64.encode(document.login.txtpassword.value));
-    document.login.txtpassword.value=base64.encode(document.login.txtpassword.value);
-    return true;
-}
-</script>
-</head>
-<body>
-<!--open of the wraper-->
-<div id="wraper">
-	<!--open of the header-->
-	<div class="container-fluid" id="header">
-    	<div class="row">
-            <div class="col-md-6">
-                <img src="images/indian_truckers.png" class="img-responsive" alt="Indian Truckers" title="Indian Truckers">
-            </div>
-            <div class="col-md-6">
-            	
-            </div>
-        </div>
-    </div>
-    <!--end of the header-->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><?=SITE_PAGE_TITLE?> | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="assets/dist/css/AdminLTE.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="assets/plugins/iCheck/square/blue.css">
 
-<!--open of the content-->
-<div class="row" id="content">
-	<div class="col-md-12">
-    	<center>
-        <form name="login" action="login.php" method="post" onSubmit="formvalid()">
-        <input type="hidden" name="submitForm" value="yes" />
-        <input type="hidden" name="encpassword" value="" />
-         <table>
-             <tr>
-                 <td><strong>Username</strong></td>
-                 <td><input name="txtusername" type="text" class="form-control" id="txtusername" value="Enter User Name" onBlur="if(this.value=='') this.value='Enter User Name'" onFocus="if(this.value =='Enter User Name' ) this.value=''"/></td>
-             </tr>
-             <tr>
-                 <td><strong>Password</strong></td>
-                 <td> <input value="Enter Password" class="form-control" onBlur="if(this.value=='') this.value='Enter Password'" onFocus="if(this.value =='Enter Password' ) this.value=''" name="txtpassword" type="password" id="txtpassword" /></td>
-             </tr>
-             <tr>
-               <td></td>
-               <td><a href="">Forgot Password</a></td>
-             </tr>
-             <tr>
-                 <td></td>
-                 <td><input type="submit" class="btn btn-default" value="Submit" id="submit" /></td>
-             </tr>
-         </table>  
-         </form> 
-        </center>
-    </div>
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript">
+    function formSubmit(){
+    if($("#txtusername").val() == "" ){
+            $("#txtusername").focus();
+            alert("Please Enter Username");
+            return false;
+        }
+    if($("#txtpassword").val() == "" ){
+            $("#txtpassword").focus();
+            alert("Please Enter Password");
+            return false;
+        }
+    }
+    // get Modal form
+    function getModal(){
+        $.post("ajaxrequest/forget_password.php",
+        function(data){
+            $("#forgetPwd").html(data);
+        });
+    }
+    function getPassword(){
+      var mobile = document.getElementById("mobile").value;
+      if(mobile == ""){
+        alert("Please Enter Your Mobile No.");
+      }
+      else{
+        $.post("ajaxrequest/send_password.php",
+        {
+            mobile : $("#mobile").val()
+        },
+        function(data){
+            $("#dvmsg").html(data);
+        });
+      }
+    }
+  </script>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="http://indiantruckers.com/"><b>Indian</b>Truckers</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <div id="msg"><!-- msg -->
+      <!-- Show alert Message -->
+    </div> <!-- end msg -->
+    <p class="login-box-msg">Sign in to start your session</p>
+    <?php if(isset($_GET["login-failed"])){?>
+      <div class='alert alert-danger alert-dismissible' role='alert'>
+        <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+        <strong><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                </strong> <?= $_GET["login-failed"];?>
+      </div>   
+    <?php } ?>
+    <form name="login" method="post" action="login.php" onsubmit="return formSubmit(this);">
+      <div class="form-group has-feedback">
+        <input name="txtusername" type="text" class="form-control" id="txtusername" placeholder="Enter User Name" value="<?php if(isset($_COOKIE["member_login"])) { echo $_COOKIE["member_login"]; } ?>" />
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input placeholder = "Enter Password" class = "form-control" name = "txtpassword" type = "password" id = "txtpassword" value="<?php if (isset($_COOKIE["member_password"])){ echo $_COOKIE["member_password"];
+        } ?>" />
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <div class="checkbox icheck">
+            <label>
+              <input type="checkbox" name="remember" <?php if(isset($_COOKIE["member_login"])) { ?> checked <?php } ?> >
+              Remember Me
+            </label>
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          
+          <input type="submit" name= "submit" class="btn btn-primary btn-block btn-flat"  value="LogIn" id="submit" />
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+    <a data-toggle="modal" data-target="#myModal" onclick="getModal();" href="#">I forgot my password</a><br>
+  </div>
+  <!-- /.login-box-body -->
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" id="forgetPwd">
+        
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 </div>
-<!--end of the content-->
-<!--open of the footer-->
-<div class="row" id="footer">
-	<div class="col-md-12">
-    <p>Copyright &copy; 2015 INDIAN TRUCKERS, All rights reserved.</p>
-    </div>
-</div>
-<!--end footer-->
-</div>
-<!--end wraper-->
-<!-------Javascript------->
-<script src="js/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
- <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+<!-- /.login-box -->
+
+<!-- jQuery 2.2.3 -->
+<script src="assets/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="assets/plugins/iCheck/icheck.min.js"></script>
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+</script>
 </body>
 </html>

@@ -34,31 +34,27 @@ if(mysql_num_rows($stockArr)>0)
 				{
 						echo "<h2 class='title'>".$moduleCatNameDict[$row["moduleCatId"]]."</h2>";
 					 	echo "<table class='table table-hover table-bordered'>
-							
-							<tr>
-							<th class='col-md-3'>S. No.</th>                   
-							<th class='col-md-6'>Module Name</th>  
-							
-							<th class='col-md-3'><p>Action<small>
-							<input type='checkbox' onclick=checkPermission(".$row["moduleCatId"].")  /> Check/Uncheck All				
-							</small></p>
-							</th>	
-							</tr>";
+								<tr>
+									<th><small>S. No.</small></th>                   
+									<th><small>Module Name</small></th>  
+									<th><small>Action
+										<input type='checkbox' onclick=checkPermission(".$row["moduleCatId"].")  /> Check/Uncheck All				
+										</small>
+									</th>	
+								</tr>";
 				}
 				else
 				{
 						echo '</table>';
 						echo "<h2 class='title'>".$moduleCatNameDict[$row["moduleCatId"]]."</h2>";
 					 	echo "<table class='table table-hover table-bordered'>
-							
-							<tr>
-							<th class='col-md-3'>S. No.</th>                   
-							<th class='col-md-6'>Module Name</th>  
-							
-							<th class='col-md-3'><p>Action<small>
-							<input type='checkbox' onclick=checkPermission(".$row["moduleCatId"].")  /> Check/Uncheck All
-							</th>	
-							</tr>";
+							  	<tr>
+									<th><small>S. No.</small></th>                   
+									<th><small>Module Name</small></th>  
+									<th><small>Action
+										<input type='checkbox' onclick=checkPermission(".$row["moduleCatId"].")  /> Check/Uncheck All</small>
+									</th>	
+								</tr>";
 				}
 		   }
 		   $moduleCat = $row["moduleCatId"];
@@ -70,10 +66,10 @@ if(mysql_num_rows($stockArr)>0)
  	?>
  
     <tr <?php print $class?>>
-    <td><?php print $kolor++;?>.</td>
-	<td><?php echo stripslashes($row["Module"]);?></td>	
+    <td><small><?php print $kolor++;?>.</small></td>
+	<td><small><?php echo stripslashes($row["Module"]);?></small></td>	
    
-    <td> 
+    <td><small> 
   	    <?php if($row["UserModID"]== NULL) 
  {
  	
@@ -83,7 +79,8 @@ if(mysql_num_rows($stockArr)>0)
  {
  	
    echo '<input type="checkbox" class="perCheck'.$row["moduleCatId"].'" value='.$row["MId"].' checked name="list[]" id="list" />';
- } ?>  
+ } ?> 
+ 	</small> 
     </td>
     </tr>
     <?php

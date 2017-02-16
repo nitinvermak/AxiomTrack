@@ -11,21 +11,23 @@ if ($cust_id == '')
 		else if($cust_id !== '')
 			{
 				$linkSQL = "SELECT A.cust_id, A.customer_type, A.np_device_amt, A.np_device_rent, 
-							A.installment_amt, A.r_installation_charge, A.no_of_installment, 
-							A.rent_payment_mode, B.vehicle_no, B.id, B.installation_date, 
-							B.model_name, B.paymentActiveFlag 
-							FROM tbl_customer_master as A
-							INNER JOIN tbl_gps_vehicle_master as B 
-							ON A.cust_id = B.Customer_id 
-							WHERE A.cust_id = '$cust_id' and B.paymentActiveFlag='N'
-							order by B.vehicle_no
-							";
+							      A.installment_amt, A.r_installation_charge, A.no_of_installment, 
+							      A.rent_payment_mode, B.vehicle_no, B.id, B.installation_date, 
+							      B.model_name, B.paymentActiveFlag, B.device_id as deviceId 
+							      FROM tbl_customer_master as A
+							      INNER JOIN tbl_gps_vehicle_master as B 
+							      ON A.cust_id = B.Customer_id 
+							      WHERE A.cust_id = '$cust_id' 
+                    and B.paymentActiveFlag='N'
+                    and B.activeStatus = 'Y'
+							      order by B.vehicle_no";
 				/*echo "cmd" . $linkSQL;*/
 			}
 $stockArr=mysql_query($linkSQL);
 
 if(mysql_num_rows($stockArr)>0)
 	{	
+    echo "<div class='col-md-12' id='div_Show'></div>";
 	 	echo '<table width="500px" class="table table-hover table-bordered ">';
 ?>	
 			 
@@ -33,6 +35,7 @@ if(mysql_num_rows($stockArr)>0)
              <th><small>S. No.</small></th>  
           	 <th><small>Vehicle No.</small></th> 
           	 <th><small>Date of Instl.</small></th>
+             <th><small>Dealer Name</small></th>
              <th><small>Model</small></th>  
           	 <th><small>Device Type</small></th>
              <th><small>Device Amt.</small></th>
@@ -59,11 +62,12 @@ if(mysql_num_rows($stockArr)>0)
             </small>
             </td>
 	  		<td><small><?php echo stripslashes($row["installation_date"]);?> <input type="hidden" name="installation_date" id="installation_date" value="<?php echo stripslashes($row["installation_date"]);?>"></small></td>
+            <td><small><?php echo getDealer1($row['deviceId']); ?></small></td>
 	  		<td><small><?php echo stripslashes($row["model_name"]);?> <input type="hidden" name="model_name" id="model_name" value="<?php echo stripslashes($row["model_name"]);?>"></small></td>
 	  		<td>               
                 <select name="device_type" id="device_type" class="device_type" style="width:140px;">
                     <option value="X_"   >Device Type</option>
-                    <?php $Country=mysql_query("select * from tbl_device_type");
+                    <?php $Country=mysql_query("select * from tbl_device_type order by DeviceType");
                                    while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
                     <option value="<?php echo $resultCountry['DeviceTypeId']; ?>" 
@@ -74,9 +78,9 @@ if(mysql_num_rows($stockArr)>0)
                 <?php ?>
             </td>
             <td>
-            	<select name="device_amt" id="device_amt<?php echo stripslashes($row["id"]);?>" class="device_amt"  style="width:50px;" >
+            	<select name="device_amt" id="device_amt" class="device_amt"  style="width:50px;" >
                     <option value="X_">Select</option>
-                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1");
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 1 order by plan_rate");
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
                   	  <option value="<?php echo $resultCountry['id']."@".$resultCountry['plan_rate']; ?>" <?php if(isset($row['np_device_amt']) && $resultCountry['id']==$row['np_device_amt']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
@@ -88,7 +92,7 @@ if(mysql_num_rows($stockArr)>0)
         	<td>
             	<select name="device_rent" id="device_rent" class="device_rent" style="width:50px;" >
                     <option value="X_">Select</option>
-                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 2");						
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 2 order by plan_rate");						
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
                     <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($row['np_device_rent']) && $resultCountry['id']==$row['np_device_rent']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
@@ -110,7 +114,7 @@ if(mysql_num_rows($stockArr)>0)
             <td>
             	<select name="installation_charges" id="installation_charges" class="installation_charges" style="width:50px;" >
                    <option value="X_">Select</option>
-                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3");
+                    <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3 order by plan_rate");
 					
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
@@ -140,7 +144,7 @@ if(mysql_num_rows($stockArr)>0)
               </td>
           
           
-        <td><input type="button" name="Save" id="Save" value="Save" onclick="getValue(<?php echo stripslashes($row["id"]);?>);"></td>
+        <td><input type="button" name="Save" id="Save" value="Save" onclick="get_Value(<?php echo stripslashes($row["id"]);?>);"></td>
       	</tr>
         
         

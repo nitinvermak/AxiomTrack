@@ -1,9 +1,7 @@
 <?php
 include("../includes/config.inc.php"); 
-include("../includes/crosssite.inc.php"); 
+/*include("../includes/crosssite.inc.php"); */
 $cust_id = $_REQUEST['cust_id']; 
-/*echo 'ajfhasjkfh';*/
-/*echo $searchText;*/
 error_reporting(0);
 if ($cust_id == '')
 	{
@@ -17,7 +15,8 @@ if ($cust_id == '')
 						    INNER JOIN tbl_gps_vehicle_payment_master as C 
 						    ON B.id = C.Vehicle_id
 						    WHERE A.cust_id = '$cust_id'
-							and C.PlanactiveFlag = 'Y'
+							and C.PlanactiveFlag = 'Y' 
+                            and B.activeStatus = 'Y'
 							order by B.vehicle_no
 							";
 				/*echo "cmd" . $linkSQL;*/
@@ -62,14 +61,17 @@ if(mysql_num_rows($stockArr)>0)
 	  		<td><small><?php  if($row['device_amt'] !=0) { echo getDeviceAmt($row['device_amt']); } else { echo 'N/A'; } ?></small></td>
 	  		<td><small><?php if($row['device_rent_amt'] !=0) { echo getDeviceAmt($row['device_rent_amt']); } else { echo 'N/A';} ?></small></td>
             <td><small><?php if($row['RentalFrequencyId'] !=0) { echo getFrequency($row['RentalFrequencyId']); } else { echo 'N/A';} ?></small></td>
-        	<td><small><?php if($row['r_installation_charge'] !=0) { echo getDeviceAmt($row['installation_charges']); } else { echo 'N/A'; } ?></small></td>
+        	<td><small><?php if($row['installation_charges'] == '0') { echo 'N/A'; } else { echo getDeviceAmt($row['installation_charges']); } ?></small></td>
             <td><small><?php if($row['InstallmentamountID'] !=0){ echo $row['InstallmentamountID'];} else { echo 'N/A';} ?></small></td>
             <td><small><?php if($row['NoOfInstallment'] !=0) { echo stripcslashes(ucfirst($row['NoOfInstallment']));} else { echo 'N/A';}?></small></td>
             <td><small><?php if($row['InstFrequencyID'] !=0) { echo getFrequency($row['InstFrequencyID']); } else { echo 'N/A'; } ?></small></td>
-            <td><small><?php echo stripslashes($row["PlanStartDate"]);?> 
+            <td><small><?php echo date("d-m-Y", strtotime($row["PlanStartDate"]));?> 
             <input type="hidden" name="installation_date" id="installation_date" value="<?php echo stripslashes($row["installation_date"]);?>">
             </small></td>
-            <td><small><?php echo stripslashes($row["PlanendDate"]);?> 
+            <td><small>
+                <?php 
+                echo date("d-m-Y", strtotime($row["PlanendDate"]));
+                ?> 
             <input type="hidden" name="plan_end" id="plan_end" value="<?php echo stripslashes($row["PlanendDate"]);?>">
             </small></td>
         	<td><img class="pointer" id="image" onclick="getDetails(<?php echo stripslashes($row["Vehicle_id"]);?>)" src="images/plus.gif" /></td>

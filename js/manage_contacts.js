@@ -106,7 +106,7 @@ function chkcontactform(obj)
 	document.getElementById("chekpage").value="1";
 
 }
-function chkupload(obj1)
+/*function chkupload(obj1)
 {
 	if(obj1.datasource1.value == "")
 	{
@@ -126,4 +126,4 @@ function chkupload(obj1)
 		return false;
 	}
 }
-
+*/

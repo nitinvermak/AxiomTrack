@@ -79,10 +79,10 @@ if(mysql_num_rows($stockArr)>0)
             <td>
             <small><?php if($row['InstFrequencyID'] !=0) { echo getFrequency($row['InstFrequencyID']); } else { echo 'N/A'; } ?></small>  
         	</td>
-            <td><small><?php echo stripslashes($row["PlanStartDate"]);?> 
+            <td><small><?php echo date("d-m-Y", strtotime($row["PlanStartDate"]));?> 
             <input type="hidden" name="installation_date" id="installation_date" value="<?php echo stripslashes($row["installation_date"]);?>">
             </small></td>
-            <td><small><?php echo stripslashes($row["PlanendDate"]);?> 
+            <td><small><?php echo date("d-m-Y", strtotime($row["PlanendDate"]));?> 
             <input type="hidden" name="plan_end" id="plan_end" value="<?php echo stripslashes($row["PlanendDate"]);?>">
             </small></td>
       		</tr>

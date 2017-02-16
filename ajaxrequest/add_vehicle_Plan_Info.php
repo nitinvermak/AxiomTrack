@@ -7,7 +7,7 @@ $myArray = json_decode($_POST["postdata"] );
  
 foreach ( $myArray as $array1){
 	foreach ($array1 as $key => $val) {
-	     	echo '</br>'; 
+	     	/*echo '</br>'; */
 	    	/* echo var_dump($array1);*/ 
 	     // echo "$key => $val\n";
      		 	$chunk = explode('=',$val); 
@@ -73,29 +73,30 @@ if($device_type == 4)
 
 
 	{	
-		echo $device_amt;
+		/*echo $device_amt;*/
 		
 		$deviceAmt =explode('@',$device_amt);
-		echo '<br/>';
+		/*echo '<br/>';
 		echo $deviceAmt[0];
 		echo '<br/>';
-		echo $deviceAmt[1];
+		echo $deviceAmt[1];*/
 		
 		
 		$instalment = 	($deviceAmt[1] - $downpayment)/$NoOfInstallation;
-	    echo $instalment;
+	   /* echo $instalment;*/
 		$Update = "Insert tblinstallmentmaster SET VehicleId = '$vehicle_id', Installmentamount = '$instalment',   		
 		downpaymentAmount = '$downpayment', InstFrequencyID='$instalment_frq', NoOfInstallment = '$NoOfInstallation'"; 
-		echo "Update".$Update;
+		/*echo "Update".$Update;*/
 		$result1 = mysql_query($Update);
 		$instalmentId = mysql_insert_id();
 		/*echo 'inid'.$instalmentId;*/
-		$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', instalmentId='$instalmentId', Vehicle_id = '$vehicle_id', device_type = '$device_type', device_amt = '$deviceAmt[0]', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq',PlanStartDate='$installation_date', PlanactiveFlag='Y'";
-		echo 'comnd' .$sql;
+		$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', instalmentId='$instalmentId', Vehicle_id = '$vehicle_id', device_type = '$device_type', device_amt = '$deviceAmt[0]', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq',PlanStartDate='$installation_date', next_due_date = '$installation_date', PlanactiveFlag='Y'";
+		/*echo 'comnd' .$sql;*/
 		$result = mysql_query($sql);
 		$change_status = "UPDATE tbl_gps_vehicle_master SET paymentActiveFlag='Y' where id='$vehicle_id'";
 		/*echo $change_status; */
 		$change = mysql_query($change_status);
+		echo "<p style = 'color:green; font-weight:bold;'> Payment Details Added !</p>";
 	}
 else
 	{
@@ -103,11 +104,12 @@ else
 		$deviceAmt =explode('@',$device_amt);
  
 	$sql = "Insert into tbl_gps_vehicle_payment_master set cust_id = '$custid', Vehicle_id = '$vehicle_id ', device_type = '$device_type', device_amt = '$deviceAmt[0]', device_rent_amt = '$device_rent', installation_charges = '$installation_charges', RentalFrequencyId='$rent_frq', PlanStartDate='$installation_date', PlanactiveFlag='Y'";
-	echo 'comnd' .$sql;
+	/*echo 'comnd' .$sql;*/
 	$result = mysql_query($sql);
 	$change_status = "UPDATE tbl_gps_vehicle_master SET paymentActiveFlag='Y' where id='$vehicle_id'";
-	echo $change_status; 
+	/*echo $change_status; */
 	$change = mysql_query($change_status);
+	echo  "<p style = 'color:green; font-weight:bold;'> Payment Details Added !</p>";
 	}
  
 ?>

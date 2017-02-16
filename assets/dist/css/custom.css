@@ -1,0 +1,82 @@
+.small-box{
+	min-height:320px;
+}
+.small-box .inner h3{
+	font-size: 16px;
+}
+.small-box .inner .dash-info{
+	float: left;
+	padding:10px;
+	font-weight:bold;
+}
+.small-box .inner .dash-info a{
+	color:#fff;
+	text-decoration:underline;
+}
+.small-box .inner .dash-info a:hover{
+	color:#ededed;
+	text-decoration:none;
+}
+th{
+	background-color:#3c79b7;
+	color:#fff;
+}
+.small-form{
+	max-width: 500px;
+	/*background-color: red;*/
+}
+.tkt-form{
+	max-width: 700px;
+	/*background-color: red;*/
+}
+.search_grid{
+	padding-top: 10px;
+	padding-bottom: 20px;
+}
+.loader{
+    position: absolute;
+    height: auto;
+    width: auto;
+   	margin:auto;
+    top: 50%;
+    left: 45%;
+	display:none;
+}
+.small-panel i{
+	color: red;
+}
+.small-alert{
+	max-width: 500px;
+}
+.delete-multiple-button{
+	padding: 0px 0px 15px 0px;
+}
+.red{
+	color: red;
+}
+.form_custom .custom_field span{
+	font-weight: bold;
+}
+.form_custom .custom_field{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.title{
+	font-size: 16px;
+	color: red;
+	font-weight: bold;
+}
+.field-option{
+	background-color: #ecf0f5;
+	color: red;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.button-op{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.button-op .btn-info{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}

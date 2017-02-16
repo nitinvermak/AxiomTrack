@@ -6,6 +6,8 @@
 // ini_set('upload_tmp_dir','/tmp');
 //ini_set('max_execution_time','2000');
 error_reporting(0);
+session_set_cookie_params(3600,"/");
+session_set_cookie_params(3600,"/");
 session_start(); // starting user session here]
 //ob_start();
 //header( "Set-Cookie: name=value; httpOnly" );

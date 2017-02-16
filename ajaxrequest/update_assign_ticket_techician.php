@@ -12,18 +12,22 @@ $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)
 	{
 	
-	 	echo '  <table class="table table-bordered table-hover">  ';
+	 	echo '  <table class="table table-bordered table-hover" id="example">  ';
+	 	echo "<thead>";
 ?>                 
     	          <tr>
-                  <th><small>S. No.</small></th>     
-                  <th><small>Ticket Id</small></th> 
-                  <th><small>Organization Name</small></th>  
-                  <th><small>Product</small></th>
-                  <th><small>Request Type</small></th> 
-                  <th><small>Created</small></th> 
-                  <th><small>Appointment Date Time</small></th>              
-                  <th><small>Actions</small></th>   
-                  </tr>    
+	                  <th><small>S. No.</small></th>     
+	                  <th><small>Ticket Id</small></th> 
+	                  <th><small>Organization Name</small></th>  
+	                  <th><small>Product</small></th>
+	                  <th><small>Request Type</small></th> 
+	                  <th><small>Vehicle No</small></th> 
+	                  <th><small>Created</small></th> 
+	                  <th><small>Appointment Date Time</small></th>              
+	                  <th><small>Actions</small></th>   
+                  </tr> 
+             </thead>
+             <tbody>   
 	
 	<?php
 	  $kolor =1;
@@ -50,6 +54,7 @@ if(mysql_num_rows($stockArr)>0)
 				 <td><small><?php echo getOraganization(stripslashes($row["organization_id"]));?></small></td>
 				 <td><small><?php echo getproducts(stripslashes($row["product"]));?></small></td>
                  <td><small><?php echo getRequesttype(stripslashes($row["rqst_type"]));?></small></td>
+                 <td><small><?php echo getVehicle($row['vehicleId']); ?></small></td>
 				 <td><small><?php echo stripslashes($row["createddate"]);?></small></td>
                  <td><small><?php echo stripslashes($row["appointment_date"]." ".$row["appointment_time"]);?></small></td>
                  <td>
@@ -58,13 +63,7 @@ if(mysql_num_rows($stockArr)>0)
                  </tr>
 	<?php 
 	      }
-
- 
-
 	}
-    else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br></td><tr/></table>";
 ?> 
-
- 	
-        <!-- Modal -->
+</tbody>
+</table>

@@ -1,13 +1,19 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$search_box = mysql_real_escape_string($_POST['search_box']);
-/*echo "Sim Report"; */
-$branchname = $_SESSION['branch'];
+$branch = mysql_real_escape_string($_POST['branch']);
+$installedStatus = mysql_real_escape_string($_POST['installedStatus']);
+$executive = mysql_real_escape_string($_POST['executive']);
 error_reporting(0);
-if($branchname == 14)
-{
-	$linkSQL = "SELECT * FROM tblsim as A 
+	$linkSQL = "SELECT A.sim_no as simNo, A.date_of_purchase as purchaseDate, A.company_id as provider, 
+				A.mobile_no as mobileNo, A.status_id as statusId, A.branch_assign_status as branchAssignStatus,
+				B.branch_id  as branchId, D.CompanyName as branchname, 
+				B.technician_assign_status as technicianStatus, 
+				C.technician_id as technicianId, G.callingdata_id as callingDataId, 
+				E.First_Name as fName, E.Last_Name as lName, F.vehicle_no as vehicleNo, 
+				B.assigned_date as branchAssignDate, C.assigned_date as techAssignDate,
+				A.modifyDate as modifyDate
+				FROM tblsim as A 
 				LEFT OUTER JOIN tbl_sim_branch_assign as B
 				ON A.id = B.sim_id
 				LEFT OUTER JOIN tbl_sim_technician_assign as C
@@ -15,149 +21,106 @@ if($branchname == 14)
 				LEFT OUTER JOIN tblbranch as D 
 				ON B.branch_id = D.id
 				LEFT OUTER JOIN tbluser as E 
-				ON C.technician_id = E.id WHERE A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%'";
-}
-else
-{
-	$linkSQL = "SELECT * FROM tblsim as A 
-				LEFT OUTER JOIN tbl_sim_branch_assign as B
-				ON A.id = B.sim_id
-				LEFT OUTER JOIN tbl_sim_technician_assign as C
-				ON B.sim_id = C.sim_id
-				LEFT OUTER JOIN tblbranch as D 
-				ON B.branch_id = D.id
-				LEFT OUTER JOIN tbluser as E 
-				ON C.technician_id = E.id WHERE (A.sim_no LIKE '%$search_box%' OR A.mobile_no LIKE '%$search_box%') And B.branch_id = '$branchname'";
-}
-/*echo $linkSQL;*/
-$stockArr = mysql_query($linkSQL);
-/*$total_num_rows = mysql_num_rows($stockArr);*/
+				ON C.technician_id = E.id 
+				LEFT OUTER JOIN tbl_gps_vehicle_master as F 
+				ON A.id = F.mobile_no
+				LEFT OUTER JOIN tbl_customer_master as G 
+				ON F.customer_Id = G.cust_id";
+	/*$authorized_branches = BranchLogin($_SESSION['user_id']);
+	if ( $authorized_branches != '0'){
+		$linkSQL = $linkSQL.' Where and B.branch_id in  '.$authorized_branches;		
+	}*/
+	/*echo $linkSQL;*/
+	if( ($branch != 0) or ( $installedStatus != NULL) or ($executive != 0) or ($assignStatus != NULL) ){
+		$linkSQL  = $linkSQL." Where ";
+	}
+	$counter = 0;
+	if($branch != 0){
+		if ($counter > 0 )
+		$linkSQL = $linkSQL.' AND ';
+		$linkSQL  = $linkSQL." B.branch_id = '$branch'" ;
+		$counter+=1;
+		/*echo $linkSQL;*/
+	}
+	if($installedStatus != NULL){
+		if ($counter > 0 )
+		$linkSQL = $linkSQL.' AND ';
+		$linkSQL  = $linkSQL." A.status_id = '$installedStatus'" ;
+		$counter+=1;
+		/*echo $linkSQL;*/
+	}
+	if($executive != 0){
+		if ($counter > 0 )
+		$linkSQL = $linkSQL.' AND ';
+		$linkSQL  = $linkSQL." C.technician_id = '$executive'" ;
+		$counter+=1;
+		/*echo $linkSQL;*/
+	}
+	/*if($assignStatus != NULL)
+		{
+			if ($counter > 0 )
+			$linkSQL = $linkSQL.' AND ';
+			$linkSQL  = $linkSQL." A.branch_assign_status = '$assignStatus'" ;
+			$counter+=1;
+			echo $linkSQL;
+		}*/
+	/*echo $linkSQL;*/
+	$stockArr = mysql_query($linkSQL);
+	/*$total_num_rows = mysql_num_rows($stockArr);*/
 if(mysql_num_rows($stockArr)>0)
 	{
-		/*echo "Total Found Record" .$total_num_rows. "!";*/
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
 ?>		
-				<tr>
-              	<th><small>S. No.</small></th>     
-              	<th><small>Sim  No.</small></th>  
-              	<th><small>Mobile No.</small></th>
-              	<th><small>Company</small></th> 
-              	<th><small>Status (Instock/Installed)</small></th>
-              	<th><small>Allocated/ Unallocated</small></th>   
-              	<th><small>Branch Id</small></th>   
-              	<th><small>Branch Status</small></th>
-              	<th><small>Technician Id</small></th>
-              	<th><small>Technician Status</small></th>                          
-              	</tr>    
-				<?php
-				$kolor=1;
-				if(isset($_GET['page']) and is_null($_GET['page']))
-					{ 
-						$kolor = 1;
-					}
-				elseif(isset($_GET['page']) and $_GET['page']==1)
-					{ 
-						$kolor = 1;
-					}
-				elseif(isset($_GET['page']) and $_GET['page']>1)
-					{
-						$kolor = ((int)$_GET['page']-1)* PER_PAGE_ROWS+1;
-					}
-	
-				if(mysql_num_rows($stockArr)>0)
-				{
-				  while ($row = mysql_fetch_array($stockArr))
-				  {
-				  
-				  if($kolor%2==0)
-					$class="bgcolor='#ffffff'";
-					else
-					$class="bgcolor='#fff'";
-			 	?>
-	 			<tr <?php print $class?>>
-	 			<td><small><?php print $kolor++;?>.</small></td>
-	 			<td><small><?php echo stripslashes($row["sim_no"]);?></small></td>
-	 			<td><small><?php echo stripslashes($row["mobile_no"]);?></small></td>
-	 			<td><small><?php echo getserviceprovider(stripslashes($row["company_id"]));?></small></td>
-	 			<td>
-				<small>
-					<?php 
-					if($row["status_id"] == 0)
-						{  
-							echo "<span style='color:red; font-weight:bold;'>Instock</span>";
-						}
-					else
-						{
-							echo "<span style='color:green; font-weight:bold;'>Installed</span>";
-						}
-					?>
-                </small>
-                </td>
-                <td>
-                <small>
-					<?php 
-                    if($row["branch_assign_status"] == 0)
-                        {
-                        	echo "<span class='no'>Unallocated</span>";
-                        }
-                    else
-                        {
-                        	echo "<span class='yes'>Allocated</span>";
-                        }
-                    ?>
-                </small>
-                </td>
-                <td><small><?php echo stripslashes($row["CompanyName"]);?></small></td>
-                <td>
-                <small>
-				<?php  
-                if($row["technician_assign_status"] == 0)
-                    {
-                    echo "<span class='no'>InStock</span>";
-                    }
-                else
-                    {
-                    echo "<span class='yes'>Assigned</span>";
-                    }
-                ?>
-                </small>
-                </td>
-                <td>
-                <small>
-                <?php 
-                if($row["technician_id"] == "")
-                    {
-                    echo "<span class='no'>N/A</span>";
-                    }
-                else
-                    {
-                    echo stripslashes($row["First_Name"]." ".$row["Last_Name"] );
-                    }
-                ?>
-                </small>
-                </td>
-                <td>
-                <small>
-                <?php 
-                if($row["status_id"] == 0)
-                    {  
-                    echo "<span style='color:red; font-weight:bold;'>Instock</span>";
-                    }
-                else
-                    {
-                    echo "<span style='color:green; font-weight:bold;'>Installed</span>";
-                    }
-                ?>
-                </small>
-                </td>
-                </tr> 	
-				<?php 
-                }
-                echo $pagerstring;
-                
-                        }
-                    else
-                    echo "<h3 style='color:red;'><font color=red>No records found !</h3><br></font>";
-				}
-                ?>
+	<table border="0" id="example" class="table table-hover table-bordered">
+		<thead>
+			<tr>
+	        	<th><small>S. No.</small></th>     
+	            <th><small>Sim  No.</small></th>  
+	            <th><small>Mobile No.</small></th>
+	            <th><small>Company</small></th> 
+	            <th><small>Date of Purchase</small></th>
+	            <th><small>Final Status</small></th>
+	            <th><small>Modify Date</small></th>
+	            <th><small>Branch Status</small></th>   
+	            <th><small>Branch</small></th>
+	            <th><small>Branch Assign Date</small></th>   
+	            <th><small>Tech. Status</small></th>
+	            <th><small>Tech.</small></th>
+	            <th><small>Tech. Assign Date</small></th>
+	            <th><small>Installed Company</small></th> 
+	            <th><small>Vehicle No.</small></th>                         
+	        </tr>   
+	    </thead>
+	    <tbody> 
+		<?php
+		$kolor=1;
+		while ($row = mysql_fetch_array($stockArr)){
+		?>
+		<tr>
+		 	<td><small><?php print $kolor++;?>.</small></td>
+		 	<td><small><?php echo stripslashes($row["simNo"]);?></small></td>
+		 	<td><small><?php echo stripslashes($row["mobileNo"]);?></small></td>
+		 	<td><small><?php echo getserviceprovider(stripslashes($row["provider"]));?></small></td>
+	        <td><small><?php echo stripslashes($row["purchaseDate"]);?></small></td>
+	        <td><small><?php echo getStatus(stripcslashes($row["statusId"])); ?></small></td>
+	        <td><small><?php echo $row["modifyDate"]; ?></small></td>
+	        <td><small><?php echo getBranchAllocateStatus(stripcslashes($row["branchAssignStatus"])); ?></small></td>
+	        <td><small><?php echo stripslashes($row["branchname"]);?></small></td>
+	        <td><small><?php echo stripslashes($row["branchAssignDate"]);?></small></td>
+	        <td><small><?php echo getBranchAssignStatus(stripslashes($row["technicianStatus"]));?></small></td>
+	        <td><small><?php echo gettelecallername(stripcslashes($row["technicianId"])); ?></small></td>
+	        <td><small><?php echo stripslashes($row["techAssignDate"]);?></small></td>
+	        <td><small><?php echo getOraganization($row['callingDataId']);?></small></td>
+	        <td><small><?php echo getVehicleNo($row['vehicleNo']); ?></small></td>
+	    </tr> 	
+		<?php 
+        }
+        ?>
+        </tbody>
+        </table>
+<?php 
+    }
+    else{
+    	echo "<center><h3 style='color:red;'>No Records Found</h3></center>";
+    }
+?>
               

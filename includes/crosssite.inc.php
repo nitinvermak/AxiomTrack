@@ -17,7 +17,7 @@ header("location:index.php?logout=1");
 //echo (time()-$_SESSION['token_time'])."<br />";
 if (isset($_SESSION['token']) && isset($_SESSION['token_time']))
 {
-	if((time()-$_SESSION['token_time'])>2000)
+	if((time()-$_SESSION['token_time'])>10000)
 	{
 	$token = md5(uniqid(rand(), true));
 	$_SESSION['token'] = $token;

@@ -5,20 +5,21 @@ $model = mysql_real_escape_string($_POST['modelname']);
 error_reporting(0);
 if ($model == 0)
 {
-	$linkSQL = "select * from tbl_device_master where assignstatus= '0' order by id desc";
+	$linkSQL = "select * from tbl_device_master where assignstatus= '0' and status <> 3 order by id desc";
 }
 else
 {
-	$linkSQL = "select * from tbl_device_master where assignstatus= '0' and device_name = '{$model}' order by id desc";
+	$linkSQL = "select * from tbl_device_master where assignstatus= '0' and status <> 3 and device_name = '{$model}' 
+				order by id desc";
 }
 $stockArr=mysql_query($linkSQL);
 
 if(mysql_num_rows($stockArr)>0)
 	{
 	
-	 	echo '  <table border="0" class="table table-hover table-bordered">  ';
+	 	echo '  <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">  ';
 ?>		
-				
+				<thead>				
                 <tr>
 	            <th><small>S. No.</small></th>                        
 	            <th><small>Device Model</small></th>  
@@ -31,7 +32,8 @@ if(mysql_num_rows($stockArr)>0)
                 <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a>
                  </th>   
                  </tr>   
-	
+				</thead>
+                
 				<?php
 	  				$kolor =1;
 	  				while ($row = mysql_fetch_array($stockArr))
@@ -57,7 +59,7 @@ if(mysql_num_rows($stockArr)>0)
                 <input type="hidden" name="devic_model_id" value="<?php echo stripslashes($row["device_name"]);?>" /></td>
                 <td><small><?php echo stripslashes($row["id"]);?></small></td>	
 				<td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
-                <td><small><?php echo stripslashes($stock);?></small></td>			  
+                <td><small><span class="label label-warning"><?php echo stripslashes($stock);?></span></small></td>			  
                 <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
                 </tr>
 				<?php }
@@ -69,8 +71,7 @@ if(mysql_num_rows($stockArr)>0)
                 <form method="post">
                 <table>
                 <tr>
-                <td></td>
-                <td colspan="3"><input type="submit" name="submit" class="btn btn-primary" onClick="return val();" value="Assign" id="submit" /> </td>
+                <td colspan="3"><input type="submit" name="submit" class="btn btn-primary btn-sm" onClick="return val();" value="Save" id="submit" /> </td>
                 <td></td>
                 </tr>
                 </table><br />

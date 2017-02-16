@@ -1,5 +1,6 @@
-<div class="row" id="footer">
-	<div class="col-md-12">
-    <p>Copyright &copy; 2015 INDIAN TRUCKERS, All rights reserved.</p>
+<footer class="main-footer">
+    <div class="pull-right hidden-xs">
+        <b>Version</b> 2.0.1
     </div>
-</div>
+    <strong>Copyright &copy; 2016-2017 Indian Truckers.</strong> All rights reserved.
+</footer>

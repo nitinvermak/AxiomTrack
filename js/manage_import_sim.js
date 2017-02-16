@@ -9,7 +9,8 @@ function ShowPlans()
 	}
 function getPlans(str){
 	document.getElementById('showPlan').innerHTML=str;
-	}
+	$(".select2").select2();
+}
 
 
 function ShowPlans2()
@@ -22,7 +23,8 @@ function ShowPlans2()
 	}
 function getPlans2(str){
 	document.getElementById('showPlan2').innerHTML=str;
-	}
+	$(".select2").select2();
+}
 function singlecontact() {
     document.getElementById("contactform").style.display = "";
 	document.getElementById("contactUpload").style.display = "none";
@@ -77,64 +79,4 @@ function chkcontactform(obj)
 	document.getElementById("chekpage").value="1";
 
 }
-function chkupload(obj1)
-{
-	if(obj1.provider2.value == "")
-	{
-		alert("Please Select Provider");
-		obj1.provider2.focus();
-		return false;
-	}
-	if(obj1.plan2.value=="")
-	{
-		alert("Please Select Plan");
-		obj1.plan2.focus();
-		return false;
-	}
-	if(obj.state3.value == "")
-	{
-		alert("Please Select State");
-		obj.state3.focus();
-		return false;
-	}
-	if(obj.date2.value == "")
-	{
-		alert("Please provide Purchase of Date");
-		obj.date2.focus();
-		return false;
-	}
-}
-//Import file Validate
-function chkupload(obj)
-{
-	if(obj.provider2.value == "")
-	{
-		alert("Please Select Provider");
-		obj.provider2.focus();
-		return false;
-	}
-	if(obj.plan2.value == "")
-	{
-		alert("Please Select Plan");
-		obj.plan2.focus();
-		return false;
-	}
-	if(obj.state3.value == "")
-	{
-		alert("Please Select State");
-		obj.state3.focus();
-		return false;
-	}
-	if(obj.date2.value == "")
-	{
-		alert("Please provide Date");
-		obj.date2.focus();
-		return false;
-	}
-	if(obj.contactfile.value == "")
-	{
-		alert("Please Select file");
-		obj.contactfile.focus();
-		return false;
-	}
-}
+

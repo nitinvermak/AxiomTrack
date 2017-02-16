@@ -1,36 +1,64 @@
 <?php
-//echo("hi");
-//die;
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
 
-
- if(count($_POST['linkID'])>0)
+if(count($_POST['linkID'])>0)
    {			   
   		$dsl="";
 		if(isset($_POST['linkID']) && (isset($_POST['submit'])))
      		{
 			  foreach($_POST['linkID'] as $chckvalue)
               {
-				$technician_id=$_POST['technician_id'];
-		  		$status_id="1";
-		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', technician_id ='$technician_id', assigned_date	=Now()";
-				$results = mysql_query($sql);
-	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-						/*echo $assign_technician;*/
-				$confirm = mysql_query($assign_technician);
+				$technician_id = $_POST['executive'];
+		  		$status_id = "1";
+		  		$createdby = $_SESSION['user_id'];
+		  		/*$ticketId = mysql_real_escape_string($_POST['ticketId']);*/
+		  		$companyName = mysql_real_escape_string($_POST['companyName']);
+		  		$requestType = mysql_real_escape_string($_POST['requestType']);
+		  		$organizationContact = mysql_real_escape_string($_POST['organizationContact']);
+		  		$description = mysql_real_escape_string($_POST['description']);
+				$vehicleNo = mysql_real_escape_string($_POST['vehicleNo']);
+
+		  		$mssg = 'T Id: '.$chckvalue.' '.'Cmpny: '.$companyName.' '.'Rqst.: '.$requestType.' '.' Veh.: '.$vehicleNo.' '.'Mob.: '.$organizationContact.' '.'Rmrk. '.$description;
+		  		//echo $mssg.'<br>'.$technician_id;
+				$check_ticketId = mysql_query("SELECT * FROM tbl_ticket_assign_technician 
+											   WHERE ticket_id='$chckvalue'");
+					if(mysql_num_rows($check_ticketId) <= 0)
+					{ 
+						$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', 
+								technician_id = '$technician_id', assigned_by = '$createdby', 
+								assigned_date	= Now()";
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+						// End Activity Log Function
+						$results = mysql_query($sql);
+
+						$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status = '$status_id' 
+											  where ticket_id='$chckvalue'";
+						$confirm = mysql_query($assign_technician);
+						$_SESSION['sess_msg'] = "<span style='color:#006600;'>Ticket Assign Successfully</span>";
+						
+						// Call User Activity Log function
+						UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $assign_technician);
+						// End Activity Log Function
+						
+						// Call sms send function
+						sendTicketAlert($technician_id, $mssg);
+						
+					}
+					else
+					{
+						$_SESSION['sess_msg'] = "<span style='color:red;'>Ticket already Assign</span>";
+					} 
    			   }
 			 }  
   		$id="";
@@ -48,14 +76,18 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		  		$status_id="0";
 		  		$createdby=$_SESSION['user_id'];
 				$sql = "delete from tbl_ticket_assign_technician where ticket_id='$chckvalue'";
+				// Call User Activity Log function
+				UserActivityLog($_SESSION['user_id'], $_SERVER['REMOTE_ADDR'], $_SERVER['PHP_SELF'], $sql);
+				// End Activity Log Function
 				$results = mysql_query($sql); 	
-				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-				
+				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' 
+						   where ticket_id='$chckvalue'";
+				 				
 				$query = mysql_query($assign);
+				$_SESSION['sess_msg']="<span style='color:red;'>Ticket Removed</span>";
    			   }
 			 }  
   		$id="";
-  
   }
 ?>
 <!DOCTYPE html>
@@ -64,15 +96,22 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
 <link rel="stylesheet" href="css/custom.css">
-<script type="text/javascript" src="js/checkbox_validation_assign_pages.js"></script>
+<!-- Bootstrap Datatable CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css">
+<script type="text/javascript" src="js/checkValidation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script  src="js/ajax.js"></script>
 <script type="text/javascript" src="js/ticket_assign_technician.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Jquery Latest CDN -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<!-- DataTable CDN-->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
 // send ajax request when click assign ticket button
 $(document).ready(function(){
@@ -85,6 +124,7 @@ $(document).ready(function(){
 					function(data){
 						/*alert(data);*/
 						$("#divassign").html(data);
+						$('#example').DataTable();
 						$(".loader").removeAttr("disabled");
 						$('.loader').fadeOut(1000);
 				});	
@@ -97,17 +137,33 @@ $(document).ready(function(){
 		$('.loader').show();
 		$.post("ajaxrequest/view_assign_ticket_branch_technician.php?token=<?php echo $token;?>",
 				{
-					branch : $('#branch').val()
+					branch : $('#branch').val(),
+					executive : $('#executive').val()
 				},
 					function(data){
 						/*alert(data);*/
 						$("#divassign").html(data);
+						$('#example1').DataTable();
 						$(".loader").removeAttr("disabled");
 						$('.loader').fadeOut(1000);
 				});	
 	});
 });
 // end
+// send ajax when select branch
+$(document).ready(function(){
+	$("#branch").change(function(){
+		$.post("ajaxrequest/executive_ticket.php?token=<?php echo $token;?>",
+				{
+					branch : $('#branch').val()
+				},
+					function(data){
+						/*alert(data);*/
+						$("#showTechnician").html(data);
+				});
+	});
+});
+// End
 </script>
 </head>
 <body>
@@ -129,51 +185,40 @@ $(document).ready(function(){
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Branch*</label>
                 <div class="col-sm-10">
-                <?php 
-				$branchName = $_SESSION['branch'];
-				if($branchName == 14)
-				{
-				?>
-                  <select name="branch" id="branch" class="form-control drop_down">
-                  <option label="" selected="selected">Select Branch</option>
-                  <option value="0">All Branch</option>
-                  <?php $Country=mysql_query("select * from tblbranch");									  
-				        while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                  <?php } ?>
-                  </select>
-                <?php 
-				}
-				else
-				{
-				?>
-                  <select name="branch" id="branch" class="form-control drop_down">
-                  <option label="" selected="selected">Select Branch</option>
-                  <?php $Country=mysql_query("select * from tblbranch where id = '$branchName'");									  
-				        while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?></option>
-                  <?php } ?>
-                  </select>
-                <?php 
-				}
-				?>
+                 	<select name="branch" id="branch" class="form-control drop_down">
+	                <option label="" value="" selected="selected">Select Branch</option>
+	                
+	                  <?php 
+	                        $branch_sql= "select * from tblbranch ";
+	                        $authorized_branches = BranchLogin($_SESSION['user_id']);
+	                        //echo $authorized_branches;
+	                        if ( $authorized_branches != '0'){
+	                             
+	                            $branch_sql = $branch_sql.' where id in '.$authorized_branches;		
+	                        }
+	                        if($authorized_branches == '0'){
+	                            echo'<option value="0">All Branch</option>';	
+	                        }
+	                        //echo $branch_sql;
+	                        $Country = mysql_query($branch_sql);					
+	                                                      
+	                        while($resultCountry=mysql_fetch_assoc($Country)){
+	                  ?>
+	                <option value="<?php echo $resultCountry['id']; ?>" >
+	                <?php echo stripslashes(ucfirst($resultCountry['CompanyName'])); ?>
+	                </option>
+	                <?php } ?>
+	                </select>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group" >
                 <label for="inputEmail3" class="col-sm-2 control-label">Executive*</label>
-                <div class="col-sm-10">
-                  <select name="technician_id" id="technician_id" class="form-control drop_down" onChange="return ShowByTechnician();">
-                  <option label="" value="" selected="selected">Select Executive</option>
-                  <?php $Country=mysql_query("select * from tbluser");
-						while($resultCountry=mysql_fetch_assoc($Country)){
-				  ?>
-                  <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
-                  <?php } ?>
-                  </select>
+                <div class="col-sm-10" id="showTechnician">
+                  <select name="executive" id="executive" class="form-control drop_down">
+            		<option label="" value="" selected="selected">Select Technician</option>
+            	 </select>
                 </div>
             </div>
         </div>
@@ -191,7 +236,23 @@ $(document).ready(function(){
 		 $linkSQL="";
   		 ?>
 		 <input type="hidden" name="token" value="<?php echo $token; ?>" />
-    	 <input type='hidden' name='pagename' value='assigncontacts'>               	
+    	 <input type='hidden' name='pagename' value='assigncontacts'> 
+		<div class="col-md-12"> 
+		   <!--<div id="messages" class="hide" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>--->
+				 <?php if($_SESSION['sess_msg']!='')
+					{
+						echo "<p class='success-msg'>".$_SESSION['sess_msg'];$_SESSION['sess_msg']=''."</p>";
+					} 
+				 ?>
+                  <?php if($_SESSION['ticket_msg']!='')
+					{
+						echo "<p class='success-msg'>".$_SESSION['ticket_msg'];$_SESSION['ticket_msg']=''."</p>";
+					} 
+				 ?>
+		  <!-- </div>--->
+		  </div>
         <div id="divassign" class="col-md-12 table-responsive assign_grid">
        		<!-- Ajaxrequest-->
       	</div>
@@ -214,7 +275,7 @@ $(document).ready(function(){
 </div>
 <!--end wraper-->
 <!-------Javascript------->
-<script src="js/jquery.js"></script>
+<!--<script src="js/jquery.js"></script>-->
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

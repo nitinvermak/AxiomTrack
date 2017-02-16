@@ -24,9 +24,11 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 				$technician_id=$_POST['technician_id'];
 		  		$status_id="1";
 		  		$createdby=$_SESSION['user_id'];
-				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', technician_id ='$technician_id', assigned_date	=Now()";
+				$sql = "insert into tbl_ticket_assign_technician set ticket_id='$chckvalue', technician_id ='$technician_id', 
+						assigned_date	=Now()";
 				$results = mysql_query($sql);
-	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status='$status_id' where ticket_id='$chckvalue'";
+	  			$assign_technician = "update tbl_ticket_assign_branch set technician_assign_status='$status_id' 
+									  where ticket_id='$chckvalue'";
 				/*echo $assign_technician;*/
 				$confirm = mysql_query($assign_technician);
    			   }
@@ -47,8 +49,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 		  		$createdby=$_SESSION['user_id'];
 				$sql = "delete from tbl_ticket_assign_technician where ticket_id='$chckvalue'";
 				$results = mysql_query($sql); 	
-				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' where ticket_id='$chckvalue'";
-				
+				$assign = "update tbl_ticket_assign_branch set 	technician_assign_status='$status_id' 
+						  where ticket_id='$chckvalue'";
 				$query = mysql_query($assign);
    			   }
 			 }  
@@ -62,6 +64,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
@@ -81,18 +84,42 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   });
 /* Send ajax request*/
 function showRecords()
-	{
-		dateFrom = document.getElementById("dateFrom").value;;
-		dateto = document.getElementById("dateto").value;;
-		users = document.getElementById("users").value;
-		url="ajaxrequest/show_conveyance_records.php?dateFrom="+dateFrom+"&dateto="+dateto+"&users="+users+"&token=<?php echo $token;?>";
-		alert(url);
-		xmlhttpPost(url,dateFrom,"GetDetails");
-	} 
-function GetDetails(str){
-	document.getElementById('divassign').innerHTML=str;
-	}
-	
+{
+	$('.loader').show();
+	$.post("ajaxrequest/show_conveyance_records.php?token=<?php echo $token;?>",
+				{
+					dateFrom : $('#dateFrom').val(),
+					dateto : $('#dateto').val(),
+					users : $('#users').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});
+}
+/* Send Data using ajax request */
+function getData(obj)
+{
+/*	alert(obj);*/
+	$('.loader').show();
+	$.post("ajaxrequest/conveyance_details.php?token=<?php echo $token;?>",
+				{
+					description : $('#description'+obj).val(),
+					kmTravel : $('#kmTravel'+obj).val(),
+					fare : $('#fare'+obj).val(),
+					amount : $('#amount'+obj).val(),
+					ticket : $('#ticket'+obj).val(),
+					users : $('#users').val()
+				},
+					function( data){
+						/*alert(data);*/
+						$("#divassign").html(data);
+						$(".loader").removeAttr("disabled");
+						$('.loader').fadeOut(1000);
+				});
+}
 function calTotal(elementId){
 	var kmTravel = document.getElementById('kmTravel'+elementId).value; 
     var fare = document.getElementById('fare'+elementId).value;
@@ -119,14 +146,16 @@ function calTotal(elementId){
      <td class="col-xs-1"><strong>Date (From)* </strong></td>
      <td class="col-xs-2"><input type="text" name="dateFrom" id="dateFrom" class="form-control text_box-sm"></td>
      <td class="col-xs-1"><strong>Executive*</strong></td>
-     <td class="col-xs-2"><select name="users" id="users" class="form-control drop_down-sm" style="max-width:140px;">
-       <option value="0">All Executive</option>
+     <td class="col-xs-2">
+     <select name="users" id="users" class="form-control drop_down-sm" style="max-width:140px;">
+       <option value="">--Select--</option>
        <?php $Country=mysql_query("select * from tbluser ORDER BY First_Name,Last_Name ASC");
 				while($resultCountry=mysql_fetch_assoc($Country)){
 		   ?>
        <option value="<?php echo $resultCountry['id']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?></option>
        <?php } ?>
-     </select></td>
+     </select>
+     </td>
      <td class="col-xs-1">&nbsp;</td>
      <td>&nbsp;</td>
      <td>&nbsp;</td>

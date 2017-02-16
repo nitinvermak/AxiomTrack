@@ -21,7 +21,7 @@ if(isset($_GET['id']))
 	}
 	if($delete)
 	{
-		echo "<script> alert('Record Delted Successfully'); </script>";
+		$msg = "Device Deleted Successfully";
 	}
 //End
 //Delete multiple records
@@ -34,7 +34,7 @@ if(isset($_POST['delete_selected']))
    			}
 			if($result)
 				{
-			   		echo "<script> alert('Records Deleted Successfully'); </script>";
+			   		$msg = "Device Deleted Successfully";
 			   	}
 	}
 //end
@@ -49,93 +49,181 @@ if(isset($_POST['instock']))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/bootstrap-submenu.min.css">
-<link rel="stylesheet" href="css/custom.css">
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="assets/bootstrap/css/font-awesome.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="assets/bootstrap/css/ionicons.min.css">
+<!-- Custom CSS -->
+<link rel="stylesheet" type="text/css" href="assets/dist/css/custom.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="assets/dist/css/AdminLTE.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="assets/dist/css/skins/_all-skins.min.css">
+<!-- DataTable CSS -->
+<link rel="stylesheet" type="text/css" href="assets/plugins/datatables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="assets/plugins/datatables/css/buttons.dataTables.min.css">
+<!-- Validation Js -->
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$("#searchBtn").click(function(){
-			$('.loader').show();
-			$.post("ajaxrequest/show_import_devices.php?token=<?php echo $token;?>",
-				{
-					searchText : $('#search').val()
-				},
-					function( data ){
-						$("#responseText").html(data);
-						$(".loader").removeAttr("disabled");
-            			$('.loader').fadeOut(1000);
-				});
-				 
-		});
-	});
-
-</script>
+<script type="text/javascript" src="assets/bootstrap/js/jquery.min.js"></script>
 </head>
-<body>
-<!--open of the wraper-->
-<div id="wraper">
-	<!--include header-->
-    <?php include_once('includes/header.php');?>
-    <!--end-->
-    <!--open of the content-->
-<div class="row" id="content">
-	<div class="col-md-12">
-    	<h3>Import Device Details</h3>
-        <hr>
-    </div>
-    <div class="col-md-12">
-   	  <div class="col-md-5 btn_grid">
-   		<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('model.php?token=<?php echo $token ?>')"/>
-	    &nbsp;&nbsp;&nbsp;</div>
-    </div>
-    <div class="col-md-12">  
-      <form name='fullform' method='post' onSubmit="return confirmdelete()">
-       <input type="hidden" name="token" value="<?php echo $token; ?>" />
-       <input type='hidden' name='pagename' value='users'> 
-       
-           <div class="table-responsive">
-           <table>
-           <tr>
-           <td><input type="text" name="search" id="search" class="form-control text_box"></td>
-           <td><input type="button" name="searchBtn" id="searchBtn" class="btn btn-primary btn-sm" value="Search"></td>
-           </tr>
-           </table>
-           </div>
-           <div class="table-responsive" id="responseText">
-                <!--show Data from ajax request-->
-           </div>
-           <!--if device details is updated show alert message-->
-           <div>
-           		<?php if($_SESSION['sess_msg']!=''){?>
-                <center>
-                <div style="color:#009900; padding:0px 0px 10px 0px; font-weight:bold;"><?php echo $_SESSION['sess_msg'];$_SESSION['sess_msg']='';?></div>
-                </center>
-                <?php } ?>
-           </div>
-           <!--End alert message-->
-    	</form>
-    </div>
-    
-</div>
-<!--end of the content-->
-<!--open of the footer-->
-<div class="row" id="footer">
-	<div class="col-md-12">
-    <p>Copyright &copy; 2015 INDIAN TRUCKERS, All rights reserved.</p>
-    </div>
-</div>
-<!--end footer-->
-<div class="loader">
-	<img src="images/loader.gif" alt="loader">
-</div>
-</div>
-<!--end wraper-->
-<!-------Javascript------->
-<script src="js/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+	<?php include_once("includes/header.php") ?>
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+	    <!-- Content Header (Page header) -->
+	    <section class="content-header">
+	      <h1>
+	        Edit Device Details
+	        <!--<small>Control panel</small>-->
+	      </h1>
+	      <ol class="breadcrumb">
+	        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+	        <li class="active">Edit Device Details</li>
+	      </ol>
+	    </section>
+	    <!-- Main content -->
+	    <section class="content">
+	    	<div class="row search_grid">
+	    		<div class="col-md-12">
+	    			<form class="form-inline">
+					  <div class="form-group">
+					    <label for="exampleInputName2">Id or IMEI No.</label>
+					    <input type="text" name="search" id="search" class="form-control" placeholder = "Id or IMEI">
+					  </div>
+					  <input type="button" name="searchBtn" id="searchBtn" onclick="getDeviceDetails()" class="btn btn-primary btn-sm" value="Search">
+					</form>
+	    		</div> <!-- end col-md-12 -->
+	    	</div> <!-- end row -->
+	    	<div class="box box-info">
+	            <div class="box-header">
+	              <!-- <h3 class="box-title">Details</h3> -->
+	            </div>
+	            <div class="box-body">
+	            	<!-- Show alert  message-->
+	            	<?php if($_SESSION['sess_msg'] != '') {?>
+	            	<div class="alert alert-success alert-dismissible small-alert" role="alert">
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <strong><i class="fa fa-check-circle-o" aria-hidden="true"></i></strong> 
+					  	<?= $_SESSION['sess_msg']; $_SESSION['sess_msg']=''; ?>
+					</div>
+					<?php } ?>
+					<?php if($msg !="") {?>
+	            	<div class="alert alert-danger alert-dismissible small-alert" role="alert">
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <strong><i class="fa fa-check-circle-o" aria-hidden="true"></i></strong> 
+					  	<?= $msg; $msg=""; ?>
+					</div>
+					<?php } ?>
+					<!-- end alert message -->
+	            	<form name='fullform' method='post' onSubmit="return confirmdelete()">
+				       <input type="hidden" name="token" value="<?php echo $token; ?>" />
+				       <input type='hidden' name='pagename' value='users'> 
+				       <div id="responseText">
+				       	<!-- Show data from ajax request -->
+				       </div>
+				    </form>
+	            </div><!-- /.box-body -->
+	        </div> <!-- end box-info -->
+	    </section><!-- End Main content -->
+	</div> <!-- end content Wrapper-->
+	<?php include_once("includes/footer.php") ?>
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <!-- Show Modal Content From Ajax request-->
+	    </div>
+	  </div>
+	</div>
+	<!-- End Modal -->
+	<!-- Loader -->
+	<div class="loader">
+		<img src="images/loader.gif" alt="loader">
+	</div>
+	<!-- End Loader -->
+</div> <!-- End site wrapper -->
+<!-- jQuery 2.2.3 -->
+<script src="assets/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- DataTable JS -->
+<script type="text/javascript" src="assets/plugins/datatables/js/jquery-1.12.3.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/jszip.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/pdfmake.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/vfs_fonts.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/buttons.print.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="assets/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="assets/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="assets/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="assets/dist/js/demo.js"></script>
+<script type="text/javascript">
+function getDeviceDetails(){
+		$('.loader').show();
+		$.post("ajaxrequest/show_import_devices.php?token=<?php echo $token;?>",
+		{
+			searchText : $('#search').val()
+		},
+		function( data ){
+			$("#responseText").html(data);
+			$('#example').DataTable( {
+				        dom: 'Bfrtip',
+				        "bPaginate": false,
+				        buttons: [
+				            'copy', 'csv', 'excel', 'pdf', 'print'
+				        ]
+			});
+			$(".loader").removeAttr("disabled");
+            $('.loader').fadeOut(1000);
+		});		 
+}
+function getForm(obj){
+	$('.loader').show();
+	$.post("ajaxrequest/change_device_status_form.php?token=<?php echo $token;?>",
+	{
+		deviceId : obj
+	},
+	function( data ){
+		$(".modal-content").html(data);
+		$(".loader").removeAttr("disabled");
+	    $('.loader').fadeOut(1000);
+	});	
+}
+function updateDeviceStatus(){
+	var status = document.getElementById("status").value;
+	if(status == ""){
+		alert("Please Select Device Status");
+	}
+	else{
+		$('.loader').show();
+		$.post("ajaxrequest/update_device_status.php?token=<?php echo $token;?>",
+		{
+			deviceId : $('#deviceId').val(),
+			devicestatus : $('#status').val()
+		},
+		function( data ){
+			$("#dvAlert").html(data);
+			$(".loader").removeAttr("disabled");
+		    $('.loader').fadeOut(1000);
+		    getDeviceDetails();
+		});	
+	}
+}
+</script>
 </body>
 </html>

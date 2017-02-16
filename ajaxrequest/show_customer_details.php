@@ -9,7 +9,7 @@ $linkSQL = "SELECT B.id, B.Company_Name, B.First_Name, B.Last_Name, B.Phone, B.M
 			FROM tbl_customer_master as A 
 			INNER JOIN tblcallingdata as B 
 			ON A.callingdata_id = B.id 
-			WHERE A.callingdata_id='$organization'";
+			WHERE A.cust_id='$organization'";
 /*echo "cmd" . $linkSQL;*/
 $stockArr=mysql_query($linkSQL);
 if(mysql_num_rows($stockArr)>0)

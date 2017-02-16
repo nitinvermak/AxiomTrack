@@ -25,12 +25,17 @@ if(isset($_POST['submit']))
 			$year = mysql_real_escape_string($_POST['year']);
 			$intervelname = $item;
 			$generated_status = 'N';
-			$check_rows = mysql_query("SELECT * FROM `tblesitmateperiod` WHERE IntervelYear='$year' and Intervalname='$period'");
+			$check_rows = mysql_query("SELECT * FROM `tblesitmateperiod` 
+									   WHERE IntervelYear='$year' 
+									   and Intervalname='$period'");
 			if(mysql_num_rows($check_rows)<=0)
 				{
-					$sql = "INSERT INTO tblesitmateperiod Set IntervelYear='$year', Intervalname='$period',  
-					FrequnceyID='$frequency[0]', intervalMonth = '$frequency[1]', GeneratedStatus='$generated_status'";
+					$sql = "INSERT INTO tblesitmateperiod Set IntervelYear='$year', 
+							Intervalname='$period', FrequnceyID='$frequency[0]', 
+							intervalMonth = '$frequency[1]', GeneratedStatus='$generated_status'";
 					$result = mysql_query($sql);
+					echo $sql;
+					echo "<br>";
 					$msg="Intervel Added Sucessfully";
 				}
 			else
@@ -46,6 +51,7 @@ if(isset($_POST['submit']))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">

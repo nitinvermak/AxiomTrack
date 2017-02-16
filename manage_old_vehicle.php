@@ -16,12 +16,12 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 if(isset($_GET['id']))
 	{
 		$id = $_GET['id'];
-		$delete_single_row = "DELETE FROM tbl_gps_vehicle_master WHERE id='$id'";
+		$delete_single_row = "DELETE FROM tbl_device_master WHERE id='$id'";
 		$delete = mysql_query($delete_single_row);
 	}
 	if($delete)
 	{
-		echo "<script> alert('Record Delted Successfully'); </script>";
+		$msg = "Device Deleted Successfully";
 	}
 //End
 //Delete multiple records
@@ -29,15 +29,19 @@ if(isset($_POST['delete_selected']))
 	{
 		foreach($_POST['linkID'] as $chckvalue)
         	{
-		    	$sql = "DELETE FROM tbl_gps_vehicle_master WHERE id='$chckvalue'";
+		    	$sql = "DELETE FROM tbl_device_master WHERE id='$chckvalue'";
 				$result = mysql_query($sql);
    			}
 			if($result)
 				{
-			   		echo "<script> alert('Records Deleted Successfully'); </script>";
+			   		$msg = "Device Deleted Successfully";
 			   	}
 	}
 //end
+if(isset($_POST['instock']))
+	{
+		echo 'jafhsda';
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,51 +49,73 @@ if(isset($_POST['delete_selected']))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/bootstrap-submenu.min.css">
-<link rel="stylesheet" href="css/custom.css">
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="assets/bootstrap/css/font-awesome.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="assets/bootstrap/css/ionicons.min.css">
+<!-- Custom CSS -->
+<link rel="stylesheet" type="text/css" href="assets/dist/css/custom.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="assets/dist/css/AdminLTE.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="assets/dist/css/skins/_all-skins.min.css">
 <script type="text/javascript" src="js/checkbox_validation.js"></script>
 <script type="text/javascript" src="js/checkbox.js"></script>
+<script type="text/javascript" src="assets/bootstrap/js/jquery.min.js"></script>
 </head>
-<body>
-<!--open of the wraper-->
-<div id="wraper">
-	<!--include header-->
-    <?php include_once('includes/header.php');?>
-    <!--end-->
-    <!--open of the content-->
-<div class="row" id="content">
-	<div class="col-md-12">
-    	<h3>Vehicle Details</h3>
-        <hr>
-    </div>
-    <div class="col-md-12">
-    	<div class="col-md-4 btn_grid">
-        <form name='fullform1'  method='post'>       	
-     	<input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('1_old_29_15_add_gps_vehicle.php?token=<?php echo $token ?>')"/>
-       &nbsp;&nbsp;&nbsp;
-        <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Edit/Repair Vehicle" onClick="window.location.replace('old_edi_gps_vehicle.php?token=<?php echo $token ?>')"/>
-        </form>
-        </div>
-    </div>
-    <div class="col-md-12"> 
-    <div class="table-responsive">
-    </div>
-    </div>
-</div>
-<!--end of the content-->
-<!--open of the footer-->
-<div class="row" id="footer">
-	<div class="col-md-12">
-    <p>Copyright &copy; 2015 INDIAN TRUCKERS, All rights reserved.</p>
-    </div>
-</div>
-<!--end footer-->
-</div>
-<!--end wraper-->
-<!-------Javascript------->
-<script src="js/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+	<?php include_once("includes/header.php") ?>
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+	    <!-- Content Header (Page header) -->
+	    <section class="content-header">
+	      <h1>
+	        Vehicle Details
+	        <!--<small>Control panel</small>-->
+	      </h1>
+	      <ol class="breadcrumb">
+	        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+	        <li class="active">Vehicle Details</li>
+	      </ol>
+	    </section>
+	    <!-- Main content -->
+	    <section class="content">
+	    	<div class="box box-info">
+	            <div class="box-header">
+	              <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Add New" onClick="window.location.replace('1_old_29_15_add_gps_vehicle.php?token=<?php echo $token ?>')"/>
+          		  <input type='button' name='cancel' class="btn btn-primary btn-sm" value="Edit/Repair Vehicle" onClick="window.location.replace('old_edi_gps_vehicle.php?token=<?php echo $token ?>')"/>
+	            </div>
+	            <div class="box-body">
+	            	
+	            </div><!-- /.box-body -->
+	        </div> <!-- end box-info -->
+	    </section><!-- End Main content -->
+	</div> <!-- end content Wrapper-->
+	<?php include_once("includes/footer.php") ?>
+	<!-- Loader -->
+	<div class="loader">
+		<img src="images/loader.gif" alt="loader">
+	</div>
+	<!-- End Loader -->
+</div> <!-- End site wrapper -->
+<!-- jQuery 2.2.3 -->
+<script src="assets/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="assets/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="assets/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="assets/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="assets/dist/js/demo.js"></script>
 </body>
 </html>

@@ -11,10 +11,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 }
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-{
-		header("location: home.php?token=".$token);
-}
+
 $error =0;
 if(isset($_POST['submit']))
 	{
@@ -50,6 +47,7 @@ if(isset($_POST['submit']))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
@@ -275,8 +273,11 @@ function CallPincode()
         <div class="col-md-6 form">
             <div class="form-group">
                 <label for="simno" class="col-sm-2 control-label">Pincode*</label>
-                <div class="col-sm-10" id="divpincode">
-                 	<input name="pin_code" id="pin_code" class="form-control text_box"  value="<?php if(isset($result['id'])) echo getpincode($result['Pin_code']); ?>" type="text" readonly/>
+                <div class="col-sm-10" id="divpincode">                    
+                    <select name="pin_code" id="pin_code" class="form-control drop_down">
+                        <option value="">Select Pincode</option>
+                         <option value="<?php echo $result['Pin_code']; ?>" <?php if(isset($result['id']) && $result['Pin_code']==$result['Pin_code']){ ?>selected<?php } ?>><?php echo getpincode(stripslashes(ucfirst($result['Pin_code']))); ?></option>
+                    </select>
                 </div>
             </div>              
         </div>
@@ -294,8 +295,8 @@ function CallPincode()
         <div class="col-md-6 form">
           <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" name="submit" value="Submit" class="btn btn-primary" id="submit"  />
-                  <input type="button" value="Back" id="Back" class="btn btn-primary" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
+                  <input type="submit" name="submit" value="Submit" class="btn btn-primary btn-sm" id="submit"  />
+                  <input type="button" value="Back" id="Back" class="btn btn-primary btn-sm" onClick="window.location='managecontacts.php?token=<?php echo $token ?>'" />
                 </div>
   			</div> 
         </div>

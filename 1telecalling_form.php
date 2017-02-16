@@ -3,6 +3,8 @@
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
 include("includes/simpleimage.php");
+session_set_cookie_params(3600,"/");
+session_set_cookie_params(3600,"/");
 session_start();
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
 	session_destroy();
@@ -135,6 +137,7 @@ if(isset($_GET['id']))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">

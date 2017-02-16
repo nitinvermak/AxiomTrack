@@ -1,20 +1,15 @@
 <?php
 include("../includes/config.inc.php"); 
-
-							$where='';
-							
-							if($state_id=$_REQUEST['state_id']!="")
-							{
-							$where.=" and tblcallingdata.State='".$_REQUEST['state_id']."'";
-							}
-							if($state_id=$_REQUEST['city']!="")
-							{
-							$where.=" and tblcallingdata.City='".$_REQUEST['city']."'";
-							}
-							if($state_id=$_REQUEST['callcat']!="")
-							{
-							$where.=" and tblcallingdata.id NOT IN (select callingdata_id from tblassign where 	callingcategory_id='".$_REQUEST['callcat']."') and calling_status=0 ";
-							}
+$where='';
+if($state_id=$_REQUEST['state_id']!=""){
+	$where.=" and tblcallingdata.State='".$_REQUEST['state_id']."'";
+}
+if($state_id=$_REQUEST['city']!=""){
+	$where.=" and tblcallingdata.City='".$_REQUEST['city']."'";
+}
+if($state_id=$_REQUEST['callcat']!=""){
+	$where.=" and tblcallingdata.id NOT IN (select callingdata_id from tblassign where 	callingcategory_id='".$_REQUEST['callcat']."') and calling_status=0 ";
+}
 $linkSQL="";	
 $linkSQL = "select * from tblcallingdata where 1=1 $where ";
 $oRS = mysql_query($linkSQL); 

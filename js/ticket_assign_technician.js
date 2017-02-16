@@ -14,14 +14,6 @@ function confirmdelete(obj)
 	 return false;
 	 }
 	
-	 if(confirm('Do you really want to Assign this records?'))
-	 { 
-	 return true;
-	 } 
-	 else 
-	 { 
-	 return false;
-	 }
  }
 function ShowByBranch()
 	{

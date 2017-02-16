@@ -6,7 +6,7 @@ $area = $_REQUEST['area'];
 error_reporting(0);
 $branchArr=mysql_query("SELECT * FROM tbl_pincode WHERE Area_id='$area'");
 ?>
-	<select name="pin_code" id="pin_code" class="form-control drop_down">
+	<select name="pin_code" id="pin_code" style="width: 100%"  class="form-control">
     	<?php 
 		// error_reporting(-1);
 		if(mysql_num_rows($branchArr)>0){ 

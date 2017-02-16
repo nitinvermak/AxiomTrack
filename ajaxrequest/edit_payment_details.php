@@ -5,33 +5,32 @@ $cust_id = $_REQUEST['cust_id'];
 
 /*echo $searchText;*/
 error_reporting(0);
-if ($cust_id == '')
-	{
-	$linkSQL = "Please Provide Search Criteria";
-	}
-		else if($cust_id !== '')
-			{
-				$linkSQL = "SELECT * FROM tbl_customer_master as A 
-						    INNER JOIN tbl_gps_vehicle_master as B 
-						    on A.cust_id = B.customer_Id
-						    INNER JOIN tbl_gps_vehicle_payment_master as C 
-						    ON B.id = C.Vehicle_id
-						    WHERE A.cust_id = '$cust_id'
-							and C.PlanactiveFlag = 'Y'
-							order by B.vehicle_no
-							";
-				/*echo "cmd" . $linkSQL;*/
-			}
+$linkSQL = "SELECT * FROM tbl_customer_master as A 
+      			INNER JOIN tbl_gps_vehicle_master as B 
+      			on A.cust_id = B.customer_Id
+      			INNER JOIN tbl_gps_vehicle_payment_master as C 
+      			ON B.id = C.Vehicle_id
+      			WHERE A.cust_id = '$cust_id'
+      			and C.PlanactiveFlag = 'Y'
+            and B.activeStatus = 'Y'
+      			order by B.vehicle_no";
+// echo "cmd" . $linkSQL;
+
 $stockArr=mysql_query($linkSQL);
 
 if(mysql_num_rows($stockArr)>0)
 	{	
+    echo "<div class='col-md-12' id='dvMSG'></div>";
 	 	echo '<table width="500px" class="table table-hover table-bordered ">';
 ?>	
 			 
              <tr>
              <th><small>S. No.</small></th> 
-             <th><small>Vehicle No.</small></th>  
+             <th><small>Vehicle No.</small></th>
+             <th><small>IMEI No.</small></th>
+             <th><small>Mobile No.</small></th>
+             <th><small>Activation Date</small></th> 
+             <th><small>Dealer Name</small></th> 
              <th><small>Device Type</small></th>
              <th><small>Device Amt.</small></th>
              <th><small>Rent Amt.</small></th>
@@ -55,8 +54,15 @@ if(mysql_num_rows($stockArr)>0)
 	  		<td><small><?php echo stripslashes($row["vehicle_no"]);?> 
             <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo stripslashes($row["Vehicle_id"]);?>">
             <input type="hidden" name="custid" id="custid" value="<?php echo stripslashes($row["cust_id"]);?>">
+			<input type="hidden" name="next_due_date" id="next_due_date" value="<?php echo stripslashes($row["next_due_date"]);?>">
+			
+			
             </small>
             </td>
+            <td><small><?php echo stripslashes($row["imei_no"]);?> </small></td>
+            <td><small><?php echo getMobile(stripslashes($row["mobile_no"]));?> </small></td>
+            <td><small><?php echo date("d-m-Y", strtotime($row["installation_date"]));?> </small></td>
+            <td><small><?php echo getDealer1(stripslashes($row["device_id"]));?> </small></td>
 	  		<td>
             <select name="device_type" id="device_type" class="device_type" style="width:50px;">
                     <option value="X_">Device Type</option>
@@ -104,7 +110,7 @@ if(mysql_num_rows($stockArr)>0)
                     <?php $Country=mysql_query("select * from tblplan where productCategoryId = 4 and planSubCategory = 3");
                           while($resultCountry=mysql_fetch_assoc($Country)){
                     ?>
-                <option value="<?php echo $resultCountry['id']; ?>" <?php if(isset($row['r_installation_charge']) && $resultCountry['id']==$row['r_installation_charge']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
+                <option value="<?php echo $resultCountry['id']; ?>" <?php if($resultCountry['id']==$row['installation_charges']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['plan_rate'])); ?></option>
                     <?php } ?>
         	  </select>                
     		</td>
@@ -126,13 +132,13 @@ if(mysql_num_rows($stockArr)>0)
              
              
  
-              <td><small><?php echo stripslashes($row["PlanStartDate"]);?> 
+              <td><small><?php echo date("d-m-Y", strtotime($row["PlanStartDate"]));?> 
               	<input type="hidden" name="installation_date" id="installation_date" value="<?php echo stripslashes($row["installation_date"]);?>">
               </small></td>
-              <td><small><?php echo stripslashes($row["PlanendDate"]);?> 
+              <td><small><?php echo date("d-m-Y", strtotime($row["PlanendDate"]));?> 
               <input type="hidden" name="plan_end" id="plan_end" value="<?php echo stripslashes($row["PlanendDate"]);?>">
               </small></td>
-        <td><input type="button" name="Save" id="Save" value="Save" onclick="getValueHistoryPage(<?php echo stripslashes($row["id"]);?>);"></td>
+        <td><input type="button" name="Save" id="Save" class="btn btn-primary btn-sm" value="Save" onclick="getValueHistoryPage(<?php echo stripslashes($row["id"]);?>);"></td>
       	</tr>
         
         </div>
@@ -140,7 +146,9 @@ if(mysql_num_rows($stockArr)>0)
 	      }
 	}
     else
+	{
    		 echo "<h3 style='color:red;'>No Plan found!</h3>";
+	}
 	?> 
           			
                 

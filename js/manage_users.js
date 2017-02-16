@@ -1,9 +1,3 @@
-base64 = new Nibbler({
-    dataBits: 8,
-    codeBits: 6,
-    keyString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
-    pad: '='
-});
 function chkcontactform(obj)
 {
 	if(obj.empId.value =="")

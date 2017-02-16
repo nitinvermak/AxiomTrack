@@ -7,7 +7,7 @@ $sql = "SELECT * FROM tblplan where serviceprovider_id='$provider2'";
 /*echo $sql;*/
 $result = mysql_query($sql);
 ?>		
-<select name="plan2" id="plan2" class="form-control drop_down">
+<select name="plan2" id="plan2" class="form-control select2" style="width: 100%">
 <option value="">Select Plan</option>
 <?php 
 	while($resultPlan=mysql_fetch_assoc($result)){

@@ -13,10 +13,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 	session_destroy();
 	header("location: index.php?token=".$token);
 	}
-if (isset($_SESSION) && $_SESSION['user_category_id']!=1) 
-	{
-		header("location: home.php?token=".$token);
-	}
+
 $error =0;
 if(isset($_REQUEST['organization']))
 	{
@@ -75,6 +72,7 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'])
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/custom.css">

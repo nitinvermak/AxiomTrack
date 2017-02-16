@@ -5,13 +5,10 @@ $telecaller =$_REQUEST['telecaller'];
 error_reporting(0);
 	/*echo $branch_id;*/
 	$linkSQL = "select * FROM tblcallingdata as A, tblassign as B WHERE A.id = B.callingdata_id and A.calling_status='0' and B.status_id=2 and B.telecaller_id='{$telecaller}'";
-	
- 
+	// echo $linkSQL; 
 $stockArr=mysql_query($linkSQL);
-
 if(mysql_num_rows($stockArr)>0)
 	{
-	
 	 	echo '  <table class="table table-hover table-bordered">  ';
 ?>		
 				<tr>

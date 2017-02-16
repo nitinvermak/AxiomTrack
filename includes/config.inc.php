@@ -6,6 +6,9 @@
 // ini_set('upload_tmp_dir','/tmp');
 //ini_set('max_execution_time','2000');
 error_reporting(0);
+$session_timeout = 3600 * 12;
+// session_set_cookie_params(3600,"/");
+session_set_cookie_params($session_timeout);
 session_start(); // starting user session here]
 //ob_start();
 //header( "Set-Cookie: name=value; httpOnly" );
@@ -14,13 +17,13 @@ defining all the required Constants
 */
 
 // path of site used to call images,style,js etc by their absolute path.
-define('SITE_WS_PATH','http://localhost/crm/AxiomTrack/'); 
+define('SITE_WS_PATH','http://localhost/CRM/AxiomTrack/'); 
 
 // title of site								
 define('SITE_TITLE','Welcome To IndianTruckers.com'); 												
 
 // Location of airtel directory on server use to include class files
-define('SITE_FS_PATH',$_SERVER['DOCUMENT_ROOT']."/crm/AxiomTrack");								
+define('SITE_FS_PATH',$_SERVER['DOCUMENT_ROOT']."/CRM/AxiomTrack");								
 
 define('SITE_PAGE_TITLE','IndianTruckers.com');
 define('PER_PAGE_ROWS',10);
@@ -61,7 +64,7 @@ $database="crm";
 
 
 //Connecting to the sql server
-mysql_connect($host_name,$user_name,$password) or die("Error in connection");
+mysql_connect($host_name,$user_name,$password) or die(mysql_errno());
 
 //Connecting to the database
 mysql_select_db($database) or die("Error in database connection");

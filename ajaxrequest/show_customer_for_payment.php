@@ -6,7 +6,7 @@ $searchText = $_REQUEST['searchText'];
 error_reporting(0);
 if($searchText !== '')
 {
-	$linkSQL = "SELECT A.cust_id as Cid, B.Company_Name as cname, A.activeStatus as activestatus , A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id  WHERE A.cust_id like '$searchText%' or B.Company_Name like '$searchText%' ";
+	$linkSQL = "SELECT A.cust_id as Cid, B.Company_Name as cname, A.activeStatus as activestatus ,A.customerStatus as customerStatus, A.calling_product as P_id, A.confirmation_date as Cdate FROM tbl_customer_master as A INNER JOIN tblcallingdata as B ON A.callingdata_id = B.id  WHERE A.cust_id like '$searchText%' or B.Company_Name like '$searchText%' ";
 				/*echo "cmd" . $linkSQL;*/
 	$stockArr=mysql_query($linkSQL);
 	if(mysql_num_rows($stockArr)>0)
@@ -43,6 +43,19 @@ if($searchText !== '')
 			{
 		?>
         	<input type="submit" name="active" id="active" value="Active" class="btn btn-info btn-sm" />
+        <?php 
+			}
+		?>
+        <?php if($row["customerStatus"] == "Ok")
+			{
+		?>
+        	<input type="button" name="defaulter" id="defaulter" value="Defaulter" class="btn btn-info btn-sm" onClick="getDefaulter()">
+		<?php 
+			}
+			else if($row["customerStatus"] == "Defaulter")
+			{
+		?>
+        	<input type="button" name="ok" id="ok" value="OK" class="btn btn-info btn-sm" onClick="getOK()">
         <?php 
 			}
 		?>

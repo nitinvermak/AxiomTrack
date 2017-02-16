@@ -4,17 +4,17 @@ include("../includes/crosssite.inc.php");
 $searchText = $_REQUEST['searchText']; 
 /*echo $searchText;*/
 error_reporting(0);
-		 if($searchText != '')
-			{
-				$linkSQL = "SELECT * from tblcallingdata WHERE First_Name LIKE '$searchText%' OR Last_Name LIKE '$searchText%' OR Company_Name LIKE '$searchText%' OR Mobile  LIKE '$searchText%'";
+$linkSQL = "SELECT * from tblcallingdata WHERE First_Name LIKE '$searchText%' OR Last_Name LIKE '$searchText%' OR Company_Name LIKE '$searchText%' OR Mobile  LIKE '$searchText%'";
 				/*echo "cmd" . $linkSQL;*/
-			}
 $stockArr=mysql_query($linkSQL);
-
 if(mysql_num_rows($stockArr)>0)
 	{	
-	 	echo '<table class="table table-hover table-bordered ">';
 ?>	
+    <div class="col-md-12 delete-multiple-button">
+      <button type="submit" name="delete_selected" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    </div>
+    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			 <thead>
 			 <tr>
              <th><small>S. No.</small></th>  
           	 <th><small>Name</small></th> 
@@ -22,12 +22,13 @@ if(mysql_num_rows($stockArr)>0)
           	 <th><small>Phone</small></th>
           	 <th><small>Mobile</small></th>
           	 <th><small>Data Source</small></th>
-          	 <th><small>Actions</small> 
+          	 <th><small>Actions</small> <br />
               <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',true)" style="color:#fff; font-size:11px;">Check All </a>
-              &nbsp;&nbsp;
-              <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a> 
+      
+                <a href='#' onClick="SetAllCheckBoxes('fullform','linkID[]',false)" style="color:#fff; font-size:11px;">Uncheck All </a> 
           	</th>   
           	</tr>  
+            </thead>
 	
 	<?php
 	  $kolor =1;

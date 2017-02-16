@@ -6,7 +6,7 @@ error_reporting(0);
 
 $branchArr=mysql_query("SELECT * FROM tblstate WHERE Country_id='$country' Order by State_name ASC");
 ?>
-	<select name="state" id="state" class="form-control drop_down"  onchange="return CallDistrict(this.value)">
+	<select name="state" id="state" class="form-control" style="width: 100%" onchange="return CallDistrict(this.value)">
     <option value="">Select State</option>
     	<?php 
 		// error_reporting(-1);

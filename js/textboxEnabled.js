@@ -44,7 +44,12 @@
 
 $(document).ready(function(){
 	$('#submit').click(function(){
-		if($("#cash").prop('checked') == true)
+		if($("#organizationName").val() == "" ){
+		    $("#organizationName").focus();
+		    alert("Please Select Organization");
+		    return false;
+		}	
+		else if($("#cash").prop('checked') == true)
 		{
 			if($("#cashAmount").val() == "" ){
 		    $("#cashAmount").focus();
@@ -52,7 +57,7 @@ $(document).ready(function(){
 		    return false;
 			}
 		}
-		if($('#cheque').prop('checked') == true)
+		else if($('#cheque').prop('checked') == true)
 		{
 			if($("#chequeNo").val() == "" ){
 		    $("#chequeNo").focus();
@@ -80,7 +85,7 @@ $(document).ready(function(){
 		    return false;
 			}
 		}
-		if($('#onlineTransfer').prop('checked') == true)
+		else if($('#onlineTransfer').prop('checked') == true)
 		{
 			if($("#onlineTransferAmount").val() == "" ){
 		    $("#onlineTransferAmount").focus();
@@ -93,19 +98,13 @@ $(document).ready(function(){
 		    return false;
 			}
 		}
-		if($("#revievingDate").val() == "" ){
-		    $("#revievingDate").focus();
-		    alert("Please Enter Recieving Date");
-		    return false;
-		}
-		
-		if($("#recievedby").val() == "" ){
-		    $("#recievedby").focus();
-		    alert("Please Enter Payment Revieved");
-		    return false;
-		}
-
+		else
+		{
+			alert('Please Select Payment Type');
+			return false;
+		}		 
 	});
+	
 });
 
 //end

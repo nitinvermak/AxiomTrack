@@ -26,6 +26,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
@@ -46,7 +47,7 @@ function Show()
 	}
 
 function getValue(a){
-     //console.log( $(this).attr('interval_Id') + '=' + $(this).val());
+    //console.log( $(this).attr('interval_Id') + '=' + $(this).val());
  	$('.loader').show();
 	elements= '#'+a+'   input';
  	jsonArr= []
@@ -59,7 +60,7 @@ function getValue(a){
 	 url="ajaxrequest/generate_estimate_info.php?token=<?php echo $token;?>";	                 
      
 	 postData = {'PostData': jsonArr };
-	 console.log(jsonArr);
+	 console.log(postData);
 	 alert('Invoice for selected month are getting generated');
  
 	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
@@ -68,7 +69,7 @@ function getValue(a){
  		  document.getElementById('divShow').innerHTML=str;
 		  $(".loader").removeAttr("disabled");
 		  $('.loader').fadeOut(1000);
-	     } 
+	} 
 </script>
 </head>
 <body>

@@ -78,6 +78,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="images/ico.png" type="image/x-icon">
 <title><?=SITE_PAGE_TITLE?></title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
@@ -130,35 +131,16 @@ function ShowbyDate()
   		</div>
         <div class="form-group">
             <label for="exampleInputEmail2">Telecaller*</label>
-             <?php 
-				$branchname = $_SESSION['branch'];
-				if($branchname == 14)
-				{
-			?>
             <select name="telecaller" id="telecaller" class="form-control drop_down">
             <option label="" value="0" selected="selected">Select Telecaller</option>
-            <?php $Country=mysql_query("select * from tbluser where  User_Category='6' or User_Category='9' or User_Category='8'");
+            <?php $Country=mysql_query("select * from tbluser");
 				  while($telecaller=mysql_fetch_assoc($Country)){
 			?>
             <option value="<?php echo $telecaller['id']; ?>" ><?php echo stripslashes(ucfirst($telecaller['First_Name']." ". $telecaller["Last_Name"])); ?></option>
             <?php } ?>
             </select>
-           <?php 
-		   }
-		   else
-		   {
-		   ?>
-           <select name="telecaller" id="telecaller" class="form-control drop_down">
-            <option label="" value="0" selected="selected">Select Telecaller</option>
-            <?php $Country=mysql_query("select * from tbluser where (User_Category='6' or User_Category='9' or User_Category='8') AND branch_id ='$branchname'");
-				  while($telecaller=mysql_fetch_assoc($Country)){
-			?>
-            <option value="<?php echo $telecaller['id']; ?>" ><?php echo stripslashes(ucfirst($telecaller['First_Name']." ". $telecaller["Last_Name"])); ?></option>
-            <?php } ?>
-            </select>
-            <?php }?>
         </div>
-  		<input type="submit" name="search" value="Submit" class="btn btn-primary btn-sm" onClick="return ShowbyDate();" />
+  		<input type="submit" name="search" value="Submit" class="btn btn-primary" onClick="return ShowbyDate();" />
       </div> 
       <div id="divassign" class="col-md-12 table-responsive assign_grid">
           <!---- this division shows the Data of devices from Ajax request --->

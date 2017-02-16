@@ -9,7 +9,8 @@ if($cust_id != "")
 		$linkSQL = "Select A.invoiceId as invoiceId, A.invoiceType as invoiceType, B.paymentID as paymentId, 
 					A.customerId as customerId, A.generatedAmount as Amount, 
 					A.generateDate as generateDate, A.dueDate as dueDate, 
-					A.discountedAmount as discount, F.callingdata_id as callingdateId
+					A.discountedAmount as discount, F.callingdata_id as callingdateId, 
+					E.RecivedDate as rcdDate
 					from tbl_invoice_master as A
 					left outer Join tblpaymentinvoicemap as B 
 					On A.invoiceId = B.invoiceId
@@ -36,11 +37,11 @@ if($cust_id != "")
 		<th><small>Payment Id</small></th>
       	<th><small>Customer Name</small></th>  
       	<th><small>Generated Amount</small></th>
+		<th><small>Received Date</small></th>
         <th><small>Generated Date</small></th>
       	<th><small>Due Date</small></th> 
         <th><small>Discount Amount</small></th>
         <th><small>Details</small></th> 
-        <th><small>Make Payment</small></th>
       	</tr>    
         <?php
 		$kolor=1;
@@ -72,7 +73,9 @@ if($cust_id != "")
       	<td><small><?php echo stripslashes($row["paymentId"]);?><input type="hidden" name="paymentId" id="paymentId" value="<?php echo stripslashes($row["paymentId"]);?>" /></small></td>
 		<td><small><?php echo getOraganization(stripcslashes($row['callingdateId'])); ?></small></td>
       	<td><small><?php echo stripslashes($row["Amount"]);?> </small></td>
+		<td><small><?php echo $row['rcdDate'] ?></small></td>
         <td><small><?php echo stripslashes($row["generateDate"]); ?></small></td>
+		
         <td><small><?php echo stripslashes($row["dueDate"]);?></small></td>
         <td><small><?php echo stripcslashes($row["discount"]); ?></small></td>
         <td><button type="button" data-toggle="modal" data-target=".bs-example-modal-lg1<?php echo stripslashes($row["paymentId"]);?>" class="btn btn-info btn-sm">Details</button>
@@ -355,9 +358,7 @@ if($cust_id != "")
         </div>
         <!-- End  Make Payment modal-->
         </td>
-        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg-payment" onclick="getPaymentDetails(<?php echo stripslashes($row["paymentId"]);?>)">
-        View Invoice</button>
-        </td>
+        
       	</tr>
         <?php 
            	}

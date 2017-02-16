@@ -67,9 +67,10 @@ if(mysql_num_rows($stockArr)>0)
                            <td><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'></td>
   	                       </tr>
 			<?php }
+      echo "</table>";
 		}
     else
-   		echo "<tr><td colspan=6 align=center><h3 style='color:red'>No records found!</h3><br><br></td><tr/></table>";
+   		echo "<h3 style='color:red'>No records found!</h3>";
 ?> 
           				<form method="post">
                         <table>

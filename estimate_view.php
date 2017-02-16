@@ -1,148 +1,10 @@
- <?php
+<?php
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
-
 if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
-	session_destroy();
-	header("location: index.php?token=".$token);
+    session_destroy();
+    header("location: index.php?token=".$token);
 }
-
-if (isset($_SESSION) && $_SESSION['login']=='') 
-{
-	session_destroy();
-	header("location: index.php?token=".$token);
-}
-if(isset($_POST['submit']))
-    {
-        $returnCode= 0;
-        $invoiceId = mysql_real_escape_string($_POST['hiddenInvoiceID']);
-        /*Cash payment*/
-        $cashAmount = mysql_real_escape_string($_POST['cashAmount']);
-        /*Cheque*/
-        $chequeNo = mysql_real_escape_string($_POST['chequeNo']);
-        $chequeDate = mysql_real_escape_string($_POST['chequeDate']);  
-        $bankname = mysql_real_escape_string($_POST['bank']); 
-        $amountCheque = mysql_real_escape_string($_POST['amountCheque']);
-        $depositDate = mysql_real_escape_string($_POST['depositDate']);
-        /*Online Tranfer*/
-        $onlineTransferAmount = mysql_real_escape_string($_POST['onlineTransferAmount']);
-        $refNo = mysql_real_escape_string($_POST['refNo']);
-        /*Other Details*/
-        $revievingDate = mysql_real_escape_string($_POST['revievingDate']);
-        $remarks = mysql_real_escape_string($_POST['remarks']);
-        $recievedby = mysql_real_escape_string($_POST['recievedby']);
-        $confirmby = mysql_real_escape_string($_POST['confirmby']);
-
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
-            $returnCode = 1;        
-
-        }
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== False){
-            $returnCode = 2;        
-        }
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== True){
-            $returnCode = 3;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== False){
-            $returnCode = 4;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== True){
-            $returnCode = 5;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== False){
-            $returnCode = 6;        
-        }
-        if(isset($_POST['cash']) == True && ($_POST['cheque']) == True && ($_POST['onlineTransfer'])== True){
-            $returnCode = 7;        
-        }
-        if(isset($_POST['cash']) == False && ($_POST['cheque']) == False && ($_POST['onlineTransfer'])== False){
-            $returnCode = 8;        
-        }
-
-        switch ($returnCode) {
-            case 1:
-                $sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $OnlineTransferId = mysql_insert_id();
-                break;
-            case 2:
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				echo $sql;
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id(); 
-                break;
-            case 3:
-                // Cheque Payment
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id();
-                //Online Payment
-                // do nothing
-                break;
-            case 4:
-                // Cash Payment
-                // do nothing
-                break;
-            case 5:
-                // Cash Payment
-                // do nothing
-
-                // Online Payment
-                $sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $OnlineTransferId = mysql_insert_id();
-            case 6:
-                //Cash Payment
-                // do nothing
-
-                //Cheque Payment
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id();
-                // cash amount
-                // do nothing
-                break;
-            case 7:
-                // cash payment
-                // do nothing
-                //Cheque Payment
-                $sql = "Insert into PaymentCheque Set ChequeNo = '$chequeNo', ChequeDate = '$chequeDate', 
-                Bank = '$bankname', DepositDate = '$depositDate', Amount = '$amountCheque'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $ChequeID = mysql_insert_id();
-                 // Online Payment
-                $sql = "Insert into paymentonlinetransfer Set RefNo = '$refNo', Amount = '$onlineTransferAmount'";
-				/*echo $sql;*/
-                $result = mysql_query($sql);
-                $OnlineTransferId = mysql_insert_id();
-            default:
-                # code...
-                break;
-        }
-        $sql = "Insert into paymentmethoddetailsmaster Set ChequeID = '$ChequeID', CashAmount = '$cashAmount', OnlineTransferId = '$OnlineTransferId', 
-                RecivedDate = STR_TO_DATE('$revievingDate','%m/%d/%Y'), Remarks = '$remarks' , RecievedBy = '$recievedby'";
-				echo $sql;
-                $result = mysql_query($sql);
-                $paymentId = mysql_insert_id();
-
-        $flagStatus ="Update tbl_invoice_master Set paymentStatusFlag = 'B', invoiceFlag = 'Y' 
-                      Where invoiceId = '$invoiceId'";
-		/*echo $flagStatus;*/
-        $resultSql = mysql_query($flagStatus);
-
-        $invoicePaymentMap = "Insert into tblpaymentinvoicemap Set invoiceId = '$invoiceId', 
-                               paymentId = '$paymentId'";
-		/*echo $invoicePaymentMap;*/
-       	$resultMap = mysql_query($invoicePaymentMap);
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -151,42 +13,91 @@ if(isset($_POST['submit']))
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?=SITE_PAGE_TITLE?></title>
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/bootstrap-submenu.min.css">
-<link rel="stylesheet" href="css/custom.css">
-<link rel="stylesheet" href="http:/resources/demos/style.css">
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="assets/bootstrap/css/font-awesome.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="assets/bootstrap/css/ionicons.min.css">
+<!-- daterange picker -->
+<link rel="stylesheet" href="assets/plugins/daterangepicker/daterangepicker.css">
+<!-- bootstrap datepicker -->
+<link rel="stylesheet" href="assets/plugins/datepicker/datepicker3.css">
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="assets/plugins/iCheck/all.css">
+<!-- Bootstrap Color Picker -->
+<link rel="stylesheet" href="assets/plugins/colorpicker/bootstrap-colorpicker.min.css">
+<!-- Bootstrap time Picker -->
+<link rel="stylesheet" href="assets/plugins/timepicker/bootstrap-timepicker.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="assets/plugins/select2/select2.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="assets/dist/css/AdminLTE.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="assets/dist/css/skins/_all-skins.min.css">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script type="text/javascript" src="js/checkbox_validation.js"></script>
-<script type="text/javascript" src="js/checkbox.js"></script>
+<!-- DataTable CSS -->
+<link rel="stylesheet" type="text/css" href="assets/plugins/datatables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="assets/plugins/datatables/css/buttons.dataTables.min.css">
+<!-- Custom CSS -->
+<link rel="stylesheet" type="text/css" href="assets/dist/css/custom.css">
+<script src="assets/bootstrap/js/jquery-1.10.2.js"></script>
+<script src="assets/bootstrap/js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/validation.js"></script>
 <script  src="js/ajax.js"></script>
-<script type="text/javascript" src="js/sim_confirmation.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script type="text/javascript" src="js/textboxEnabled.js"></script>
-
-<script type="text/javascript">
+<!-- DataTable JS -->
+<script type="text/javascript" src="assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/jszip.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/pdfmake.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/vfs_fonts.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datatables/js/buttons.print.min.js"></script>
+<script>
 // Date 
 /* $(function() {
     $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
   });*/
-   $(function() {
-    $( ".date" ).datepicker();
-  });
+  //  $(function() {
+  //   $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+  // });
 // End Date
+
 /* Send ajax request*/
-$(document).ready(function(){
-		$("#company").change(function(){
-			$.post("ajaxrequest/show_estimate_view.php?token=<?php echo $token;?>",
-				{
-					cust_id : $('#company').val(),
-				},
-					function( data){
-						/*alert(data);*/
-						$("#divassign").html(data);
-				});	 
-		});
-});
+function get_estimate_details(){
+    alert('sdafas');
+            $.post("ajaxrequest/show_estimate_view.php?token=<?php echo $token;?>",
+                {
+                    cust_id : $('#company').val(),
+                },
+                    function( data){
+                        /*alert(data);*/
+                        $("#divassign").html(data);
+                        $('#example').DataTable( {
+                                dom: 'Bfrtip',
+                                "bPaginate": false,
+                                buttons: [
+                                            'copy', 'csv', 'excel', 'pdf', 'print'
+                                         ]
+                        });
+                });  
+}
 /* End */
+// get payment Details
+function get_payment_details(obj){
+    $.post("ajaxrequest/show_payment_details.php?token=<?php echo $token;?>",
+        {
+            invoiceId : obj,
+        },
+        function( data){
+            /*alert(data);*/
+            $(".modal-content").html(data);
+        });  
+}
 // calculate percentage
  function showData1(inId){
 
@@ -238,176 +149,658 @@ function addPercent(invoiceId)
                 });  
 }
 //End
-function getValue(name, iName, iId, amount, iYear)
-	{
-		/*alert(name+iName+iId+amount+iYear);*/
-		document.getElementById("name").innerHTML = name;
-		document.getElementById("intervelName").innerHTML = iName+" "+iYear;
-		document.getElementById("payableamt").innerHTML = amount;
-	    $('#hiddenInvoiceID').val(iId);
+function getValue(name, iName, iId, amount,discount_amount, paidamount, iYear)
+    {
+        /*alert(name+iName+iId+amount+iYear);*/
+        //document.getElementById("invoice_payment_form").reset();
+        // document.getElementById("name").innerHTML = name;
+        // document.getElementById("intervelName").innerHTML = iName+" "+iYear;
+        // document.getElementById("payableamt").innerHTML = amount - paidamount;
+         
+        // $('#invoice_payable_amount').val(amount);
+        // $('#invoice_partial_paid_amount').val(paidamount);
+        
+        // $('#hiddenInvoiceID').val(iId);
+        $.post("ajaxrequest/make_payment_form.php?token=<?php echo $token;?>",
+                {
+                    orgName : name,
+                    intervelName : iName+" "+iYear,
+                    payableamt : amount,
+					paid_amount: paidamount,
+					discount_amount: discount_amount,
+                    customer_id : $("#company").val(),
+                    invoiceId : $("#invoiceId").val()
+                },
+                function(data){
+                    $('.modal-content-payment').html(data);
+                    // var pamt = document.getElementById("payableamt").value;
+                    // alert(pamt);
+                }); 
     }
+function getPaymentEntryData(){
+    if($("#paymentId").val() == ""){
+        alert("Please Select Payment Id");
+        $("#paymentId").focus();
+    }
+    else if($("#payble_amt").val() == ""){
+        alert("Please Enter Payable Amount");
+        $("#payble_amt").focus();
+    }
+    // else if(($("#adjestmentAmt").val()) > ($("#payble_amt").val()) ){
+    //     alert("Please Provide Valid Amount");
+    //     $("#payble_amt").focus();
+    // }
+    else{
+        $.post("ajaxrequest/save_estimate_amt.php?token=<?php echo $token;?>",
+                {
+                    paymentId : $("#paymentId").val(),
+                    enter_payble_amt : $("#payble_amt").val(),
+                    hiddenInvoiceID : $("#hiddenInvoiceID").val(),
+                    total_amt : $("#total_amt").val(),
+                    adjestmentAmt : $("#adjestmentAmt").val(),
+                    pending_payable_amt : $("#payable_amt").val()
+                    
+                },
+                function(data){
+                    // alert(data);
+                    $("#dv_success").html(data);
+                });
+    }
+}
+function close_form(){
+    get_estimate_details();
+}
+// get Device Amt 
+function getDeviceAmt()
+{
+    $('.loader').show();
+    $.post("ajaxrequest/device_amount_details.php?token=<?php echo $token;?>",
+            {
+                paymentId : $('#paymentId').val()
+            },
+            function (data)
+            {
+                //alert(data);
+                $("#divAmt1").html(data);
+                $(".loader").removeAttr("disabled");
+                $('.loader').fadeOut(1000);
+            });
+}
+// End
+// send Data via ajaxrequest
+function getData(){
+     
+    if($("#cash").prop('checked') == true){
+        if($("#cashAmount").val() == "" ){
+            $("#cashAmount").focus();
+            alert("Please Enter Cash Amount");
+            return false;
+        }
+    }
+    else if($('#cheque').prop('checked') == true){
+        if($("#chequeNo").val() == "" ){
+            $("#chequeNo").focus();
+            alert("Please Enter Cheque No");
+            return false;
+        }
+        else if($("#chequeDate").val() == "" ){
+            $("#chequeDate").focus();
+            alert("Please Enter Cheque Date");
+            return false;
+        }
+        else if($("#bank").val() == "" ){
+            $("#bank").focus();
+            alert("Please Enter Bank");
+            return false;
+        }
+        else if($("#amountCheque").val() == "" ){
+            $("#amountCheque").focus();
+            alert("Please Enter Cheque Amount");
+            return false;
+        }
+        else if($("#depositDate").val() == "" ){
+            $("#depositDate").focus();
+            alert("Please Enter Bank Deposit Date");
+            return false;
+        }
+    }
+    else if($('#onlineTransfer').prop('checked') == true){
+        if($("#onlineTransferAmount").val() == "" ){
+            $("#onlineTransferAmount").focus();
+            alert("Please Enter Amount");
+            return false;
+        }
+        if($("#refNo").val() == "" ){
+            $("#refNo").focus();
+            alert("Please Enter Reference Number");
+            return false;
+        }
+    }
+    else if($("#cash").prop('checked') == false && $('#cheque').prop('checked') == false && $('#onlineTransfer').prop('checked') == false){
+        alert("Please Select at least One Payment Type");
+        return false;
+    }
+
+    
+     
+    $.post("ajaxrequest/make_payment.php?token=<?php echo $token;?>",
+            {
+                invoice_payable_amount : $("#invoice_payable_amount").val(),
+                invoice_partial_paid_amount : $("#invoice_partial_paid_amount").val(),              
+                hiddenInvoiceID : $('#hiddenInvoiceID').val(),
+                cashAmount : $('#cashAmount').val(),
+                chequeNo : $('#chequeNo').val(),
+                chequeDate : $('#chequeDate').val(),
+                bank : $('#bank').val(),
+                amountCheque : $('#amountCheque').val(),
+                depositDate : $('#depositDate').val(),
+                onlineTransferAmount : $('#onlineTransferAmount').val(),
+                refNo : $('#refNo').val(),
+                revievingDate : $('#revievingDate').val(),
+                remarks : $('#remarks').val(),
+                recievedby : $('#recievedby').val(),
+                confirmby : $('#confirmby').val()
+            },
+                function( data){
+                    /*alert(data);*/
+                     $('.modal').modal('hide');
+                    $("#divassign").html(data);
+            });  
+    
+}
+// end 
+
+/*Delete Estimate*/
+function deleteEstimate(estimateId){
+    $('.loader').show();
+    $.post("ajaxrequest/delete_estimate.php?token=<?php echo $token;?>",
+    {
+        estimateId : estimateId
+    },
+    function( data){
+        // alert(data);        
+        restoreDueDate(estimateId); 
+    }); 
+}
+/* End */
+/* Restore Previous Due Date */
+function restoreDueDate(estimateId){
+     
+    jsonArr = []
+    // $(".vehicleId").each(function(){
+    //     jsonArr.push({"id":$(this).attr('id')+'='+$(this).val()});
+    // });
+ 
+	jsonArr.push({"id":"interval_Id="+$("#" + "interval_Id_"+estimateId).val()});
+	jsonArr.push({"id":"estimate_id="+estimateId})
+	jsonArr.push({"id":"intervalMonth="+$("#" + "intervalMonth_"+estimateId).val()});
+	jsonArr.push({"id":"Intervel_Year="+$("#" + "Intervel_Year_"+estimateId).val()});
+	jsonArr.push({"id":"customer_id="+$("#" + "customer_id_"+estimateId).val()});
+	
+ 
+    console.log(jsonArr);
+    
+/* 	url="ajaxrequest/restore_pre_due_date.php?token=<?php echo $token;?>";
+    postData = {'PostData': jsonArr };
+    xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
+    reGenerateEstimate(); */
+	
+	$.post("ajaxrequest/restore_pre_due_date.php?token=<?php echo $token;?>",
+    {
+
+		interval_Id: $("#" + "interval_Id_"+estimateId).val(),
+		customer_id: $("#" + "customer_id_"+estimateId).val()
+		 
+    },
+    function( data){
+        // alert(data); 
+		console.log('regenerating estimates');
+		$('.loader').hide();
+		alert('Invoice deleted and due dates are restoed to previous month.');
+		location.reload(); 
+		
+              
+    }); 
+	
+}
+function GetResponseA(str){
+        document.getElementById('msgDV').innerHTML=str;
+        $(".loader").removeAttr("disabled");
+        $('.loader').fadeOut(1000);
+} 
+// Re Generate Estimate
+function reGenerateEstimate(intervalId){
+    $('.loader').show();
+    jsonArr = []
+ 	jsonArr.push({"id":"interval_Id="+$("#" + "interval_Id_"+intervalId).val()});
+	// jsonArr.push({"id":"estimate_id="+intervalId})
+	jsonArr.push({"id":"intervalMonth="+$("#" + "intervalMonth_"+intervalId).val()});
+	jsonArr.push({"id":"Intervel_Year="+$("#" + "Intervel_Year_"+intervalId).val()});
+	jsonArr.push({"id":"customer_id="+$("#" + "customer_id_"+intervalId).val()});
+	
+	
+    console.log(jsonArr);
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+	
+	 url="ajaxrequest/generate_estimate_info.php?token=<?php echo $token;?>";	                 
+     
+	 postData = {'PostData': jsonArr };
+	 console.log(jsonArr);
+	  
+ 
+	 xmlhttpPost(url,JSON.stringify(jsonArr),"GetResponseA");
+	
+}
+
+function generate_manually_invoice(obj){
+    $('.loader').show();
+    $.post("ajaxrequest/generate_manually_invoice.php?token=<?php echo $token;?>",
+    {
+        customerId : obj
+    },
+    function( data){
+        $('.modal-content').html(data);
+        $(".loader").removeAttr("disabled");
+        $('.loader').fadeOut(1000);
+    }); 
+} 
+// Re-generate Manually Estimate
+  function re_generate_manually_estimate(custId){
+    $('.loader').show();
+    $.post("ajaxrequest/re_generate_manually_estimate.php?token=<?php echo $token;?>",
+    {
+        customerId : custId
+    },
+    function( data){
+        $('#divassign').html(data);
+        // $('body').on('focus',".date", function(){
+         
+        // });
+        $(".date").datepicker({dateFormat: 'yy-mm-dd'});
+        $(".end_date").datepicker({dateFormat: 'yy-mm-dd'});
+        //  $('.calculate_amt').on('click', function(){
+        //         alert('adfas');
+        //           var val1 = $(this).attr('name');
+        //           var datefrom = $("#dd"+val1).val();
+        //           console.log(datefrom);
+                      
+        // });
+        getCurrentDate();
+        $(".loader").removeAttr("disabled");
+        $('.loader').fadeOut(1000);
+    }); 
+  }
+
+// Make all start date same
+function makeAllStartDateSame()
+{
+    //alert("Check box changed");
+    var firstTextBoxValue="";
+    var i=0;
+    $('#example').find('input.start_date').each(function(){
+        if(i==0)
+        {
+            firstTextBoxValue=$(this).val();
+        }
+        else
+        {
+            $(this).val(firstTextBoxValue);
+        }
+        $(this).id;
+        i++;
+        //console.log($(this).val()+"ID="+$(this).ID);
+    });
+}
+// Make all end date same
+function makeAllEndDateSame()
+{
+    // alert("Check box changed");
+    var firstTextBoxValue="";
+    var i=0;
+    $('#example').find('input.end_date').each(function(){
+        if(i==0)
+        {
+            firstTextBoxValue=$(this).val();
+        }
+        else
+        {
+            $(this).val(firstTextBoxValue);
+        }
+        $(this).id;
+        i++;
+       
+    });
+     calculate_amt();
+}
+// Make all rent amt same 
+function makeAllRentAmtSame()
+{
+    //alert("Check box changed");
+    var firstTextBoxValue="";
+    var i=0;
+    $('#example').find('input.rent_amt').each(function(){
+        if(i==0)
+        {
+            firstTextBoxValue=$(this).val();
+        }
+        else
+        {
+            $(this).val(firstTextBoxValue);
+        }
+        $(this).id;
+        i++;
+        calculate_amt();
+    });
+}
+function calculate_amt(){
+    $('.row_val').each(function(){
+		if($(".start_date",this).val()){
+			var  start_date = $(".start_date",this).val();
+			var end_date = $(".end_date",this).val();
+            var rent_amt = $(".rent_ammt",this).val();
+            console.log(rent_amt);
+			var sdt = new Date(start_date);
+			var sdt1 = new Date(end_date);
+			var difdt = new Date(sdt1-sdt);
+			var months = difdt.getMonth();
+			var days = difdt.getDate();
+            var years = difdt.toISOString().slice(0, 4) - 1970;
+			console.log(months);
+			// console.log(days);
+            var total_rent_yearly = rent_amt * years * 12;
+			var total_monthly_rent = rent_amt * months;
+			var total_days_rent = rent_amt/30 * days;
+			var total_rent_amt = total_rent_yearly + total_monthly_rent + total_days_rent;
+			console.log(total_rent_amt);
+			$(".rent_amt",this).val(total_rent_amt);
+		}
+		
+        // document.getElementById("rent_amt").value = total_rent_amt;
+    });
+}
+function get_intervalId(){
+    $('.loader').show();
+    $.post("ajaxrequest/get_interval_id.php?token=<?php echo $token;?>",
+    {
+        generated_date : $("#generated_date").val()
+    },
+    function( data){
+        // alert(data);
+        $('#dv_intervalId').html(data);
+        $(".loader").removeAttr("disabled");
+        $('.loader').fadeOut(1000);
+    }); 
+}
+function save_rent_amount(){
+  $('.loader').show();
+  jsonArr = []
+  $(".data").each(function(){
+    //jsonArr.push({"name":$(this).attr('name')+'='+$(this).val()});
+  });
+   $('.row_val').each(function(){
+        if($(".start_date",this).val()){
+            var  start_date = $(".start_date",this).val();
+            var  end_date = $(".end_date",this).val();
+            var  rent_amt = $(".rent_amt",this).val();
+            var  vehicle_id = $(".vehicle_id",this).val();
+            var customer_Id = $(".customer_Id",this).val();
+            var next_due_date = $(".next_due_date",this).val();
+            var plan_rate_id = $(".plan_rate_id",this).val();
+            if(start_date&&end_date){
+                jsonArr.push({"data": vehicle_id+'='+end_date+'='+start_date+'='+rent_amt+'='+customer_Id+'='+next_due_date+'='+plan_rate_id});
+            }             
+        }
+    });
+  console.log(jsonArr);
+  url="ajaxrequest/save_rent_amount_manually.php?token=<?php echo $token;?>";
+  postData = {'PostData': jsonArr,'interval_Id':$("#interval_Id").val()};
+  //xmlhttpPost(url,JSON.stringify(postData),"GetResponseA");
+  $.ajax({
+        type: "POST",
+        url: url,
+        data:{postData:postData, },
+        dataType: "json" ,
+        success: function (data){
+            alert('a');
+            console.log(data);
+            //GetResponseA(data);
+        },
+        complete:function(data){
+          console.log(data.responseText);
+          $('#divassign').html(data.responseText);
+          $(".loader").removeAttr("disabled");
+          $('.loader').fadeOut(1000);
+        }
+    });
+}
+
+function GetResponseA(str){
+      document.getElementById('divassign').innerHTML=str;
+      $(".loader").removeAttr("disabled");
+      $('.loader').fadeOut(1000);
+} 
+function getCurrentDate() {
+    // document.getElementById('generated_date').value= Date({dateFormat: 'yy-mm-dd'});
+    var today = new Date();
+    var dd = today.getDate();
+
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+    if(dd<10) 
+    {
+        dd='0'+dd;
+    } 
+
+    if(mm<10) 
+    {
+        mm='0'+mm;
+    } 
+    // today = mm+'-'+dd+'-'+yyyy;
+    today = yyyy+'-'+mm+'-'+dd;
+    console.log(today);
+    document.getElementById('generated_date').value= today;
+    get_intervalId();
+    // today = mm+'/'+dd+'/'+yyyy;
+    // console.log(today);
+    // today = dd+'-'+mm+'-'+yyyy;
+    // console.log(today);
+    // today = dd+'/'+mm+'/'+yyyy;
+    // console.log(today);
+}
+// export CSV
+$(document).ready(function () {
+     console.log("HELLO")
+            function exportTableToCSV($table, filename) {
+                console.log("HELLO")
+                var $headers = $table.find('tr:has(th)')
+                    ,$rows = $table.find('tr:has(td)')
+
+                    // Temporary delimiter characters unlikely to be typed by keyboard
+                    // This is to avoid accidentally splitting the actual contents
+                    ,tmpColDelim = String.fromCharCode(11) // vertical tab character
+                    ,tmpRowDelim = String.fromCharCode(0) // null character
+
+                    // actual delimiter characters for CSV format
+                    ,colDelim = '","'
+                    ,rowDelim = '"\r\n"';
+
+                    // Grab text from table into CSV formatted string
+                    var csv = '"';
+                    csv += formatRows($headers.map(grabRow));
+                    csv += rowDelim;
+                    csv += formatRows($rows.map(grabRow)) + '"';
+
+                    // Data URI
+                    var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+                // For IE (tested 10+)
+                if (window.navigator.msSaveOrOpenBlob) {
+                    var blob = new Blob([decodeURIComponent(encodeURI(csv))], {
+                        type: "text/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, filename);
+                } else {
+                    $(this)
+                        .attr({
+                            'download': filename
+                            ,'href': csvData
+                            //,'target' : '_blank' //if you want it to open in a new window
+                    });
+                }
+
+                //------------------------------------------------------------
+                // Helper Functions 
+                //------------------------------------------------------------
+                // Format the output so it has the appropriate delimiters
+                function formatRows(rows){
+                    return rows.get().join(tmpRowDelim)
+                        .split(tmpRowDelim).join(rowDelim)
+                        .split(tmpColDelim).join(colDelim);
+                }
+                // Grab and format a row from the table
+                function grabRow(i,row){
+                     
+                    var $row = $(row);
+                    //for some reason $cols = $row.find('td') || $row.find('th') won't work...
+                    var $cols = $row.find('td'); 
+                    if(!$cols.length) $cols = $row.find('th');  
+
+                    return $cols.map(grabCol)
+                                .get().join(tmpColDelim);
+                }
+                // Grab and format a column from the table 
+                function grabCol(j,col){
+                    var $col = $(col),
+                        $text = $col.text();
+
+                    return $text.replace('"', '""'); // escape double quotes
+
+                }
+            }
+
+
+            // This must be a hyperlink
+          $(document).on("click","#export", function(){
+                // var outputFile = 'export'
+                var outputFile = window.prompt("Please Enter the name your output file.") || 'DeviceAmtReport';
+                outputFile = outputFile.replace('.csv','') + '.csv'
+                 
+                // CSV
+                exportTableToCSV.apply(this, [$('#dvData > table'), outputFile]);
+                
+                // IF CSV, don't do event.preventDefault() or return false
+                // We actually need this to be a typical hyperlink
+            });
+         })
+//end
 </script>
 </head>
-<body>
-<!--open of the wraper-->
-<div id="wraper">
-	<!--include header-->
-    <?php include_once('includes/header.php');?>
-    <!--end-->
-    <!--open of the content-->
-<div class="row" id="content">
-	<div class="col-md-12">
-    	<h3>Estimate View</h3>
-        <hr>
-    </div>
-    <div class="col-md-12">
-    <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
-      <div class="col-md-12">
-        <div class="form-group">
-            <label for="exampleInputEmail2">Company</label>
-            <select name="company" id="company" class="form-control drop_down" >
-                <option value="">Select Company</option>
-                <?php $Country=mysql_query("SELECT DISTINCT A.cust_id, A.callingdata_id, B.customerId  
-											FROM tbl_customer_master as A
-											inner join tbl_invoice_master as B
-											on A.cust_id = B.customerId;");
-				 	  while($resultCountry=mysql_fetch_assoc($Country)){
-				?>
-                <option value="<?php echo $resultCountry['cust_id']; ?>" ><?php echo getOraganization(stripslashes(ucfirst($resultCountry['callingdata_id']))); ?></option>
-                <?php } ?>
-            </select>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+<?php include_once("includes/header.php") ?>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Estimate View
+        <!--<small>Control panel</small>-->
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Generate Estimate Manually</li>
+      </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <form name='fullform' class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
+        <div class="row">
+            <div class="form-group form_custom col-md-12"> <!-- form Custom -->
+                <div class="row"><!-- row -->
+                    <div class="col-lg-6 col-sm-6 custom_field"> <!-- Custom field -->
+                        <span>Company <i class="red">*</i></span>
+                        <select name="company" id="company" onchange="get_estimate_details()" class="form-control drop_down select2" style="width: 100%" >
+                            <option value="0">Select Company</option>
+                            <option value="">All</option>
+                            <?php $Country=mysql_query("SELECT A.cust_id as custId, 
+                                                        B.Company_Name as companyname
+                                                        FROM tbl_customer_master as A 
+                                                        INNER JOIN tblcallingdata as B 
+                                                        ON A.callingdata_id = B.id
+                                                        WHERE A.activeStatus = 'Y'
+                                                        ORDER BY B.Company_Name");
+                                    while($resultCountry=mysql_fetch_assoc($Country)){
+                            ?>
+                            <option value="<?php echo $resultCountry['custId']; ?>" ><?php echo stripslashes(ucfirst($resultCountry['companyname'])); ?></option>
+                            <?php } ?>
+                        </select>
+						
+						       <!-- 	<button type="button" class="btn btn-danger btn-sm" onclick="nitin_function();">
+        		                     do the thing
+        	                        </button><br><br>  -->
+						Deleting invoice instruction:<br/>
+							1) Delete the latest invoice first.<br/>
+							2) Due date will be restored to previous month invoice<br/>
+							3) if multiple invoices need to be deleted do it one by one. Starting from latest invoice.<br/>
+							
+						
+                    </div> <!-- end custom field -->
+                </div><!-- end row -->                
+            </div><!-- End From Custom -->
         </div>
-      </div> 
-      <div id="divassign" class="col-md-12 table-responsive assign_grid">
-          <!---- this division shows the Data of devices from Ajax request --->
-       </div>
-    </form>
-    </div>
-</div>
-<!--end of the content-->
-<!--open of the footer-->
+        <div class="box box-info">
+            <div class="box-header">
+              <!-- <h3 class="box-title">Details</h3> -->
+            </div>
+            <div class="box-body">
+                <?php if(isset($msg)){?>
+                <div class="alert alert-success alert-dismissible small-alert" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong><i class="fa fa-check-circle" aria-hidden="true"></i></strong> <?= $msg; ?>
+                </div>
+                <?php 
+                }
+                ?>
+                <div id="msgDV"></div>
+                <div id="divassign" class="table-responsive">
+                    <!-- Show Content from ajax page -->
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        </form>
+    </section> <!-- end main content -->
+</div><!-- /.content-wrapper -->
 <!-- Payment Modal Start -->
-<div class="modal fade bs-example-modal-lg-payment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Make Payment</h4>
-      </div>
-      <div class="modal-body">
-      	<!--Start form -->
-         <form name='fullform' class="form-horizontal"  method='post'>
-         <input type="hidden" name="hiddenInvoiceID" id="hiddenInvoiceID" value="">
-    	 <div class="table-responsive">         
-    	 <table class="formStyle" border="0">
-         <tr>
-         <td colspan="4">
-         <table class="table table-bordered">
-         <tr>
-         <td><strong>Company Name:</strong></td>
-         <td><strong><span style="color:#FF0000;" id="name"></span></strong></td>
-         <td><strong>Interval Name:</strong></td>
-         <td><strong><span style="color:#FF0000;" id="intervelName"></span></strong></td>
-         <td><strong>Payable Amount:</strong></td>
-         <td><strong><span style="color:#FF0000;" id="payableamt"></span></strong></td>
-         </tr>
-         </table>
-         </td>
-         </tr>
-         <tr>
-         <th colspan="4">Cash <input type="checkbox" name="cash" id="cash"></th>
-         </tr>
-         <tr>
-         <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="cashAmount" id="cashAmount" class="form-control text_box" disabled></td>
-         <td class="col-md-2"></td>
-         <td class="col-md-4"></td>
-         </tr>
-         <tr>
-         <th colspan="4">Cheque <input type="checkbox" name="cheque" id="cheque"></th>
-         </tr>
-         <tr>
-         <td class="col-md-2">Cheque No.</td>
-         <td class="col-md-4"><input type="text" name="chequeNo" id="chequeNo" class="form-control text_box" disabled></td>
-         <td class="col-md-2">Cheque Date</td>
-         <td class="col-md-4"><input type="text" name="chequeDate" id="chequeDate" class="date form-control text_box" disabled></td>
-         </tr>
-         <tr>
-         <td class="col-md-2">Bank</td>
-         <td class="col-md-4">
-         <select name="bank" id="bank" class="form-control drop_down ddlCountry" disabled>
-            <option value="">Select Plan Category</option>
-            <?php $Country=mysql_query("select * from tblBank");
-						   while($resultCountry=mysql_fetch_assoc($Country)){
-			?>
-            <option value="<?php echo $resultCountry['bankId']; ?>" <?php if(isset($result['bankId']) && $resultCountry['bankId']==$result['bankId']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($resultCountry['bankName'])); ?></option>
-            <?php } ?>
-        </select>
-         </td>
-         <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="amountCheque" id="amountCheque" class="form-control text_box" disabled></td>
-         </tr>
-         <tr>
-         <td class="col-md-2">Bank Deposit Date</td>
-         <td class="col-md-4"><input type="text" name="depositDate" id="depositDate" class="form-control text_box date" disabled></td>
-         <td class="col-md-2">Confirm Date</td>
-         <td class="col-md-4"><input type="text" name="confirmDate" id="confirmDate" class="form-control text_box" disabled="disabled" /></td>
-         </tr>
-         <tr>
-         <th colspan="4">Online Transfer <input type="checkbox" name="onlineTransfer" id="onlineTransfer"></th>
-         </tr>
-         <tr>
-         <td class="col-md-2">Amount</td>
-         <td class="col-md-4"><input type="text" name="onlineTransferAmount" id="onlineTransferAmount" class="form-control text_box" disabled></td>
-         <td class="col-md-2">Reference No.</td>
-         <td class="col-md-4"><input type="text" name="refNo" id="refNo" class="form-control text_box" disabled></td>
-         </tr>
-         <tr>
-         <th colspan="4">Other Details</th>
-         </tr>
-         <tr>
-         <td class="col-md-2">Date of Recieving</td>
-         <td class="col-md-4"><input type="text" name="revievingDate" id="revievingDate" class="date form-control text_box" ></td>
-         <td class="col-md-2">Remarks</td>
-         <td class="col-md-4"><input type="text" name="remarks" id="remarks" class="form-control text_box" ></td>
-         </tr>
-         <tr>
-         <td class="col-md-2">Payment Revieved by</td>
-         <td class="col-md-4"><input type="text" name="recievedby" id="recievedby" class="form-control text_box" ></td>
-         <td class="col-md-2">Payment Confirm by</td>
-         <td class="col-md-4"><input type="text" name="confirmby" id="confirmby" class="form-control text_box" ></td>
-         </tr>
-         <tr>
-         <td class="col-md-2">&nbsp;</td>
-         <td class="col-md-4">&nbsp;</td>
-         <td class="col-md-2">&nbsp;</td>
-         <td class="col-md-4">&nbsp;</td>
-         </tr>
-         <tr>
-         <td class="col-md-2">&nbsp;</td>
-         <td class="col-md-4"><input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Submit"> <input type="reset" name="reset" id="reset" class="btn btn-primary btn-sm" value="Reset"></td>
-         <td class="col-md-2">&nbsp;</td>
-         <td class="col-md-4">&nbsp;</td>
-         </tr>
-         </table>
-    	 </div>
-    	 </form>
-        <!-- End Form -->
-      </div>
+    
     </div>
   </div>
 </div>
 <!-- End Payment Modal -->
-
-<div class="row" id="footer">
-	<div class="col-md-12">
-    <p>Copyright &copy; 2015 INDIAN TRUCKERS, All rights reserved.</p>
-    </div>
+<!-- Loader -->
+<div class="loader">
+    <img src="images/loader.gif" alt="loader">
 </div>
-<!--end footer-->
-</div>
-<!--end wraper-->
-<!-------Javascript------->
+<!-- End Loader -->
+<?php include_once("includes/footer.php") ?>
+</div><!-- ./wrapper -->
 <script src="js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="assets/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="assets/dist/js/demo.js"></script>
+<!-- Select2 -->
+<script src="assets/plugins/select2/select2.full.min.js"></script>
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+  });
+</script>
 </body>
 </html>

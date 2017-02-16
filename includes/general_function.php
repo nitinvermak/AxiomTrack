@@ -343,7 +343,7 @@ function fnRandomChar ($var_MaxLength = 8,$advanced=false,$loweruppper=0)
 function run_query($sql)
 {
 	$result=doquery($sql);
-	?><title>getDeviceAmt</title>
+	?><title>viceAmt</title>
 	<table border="1">
 		<tr>
 		<?php
@@ -768,7 +768,26 @@ function getdepartment($id)
   return $result['dept_name'];
   else
   return NULL;
-  
+}
+function getSimNo($id)
+{
+  $sql="SELECT `sim_no` FROM `tblsim` WHERE `id` = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['sim_no'])
+  return $result['sim_no'];
+  else
+  return 'N/A';
+}
+function getpaymentStatus($val)
+{
+	if($val == 0)
+	{
+		echo "Pending";
+	}
+	else{
+		echo "Received";
+	}
 }
 function getcountry($id)
 {
@@ -778,8 +797,7 @@ function getcountry($id)
   if($result['Country_name'])
   return $result['Country_name'];
   else
-  return NULL;
-  
+  return NULL; 
 }
 function getcity($id)
 {
@@ -799,7 +817,36 @@ function getcities($id)
   if($result['City_Name'])
   return $result['City_Name'];
   else
-  return NULL;
+  return 'N/A';
+}
+function BranchLogin($id)
+{
+  //return 'asdasd'; 		
+  $sql = "select branchId from userbranchmapping where userId = ".$id;
+  $rs = mysql_query($sql);
+/*  $result = mysql_fetch_assoc($rs);*/
+  $auth_branch= '';
+  while($row =  mysql_fetch_array($rs)){
+  	if ($auth_branch){
+		$auth_branch = $auth_branch.','.$row['branchId'];
+	}else{
+		$auth_branch = $row['branchId'];		
+	}
+  }
+  if($auth_branch == 0){
+  	return $auth_branch;	
+  }else{
+  	return "(".$auth_branch.")";;
+  
+  }
+}
+function UserActivityLog($userId, $ipAddress, $pageName, $detailsString)
+{
+	$detailsString = str_replace("'", " ", $detailsString);
+	$sql = "Insert into tbluseractivitylog set userId = '$userId', timeStamp = Now(), ipAddress = '$ipAddress', 
+			pageName = '$pageName', detailsString = '$detailsString'";
+	/*echo $sql;*/
+	$result = mysql_query($sql);
 }
 function getcityname($id)
 {
@@ -819,7 +866,7 @@ function getarea($id)
   if($result['Area_name'])
   return $result['Area_name'];
   else
-  return NULL;
+  return 'N/A';
 }
 function getpincode($id)
 {
@@ -841,6 +888,172 @@ function getdistrict($id)
   	 else
   	 return NULL;
 }
+function sendConfigSms($model, $mobile, $cmd)
+{
+	if($model != NULL)
+	{
+		$sql = "SELECT * FROM `tbldevicecommand` where modelId =".$model;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+		/*echo $sql.'ahsfjasf';*/
+	//	die();
+		sendSms($mobile, $resultArr['ipCmd']);
+		sleep(15);
+		sendSms($mobile, $resultArr['timeZoneCmd']);
+		sleep(5);
+		sendSms($mobile, $resultArr['dataIntervelCmd']);
+		sleep(5);
+		sendSms($mobile, $resultArr['apnCmd']);
+	}
+	else
+	{
+		
+	}
+}
+// Send message when configure new vehicle
+function SendAlert($id){
+	if($id != NULL)
+	{
+		$sql = "SELECT C.Mobile as clientMob, D.Contact_No as techMob, A.vehicle_no as vehicleNo
+				FROM tempvehicledata as A 
+				INNER JOIN tbl_customer_master as B 
+				ON A.customer_Id = B.cust_id
+				INNER JOIN tblcallingdata as C 
+				ON B.callingdata_id = C.id
+				INNER JOIN tbluser as D 
+				ON A.techinician_name = D.id
+				WHERE A.id =".$id;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+		$mob = $resultArr['clientMob'].','.$resultArr['techMob'];
+		$vehicle = $resultArr['vehicleNo'];
+		$msg = "Vehicle No. ".$vehicle." Added Successfully !";
+		sendSms($mob, $msg);
+	}
+}
+// send message when configure repair vehicle
+function SendAlertRepair($id){
+	if($id != NULL)
+	{
+		$sql = "SELECT C.Mobile as clientMobile, D.Contact_No as techMob, A.vehicleId as vehicleNo
+				FROM tempvehicledatarepair as A 
+				INNER JOIN tbl_customer_master as B
+				ON A.customerId = B.cust_id
+				INNER JOIN tblcallingdata as C 
+				ON B.callingdata_id = C.id 
+				INNER JOIN tbluser as D 
+				ON A.techinicianId = D.id 
+				WHERE A.id = ".$id;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+		$mob = $resultArr['clientMobile'].','.$resultArr['techMob'];
+		$vehicleNo = getVehicleNumber($resultArr['vehicleNo']); 
+		$msg = "Vehicle No. " .$vehicleNo. " Repair Successfully !";
+		sendSms($mob, $msg);
+	}
+}
+// This function send message when assign ticket to technician
+function sendTicketAlert($technician_id, $mssg)
+{
+	if($technician_id !=NULL)
+	{
+		$sql = "SELECT 	Contact_No FROM `tbluser` where id =".$technician_id;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+		//echo $resultArr['Contact_No'];
+		sendSms($resultArr['Contact_No'], $mssg);
+	}
+}
+function sendTicketConfirmation($callingDataId, $msgClnt)
+{
+	if($callingDataId !=NULL)
+	{
+		$sql = "SELECT `Mobile` FROM tblcallingdata WHERE `id`= ".$callingDataId;
+		$result = mysql_query($sql);
+		$resultArr = mysql_fetch_assoc($result);
+		//echo $resultArr['Contact_No'];
+		sendSms($resultArr['Mobile'], $msgClnt);
+	}
+}
+// End function
+function sendSms($mobileno, $message)
+{
+	$authKey = "2763A765rdm1CXD561227a2";
+	//Multiple mobiles numbers separated by comma
+	$mobileNumber = $mobileno;
+	$messageText = $message;
+	//Sender ID,While using route4 sender id should be 6 characters long.
+	$senderId = "Indtrk";
+	
+	//Your message to send, Add URL encoding here.
+	$message = urlencode($message);
+	
+	//Define route 
+	$route = "4";
+	//Prepare you post parameters
+	$postData = array(
+		'authkey' => $authKey,
+		'mobiles' => $mobileNumber,
+		'message' => $message,
+		'sender' => $senderId,
+		'route' => $route
+	);
+	
+	//API URL
+	$url="http://sms.bulk24sms.com/sendhttp.php";
+	
+	// init the resource
+	$ch = curl_init();
+	curl_setopt_array($ch, array(
+		CURLOPT_URL => $url,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POST => true,
+		CURLOPT_POSTFIELDS => $postData
+		//,CURLOPT_FOLLOWLOCATION => true
+	));
+	
+	
+	//Ignore SSL certificate verification
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	
+	
+	//get response
+	$output = curl_exec($ch);
+	
+	//Print error if any
+	if(curl_errno($ch))
+	{
+		echo 'error:' . curl_error($ch);
+	}
+	
+	curl_close($ch);
+	
+	$_SESSION['ticket_msg'] = $output."<br />";
+}
+function getPassword($mobile)
+{
+	$sql = "SELECT `Password`, `Contact_No` FROM `tbluser` WHERE `Contact_No`= '$mobile'";
+	$result = mysql_query($sql);
+	$row = mysql_fetch_assoc($result);
+	if($row){
+		$msg = "Your Password is: ".$row['Password'];
+		$mobile = $row['Contact_No'];
+		// echo $msg;
+		// exit();
+		sendSms($mobile, $msg);
+		echo '<div class="alert alert-success alert-dismissible login-alert" role="alert">
+          		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<strong>Success !</strong> Password Sent to your Mobile. Please check your Mobile.!
+			  </div>';
+		}
+		else{
+			echo '<div class="alert alert-danger alert-dismissible login-alert" role="alert">
+	          		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong><span class="glyphicon glyphicon-info-sign"></span></strong> Invalid Mobile Number !
+				  </div>';
+		}
+}
 function getOraganization($id)
 {
   $sql="select Company_Name from tblcallingdata where id=".$id;
@@ -849,8 +1062,119 @@ function getOraganization($id)
   if($result['Company_Name'])
   return $result['Company_Name'];
   else
+  return 'N/A';
+}
+function get_device_received_amt($vid)
+{
+  $sql="SELECT SUM(`deviceamt`) AS amt FROM `devicepayment` WHERE `vehicleId`=".$vid;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['amt'])
+  return $result['amt'];
+  else
+  return '0';
+}
+function getCust($id)
+{
+  $sql="SELECT A.callingdata_id as callingId, B.Company_Name as CompanyName 
+		FROM tbl_customer_master as A 
+		INNER JOIN tblcallingdata as B 
+		ON A.callingdata_id = B.id
+		WHERE A.cust_id = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['CompanyName'])
+  return $result['CompanyName'];
+  else
+  return 'N/A';
+}
+function getCustContact($id)
+{
+  $sql="SELECT  B.Mobile as mobile
+		FROM tbl_customer_master as A 
+		INNER JOIN tblcallingdata as B 
+		ON A.callingdata_id = B.id
+		WHERE A.cust_id = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['mobile'])
+  return $result['mobile'];
+  else
+  return 'N/A';
+}
+function getCustomerType($id)
+{
+  $sql="select customer_type from tbl_customer_type where customer_type_id=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['customer_type'])
+  return $result['customer_type'];
+  else
+  return 'N/A';
+}
+function getVehicleNumber($id)
+{
+  $sql="SELECT vehicle_no FROM tbl_gps_vehicle_master where id=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['vehicle_no'])
+  return $result['vehicle_no'];
+  else
+  return 'N/A';
+}
+function getDealer($id)
+{
+  $sql="SELECT `Company_Name` FROM tbldealer WHERE `id` =".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['Company_Name'])
+  return $result['Company_Name'];
+  else
+  return 'N/A';
+}
+
+function getVehicleNo($vehicleNo)
+{
+	if($vehicleNo == NULL)
+	{
+		echo 'N/A';
+	}
+	else
+	{
+		echo $vehicleNo;
+	}
+}
+function getVehicleStatus($status){
+	if($status == 'Y')
+	{
+		echo '<span class="label label-success">Active</span>';
+	}
+	else
+	{
+		echo '<span class="label label-danger">Inactive</span>';
+	}
+}
+function getCustType($type){
+	if($type != NULL)
+	{
+		echo $type;
+	}
+	else
+	{
+		echo 'N/A';
+	}
+}
+function getBankName($id)
+{
+  $sql="select bankName from tblbank where bankId=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['bankName'])
+  return $result['bankName'];
+  else
   return NULL;
 }
+
 function getIntervelname($id)
 {
   $sql="select Intervalname from tblesitmateperiod where intervalId=".$id;
@@ -883,13 +1207,47 @@ function getRequesttype($id)
 }
 function gettelecallername($id)
 {
-  $sql="select CONCAT(First_Name,' ',Last_Name) As fullname from tbluser where id=".$id;
+  $sql="select  CONCAT(First_Name,' ',Last_Name) As fullname from tbluser where id='$id' ORDER BY First_Name";
   $rs=mysql_query($sql);
   $result=mysql_fetch_assoc($rs);
   if($result['fullname'])
   return $result['fullname'];
   else
-  return NULL;
+  return 'N/A';
+}
+function getCType($type)
+{
+	if($type == 1)
+	{
+		echo 'Sale';
+	}
+	elseif($type == 2)
+	{
+		echo 'Rent';
+	}
+	elseif($type == 3)
+	{
+		echo 'Installment';
+	}
+	else
+	{
+		echo 'N/A';
+	}
+}
+function getRepairType($repair)
+{
+	if($repair == 1)
+	{
+		echo "Sim";
+	}
+	else if($repair == 2)
+	{
+		echo "Device";
+	}
+	else if($repair == 3)
+	{
+		echo "Both";
+	}
 }
 function getsimprovider($id)
 {
@@ -909,7 +1267,7 @@ function getstate($id)
   if($result['State_name'])
   return $result['State_name'];
   else
-  return NULL;
+  return 'N/A';
 }
 function getproviderid($id)
 {
@@ -921,13 +1279,13 @@ function getproviderid($id)
   else
   return NULL;
 }
-function getSimNO($id)
+function getIMEINO($id)
 {
-  $sql="select sim_no from tblsim where id=".$id;
+  $sql="SELECT `imei_no` FROM `tbl_device_master` WHERE `id` =".$id;
   $rs=mysql_query($sql);
   $result=mysql_fetch_assoc($rs);
-  if($result['sim_no'])
-  return $result['sim_no'];
+  if($result['imei_no'])
+  return $result['imei_no'];
   else
   return NULL;
 }
@@ -939,7 +1297,7 @@ function getMobile($id)
   if($result['mobile_no'])
   return $result['mobile_no'];
   else
-  return NULL;
+  return "N/A";
 }
 
 function getdevicename($id)
@@ -952,13 +1310,15 @@ function getdevicename($id)
   else
   return NULL;
 }
-function getDeviceType($id)
+function getDeviceType($custId)
 {
-  $sql="select DeviceType from tbl_device_type where DeviceTypeId=".$id;
+  $sql="SELECT B.DeviceType as deviceType FROM tbl_gps_vehicle_payment_master as A 
+		INNER JOIN tbl_device_type as B 
+		On A.device_type = B.DeviceTypeId WHERE A.cust_id =".$custId;
   $rs=mysql_query($sql);
   $result=mysql_fetch_assoc($rs);
-  if($result['DeviceType'])
-  return $result['DeviceType'];
+  if($result['deviceType'])
+  return $result['deviceType'];
   else
   return NULL;
 }
@@ -980,7 +1340,38 @@ function getFrequency($id)
   if($result['FrqDescription'])
   return $result['FrqDescription'];
   else
-  return NULL;
+  return 'N/A';
+}
+function getFrequencyId($id)
+{
+  $sql="SELECT `rent_payment_mode` FROM `tbl_customer_master` WHERE `cust_id`=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['rent_payment_mode'])
+  return $result['rent_payment_mode'];
+  else
+  return 'N/A';
+}
+function getNoOfVehicles($custId)
+{
+  $sql="SELECT COUNT(*) as totalVehicles FROM `tbl_gps_vehicle_master` WHERE `customer_Id`=".$custId;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['totalVehicles'])
+  return $result['totalVehicles'];
+  else
+  return 'N/A';
+}
+function getRentAmt($id)
+{
+	  $sql = "select * from tblplan where productCategoryId = 4 and planSubCategory = 2 and id =".$id;
+
+	  $rs = mysql_query($sql);
+	  $result = mysql_fetch_assoc($rs);
+	  if($result['plan_rate'])
+	  return $result['plan_rate'];
+	  else
+	  return '0';
 }
 function getdeviceimei($id)
 {
@@ -1012,6 +1403,69 @@ function getPlanCategory($id)
   else
   return NULL;
 }
+function getPlanAmt($id)
+{
+  $sql="select plan_rate from tblplan where id = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['plan_rate'])
+  return $result['plan_rate'];
+  else
+  return '0';
+}
+function lastpaymentreceiveddate($custId){
+  $sql="SELECT Max(A.end_date) as startdate
+		FROM tbl_payment_breakage as A 
+		INNER JOIN tbl_invoice_master as B 
+		ON A.invoiceId = B.invoiceId 
+		WHERE B.invoiceFlag = 'Y'
+		AND B.customerId = ".$custId;
+  // echo $sql;
+  // exit();
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['startdate'])
+  return $result['startdate'];
+  else
+  return 'N/A';
+ // (B.invoiceFlag = 'N' OR B.invoiceFlag = 'P')
+}
+function next_due_date($custId){
+  $sql="SELECT MIN(next_due_date) as next_due_date 
+  		FROM `tbl_gps_vehicle_payment_master` 
+  		WHERE `PlanactiveFlag` ='Y' 
+  		AND `cust_id` = ".$custId;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['next_due_date'])
+  return $result['next_due_date'];
+  else
+  return 'N/A';
+}
+function payment_from($estimateId){
+  $sql="SELECT MIN(`start_date`) as fromdate, MAX(`end_date`) as todate 
+		FROM `tbl_payment_breakage` 
+		WHERE `invoiceId` = ".$estimateId;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+
+  if($result['fromdate'])
+  return $result['fromdate'];
+  else
+  return 'N/A';
+}
+function payment_to($estimateId){
+  $sql="SELECT MIN(`start_date`) as fromdate, MAX(`end_date`) as todate 
+		FROM `tbl_payment_breakage` 
+		WHERE `invoiceId` = ".$estimateId;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+
+  if($result['todate'])
+  return $result['todate'];
+  else
+  return 'N/A';
+}
 function getserviceprovider($id)
 {
   $sql="select serviceprovider from tblserviceprovider where id=".$id;
@@ -1031,11 +1485,30 @@ function getdept_bv($id)
   return getvertical($result['business_vertical_id']);
   else
   return NULL;
-  
 } 
-
- 
-
+function getVehicle($id)
+{
+  $sql="SELECT `vehicle_no` FROM `tbl_gps_vehicle_master` WHERE `id` =".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['vehicle_no'])
+  return $result['vehicle_no'];
+  else
+  return 'N/A';
+} 
+function getDealer1($id)
+{
+  $sql="SELECT Company_Name FROM tbl_device_master as A 
+		Inner Join tbldealer as B 
+		On A.dealer_id = B.id
+		Where A.id = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['Company_Name'])
+  return $result['Company_Name'];
+  else
+  return 'N/A';
+}
 function getstore($store_id)
 {
   $sql="select store_code from store where store_id=".$store_id;
@@ -1078,10 +1551,19 @@ function getvertical($id)
   return $result['business_vertical_name'];
   else
   return NULL;
-  
 }   
+function getBranch($id)
+{
+  $sql="select * from tblbranch where id= ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['CompanyName'])
+  return $result['CompanyName'];
+  else
+  return 'N/A';
+}  
 
- function getusercategory($id)
+function getusercategory($id)
 {
 	//echo $id;
   //die;
@@ -1116,7 +1598,182 @@ $query=mysql_query("select * from business_vertical where business_vertical_id="
 $result=mysql_fetch_assoc($query);
 return (ucfirst($result['business_vertical_name']));
 }
+function getStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span class='label label-warning'>Instock</span>";
+	}
+	else if($statusId == 1)
+	{
+		echo "<span class='label label-success'>Installed</span>";
+	}
+	else if($statusId == 2){
+		echo "<span class='label label-warning'>Replacement</span>";
+	}
+	else
+	{
+		echo "<span class='label label-danger'>Damage</span>";
+	}
+}
+function getTicketStatusEdit($Id)
+{
+	if($Id == 0)
+	{
+		echo "Open";
+	}
+	else if($Id == 1)
+	{
+		echo "Close";
+	}
+	else if($Id == 2)
+	{
+		echo "Reschedule";
+	}
+}
+function getAdjustment($Status)
+{
+	if($Status == 0)
+	{
+		echo "<span class='label label-success'>Yes</span>";
+	}
+	else 
+	{
+		echo "<span class='label label-danger'>No</span>";
+	}
+}
+function getConfirm($statusId)
+{
+	if($statusId == 2)
+	{
+		echo "<span class='label label-success'>Confirmed</span>";
+	}
+	else
+	{
+		echo "<span class='label label-danger'>Not Confirmed</span>";
+	}
+}
+function getAllocated($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span class='label label-danger'>Instock</span>";
+	}
+	else
+	{
+		echo "<span class='label label-success'>Allocated</span>";
+	}
+}
+function getBranchAllocateStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>Unallocated</span>";
+	}
+	else
+	{
+		echo "<span>Allocated</span>";
+	}
+}
+function getBranchAssignStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>InStock</span>";
+	}
+	else
+	{
+		echo "<span>Assigned</span>";
+	}
+}
+function CheckValue($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "N/A";
+	}
+	else
+	{
+		echo $statusId;
+	}
+}
+function getCallingData($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "N/A";
+	}
+	else
+	{
+		echo $statusId;
+	}
+}
+function getTechnicianAssignStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>N/A</span>";
+	}
+	else
+	{
+		echo "<span>Assigned</span>";
+	}
+}
 
+function getCallingStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span>No</span>";
+	}
+	else
+	{
+		echo "<span>Yes</span>";
+	}
+}
+function getTicketStatus($statusId)
+{
+	if($statusId == 0)
+	{
+		echo "<span class='label label-danger'>Pending</span>";
+	}
+	else if($statusId == 1)
+	{
+		echo "<span class='label label-success'>Closed</span>";
+	}
+	else if($statusId == 2)
+	{
+		echo "<span class='label label-warning'>Reschedule</span>";
+	}
+}
+// invoice report function 
+function getConfirmation($value)
+{
+	if($value == 0)
+	{
+		echo "<span class='label label-danger'>No</span>";
+	}
+	else
+	{
+		echo "<span class='label label-success'>Yes</span>";
+	}
+}
+function getClearStatus($value)
+{
+	if($value == 'Y')
+	{
+		echo "<span class='label label-success'>Cleared</span>";
+	}
+	else if($value == 'B')
+	{
+		echo "<span class='label label-danger'>Bounced</span>";
+	}
+	else if($value == 'N')
+	{
+		echo "<span class='label label-warning'>Pending</span>";
+	}
+}
+// End
 function getCompany($id){
 $query=mysql_query("select * from company where company_id=".$id);
 $result=mysql_fetch_assoc($query);
@@ -1127,11 +1784,7 @@ $query=mysql_query("select * from company where company_id=".$id);
 $result=mysql_fetch_assoc($query);
 return ($result['risk_matrix']);
 }
-function getBranch($id){
-$query=mysql_query("select * from tblbranch where id=".$id);
-$result=mysql_fetch_assoc($query);
-return (ucfirst($result['CompanyName']));
-}
+
 function getCallingCategory($id){
 $query=mysql_query("select * from tblcallingcategory where id=".$id);
 $result=mysql_fetch_assoc($query);
@@ -1143,7 +1796,7 @@ $result=mysql_fetch_assoc($query);
 return (ucfirst($result['branch_id']));
 }
 
-function getDept($id){
+function pt($id){
 $query=mysql_query("select dept_name from department where dept_id=".$id);
 $result=mysql_fetch_assoc($query);
 return (ucfirst($result['dept_name']));
@@ -1153,7 +1806,7 @@ $query=mysql_query("select * from user_category where user_category_id=".$id);
 $result=mysql_fetch_assoc($query);
 return (ucfirst($result['name']));
 }
-function getDeptID($name){
+function ptID($name){
 $name=strtolower($name);
 $query=mysql_query("select * from department where lcase(dept_name)='".$name."'");
 $result=mysql_fetch_assoc($query);
@@ -1194,7 +1847,7 @@ $query=mysql_query("select max(right(risk_reference_label_val,3)) as cs  from ri
 $result=mysql_fetch_assoc($query);
 return ($result['cs']);
 }
-function getDeptShortName($id){
+function ptShortName($id){
 $query=mysql_query("select dept_short_name  from department where dept_id='$id'");
 $result=mysql_fetch_assoc($query);
 return ($result['dept_short_name']);

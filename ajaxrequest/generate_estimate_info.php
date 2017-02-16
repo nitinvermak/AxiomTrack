@@ -2,70 +2,118 @@
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
 //include("../includes/payment_master.php"); 
- 
+set_time_limit(0); 
 error_reporting(E_ALL);
+echo '<pre>';
 $myArray = json_decode($_POST["postdata"] );
-/*echo $myArray;*/
- 
+//print_r($_POST["postdata"]);
+//echo '-----------------';
+//print_r($myArray);
+
+$regenerate_customer_id = -1;
 
 foreach ( $myArray as $array1){
+	 
+	
 	foreach ($array1 as $key => $val) {
-	     	echo '</br>'; 
+		    //echo  print_r($val);
+	     	//echo '</br>'; 
   		 	$chunk = explode('=',$val); 
 
        		switch ($chunk[0]) {
 				case 'interval_Id':
-					$interval_Id = $chunk[1];	 		
+					$interval_Id = $chunk[1];	
+					echo "Interval Id";
 					echo $interval_Id;
 					break;	
 			    case 'intervalMonth':
-					$intervalMonth = $chunk[1];	 		
+					$intervalMonth = $chunk[1];	
+					echo "Interval Month";
 					echo $intervalMonth;
 					break;					 				 				
  				case 'Intervel_Year':
-					$Intervel_Year = $chunk[1];	 		
+					$Intervel_Year = $chunk[1];	
+					echo "Interval Year";
 					echo $Intervel_Year;
 					break;
+				case 'customer_id':
+					$regenerate_customer_id = $chunk[1];	
+					echo "regenerate_customer_id";
+					echo $regenerate_customer_id;
+					break;	
+					
 		}  
  	} 
 }
 
-$genDate = $Intervel_Year.'-'.$intervalMonth.'-01';
-$dueDate = $Intervel_Year.'-'.$intervalMonth.'-15';
-$monthDays=cal_days_in_month(CAL_GREGORIAN,$intervalMonth,$Intervel_Year);
 
-$sql0 = "UPDATE `tblesitmateperiod` SET GeneratedStatus='Y', GeneratedDate = Now() WHERE intervalId = '$interval_Id'"; 
-$result = mysql_query($sql0);
-$rentFreqId = 1;  //  pass it from the page
-//$estimateStatus = generate_estimates($interval_Id,$rentFreqId);
- $intervalId = $interval_Id;
- $rentFrequencyId = 1;
-    $joinQuery = "
-	        SELECT  
-			A.id as vehicleId , A.customer_Id  as customerId, B.device_amt as deviceAmount,
-			EXTRACT(DAY FROM A.installation_date) AS installation_date,
-			EXTRACT(MONTH FROM A.installation_date) AS installation_month,
-			EXTRACT(YEAR FROM A.installation_date) AS installation_year,
-			B.device_rent_amt as deviceRentAmt , B.installation_charges as  installationCharges,
-			B.oneTimePaymentFlag as oneTimePaymentFlag, B.planId as planId, B.instalmentId vehicleInstalmentId,
-			C.id as installmenPlanId, C. Installmentamount as installmentAmountID,
-			C.PaidInstalments as paidInstalments, C.NoOfInstallment as noOfInstallment,
-			C.activeFlag as installmentActiveFlag, C.downpaymentAmount as downpaymentAmount
-			FROM tbl_gps_vehicle_master as A 
-			INNER JOIN tbl_gps_vehicle_payment_master as B 
-			ON A.id = B.Vehicle_id
-			LEFT OUTER JOIN  tblinstallmentmaster  as C
-			ON B.instalmentId = C.id
-			where A.paymentActiveFlag = 'Y'
-			and   B.PlanactiveFlag = 'Y'
-			and   B.RentalFrequencyId = '$rentFrequencyId'
-			order by B.cust_Id 
-			";
+
+if (strlen($intervalMonth)==1){
+	$intervalMonthTemp= "0".$intervalMonth;			
+}
+else{
+	$intervalMonthTemp = $intervalMonth;	
+}
+	$genDate = $Intervel_Year.'-'.$intervalMonthTemp.'-01';
+	$dueDate = $Intervel_Year.'-'.$intervalMonthTemp.'-15';
+	$monthDays=cal_days_in_month(CAL_GREGORIAN,$intervalMonth,$Intervel_Year);
+//exit();
+
+    if ($regenerate_customer_id == -1){
+		$sql0 = "UPDATE `tblesitmateperiod` SET GeneratedStatus='Y', GeneratedDate = Now() 
+				 WHERE intervalId = '$interval_Id'"; 
+		$result = mysql_query($sql0);
+	}
+	$rentFreqId = 1;  //  pass it from the page
+	//$estimateStatus = generate_estimates($interval_Id,$rentFreqId);
+	$intervalId = $interval_Id;
+
+	// Error 
+    $joinQuery = "SELECT B.Vehicle_id 	 as vehicleId, B.cust_id  as customerId, B.device_amt as deviceAmount,
+				  EXTRACT(DAY FROM A.installation_date) AS installation_date, 
+				  EXTRACT(MONTH FROM A.installation_date) AS installation_month,
+				  EXTRACT(YEAR FROM A.installation_date) AS installation_year,
+				  A.installation_date AS installation_date_desc, B.device_rent_amt as deviceRentAmt ,
+				  B.devicepaymentStatus AS devicepaymentStatus,				   
+				  B.installation_charges as  installationCharges,
+				  B.oneTimePaymentFlag as oneTimePaymentFlag, B.planId as planId, 
+				  B.instalmentId vehicleInstalmentId, B.RentalFrequencyId as rentalFreg,
+				  B.next_due_date as next_due_date, C.id as installmenPlanId, 
+				  EXTRACT(DAY FROM B.next_due_date) AS next_due_date_day,
+                  EXTRACT(MONTH FROM B.next_due_date) AS next_due_date_month,
+				  EXTRACT(YEAR FROM B.next_due_date) AS next_due_date_year, 				  
+				  C. Installmentamount as installmentAmountID,
+				  C.PaidInstalments as paidInstalments, C.NoOfInstallment as noOfInstallment,
+				  C.activeFlag as installmentActiveFlag, C.downpaymentAmount as downpaymentAmount
+				  FROM tbl_gps_vehicle_master as A 
+				  INNER JOIN tbl_gps_vehicle_payment_master as B 
+				  ON A.id = B.Vehicle_id
+				  LEFT OUTER JOIN  tblinstallmentmaster  as C
+				  ON B.instalmentId = C.id
+				  where A.paymentActiveFlag = 'Y'
+				  and A.activeStatus =  'Y'
+				  and B.PlanactiveFlag = 'Y'";
+				  
+	// this condition removed		
+	// and   B.RentalFrequencyId = '$rentFrequencyId'	
+	
 	// watchout the joins used	first is inner and second is left outer		
+	
+	if ($regenerate_customer_id != -1){
+		echo '!!!!!!!!!!!!!!!!!!';
+		echo '!!!!!! REGENERATING INVOICE FOR CUSTOMER'.$regenerate_customer_id;
+		echo '!!!!!!!!!!!!!!!!!!';
+		$joinQuery = $joinQuery." and B.cust_Id = '$regenerate_customer_id ' ";
+		
+	}
+	// this sorting is important
+	$joinQuery = $joinQuery."order by B.cust_Id , B.Vehicle_id";
+	
 	echo $joinQuery;		 
 	$stockArr = mysql_query($joinQuery);
-	$planRateQuery= " Select id , planSubCategory  , plan_rate  from tblplan where 
-	 productCategoryId = 4  and ( 	planSubCategory = 1 or   	planSubCategory = 2 or 	planSubCategory = 3)";
+	$planRateQuery= "Select id, planSubCategory, plan_rate from tblplan 
+					 where productCategoryId = 4  and (planSubCategory = 1 or planSubCategory = 2 
+					 or planSubCategory = 3)";
 	$planRateQueryArr = mysql_query($planRateQuery);
  
 	$deviceAmountDict = array();
@@ -92,27 +140,56 @@ $rentFreqId = 1;  //  pass it from the page
 	
 	$maxRow = mysql_num_rows($stockArr);
 	$nextCustomer = -1;
-	$loopCounter = 0 ;
+	$loopCounter = 0;
 	$newInvoiceId= 0;
+	$skipLastVehicle = 0;
 	// Looop start for calculating the payment details 
 	
 	while ($row = mysql_fetch_array( $stockArr)){
 		echo '</br>';
-		echo '----------------------------------------processing customer id= '.$row['customerId'];
+		echo '---------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>processing customer id= '.$row['customerId'];
+		echo '</br>';
+		echo '---------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>processing vehicle id= '.$row['vehicleId'];
+		echo '</br>';
+                echo '---------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>processing vehicle NEXT DUE DATE= '.$row['next_due_date'];
 		echo '</br>';
 		
+		// this logic is added to disable the calculation of installment process.
+		// on 29 jan 2017. remove the below the line to activate the installement logic
+		$row['installmentActiveFlag'] = NULL;
+		$pro_rata_procesing_flag = 'N';
+			 	
+		
+		//sandeepTODO
+		if ($regenerate_customer_id == -1){
+			$sql_add_due_date = "Insert into tblvehicleprevduedate set   
+								 customer_id= '".$row['customerId']."',
+								 vehicle_id= '".$row['vehicleId']."',
+								 last_due_date= '".$row['next_due_date']."',
+								 interval_id = '$interval_Id'  " ;
+						 
+			 
+			echo  $sql_add_due_date ;
+			echo '</br>';
+			$result_add_due_date = mysql_query($sql_add_due_date );		//  
+        }
 		$loopCounter=$loopCounter+1;
-		$proRataDeviceRentAmt =0;
+		//$proRataDeviceRentAmt =0;
 		$vehicle_installation_date = $row["installation_date"]; // return only the day of the month
 		$monthDays=cal_days_in_month(CAL_GREGORIAN,$row["installation_month"],$row["installation_year"]);
 		echo '</br>';
 		echo '$monthDays='.$monthDays;
 		echo '</br>';
-		echo '----------------------------------------vehicle_installation_date= '.$vehicle_installation_date;
+		echo '----------------------------------------vehicle_installation_date= '.$row["installation_date_desc"];
 		echo '</br>';
 		$proRataDeviceRentAmt = 0;
+		$deviceRentPayableOneTime = 0;
+		$deviceRentPayableGeneral = 0;
+
+ 
+ 
 		if ($nextCustomer == -1){  // to get invoice id for the first payment breakage Ids
-			$sqlMaxId = "Select Max(invoiceId) as  invoiceId from tbl_Invoice_Master ";
+			$sqlMaxId = "Select Max(invoiceId) as  invoiceId from tbl_invoice_master ";
 			$resultMaxId  = mysql_fetch_array(mysql_query($sqlMaxId));
 			$newInvoiceId =  $resultMaxId["invoiceId"] + 1;
 			$newInvoiceIdTypeB = $resultMaxId["invoiceId"] + 2;
@@ -131,35 +208,41 @@ $rentFreqId = 1;  //  pass it from the page
 			echo '$maxRow='.$maxRow;
 			echo '</br>';
 			
-						
+
 			if($nextCustomer != -1 ){	
 				echo '-----------------------------Record change invoice are getting added--------------------------';
 				echo '</br>';
 				echo ' Inserting Type A invoice record 1';	
 				echo '</br>';
-				$sql = "Insert into tbl_Invoice_Master set 
-				intervalId = '$intervalId', customerId ='".$nextCustomer."',
-				generateDate = '$genDate' , dueDate = '$dueDate',
-				invoiceType = 'A', generatedAmount = '$payableAmountTypeA', taxId = '1', discountedAmount = '0', paidAmount ='0',
-				invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
-				echo $sql;
-				$result = mysql_query($sql);
-
-				
-				if($typeBAmountEntry==1){
+				if ($payableAmountTypeA != 0){
+					$sql = "Insert into tbl_invoice_master set intervalId = '$intervalId', 
+							customerId ='".$nextCustomer."', generateDate = '$genDate' , 
+							dueDate = '$dueDate', invoiceType = 'A', generatedAmount = '$payableAmountTypeA', 
+							taxId = '1', discountedAmount = '0', paidAmount ='0', invoiceFlag ='N' ,
+							paymentStatusFlag = 'A'"; 
+					echo $sql;
+					$result = mysql_query($sql);					
+					echo '<br>'.mysql_error();
+					echo '<br>query result= '.$result;
+				}			
+				if($typeBAmountEntry==1 && $payableAmountTypeB !=0){
 					echo '</br>';
 					echo ' Inserting Type B invoice record 1';
 					echo '</br>';
-					$sql1 = "Insert into tbl_Invoice_Master set 
-					intervalId = '$intervalId', customerId ='".$nextCustomer."',
-					generateDate = '$genDate' , dueDate = '$dueDate',
-					invoiceType = 'B' , generatedAmount = '$payableAmountTypeB', taxId = '1', discountedAmount = '0', paidAmount 					
-					='0',	invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
+					$sql1 = "Insert into tbl_invoice_master set intervalId = '$intervalId', 
+							 customerId ='".$nextCustomer."', generateDate = '$genDate', 
+							 dueDate = '$dueDate', invoiceType = 'B', generatedAmount = '$payableAmountTypeB', 
+							 taxId = '1', discountedAmount = '0', paidAmount ='0', invoiceFlag ='N',   
+							 paymentStatusFlag = 'A'"; 
 					echo $sql1;
 					$result = mysql_query($sql1);
  					
 				}
-				$newInvoiceId =  mysql_insert_id() + 1;
+				
+				$next_invoice_id_query = "Select Max(invoiceId) as  invoiceId from tbl_invoice_master ";
+			    $next_invoice_id_result  = mysql_fetch_array(mysql_query($next_invoice_id_query));
+
+			    $newInvoiceId =  $next_invoice_id_result["invoiceId"] + 1;
 				$newInvoiceIdTypeB = $newInvoiceId + 1 ;
 					
 			}				
@@ -182,11 +265,78 @@ $rentFreqId = 1;  //  pass it from the page
 			$newFlag = 'y';	 
 			$payableAmountTypeA = 0;		
 			$payableAmountTypeB = 0;
-			$typeBAmountEntry =0;
+			$typeBAmountEntry = 0;
 			
 			
 		}		
- 
+		// skip those vehicles whose due date has not arrived (especially for quaterly, Monthly,yearly payment options)
+		if (!($row['next_due_date'] == '0000-00-00')){				
+				list($year,$month,$day) = explode('-', $row['next_due_date']);
+				echo '$day===='.$day;
+				if ( !(($year==$Intervel_Year) && ($month==$intervalMonth))){ // Proceed only if the next due month has arrived
+					if ($maxRow != $loopCounter){ 
+						echo '</br>---------------skipping this vehicle due date not current-------------------'.$row['vehicleId'];
+						continue;
+					}else{
+						$skipLastVehicle = 1;
+					}
+				}		
+		}
+			 
+			// Skip those vehicles whose installation dates is older than the current month for which the invoie is being generated
+			// or in future
+		echo "<br>row['oneTimePaymentFlag']=".$row['oneTimePaymentFlag'];
+		echo "<br>row['installation_year']=".$row['installation_year'];
+		echo "<br>Intervel_Year=".$Intervel_Year;
+		echo "<br>row['installation_month']=".$row['installation_month'];
+		echo "<br>intervalMonth=".$intervalMonth;
+		
+		if($row['oneTimePaymentFlag'] == 'N'){
+				
+				if (!(($row['installation_year']==$Intervel_Year) &&($row['installation_month']==$intervalMonth))){
+					if ($maxRow != $loopCounter){  
+						echo '</br>---------------skipping this vehicle installtion date not current-------------------'.$row['vehicleId'];
+						continue;	
+					}else{
+						$skipLastVehicle = 1;
+					}
+						
+				}
+		}	
+		
+		if($skipLastVehicle == 1){
+			echo '<br><br><br>-------------------------------------------------------LAST vehicle skipped---adding invoice -----';
+				if ($payableAmountTypeA != 0){
+					$sql = "Insert into tbl_invoice_master set 
+					intervalId = '$intervalId', customerId ='".$row['customerId']."',
+					generateDate = '$genDate' , dueDate = '$dueDate',
+					invoiceType = 'A' , generatedAmount = '$payableAmountTypeA', 
+					taxId = '1', discountedAmount = '0', paidAmount ='0',
+					invoiceFlag ='N', paymentStatusFlag = 'A'"; 
+					
+					$result = mysql_query($sql);
+					echo $sql;
+					$newInvoiceId =  mysql_insert_id();
+				}   	
+				if($typeBAmountEntry==1 && $payableAmountTypeB!=0){
+					echo '</br>';
+					echo ' Inserting Type B invoice record 2';
+					echo '</br>';
+					$sql1 = "Insert into tbl_invoice_master set 
+					intervalId = '$intervalId', customerId ='".$row['customerId']."',
+					generateDate = '$genDate' , dueDate = '$dueDate',
+					invoiceType = 'B', generatedAmount = '$payableAmountTypeB', taxId = '1', 
+					discountedAmount = '0', paidAmount ='0', invoiceFlag ='N',   
+					paymentStatusFlag = 'A'"; 
+					echo $sql1;
+					echo '</br>';
+					$result = mysql_query($sql1);
+					$newInvoiceIdTypeB = mysql_insert_id() ;
+				}
+			continue;			
+		}
+		
+		echo '</br>';			
 		echo 'deviceAmount='.$deviceAmountDict[$row["deviceAmount"]];
 		echo '</br>';
 		echo 'deviceRentAmt='.$deviceRentAmtDict[$row["deviceRentAmt"]];
@@ -194,19 +344,165 @@ $rentFreqId = 1;  //  pass it from the page
 		echo 'installationCharges='.$installationChargesDict[$row["installationCharges"]];
 		echo '</br>';
 		
-		
-		if ($row['oneTimePaymentFlag'] == 'N'){		
-		
-			$proRataDeviceRentAmt = $deviceRentAmtDict[$row["deviceRentAmt"]] * ($monthDays - $vehicle_installation_date + 1)/$monthDays;
-			echo '</br>';
-			echo 'prorata rent='.$proRataDeviceRentAmt;
-			echo '</br>';
-		    $payableAmountTypeA  = $payableAmountTypeA +  $proRataDeviceRentAmt + $installationChargesDict[$row["installationCharges"]] ; 
-			$sqlUpd = "UPDATE `tbl_gps_vehicle_payment_master` SET oneTimePaymentFlag='Y' WHERE planId = '".$row['planId']."'"; 
-            $resultUpd = mysql_query($sqlUpd);			
+		if ($row['oneTimePaymentFlag'] == 'Y' &&  $row['next_due_date_day'] > 1 ){
+			echo '<BR>';
+			echo 'Non linear processing of vehicle has started!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+			echo '<BR>';
+			echo '<BR>';
+			echo '<BR>';
+			$pro_rata_procesing_flag = 'Y';					
 		}
-		elseif ($row['oneTimePaymentFlag'] == 'Y'){
-			$payableAmountTypeA  = $payableAmountTypeA + $deviceRentAmtDict[$row["deviceRentAmt"]] ;
+		
+		
+		if ( $row['oneTimePaymentFlag'] == 'N' or $pro_rata_procesing_flag == 'Y' ){			 
+ 
+			$payment_duration_start_date=$row['installation_date_desc'];
+			if($pro_rata_procesing_flag == 'Y'){
+				$payment_duration_start_date=$row['next_due_date'];	
+                $monthDays=cal_days_in_month(CAL_GREGORIAN,$row["next_due_date_month"],$row["next_due_date_year"]);
+				$vehicle_installation_date = $row['next_due_date_day']; 
+				echo  '<<<<<>>>>>>>>>>>>';
+				echo '<BR>';
+				echo  '$payment_duration_start_date='.$payment_duration_start_date;
+				echo '<BR>';
+				echo  '$monthDays='.$monthDays;
+				echo '<BR>';
+				echo  '$vehicle_installation_date='.$vehicle_installation_date;
+				echo '<BR>';
+                				
+			}
+			
+			if ($row['rentalFreg'] == 1){
+				$proRataDeviceRentAmt = $deviceRentAmtDict[$row["deviceRentAmt"]] * 
+										($monthDays - $vehicle_installation_date + 1)/$monthDays;
+				$deviceRentPayableOneTime = $proRataDeviceRentAmt;
+				$nextDueMonth = $intervalMonth + 1;						
+			}
+			elseif ($row['rentalFreg'] == 2){
+				$proRataDeviceRentAmt = $deviceRentAmtDict[$row["deviceRentAmt"]] * 
+										($monthDays - $vehicle_installation_date + 1)/$monthDays;
+				if ($vehicle_installation_date >20){
+					$nextDueMonth = $intervalMonth + 4;	
+					$deviceRentPayableOneTime= $proRataDeviceRentAmt + ($deviceRentAmtDict[$row["deviceRentAmt"]] * 3);
+				}
+				elseif($vehicle_installation_date <=20){
+					$nextDueMonth = $intervalMonth + 3;
+					$deviceRentPayableOneTime= $proRataDeviceRentAmt + ($deviceRentAmtDict[$row["deviceRentAmt"]] * 2);
+				} 							
+			}
+			elseif ($row['rentalFreg'] == 3){
+				$proRataDeviceRentAmt = $deviceRentAmtDict[$row["deviceRentAmt"]] * 
+										($monthDays - $vehicle_installation_date + 1)/$monthDays;
+				 
+	 
+				if ($vehicle_installation_date >20){
+					$nextDueMonth = $intervalMonth + 7;
+					$deviceRentPayableOneTime= $proRataDeviceRentAmt + ($deviceRentAmtDict[$row["deviceRentAmt"]] * 6);
+				}
+				elseif($vehicle_installation_date <=20){
+					$nextDueMonth = $intervalMonth + 6;	
+					$deviceRentPayableOneTime= $proRataDeviceRentAmt + ($deviceRentAmtDict[$row["deviceRentAmt"]] * 5);
+				}
+ 				
+			}
+			elseif ($row['rentalFreg'] == 4){
+				$proRataDeviceRentAmt = $deviceRentAmtDict[$row["deviceRentAmt"]] * 
+										($monthDays - $vehicle_installation_date + 1)/$monthDays;
+				 
+				
+				if ($vehicle_installation_date >20){
+					$nextDueMonth = $intervalMonth + 13;
+					$deviceRentPayableOneTime= $proRataDeviceRentAmt + ($deviceRentAmtDict[$row["deviceRentAmt"]] * 12);
+				}
+				elseif($vehicle_installation_date <=20){
+					$nextDueMonth = $intervalMonth + 12;
+					$deviceRentPayableOneTime= $proRataDeviceRentAmt + ($deviceRentAmtDict[$row["deviceRentAmt"]] * 11);
+				}
+				
+			
+			}
+			
+			$nextDueYear= $Intervel_Year;
+			if ($nextDueMonth > 12){
+				$nextDueMonth = $nextDueMonth - 12;
+				//corner case
+				if ($nextDueMonth > 12){
+					$nextDueMonth = $nextDueMonth - 12;
+					$nextDueYear = $nextDueYear +1;					
+				}
+				$nextDueYear = $nextDueYear +1;
+				
+			}
+			if (strlen($nextDueMonth)==1){
+				$nextDueMonth= "0".$nextDueMonth;				
+			}
+				
+			$nextDueDate=$nextDueYear."-".$nextDueMonth."-01";
+			
+			
+			$payableAmountTypeA  = $payableAmountTypeA +   $deviceRentPayableOneTime;
+			
+            $payableAmountTypeA  = $payableAmountTypeA  + $installationChargesDict[$row["installationCharges"]] ; 
+
+			$sqlUpd = "UPDATE `tbl_gps_vehicle_payment_master` SET oneTimePaymentFlag='Y',
+				   next_due_date ='$nextDueDate' WHERE planId = '".$row['planId']."'"; 			 
+					   
+					   
+            $resultUpd = mysql_query($sqlUpd);			
+			
+			echo '</br> one time payment active------------';
+			echo '</br> $payableAmountTypeA='.$payableAmountTypeA;
+			echo '</br> $proRataDeviceRentAmt='.$proRataDeviceRentAmt;
+			echo '</br> $deviceRentPayableOneTime='.$deviceRentPayableOneTime;
+			echo '</br> $installationChargesDict='.$installationChargesDict[$row["installationCharges"]];
+			echo '</br> $deviceRentAmtDict='.$deviceRentAmtDict[$row["deviceRentAmt"]];
+			echo '</br>  rentalFreg '.$row['rentalFreg'];
+			echo '</br>'.$sqlUpd;
+			
+			
+		}
+		elseif ($row['oneTimePaymentFlag'] == 'Y' && $pro_rata_procesing_flag == 'N' ) {
+			$payment_duration_start_date=$row['next_due_date'];
+			if ($row['rentalFreg'] == 1){
+				$deviceRentPayableGeneral = $deviceRentAmtDict[$row["deviceRentAmt"]] ;								 	 	
+				$nextDueMonth = $intervalMonth + 1;	
+			}		
+			elseif ($row['rentalFreg'] == 2){
+				$deviceRentPayableGeneral = $deviceRentAmtDict[$row["deviceRentAmt"]] * 3;
+				$nextDueMonth = $intervalMonth + 3;						 							
+			}
+			elseif ($row['rentalFreg'] == 3){
+				$deviceRentPayableGeneral = $deviceRentAmtDict[$row["deviceRentAmt"]] * 6;				 
+				$nextDueMonth = $intervalMonth + 6;						 
+ 			}
+			elseif ($row['rentalFreg'] == 4){
+				$deviceRentPayableGeneral = $deviceRentAmtDict[$row["deviceRentAmt"]] * 12;			
+				$nextDueMonth = $intervalMonth + 12;						 	
+			}
+			$nextDueYear= $Intervel_Year;
+			if ($nextDueMonth > 12){
+				$nextDueMonth = $nextDueMonth - 12;
+				$nextDueYear = $nextDueYear +1;					
+			}
+			if (strlen($nextDueMonth)==1){
+				$nextDueMonth= "0".$nextDueMonth;				
+			}
+				
+			$nextDueDate=$nextDueYear."-".$nextDueMonth."-01";
+			$sqlUpd = "UPDATE `tbl_gps_vehicle_payment_master` SET next_due_date ='$nextDueDate' 
+					   WHERE planId = '".$row['planId']."'"; 
+            $resultUpd = mysql_query($sqlUpd);	
+				
+			$payableAmountTypeA  = $payableAmountTypeA + $deviceRentPayableGeneral ;
+			
+			echo '</br> one time payment NOT active++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
+			echo '</br> $payableAmountTypeA='.$payableAmountTypeA;
+			echo '</br> $proRataDeviceRentAmt='.$proRataDeviceRentAmt;
+			echo '</br> $deviceRentPayableGeneral='.$deviceRentPayableGeneral;
+			echo '</br> $installationChargesDict='.$installationChargesDict[$row["installationCharges"]];
+			echo '</br> $deviceRentAmtDict[$row["deviceRentAmt"]='.$deviceRentAmtDict[$row["deviceRentAmt"]];
+			echo '</br>  rentalFreg '.$row['rentalFreg'];
+			echo '</br>'.$sqlUpd;
 			
 		}
 		
@@ -220,10 +516,12 @@ $rentFreqId = 1;  //  pass it from the page
 			}				
 			echo 'installment amount added=++++++++++++++++++++++++++++++++++++++++++'.$row['installmentAmountID'];					
 		}
-		
-		if ($row['installmentActiveFlag'] == NULL){
+		//NV
+		//if ($row['installmentActiveFlag'] == NULL){
+		if ($row['installmentActiveFlag'] == 'mmmmmmmmmmm'){
 			
-			if ($row['oneTimePaymentFlag'] == 'N'){
+			// NV - 27-NOv-2016: this logic is changed now to accomodate the device paymentflag 
+			if ($row['oneTimePaymentFlag'] == 'N' or $row['devicepaymentStatus'] = 'N'){
 				    echo '</br>';
 				    echo 'Device Amount added='.$deviceAmountDict[$row["deviceAmount"]];
 					echo '</br>';
@@ -235,7 +533,7 @@ $rentFreqId = 1;  //  pass it from the page
 		
 		echo '</br>'.'payableAmountTypeA='.$payableAmountTypeA;
 		echo '</br>'.'payableAmountTypeB='.$payableAmountTypeB;
-		echo '</br>';
+		echo '</br>----------------------------------------------------$nextDueDate========'.$nextDueDate;
 
 		if ($maxRow == $loopCounter){   // Last Record Processing
 				echo '</br>';
@@ -244,33 +542,35 @@ $rentFreqId = 1;  //  pass it from the page
 				echo '</br>';
 				echo ' Inserting Type A invoice record 2';
 				echo '</br>';
-				$sql = "Insert into tbl_Invoice_Master set 
-				intervalId = '$intervalId', customerId ='".$row['customerId']."',
-				generateDate = '$genDate' , dueDate = '$dueDate',
-				invoiceType = 'A' , generatedAmount = '$payableAmountTypeA', taxId = '1', discountedAmount = '0', 
-				paidAmount ='0',
-				invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
-				
-				$result = mysql_query($sql);
-				echo $sql;
-			    $newInvoiceId =  mysql_insert_id();
+				if ($payableAmountTypeA != 0){
+					$sql = "Insert into tbl_invoice_master set 
+					intervalId = '$intervalId', customerId ='".$row['customerId']."',
+					generateDate = '$genDate' , dueDate = '$dueDate',
+					invoiceType = 'A' , generatedAmount = '$payableAmountTypeA', 
+					taxId = '1', discountedAmount = '0', paidAmount ='0',
+					invoiceFlag ='N', paymentStatusFlag = 'A'"; 
+					
+					$result = mysql_query($sql);
+					echo '<br>query result= '.$result;
+					echo '<br>'.$sql;
+					$newInvoiceId =  mysql_insert_id();
+				}
+			    
 
 				
-				if($typeBAmountEntry==1){
+				if($typeBAmountEntry==1 && $payableAmountTypeB!=0){
 					echo '</br>';
 					echo ' Inserting Type B invoice record 2';
 					echo '</br>';
-					$sql1 = "Insert into tbl_Invoice_Master set 
+					$sql1 = "Insert into tbl_invoice_master set 
 					intervalId = '$intervalId', customerId ='".$row['customerId']."',
 					generateDate = '$genDate' , dueDate = '$dueDate',
-					invoiceType = 'B', generatedAmount = '$payableAmountTypeB', taxId = '1', discountedAmount = '0', paidAmount ='0',
-					invoiceFlag ='N' ,   paymentStatusFlag = 'A'"; 
+					invoiceType = 'B', generatedAmount = '$payableAmountTypeB', taxId = '1', 
+					discountedAmount = '0', paidAmount ='0', invoiceFlag ='N', paymentStatusFlag = 'A'"; 
 					echo $sql1;
 					echo '</br>';
 					$result = mysql_query($sql1);
 					$newInvoiceIdTypeB = mysql_insert_id() ;
-					 
-
 				}
  
 				echo '</br>';
@@ -284,37 +584,62 @@ $rentFreqId = 1;  //  pass it from the page
 		}
 
 		
-		//  Add payment breakage data  Starts	
+		//  Add payment breakage data  Starts	----------------------------------------------------------------------------------
 		
 		if ($row['oneTimePaymentFlag'] == 'N'){ // this flag takes care of the one time payment
 		
 			echo '</br>';
-			$sqlA = "Insert into tbl_Payment_Breakage set 
-					invoiceId = '$newInvoiceId', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'A',
-					amount ='".$proRataDeviceRentAmt."' ";
+			$sqlA = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceId', 
+					 vehicleId = '".$row['vehicleId']."', typeOfPaymentId = 'A', 
+					 amount ='".$deviceRentPayableOneTime."', payment_rate_id ='".$row['deviceRentAmt']."' , 
+					 start_date = '".$row['installation_date_desc']."',
+					 end_date='".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
+					 
 			echo  $sqlA;
 			echo '</br>';
 			$resultA = mysql_query($sqlA);
-			
-			$sqlC = "Insert into tbl_Payment_Breakage set 
-					invoiceId = '$newInvoiceId', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'C',
-					amount ='".$installationChargesDict[$row['installationCharges']]."' ";
+
+ 			
+ 			$sqlC = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceId', 
+				     vehicleId = '".$row['vehicleId']."', typeOfPaymentId = 'C', 
+					 amount ='".$installationChargesDict[$row['installationCharges']]."',
+					 payment_rate_id ='".$row['installationCharges']."', 
+					 start_date = '".$row['installation_date_desc']."', 
+					 end_date='".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
+ 
  
 			echo  $sqlC;
-			$resultC = mysql_query($sqlC);
+			$resultC = mysql_query($sqlC); 
 			echo '</br>';
 			
 			echo '</br>';
 			
 			
 		}
-		elseif ($row['oneTimePaymentFlag'] == 'Y'){ // this flag takes care of the one time payment. After first payment , only rent 
-			echo '</br>';			
-			$sqlA = "Insert into tbl_Payment_Breakage set 
-					invoiceId = '$newInvoiceId', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'A',
-					amount ='".$deviceRentAmtDict[$row['deviceRentAmt']]."' ";
-			echo  $sqlA;
-			echo '</br>';
+		elseif ($row['oneTimePaymentFlag'] == 'Y'  ){ //   After first payment , only rent 
+			echo '</br>';	
+
+			if( $pro_rata_procesing_flag == 'N'){
+				$sqlA = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceId', 
+						 vehicleId = '".$row['vehicleId']."', typeOfPaymentId = 'A',
+						 amount ='".$deviceRentPayableGeneral."', payment_rate_id ='".$row['deviceRentAmt']."', 
+						 start_date = '".$genDate."',
+						 end_date='".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
+	 
+				echo  $sqlA;
+				echo '</br>';
+			}elseif ( $pro_rata_procesing_flag == 'Y'){
+				echo '</br>';
+				$sqlA = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceId', 
+						 vehicleId = '".$row['vehicleId']."', typeOfPaymentId = 'A', 
+						 amount ='".$deviceRentPayableOneTime."', payment_rate_id ='".$row['deviceRentAmt']."' , 
+						 start_date = '".$row['installation_date_desc']."',
+						 end_date='".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
+						 
+				echo  $sqlA;
+				echo '</br>';
+				
+			}
 			$resultA = mysql_query($sqlA);
 		 	
 		}
@@ -334,28 +659,34 @@ $rentFreqId = 1;  //  pass it from the page
 		echo '</br>';
 		if ($row['installmentActiveFlag'] == 'Y' && $typeBAmountEntry==1){ // This check will exclude NULLS & also non active installment plans
 				
-			$sqlD = "Insert into tbl_Payment_Breakage set 
-			invoiceId = '$newInvoiceIdTypeB', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'D',
-			amount ='".$row['installmentAmountID']."' ";
+			$sqlD = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceIdTypeB', 
+					 vehicleId = '".$row['vehicleId']."', typeOfPaymentId = 'D', 
+					 amount ='".$row['installmentAmountID']."', payment_rate_id ='".$row['deviceAmount']."', 
+					 start_date = '".$genDate."',
+					 end_date= '".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
+		 
 			echo  $sqlD;
 			echo '</br>';
 			$resultD = mysql_query($sqlD);		// installment amount
 			
+			
 			if($row['oneTimePaymentFlag'] == 'N'){ // down payment
-				$sqlB = "Insert into tbl_Payment_Breakage set 
-							invoiceId = '$newInvoiceIdTypeB', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'E',
-							amount ='".$row['downpaymentAmount']."' ";			
+				$sqlB = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceIdTypeB', 
+				         vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'E',
+						 amount ='".$row['downpaymentAmount']."', payment_rate_id ='".$row['deviceAmount']."', 
+						 start_date = '".$row['installation_date_desc']."', 
+						 end_date='".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
+							 							
 				echo  $sqlB;
 				$resultB = mysql_query($sqlB);
 				echo '</br>';
 				echo '</br>';
 			}
-
-			
 			if ($row['paidInstalments']+1 == $row['noOfInstallment'] ){  // if the number of installment is completed. End the 
 																		 //  update the activeFlag to N.
 				$sqlU1 = "UPDATE `tblinstallmentmaster` SET activeFlag='N', 
-				PaidInstalments = ".($row['paidInstalments']+1)." WHERE id = '".$row['installmenPlanId']."'"; 
+						 PaidInstalments = ".($row['paidInstalments']+1)." 
+						 WHERE id = '".$row['installmenPlanId']."'"; 
                 $resultU1 = mysql_query($sqlU1);
 				echo $sqlU1;
 				echo '</br>';
@@ -363,8 +694,8 @@ $rentFreqId = 1;  //  pass it from the page
 				
 			}
 			else{  // If the number of installment is not complete. Increase the No of paid installment counter.
-				$sqlU2 = "UPDATE `tblinstallmentmaster` SET  
-				PaidInstalments = ".($row['paidInstalments']+1)." WHERE id = '".$row['installmenPlanId']."'"; 
+				$sqlU2 = "UPDATE `tblinstallmentmaster` SET PaidInstalments = ".($row['paidInstalments']+1)." 
+						  WHERE id = '".$row['installmenPlanId']."'"; 
                 $resultU2 = mysql_query($sqlU2);
 				echo $sqlU2;
 				echo '</br>';
@@ -374,20 +705,26 @@ $rentFreqId = 1;  //  pass it from the page
 			}
 		}
 		
-		if ($row['installmentActiveFlag'] == NULL && $row['oneTimePaymentFlag'] == 'N' && $typeBAmountEntry ==1){
-					$sqlB = "Insert into tbl_Payment_Breakage set 
-							invoiceId = '$newInvoiceIdTypeB', vehicleId = '".$row['vehicleId']."' ,   typeOfPaymentId = 'B',
-							amount ='".$deviceAmountDict[$row['deviceAmount']]."' ";			
+		// This logic is removed on 29 jan 2017, as now the device amount is tracked from the devicepaymentStatus flag.
+		
+/* 		if (($row['installmentActiveFlag'] == NULL && $row['oneTimePaymentFlag'] == 'N' && $typeBAmountEntry ==1)
+			 or ( $typeBAmountEntry ==1 && $row['devicepaymentStatus'] = 'N')
+		    ){
+					$sqlB = "Insert into tbl_payment_breakage set invoiceId = '$newInvoiceIdTypeB', 
+							 vehicleId = '".$row['vehicleId']."', typeOfPaymentId = 'B',
+							 amount ='".$deviceAmountDict[$row['deviceAmount']]."',
+							 payment_rate_id ='".$row['deviceAmount']."' , 
+							 start_date = '".$row['installation_date_desc']."',
+							 end_date='".date( 'Y-m-d', strtotime( $nextDueDate . ' -1 day' ) )."'";  
 					echo  $sqlB;
 					$resultB = mysql_query($sqlB);
+					
 					echo '</br>';
 					echo '</br>';
-		}
+		} */
 		
 		
 		// Installment Process Ends  -------------------------------------------------------------------------------------
-
 		//  Add payment breakage data  Ends
-
 	}
 ?>

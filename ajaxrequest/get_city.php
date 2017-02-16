@@ -5,7 +5,7 @@ $district=$_REQUEST['district'];
 error_reporting(0);
 $branchArr=mysql_query("SELECT * FROM tbl_city_new WHERE District_ID='$district' Order by City_Name ASC");
 ?>
-	<select name="city" id="city" class="form-control drop_down"  onchange="return CallArea(this.value)">
+	<select name="city" id="city" class="form-control" style="width: 100%"  onchange="return CallArea(this.value)">
     <option value="">Select City</option>
     	<?php 
 		// error_reporting(-1);

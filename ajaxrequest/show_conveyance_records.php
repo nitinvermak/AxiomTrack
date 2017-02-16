@@ -1,20 +1,21 @@
 <?php
 include("../includes/config.inc.php"); 
 include("../includes/crosssite.inc.php"); 
-$dateFrom = mysql_real_escape_string($_GET['dateFrom']);
-$dateto = mysql_real_escape_string($_GET['dateto']);
-$users = mysql_real_escape_string($_GET['users']);
+$dateFrom = mysql_real_escape_string($_POST['dateFrom']);
+$dateto = mysql_real_escape_string($_POST['dateto']);
+$users = mysql_real_escape_string($_POST['users']);
 error_reporting(0);
-$linkSQL = "select A.createddate as Date, B.ticket_id as TicketId, A.product as Pid, A.rqst_type as VisitType, A.organization_id as 			Company, B.technician_id as Tid from tblticket as A 
+$linkSQL = "Select A.createddate as Date, B.ticket_id as TicketId, A.product as Pid, A.rqst_type as VisitType, A.organization_id as 			Company, B.technician_id as Tid from tblticket as A 
 			inner join tbl_ticket_assign_technician as B 
-			on A.ticket_id = B.ticket_id" ;
+			on A.ticket_id = B.ticket_id
+			WHERE B.conveyenceStatus = 'N'" ;
 			/*echo $linkSQL; */
 
-if ( ( $dateFrom !='' and $dateto !='') or ($users != 0) ) {
-	$linkSQL  = $linkSQL." WHERE ";	
+if ( ( $dateFrom != NULL and $dateto != NULL) or ($users != 0) ) {
+	$linkSQL  = $linkSQL." And ";	
 }
 $counter = 0;
-if ( $dateFrom !='' and $dateto !='') {
+if ( $dateFrom != NULL and $dateto != NULL) {
 	if ($counter > 0 )
 	 	$linkSQL =$linkSQL.' AND ';
 		$linkSQL  =$linkSQL." DATE(A.createddate) BETWEEN '$dateFrom' AND '$dateto'" ;
@@ -61,17 +62,20 @@ if(mysql_num_rows($stockArr)>0)
        			 <tr <?php print $class?>>
                  <td><small><?php print $kolor++;?>.</small></td>
                  <td><small><?php echo stripslashes($row["Date"]);?></small></td>
-				 <td><small><?php echo stripslashes($row["TicketId"]);?></small></td>
+				 <td><small><?php echo stripslashes($row["TicketId"]);?></small>
+                 	<input type="hidden" name="ticketId" id="ticket<?php echo stripslashes($row["TicketId"]);?>" value="<?php echo stripslashes($row["TicketId"]);?>" />
+                 </td>
 				 <td><small><?php echo getproducts(stripslashes($row["Pid"]));?></small></td>
                  <td><small><?php echo getRequesttype(stripslashes($row["VisitType"]));?></small></td>
 				 <td><small><?php echo getOraganization(stripslashes($row["Company"]));?></small></td>
                  <td><small><?php echo gettelecallername(stripslashes($row["Tid"]));?></small></td>
-                 <td><textarea name="description" style="width:100px;"></textarea></td>
-                 <td><input type="text" name="kmTravel" id="kmTravel<?php print $kolor -1; ?>"  class="kmTravel" style="width:50px;" /></td>
-                 <td><input type="text" name="fare" id="fare<?php print $kolor -1 ?>" 
-                   onchange="calTotal(<?php print $kolor -1; ?>)"  class="fare" style="width:50px;"></td>
-                 <td><input type="text" name="amount" id="amount<?php print $kolor-1; ?>" class="amount" style="width:50px;" readonly>                  <br>
-                 <input type="button" class="clickbtn" onclick="chck()" value="Click"></td>
+                 <td><textarea name="description" id="description<?php echo $row['TicketId']; ?>" style="width:100px;"></textarea></td>
+                 <td><input type="text" name="kmTravel" id="kmTravel<?php echo $row['TicketId']; ?>"  class="kmTravel" style="width:50px;" /></td>
+                 <td><input type="text" name="fare" id="fare<?php echo $row['TicketId']; ?>" 
+                   onchange="calTotal(<?php echo $row['TicketId']; ?>)"  class="fare" style="width:50px;"></td>
+                 <td>
+                 <input type="text" name="amount" id="amount<?php echo $row['TicketId']; ?>" class="amount" style="width:50px;" readonly>                  
+                 <input type="button" class="clickbtn" onclick="getData(<?php echo $row['TicketId']; ?>);" value="Click"></td>
                  </tr>
 	<?php 
 	      }
@@ -80,7 +84,7 @@ if(mysql_num_rows($stockArr)>0)
 
 	}
     else
-   		 echo "<tr><td colspan=6 align=center><h3 style='color:red;'>No records found!</h3><br></td><tr/></table>";
+   		 echo "<h3 style='color:red;'>No records found!</h3>";
 ?> 
 
  	

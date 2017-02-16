@@ -1,33 +1,26 @@
 <!--open of the header-->
-  
-	 <div class="container-fluid" id="header">
-    	<div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <img src="images/indian_truckers.png" class="img-responsive" alt="Indian Truckers" title="Indian Truckers">
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            	<ul class="nav nav-pills pull-right">
-                	<li role="presentation" class="dropdown">
-    				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-envelope"></span> <span class="caret"></span>
-    				</a>
-                    <ul class="dropdown-menu dropdown-user">
-                    	<li><a href="#">Message</a></li>
-                    </ul>
-                    </li>
-  					<li role="presentation" class="dropdown">
-    				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <?php echo $_SESSION['name'];?><span class="caret"></span>
-    				</a>
-    				<ul class="dropdown-menu dropdown-user">
-    					<li><a href="change_password.php?token=<?php echo $token;?>"><span class="glyphicon glyphicon-cog"></span> Change Password</a></li>
-                        <li><a href="logout.php"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
-    				</ul>
-  					</li>
-				</ul>
-            </div>
-        </div>
-    </div> 
- 
- 
-    <!--end of the header-->
-<!--start navbar-->
+<header class="main-header">
+    <!-- Logo -->
+    <a href="index2.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>Ind</b>trk</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Indian</b>Truckers</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li><a href="logout.php"><strong><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</strong></a></li>
+        </ul>
+      </div>
+    </nav>
+</header>
+<!--End Header-->
  

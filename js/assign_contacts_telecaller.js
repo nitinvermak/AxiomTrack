@@ -16,9 +16,7 @@ function ShowbyCategory()
 		xmlhttpPost(url,callingcat,"getResponseUnassignedStock");
 	} 
 	function getResponseUnassignedStock(str){
-	//alert(str);
+
 	document.getElementById('divassign').innerHTML=str;
-	//document.getElementById('area1').
-	//document.getElementById("area1").innerHTML = "";
-	//document.getElementById("divpincode").innerHTML = "";
+	
 	}
