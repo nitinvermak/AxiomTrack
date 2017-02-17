@@ -11,7 +11,7 @@ if(mysql_num_rows($stockArr)>0)
 	{
 ?>		
 
-            <select name="mobile_no" id="mobile_no" class="form-control drop_down">
+            <select name="mobile_no" id="mobile_no" class="form-control select2" style="width: 100%">
             <option value="">Select Mobile</option>
             <?php while ($row = mysql_fetch_array($stockArr)) { ?>
             <option value="<?php echo $row['id']; ?>"><?php echo stripslashes(ucfirst($row['mobile_no'])); ?></option>

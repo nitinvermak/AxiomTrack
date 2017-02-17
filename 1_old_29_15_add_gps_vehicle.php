@@ -23,6 +23,7 @@ if(isset($_REQUEST['organization'])){
   $model = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['model'])));
   $server_details = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['server_details'])));
   $insatallation_date = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['insatallation_date'])));
+  $vehicleId = htmlspecialchars(mysql_real_escape_string(trim($_REQUEST['vehicleId'])));
 }
 if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
   if(isset($_REQUEST['cid']) && $_REQUEST['cid']!=''){
@@ -32,13 +33,17 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
           mobile_no='$mobile_no', device_id='$device', imei_no='$imei', 
           model_name='$model', server_details='$server_details', 
           installation_date='$insatallation_date'  where id=" .$_REQUEST['id'];
+    // echo $sql;
     mysql_query($sql);
-    /*echo $sql;*/
+    $sql_payment = "UPDATE `tbl_gps_vehicle_payment_master` SET `cust_id`= '$organization' 
+                    WHERE `Vehicle_id`=".$vehicleId;
+    // echo $sql_payment;
+    $result_paymt = mysql_query($sql_payment);
     $update_sim = "update tblsim set status_id='1' where id='$mobile_no'";
-    /*echo $update_sim;*/
+    // echo $update_sim;
     $querysim = mysql_query($update_sim);   
     $update_Device = "update tbl_device_master set status = '1' where id='$device'";
-    /*echo $update_Device;*/
+    // echo $update_Device;
     $queryex = mysql_query($update_Device);
     $msg = 'Vehicle updated successfully';
     // header("location:old_edi_gps_vehicle.php?token=".$token);
@@ -290,9 +295,9 @@ function getNewModal()
     <!-- Main content -->
     <section class="content">
       <div class="box box-info small-panel">
-            <div class="box-header">
+           <!--  <div class="box-header">
               <h3 class="box-title">Add</h3>
-            </div>
+            </div> -->
             <div class="box-body">
             <?php if(isset($msg) && $msg !="") {?>
             <div class="alert alert-success alert-dismissible" role="alert">
@@ -306,6 +311,8 @@ function getNewModal()
                 <form name='myform' action="" class="form-horizontal" method="post" onSubmit="return chkcontactform(this)">
                   <input type="hidden" name="submitForm" value="yes" />
                   <input type='hidden' name='cid' id='cid'  value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
+
+                  <input type="hidden" name="vehicleId" id="vehicleId" value="<?php echo $result['id']; ?>">
                   <div class="form-group">
                     <label for="provider">Organization*</label>
                     <select name="organization" id="organization" class="form-control select2" style="width: 100%">
@@ -352,10 +359,6 @@ function getNewModal()
                     </div><!-- end form-group -->
                   </div> <!-- end service_provider -->
                   <div class="form-group">
-                    <label for="dateofpurchase">No&nbsp;of&nbsp;Installation*</label>
-                    <input type="text" name="no_of_installation" id="no_of_installation"  class="form-control text_box"/>
-                  </div><!-- end form-group -->
-                  <div class="form-group">
                     <label for="dateofpurchase">Mobile*</label>
                     <select name="mobile_no" id="mobile_no" class="form-control select2" style="width: 100%">
                       <option value="">Select Mobile</option>
@@ -385,7 +388,7 @@ function getNewModal()
                     <span id="getModel">
                       <select name="model" id="model" class="form-control select2" style="width: 100%">
                         <option value="">Select Model</option>
-                        <option value="<?php echo $result['model_name']; ?>" <?php if(isset($result['id']) && $result['model_name']==$result['model_name']){ ?>selected<?php } ?>><?php echo stripslashes(ucfirst($result['model_name'])); ?></option>
+                        <option value="<?php echo $result['model_name']; ?>" <?php if(isset($result['id']) && $result['model_name']==$result['model_name']){ ?>selected<?php } ?>><?php echo getdevicename(ucfirst($result['model_name'])); ?></option>
                       </select>
                     </span>
                   </div><!-- end form-group -->

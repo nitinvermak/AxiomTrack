@@ -319,7 +319,7 @@ $dueDate = $row1['dueDate'];
                       $sum_amt += $amt;
                     ?>
                       <tr>
-                        <td width="6%" style="padding: 5px;"><?= $sno++; ?>. <input type="hidden" name="s_nos[]" value="<?= $sno++; ?>."> <span></span></td>
+                        <td width="6%" style="padding: 5px;"><?= $sno++; ?>.<span></span></td>
                         <td width="16%" style="padding: 5px;"><span><?= $row['vehicleNo']; ?> 
                         <input type="hidden" name="vehicle_No[]" value="<?= $row['vehicleNo']; ?>"> </span></td>
                         <td width="16%" style="padding: 5px;"><span><?= date("d-m-Y", strtotime($row['startDate'])); ?> To <?= date("d-m-Y", strtotime($row['endDate'])); ?>

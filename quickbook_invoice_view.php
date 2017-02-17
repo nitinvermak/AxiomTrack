@@ -393,7 +393,7 @@ function getNeftReport(){
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Date (To)</strong> <i>*</i></span>
-                                <input type="text" name="neftDateForm" id="neftDateForm" class="form-control date" style="width: 100%">
+                                <input type="text" name="neftDateTo" id="neftDateTo" class="form-control date" style="width: 100%">
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Confirmation Status</strong> <i>*</i></span>

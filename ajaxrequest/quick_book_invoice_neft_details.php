@@ -4,9 +4,10 @@ include("../includes/crosssite.inc.php");
 $neftDateForm = mysql_real_escape_string($_POST['neftDateForm']);
 $neftDateTo = mysql_real_escape_string($_POST['neftDateTo']);
 $neftConfirmationStatus = mysql_real_escape_string($_POST['neftConfirmationStatus']);
-echo $neftDateForm;
-echo $neftDateTo;
-echo $neftConfirmationStatus;
+// echo $neftDateForm;
+// echo $neftDateTo;
+// echo $neftConfirmationStatus;
+// exit();
 error_reporting(0);
 $linkSQL = "SELECT B.PaymentID as paymentId, C.callingdata_id as callingDateId, 
 			B.paymentConfirmBy as confirmBy, B.RecivedDate as recivedDate, 

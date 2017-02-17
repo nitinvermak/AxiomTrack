@@ -7,6 +7,7 @@ if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
   session_destroy();
   header("location: index.php?token=".$token);
 }
+/* Comment */
 if (isset($_SESSION) && $_SESSION['login']=='') 
 {
   session_destroy();

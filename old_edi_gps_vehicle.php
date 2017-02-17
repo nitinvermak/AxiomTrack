@@ -143,9 +143,9 @@ if(isset($_POST['savedevice']))
             </div><!-- End From Custom -->
         </div>
         <div class="box box-info">
-            <div class="box-header">
+            <!-- <div class="box-header">
               <h3 class="box-title">Details</h3>
-            </div>
+            </div> -->
             <div class="box-body">
                 <?php if(isset($msg)){?>
                 <div class="alert alert-success alert-dismissible small-alert" role="alert">
@@ -295,7 +295,7 @@ if(isset($_POST['savedevice']))
               <!--end modal popup-->
         </td>
         <td><small><?php echo stripslashes($row["imei_no"]);?></small></td>
-        <td><small><?php echo stripslashes($row["techinician_name"]);?></small></td>
+        <td><small><?php echo gettelecallername($row["techinician_name"]);?></small></td>
       <td><small><?php if($row["id"]!=1){?><a href="#" onClick="if(confirm('Do you really want to delete this record?')){ window.location.href='manage_city.php?id=<?php echo $row["id"]; ?>&type=del&token=<?php echo $token ?>' } " ><img src="images/drop.png" title="Delete" border="0" /></a> <?php } ?>    <?php if($row["id"]!=1){?> <a href="1_old_29_15_add_gps_vehicle.php?id=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a><?php } else {?> <a href="change_password.php?cid=<?php echo $row["id"] ?>&token=<?php echo $token ?>"><img src='images/edit.png' title='Edit' border='0' /></a> <?php } ?> &nbsp;&nbsp;<?php if($row["id"]!=1){?><input type='checkbox' name='linkID[]' value='<?php echo $row["id"]; ?>'><?php } ?></small></td>
         </tr>
         <?php }

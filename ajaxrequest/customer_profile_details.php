@@ -27,7 +27,9 @@ if ($cust_id != NULL) {
     </div> <!-- end custom field -->
     <div class="col-lg-6 col-sm-6 custom_field"> <!-- Custom field -->
       <span>Activation Date<i class="red">*</i></span>
-      <input type="text" name="createdate" id="createdate" style="width: 100%" value="<?php if(isset($result['cust_id'])) echo $result['created'];?>" class="form-control" readonly>
+      <input type="text" name="createdate" id="createdate" style="width: 100%" 
+      value="<?php if(isset($result['cust_id'])) echo date("d-m-Y", strtotime($result['created']));?>" 
+      class="form-control" readonly>
       <input type="hidden" value="<?php echo $result['First_Name']." ".$result['Last_Name'];?>" name="name" id="name">
       <input type="hidden" value="<?php echo $result['email'];?>" name="email" id="email">
       <input type="hidden" value="<?php echo $result['Mobile'];?>" name="mobile" id="mobile">

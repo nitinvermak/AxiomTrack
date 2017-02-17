@@ -1074,7 +1074,7 @@ $(document).ready(function () {
                 <div class="row"><!-- row -->
                     <div class="col-lg-6 col-sm-6 custom_field"> <!-- Custom field -->
                         <span>Orgranization <i class="red">*</i></span>
-                        <select name="cust_id" id="cust_id" class="form-control drop_down select2" style="width: 100%">
+                        <select name="cust_id" id="cust_id" onchange="getClient()" class="form-control drop_down select2" style="width: 100%">
                             <option value="">Select Orgranization</option>                         
                             <?php $Country=mysql_query("SELECT B.cust_id as custId, A.Company_Name as companyName 
                                                         FROM tblcallingdata as A 
@@ -1089,10 +1089,10 @@ $(document).ready(function () {
                             <?php } ?>
                         </select>
                     </div> <!-- end custom field -->
-                    <div class="col-lg-6 col-sm-6 custom_field"> <!-- Custom field -->
+                    <!-- <div class="col-lg-6 col-sm-6 custom_field"> Custom field
                         <span>&nbsp;</span><br>
                         <input type="button" name="Search" onclick="getClient()" value="Search" class="btn btn-primary btn-sm"/>
-                    </div> <!-- end custom field -->
+                    </div> end custom field -->
                 </div><!-- end row -->                
             </div><!-- End From Custom -->
         </div>

@@ -1,5 +1,4 @@
 <?php
-
 /* test */
 include("includes/config.inc.php"); 
 include("includes/crosssite.inc.php"); 
@@ -12,6 +11,9 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   session_destroy();
   header("location: index.php?token=".$token);
 }
+
+
+
 
 $error =0;
 if(isset($_REQUEST['city']))

@@ -3,6 +3,7 @@ include("../includes/config.inc.php");
 include("../includes/crosssite.inc.php"); 
 $cust_id = $_REQUEST['cust_id']; 
 /*echo $cust_id;*/
+/* Vehicle Status */
 error_reporting(0);
 if ($cust_id == '')
 	{
@@ -56,7 +57,7 @@ if(mysql_num_rows($stockArr)>0)
             </td>
             <td><small><?php echo stripslashes($row["model_name"]);?></small></td>
             <td><small><?php echo getMobile(stripslashes($row["mobile_no"]));?></small></td>
-	  		<td><small><?php echo stripslashes($row["installation_date"]);?></small></td>        
+	  		<td><small><?php echo date("d-m-Y", strtotime($row["installation_date"]));?></small></td>        
         	<td>
             <?php 
 			if($row['activeStatus']=='Y')

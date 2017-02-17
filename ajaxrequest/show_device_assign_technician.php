@@ -10,7 +10,7 @@ if(mysql_num_rows($stockArr)>0)
 	{
 ?>		
 
-            <select name="device" id="device" onchange="return ShowIMEIandDeviceName();" class="form-control drop_down">
+            <select name="device" id="device" onchange="return ShowIMEIandDeviceName();" class="form-control select2" style="width: 100%">
             <option value="">Select Device</option>
             <?php while ($row = mysql_fetch_array($stockArr)) { ?>
             <option value="<?php echo $row['id']; ?>"><?php echo stripslashes(ucfirst($row['device_id'])); ?></option>

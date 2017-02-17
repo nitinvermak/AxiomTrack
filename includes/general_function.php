@@ -1310,6 +1310,29 @@ function getdevicename($id)
   else
   return NULL;
 }
+function getCustomerAddress($id)
+{
+  $sql="SELECT CONCAT(`Address`, '\n' , `Mobile`) as address FROM `tblcallingdata` WHERE `id`=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['address'])
+  return $result['address'];
+  else
+  return 'N/A';
+}
+function getCustomerDistrict($id)
+{
+  $sql="SELECT B.District_name as district FROM tblcallingdata as A 
+		INNER JOIN tbl_district as B 
+		ON A.District_id = B.District_id
+		WHERE A.id=".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['district'])
+  return $result['district'];
+  else
+  return 'N/A';
+}
 function getDeviceType($custId)
 {
   $sql="SELECT B.DeviceType as deviceType FROM tbl_gps_vehicle_payment_master as A 

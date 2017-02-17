@@ -1413,7 +1413,7 @@ function CallPincode()
                 <div class="row"><!-- row -->
                     <div class="col-lg-6 col-sm-6 custom_field"> <!-- Custom field -->
                         <span>Client <i class="red">*</i></span>
-                        <select name="searchText" id="searchText" class="form-control drop_down select2" style="width: 100%">
+                        <select name="searchText" id="searchText" onchange="getClient()" class="form-control drop_down select2" style="width: 100%">
                             <option value="">Select Orgranization</option>                         
                             <?php $Country=mysql_query("SELECT A.cust_id as custId, 
                                                         B.Company_Name as company 
@@ -1428,10 +1428,10 @@ function CallPincode()
                             <?php } ?>
                         </select>
                     </div> <!-- end custom field -->
-                    <div class="col-lg-6 col-sm-6 custom_field"> <!-- Custom field -->
+                   <!--  <div class="col-lg-6 col-sm-6 custom_field"> Custom field
                         <span>&nbsp;</span><br>
-                        <input type="button" name="Search" onclick="getClient()" value="Search" class="btn btn-primary btn-sm"/>
-                    </div> <!-- end custom field -->
+                        <input type="button" name="Search" onclick="" value="Search" class="btn btn-primary btn-sm"/>
+                    </div> end custom field -->
                 </div><!-- end row -->                
             </div><!-- End From Custom -->
         </div>

@@ -69,11 +69,15 @@ function rentReport() {
     document.getElementById("dv_rent").style.display = "";    
 }
 // pass ajax request when search cheque report
-function getDevice_report(){
+function getRent_report(){
     $('.loader').show();
         $.post("ajaxrequest/device_rent_report.php?token=<?php echo $token;?>",
                 {
-                    cust_id : $('#cust_id').val()
+                    cust_id : $("#cust_id").val(),
+                    lead_gen : $("#lead_gen").val(),
+                    service_exe : $("#service_exe").val(),
+                    generate_date : $("#generate_date").val(),
+                    duedate : $("#duedate").val()
                 },
                     function( data){
                         /*alert(data);*/
@@ -92,42 +96,17 @@ function getDevice_report(){
 // end
 
 // pass ajax request when search cash report
-function getCashReport(){
+function getDevice_report(){
     $('.loader').show();
-        $.post("ajaxrequest/quick_book_invoice_cash_details.php?token=<?php echo $token;?>",
+        $.post("ajaxrequest/device_pending_amt_details1.php?token=<?php echo $token;?>",
                 {
-                    reciveDateForm : $('#reciveDateForm').val(),
-                    reciveDateto : $('#reciveDatedateto').val(),
-                    cashConfirmation : $('#cashConfirmation').val()
+                    cust_id_D : $("#cust_id_D").val(),
+                    lead_gen_D : $("#lead_gen_D").val(),
+                    service_exe_D : $("#service_exe_D").val()
                 },
                     function( data){
                         /*alert(data);*/
-                        $("#divassign").html(data);
-                        $('#example').DataTable( {
-                          dom: 'Bfrtip',
-                          "bPaginate": false,
-                          buttons: [
-                                'copy', 'csv', 'excel', 'pdf', 'print'
-                           ]
-                        });
-                        $(".loader").removeAttr("disabled");
-                        $('.loader').fadeOut(1000);
-                });  
-}
-// end
-
-// pass ajax request when search neft report
-function getNeftReport(){
-    $('.loader').show();
-        $.post("ajaxrequest/quick_book_invoice_neft_details.php?token=<?php echo $token;?>",
-                {
-                    neftDateForm : $('#neftDateForm').val(),
-                    neftDateTo : $('#neftDateTo').val(),
-                    neftConfirmationStatus : $('#neftConfirmationStatus').val()
-                },
-                    function( data){
-                        /*alert(data);*/
-                        $("#divassign").html(data);
+                        $("#dvContent").html(data);
                         $('#example').DataTable( {
                           dom: 'Bfrtip',
                           "bPaginate": false,
@@ -164,8 +143,8 @@ function getNeftReport(){
             <form name='fullform' id="fullform" class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
                 <div class="row search_grid">
                     <div class="col-md-12">
-                        <input type="radio" name="rdopt"  value="device_report"  checked="checked" id="single" onClick="deviceReport()" /> <strong>Device</strong>&nbsp;
-                        <input type="radio" name="rdopt"  value="rent_report"  id="multiple" onClick="rentReport()"/> <strong>Rent</strong>&nbsp;
+                        <input type="radio" name="rdopt"  value="device_report"  checked="checked" id="single" onClick="deviceReport()" /> <strong>Rent</strong>&nbsp;
+                        <input type="radio" name="rdopt"  value="rent_report"  id="multiple" onClick="rentReport()"/> <strong>Device</strong>&nbsp;
                         
                     </div>
                     <div class="clearfix"></div>
@@ -174,8 +153,9 @@ function getNeftReport(){
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Company</strong> <i>*</i></span>
                                 <select name="cust_id" id="cust_id" class="form-control drop_down select2" style="width: 100%">
-                                    <option value="">Select Orgranization</option>                         
-                                    <?php $Country=mysql_query("SELECT B.cust_id as custId, A.Company_Name as companyName 
+                                    <option value="0">All</option>                         
+                                    <?php $Country=mysql_query("SELECT B.cust_id as custId, 
+                                                                A.Company_Name as companyName 
                                                                 FROM tblcallingdata as A 
                                                                 INNER JOIN tbl_customer_master as B 
                                                                 ON A.id = B.callingdata_id
@@ -190,28 +170,41 @@ function getNeftReport(){
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Lead Generated By</strong><i>*</i></span>
-                                <input type="text" name="dateto" id="dateto" class="form-control date" style="width: 100%">
+                                <select name="lead_gen" id="lead_gen" class="form-control select2" style="width: 100%">
+                                  <option value="0" selected="selected">All</option>
+                                  <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
+                                        while($resultCountry=mysql_fetch_assoc($Country)){
+                                  ?>
+                                  <option value="<?php echo $resultCountry['id']; ?>" >
+                                    <?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?>
+                                  </option>
+                                  <?php } ?>
+                                </select>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Service Executive</strong> <i>*</i></span>
-                                <select name="clearanceStatus" id="clearanceStatus" class="form-control select2" style="width: 100%">
-                                    <option value="" selected>All</option>                         
-                                    <option value="N">Pending</option>
-                                    <option value="Y">Cleared</option>
-                                    <option value="B">Bounced</option>
+                                <select name="service_exe" id="service_exe" class="form-control select2" style="width: 100%">
+                                  <option value="0" selected="selected">All</option>
+                                  <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
+                                        while($resultCountry=mysql_fetch_assoc($Country)){
+                                  ?>
+                                  <option value="<?php echo $resultCountry['id']; ?>" >
+                                    <?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?>
+                                  </option>
+                                  <?php } ?>
                                 </select>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                  <span><strong>Generated Date</strong> <i>*</i></span>
-                                 <input type="text" name="dateto" id="dateto" class="form-control date" style="width: 100%">
+                                 <input type="text" name="generate_date" id="generate_date" class="form-control date" style="width: 100%">
                             </div>
                             <div class="col-md-6 col-sm-6">
-                                 <span><strong>Date</strong> <i>*</i></span>
-                                 <input type="text" name="dateto" id="dateto" class="form-control date" style="width: 100%">
+                                 <span><strong>Due Date</strong> <i>*</i></span>
+                                 <input type="text" name="duedate" id="duedate" class="form-control date" style="width: 100%">
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span>&nbsp;</span><br>
-                                <input type="button" name="assign" value="Submit" onclick="getDevice_report()" id="submit" class="btn btn-primary btn-sm" />
+                                <input type="button" name="assign" value="Submit" onclick="getRent_report()()" id="submit" class="btn btn-primary btn-sm" />
                             </div>
                         </div>
                     </div> <!-- end chequeReport -->
@@ -219,23 +212,51 @@ function getNeftReport(){
                         <div class="col-md-12">
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Company</strong> <i>*</i></span>
-                                <input type="text" name="reciveDateForm" id="reciveDateForm" class="form-control date" style="width: 100%">
+                                <select name="cust_id_D" id="cust_id_D" class="form-control drop_down select2" style="width: 100%">
+                                    <option value="0">All</option>                         
+                                    <?php $Country=mysql_query("SELECT B.cust_id as custId, 
+                                                                A.Company_Name as companyName 
+                                                                FROM tblcallingdata as A 
+                                                                INNER JOIN tbl_customer_master as B 
+                                                                ON A.id = B.callingdata_id
+                                                                WHERE A.status = '1'
+                                                                ORDER BY A.Company_Name");                              
+                                          while($resultCountry=mysql_fetch_assoc($Country)){
+                                    ?>
+                                    <option value="<?php echo $resultCountry['custId']; ?>">
+                                    <?php echo stripslashes(ucfirst($resultCountry['companyName'])); ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span><strong>Lead Generated By</strong> <i>*</i></span>
-                                <input type="text" name="reciveDateto" id="reciveDatedateto" class="form-control date" style="width: 100%">
+                                <select name="lead_gen_D" id="lead_gen_D" class="form-control select2" style="width: 100%">
+                                  <option value="0" selected="selected">All</option>
+                                  <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
+                                        while($resultCountry=mysql_fetch_assoc($Country)){
+                                  ?>
+                                  <option value="<?php echo $resultCountry['id']; ?>" >
+                                    <?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?>
+                                  </option>
+                                  <?php } ?>
+                                </select>
                             </div>
                             <div class="col-md-6 col-sm-6">
-                                <span><strong>Confirmation Status</strong> <i>*</i></span>
-                                <select name="cashConfirmation" id="cashConfirmation" class="form-control select2" style="width: 100%">
-                                    <option value="">All</option>                         
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
+                                <span><strong>Service Executive</strong> <i>*</i></span>
+                                <select name="service_exe_D" id="service_exe_D" class="form-control select2" style="width: 100%">
+                                  <option value="0" selected="selected">All</option>
+                                  <?php $Country=mysql_query("select * from tbluser order by First_Name ASC");
+                                        while($resultCountry=mysql_fetch_assoc($Country)){
+                                  ?>
+                                  <option value="<?php echo $resultCountry['id']; ?>" >
+                                    <?php echo stripslashes(ucfirst($resultCountry['First_Name']." ". $resultCountry["Last_Name"])); ?>
+                                  </option>
+                                  <?php } ?>
                                 </select>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <span>&nbsp;</span><br>
-                                <input type="button" name="cashReportSubmit" onclick="getRent_report()" value="Submit" id="cashReportSubmit" class="btn btn-primary btn-sm" />
+                                <input type="button" name="cashReportSubmit" onclick="getDevice_report()" value="Submit" id="cashReportSubmit" class="btn btn-primary btn-sm" />
                             </div>
                         </div><!--  end col-md-12 -->
                     </div> <!-- end cashReport -->
@@ -245,7 +266,7 @@ function getNeftReport(){
                       <!-- <h3 class="box-title">Details</h3> -->
                     </div>
                     <div class="box-body">
-                        <div class="col-md-12" id="dvContent"></div>
+                        <div class="col-md-12 table-responsive" id="dvContent"></div>
                     </div><!-- /.box-body -->
                 </div> <!-- end box-info -->
             </form>
