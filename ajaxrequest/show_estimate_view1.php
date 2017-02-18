@@ -12,7 +12,7 @@ if($cust_id != "")
 				inner Join tblesitmateperiod as C
 				on B.intervalId = C.intervalId
 				where B.customerId ='$cust_id'
-				And B.invoiceFlag <> 'D'
+				And (B.invoiceFlag = 'N' or B.invoiceFlag = 'P') 
 				And B.paymentStatusFlag = 'A'
 				order by invoiceId";
     //echo $linkSQL;				
@@ -25,7 +25,7 @@ else {
 				inner Join tblesitmateperiod as C
 				on B.intervalId = C.intervalId
 				where B.paymentStatusFlag = 'A'
-				And B.invoiceFlag <> 'D'
+				And (B.invoiceFlag = 'N' or B.invoiceFlag = 'P')
 				order by invoiceId";
 				// And B.invoiceFlag <> 'D'
 }
@@ -184,8 +184,8 @@ $oRS = mysql_query($linkSQL);
 				     				C.amount as amt, C.vehicleId  as vId, C.start_date as startDate, 
 				     				C.end_date as endDate, B.customer_Id as custId, 
 				     				C.payment_rate_id as plan_rate_id					 
-									from tbl_payment_breakage as C left outer join
-									tbl_gps_vehicle_master as B  
+									from tbl_payment_breakage as C 
+									left outer join tbl_gps_vehicle_master as B  
 									On C.vehicleId = B.id					
 									where C.invoiceId= '$invoiceId'
 									order by   C.vehicleId, C.typeOfPaymentId";

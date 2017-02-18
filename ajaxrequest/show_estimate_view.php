@@ -61,7 +61,7 @@ echo 	'<div style="margin-bottom: 20px;">
 		        <th><small>Discount Amount</small></th> 
 		        <th><small>Payment Details</small></th>
 		        <th><small>Action</small></th>
-				<th><small>Make Payment</small></th>
+				<!-- <th><small>Make Payment</small></th> -->
 	      	</tr>  
 		 </thead> 
 		 <tbody> 
@@ -512,13 +512,7 @@ echo 	'<div style="margin-bottom: 20px;">
 	       		</button> 
 				-->
 	        </td>
-		    <td>
-					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-content-payment"    
-					onclick="getValue( <?php echo "'".$orgName."','".stripslashes($row["Intervalname"])."',".stripslashes($row["invoiceId"]).",".
-					stripslashes($row["generatedAmount"]).",".stripslashes($row["discountedAmount"]).",".
-					stripslashes($row["paidAmount"]).",".$row["IntervelYear"]; ?> )">
-					Make Payment</button>
-			</td>
+		    
 	      	
 			</tr>
 			

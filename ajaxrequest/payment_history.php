@@ -42,7 +42,7 @@ if(mysql_num_rows($stockArr)>0)
                 <td><small><?php echo $row["paymentId"]; ?></small></td>
                 <td><small><?php echo date("d-m-Y", strtotime($row["rcdDate"])); ?></small></td>
                 <td><small><?php if($cashAmt != 0) { echo 'Cash'; } else if($chequeAmt != 0) { echo 'Cheque'; } else if($NeftAmt != 0) { echo 'NEFT'; } ?></small></td>
-                <td><small><span class="label label-success" style="font-size: 14px"><?php echo $amount; ?></span></small></td>
+                <td><button type="button" onclick="getPaymentAdjustmentDetails(<?php echo $row["paymentId"]; ?>);" class="btn btn-success btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg"><?php echo $amount; ?></button></td>
               </tr>
  
 	<?php 

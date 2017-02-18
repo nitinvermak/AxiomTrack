@@ -950,8 +950,8 @@ function getPaymentEntryData(){
                     hiddenInvoiceID : $("#hiddenInvoiceID").val(),
                     total_amt : $("#total_amt").val(),
                     adjestmentAmt : $("#adjestmentAmt").val(),
-                    pending_payable_amt : $("#payable_amt").val()
-                    
+                    pending_payable_amt : $("#payable_amt").val(),
+                    rent_discount_amount : $("#rent_discount_amount").val()
                 },
                 function(data){
                     // alert(data);
@@ -1046,6 +1046,17 @@ $(document).ready(function () {
             });
          })
 //end
+function getPaymentAdjustmentDetails(obj){
+    $.post("ajaxrequest/payment_adjustment_history.php?token=<?php echo $token;?>",
+                {
+                    paymentId : obj
+                },
+                function(data){
+                    // alert(data);
+                    $(".modal-content").html(data);
+                    
+                });
+}
 </script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

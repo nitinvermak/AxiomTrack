@@ -4,11 +4,12 @@ include("../includes/config.inc.php");
 $paymentId = mysql_real_escape_string($_POST['paymentId']);
 $enter_payble_amt = mysql_real_escape_string($_POST['enter_payble_amt']);
 $hiddenInvoiceID = mysql_real_escape_string($_POST['hiddenInvoiceID']);
+$rent_discount_amount = mysql_real_escape_string($_POST['rent_discount_amount']);
 $total_amt = mysql_real_escape_string($_POST['total_amt']);
 $remaining_amt1 = mysql_real_escape_string($_POST['adjestmentAmt']);
 $pending_payable_amt = mysql_real_escape_string($_POST['pending_payable_amt']);
 $remaining_amt = $remaining_amt1 - $enter_payble_amt;
-
+$amt_sum = $rent_discount_amount + $total_amt;
 // echo "string".$remaining_amt;
 // exit();
 // echo "pid".$paymentId."<br>user provoid amt".$enter_payble_amt."<br>invoice id".$hiddenInvoiceID."<br>total amt".$total_amt."<br>adustment amt".$remaining_amt."<br>pending amt".$pending_payable_amt;
@@ -20,7 +21,7 @@ $result = mysql_query($sql);
 $row = mysql_fetch_assoc($result);
 $total_previous_received_amt = $row['previousamt'];
 
-$calulate_total = $total_previous_received_amt + $enter_payble_amt;
+$calulate_total = $total_previous_received_amt + $enter_payble_amt + $rent_discount_amount;
 // echo $calulate_total;
 // echo "<br>";
 // echo $total_amt;

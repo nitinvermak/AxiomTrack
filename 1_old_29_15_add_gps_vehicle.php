@@ -47,7 +47,7 @@ if(isset($_REQUEST['submitForm']) && $_REQUEST['submitForm']=='yes'){
     $queryex = mysql_query($update_Device);
     $msg = 'Vehicle updated successfully';
     // header("location:old_edi_gps_vehicle.php?token=".$token);
-    exit();
+    // exit();
   }
   else{
     $query=mysql_query("insert into tbl_gps_vehicle_master set customer_Id='$organization',

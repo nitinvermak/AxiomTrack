@@ -43,7 +43,10 @@ $previouspaid_amt = $row['previouspaidamt'];
 					<td><strong>Paid Amount:</strong></td>
                     <td><strong><span style="color:#FF0000;" id="paid_amount"><?php echo  $paid_amount; ?></span></strong></td>
                     <td><strong>Discounted Amount:</strong></td>
-                    <td><strong><span style="color:#FF0000;" id="discount_amount"><?php echo  $discount_amount; ?></span></strong></td>
+                    <td><strong><span style="color:#FF0000;" id="discount_amount">
+                        <?php echo  $discount_amount; ?>
+                        <input type="hidden" name="rent_discount_amount" id="rent_discount_amount" value="<?php echo  $discount_amount; ?>">
+                        </span></strong></td>
 					<td><strong>Payable Amount:</strong></td>
                     <td style="color:#FFF; background-color:green;">
                         <strong>
