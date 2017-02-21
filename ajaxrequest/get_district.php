@@ -5,7 +5,7 @@ $state=$_REQUEST['state'];
 error_reporting(0);
 $branchArr=mysql_query("SELECT * FROM `tbl_district` WHERE State_id='$state' Order by District_name ASC");
 ?>
-	<select name="district" id="district" class="form-control" style="width: 100%"   onchange="return CallCity(this.value)">
+	<select name="district" id="district" class="form-control select2" style="width: 100%"   onchange="return CallCity(this.value)">
     <option value="">Select District</option>
     	<?php 
 		// error_reporting(-1);

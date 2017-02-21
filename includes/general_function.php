@@ -1453,6 +1453,23 @@ function lastpaymentreceiveddate($custId){
   return 'N/A';
  // (B.invoiceFlag = 'N' OR B.invoiceFlag = 'P')
 }
+function pendingEstimateDate($custId){
+  $sql="SELECT MIN(A.start_date) as startdate
+		FROM tbl_payment_breakage as A 
+		INNER JOIN tbl_invoice_master as B 
+		ON A.invoiceId = B.invoiceId 
+		WHERE (B.invoiceFlag = 'N' OR B.invoiceFlag = 'P')
+		AND B.customerId = ".$custId;
+  // echo $sql;
+  // exit();
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['startdate'])
+  return $result['startdate'];
+  else
+  return 'N/A';
+ // (B.invoiceFlag = 'N' OR B.invoiceFlag = 'P')
+}
 function next_due_date($custId){
   $sql="SELECT MIN(next_due_date) as next_due_date 
   		FROM `tbl_gps_vehicle_payment_master` 

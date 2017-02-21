@@ -100,7 +100,7 @@ $stockArr=mysql_query($linkSQL);
                 <th><small>Amt.</small></th>  
                 <th><small>Last Pymt. Rcd. Date</small></th>                 
                 <th><small>Next Gen. Date</small></th>
-                <!-- <th><small>Last Invoice Start Date</small></th> -->
+                <th><small>Pending Estimate Date</small></th>
             </tr> 
         </thead>  
         <tbody>
@@ -136,7 +136,7 @@ $stockArr=mysql_query($linkSQL);
 		        <td><small><?= getRentAmt($row["rentAmt"]); ?></small></td>
 		        <td><small><?= date("d-m-Y", strtotime(lastpaymentreceiveddate($row["customerId"])));?></small></td>
 		        <td><small><?= date("d-m-Y", strtotime(next_due_date($row["customerId"])));?></small></td>
-
+		        <td><small><?= date("d-m-Y", strtotime(pendingEstimateDate($row["customerId"])));?></small></td>
 		    </tr> 
         <?php 
             }    

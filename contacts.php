@@ -233,7 +233,7 @@ function CallState()
 	}
 	function GetState(str)
 	{
-		/*alert(str);*/
+		// alert(str);
 		document.getElementById('Divstate').innerHTML=str;
 		$(".select2").select2();
 	}

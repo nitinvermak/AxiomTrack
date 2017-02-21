@@ -155,6 +155,7 @@ $dueDate = $row1['dueDate'];
       <!-- Main content -->
       <section class="content">
         <form name='fullform' action="generate_invoice_pdf.php" id="fullform" class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
+        <input type="hidden" name="url" id="url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
           <div class="box box-info">
                <!--  <div class="box-header">
                   <h3 class="box-title">Details</h3>
@@ -289,7 +290,7 @@ $dueDate = $row1['dueDate'];
                       ?>
                       <input type="hidden" name="summ_tax" value="<?php echo number_format($summ_tax,2, '.', ''); ?>">
                       </span></td>
-                      <td width="20%" style="padding: 5px;"><span><strong>Grand Total: </strong>
+                      <td width="20%" style="padding: 5px;"><span><strong>Payble Amount: </strong>
                           <?= $grand_total;?>
                         <input type="hidden" name="summ_grand_total" value="<?= $grand_total;?>"></span></td>
                     </tr>
@@ -308,7 +309,7 @@ $dueDate = $row1['dueDate'];
                       <td width="16%" style="padding: 5px;"><span><strong>Rent Per Vehicle</strong></span></td>
                       <td width="16%" style="padding: 5px;"><span><strong>Total Amount</strong></span></td>
                       <td width="10%" style="padding: 5px;"><span><strong>Tax</strong></span></td>
-                      <td width="16%" style="padding: 5px;"><span><strong>Grand Total</strong> </span></td>
+                      <td width="16%" style="padding: 5px;"><span><strong>Payble Amount</strong> </span></td>
                     </tr>
                     <?php 
                     $sno = 1;
