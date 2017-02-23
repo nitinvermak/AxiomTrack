@@ -22,18 +22,25 @@ if (isset($_POST['generatePDF'])) {
   $vehicle_tax = $_POST['vehicle_tax'];
   $vehicle_grand_total = $_POST['vehicle_grand_total'];
   $vehicle_sum_total = $_POST['vehicle_sum_total'];
-  $s_nos = $_POST['s_nos'];
+  // $s_nos = $_POST['s_nos'];
 
   $array = array(
-                        array('s_nos' => $s_nos),
-                        array('vehicleNo' => $vehicle_No),
-                        array('rent_period' => $rent_period),
-                        array('rent_per_vehicle' => $rent_per_vehicle),
-                        array('vehicle_total_amt' => $vehicle_total_amt),
-                        array('vehicle_tax' => $vehicle_tax),
-                        array('vehicle_grand_total' => $vehicle_grand_total)
-                    ); 
-  echo "<pre>";
-  print_r($array);
+                  'vehicleNo' => $vehicle_No,
+                  'rent_period' => $rent_period,
+                  'rent_per_vehicle' => $rent_per_vehicle,
+                  'vehicle_total_amt' => $vehicle_total_amt,
+                  'vehicle_tax' => $vehicle_tax,
+                  'vehicle_grand_total' => $vehicle_grand_total
+
+                ); 
+  // $json_array = json_encode($array);
 }
+  // echo "<pre>";
+  // var_dump($json_array);
+  // echo "</pre>";
+  // $json_encode = json_decode($json_array);
+  foreach ($array as $value) {
+    echo "<pre>";
+    print_r($value);
+  }
 ?>

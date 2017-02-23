@@ -13,8 +13,9 @@ if($cust_id != "")
 				on B.intervalId = C.intervalId
 				where B.customerId ='$cust_id'
 				And (B.invoiceFlag = 'N' or B.invoiceFlag = 'P')
-				And B.paymentStatusFlag = 'A'
+				
 				order by invoiceId";
+				// And B.paymentStatusFlag = 'A'
     //echo $linkSQL;				
 }
 else {
@@ -24,10 +25,11 @@ else {
 				on A.cust_id = B.customerId
 				inner Join tblesitmateperiod as C
 				on B.intervalId = C.intervalId
-				where B.paymentStatusFlag = 'A'
-				And (B.invoiceFlag = 'N' or B.invoiceFlag = 'P')
+				where (B.invoiceFlag = 'N' or B.invoiceFlag = 'P')
 				order by invoiceId";
 				// And B.invoiceFlag <> 'D'
+				// B.paymentStatusFlag = 'A'
+				// And
 }
 $oRS = mysql_query($linkSQL);
 

@@ -920,7 +920,7 @@ function getValue(name, iName, iId, amount,discount_amount, paidamount, iYear)
                     payableamt : amount,
                     paid_amount: paidamount,
                     discount_amount: discount_amount,
-                    customer_id : $("#company").val(),
+                    customer_id : $("#cust_id").val(),
                     invoiceId : $("#invoiceId").val()
                 },
                 function(data){

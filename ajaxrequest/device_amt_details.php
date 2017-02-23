@@ -73,6 +73,9 @@ if(mysql_num_rows($stockArr)>0){
                         else if($row['paymentStatus'] == 'P'){
                             echo '<span class="label label-danger">Pending</span>';
                         }
+                        else if($row['paymentStatus'] == ''){
+                            echo '<span class="label label-danger">Pending</span>';
+                        }
                         else if($row['paymentStatus'] == 'F'){
                             echo '<span class="label label-success">Received</span>';
                         }

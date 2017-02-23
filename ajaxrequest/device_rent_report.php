@@ -22,7 +22,7 @@ $linkSQL = "Select B.invoiceId as estimateId, B.invoiceType as invoiceType, A.cu
 			ON A.callingdata_id = D.id 
 			LEFT OUTER JOIN tbl_assign_customer_branch as E 
 			ON A.cust_id = E.cust_id
-			where (B.invoiceFlag <> 'D' or B.invoiceFlag <> 'Y')";
+			where (B.invoiceFlag = 'N' or B.invoiceFlag = 'p')";
 			// B.paymentStatusFlag = 'A'
 			// And 
 // echo $linkSQL;

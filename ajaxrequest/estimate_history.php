@@ -10,8 +10,8 @@ error_reporting(0);
 				inner Join tblesitmateperiod as C
 				on B.intervalId = C.intervalId
 				where B.customerId ='$cust_id'
-				And B.paymentStatusFlag = 'A'
 				order by invoiceId";
+				// And B.paymentStatusFlag = 'A'
     //echo $linkSQL;				
 $oRS = mysql_query($linkSQL);
 ?>
@@ -27,8 +27,8 @@ $oRS = mysql_query($linkSQL);
 		    <th><small>Period</small></th>
 		    <th><small>Generated Amount</small></th> 
 		    <th><small>Discount Amount</small></th> 
+		    <th><small>Payble Amount</small></th> 
 		    <th><small>Status</small></th>
-		   
 	    </tr>  
 	</thead>  
  	<tbody>
@@ -61,6 +61,7 @@ $oRS = mysql_query($linkSQL);
 				?>
 				</small>
 			</td>
+			<td><small><?php echo $row["generatedAmount"] - $row["discountedAmount"]; ?></small></td>
 			<td><small>
 				<?php if($row["invoiceFlag"]=='N'){
 					echo '<span class="label label-primary">Pending</span>';

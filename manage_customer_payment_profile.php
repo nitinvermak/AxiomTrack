@@ -53,9 +53,9 @@ if(isset($_POST['inactive']))
 // Active 
 if(isset($_POST['active']))
     {
-        $custid = mysql_real_escape_string($_POST['custid']);
+        $custid = mysql_real_escape_string($_POST['cust_id']);
         $sql = "UPDATE tbl_customer_master SET activeStatus = 'Y' Where cust_id = '$custid'";
-        /*echo $sql;*/
+        // echo $sql;
         $result = mysql_query($sql);
         if($result)
         {

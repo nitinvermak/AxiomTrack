@@ -85,6 +85,7 @@ $previouspaid_amt = $row['previouspaidamt'];
                                                   FROM `quickbookpaymentmethoddetailsmaster` 
                                                   WHERE `customerId` = '$custId' 
                                                   and adjustmentAmt <> 0");
+                        
                                      while($result=mysql_fetch_assoc($sql)){
                         ?>
                         <option value="<?php echo $result['PaymentID']; ?>">

@@ -54,7 +54,7 @@ if($paymentId != 0 && $receivedAmt != 0)
 			/*echo $sql;*/
 			$result = mysql_query($sql);
 			
-			$sql1 = "UPDATE `tbl_gps_vehicle_master` SET `devicePaymentStatus `='F' 
+			$sql1 = "UPDATE `tbl_gps_vehicle_master` SET `devicePaymentStatus`='F' 
 					 WHERE `id`='$vehicleId'";
 			$result1 = mysql_query($sql1);
 

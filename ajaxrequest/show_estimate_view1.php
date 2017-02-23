@@ -13,8 +13,9 @@ if($cust_id != "")
 				on B.intervalId = C.intervalId
 				where B.customerId ='$cust_id'
 				And (B.invoiceFlag = 'N' or B.invoiceFlag = 'P') 
-				And B.paymentStatusFlag = 'A'
+				
 				order by invoiceId";
+				// And B.paymentStatusFlag = 'A'
     //echo $linkSQL;				
 }
 else {
@@ -24,10 +25,11 @@ else {
 				on A.cust_id = B.customerId
 				inner Join tblesitmateperiod as C
 				on B.intervalId = C.intervalId
-				where B.paymentStatusFlag = 'A'
-				And (B.invoiceFlag = 'N' or B.invoiceFlag = 'P')
+				where (B.invoiceFlag = 'N' or B.invoiceFlag = 'P')
 				order by invoiceId";
 				// And B.invoiceFlag <> 'D'
+				// B.paymentStatusFlag = 'A'
+				// And 
 }
 $oRS = mysql_query($linkSQL);
 
@@ -59,31 +61,21 @@ $oRS = mysql_query($linkSQL);
 		        <th><small>Period</small></th>
 		      	<th><small>Generated Amount</small></th> 
 		        <th><small>Discount Amount</small></th> 
+		        <th><small>Payble Amount</small></th> 
 		        <th><small>Payment Details</small></th>
 		        <!-- <th><small>Action</small></th> -->
 				<th><small>Make Payment</small></th>
 				<th><small>Download Invoice</small></th>
 	      	</tr>  
 		 </thead>  
+		 <tbody>
         <?php
 		$kolor=1;
-		if(isset($_GET['page']) and is_null($_GET['page']))
-			{ 
-				$kolor = 1;
-			}
-		elseif(isset($_GET['page']) and $_GET['page']==1)
-			{ 
-				$kolor = 1;
-			}
-		elseif(isset($_GET['page']) and $_GET['page']>1)
-			{
-				$kolor = ((int)$_GET['page']-1)* PER_PAGE_ROWS+1;
-			}
 	 	if(mysql_num_rows($oRS)>0)
 	  		{
   				while ($row = mysql_fetch_array($oRS)){
  	  	?>
- 	  	<tbody>
+ 	  	
         <tr <?php print $class; ?>  >
       	<td><small><?php print $kolor++;?>.</small></td>
 	  	<td><small><?php echo stripslashes($row["invoiceId"]);?>
@@ -129,6 +121,7 @@ $oRS = mysql_query($linkSQL);
 			
 			</small>
 		</td>
+		<td><small><?php echo $row["generatedAmount"] -  $row["discountedAmount"]; ?></small></td>
         <td><strong>
          
         
@@ -520,11 +513,10 @@ $oRS = mysql_query($linkSQL);
 		</td>
       	<td><a href="generate_invoice.php?est=<?= $row["invoiceId"] ?>&token=<?= $token; ?>" target="_blank" class="btn btn-success btn-sm">Download</a></td>
 		</tr>
-		</tbody>
-		</table>
         <?php 
            	}
-             	echo $pagerstring;
+            echo '</tbody>
+				</table>';
           }
         }
 	 else
