@@ -40,6 +40,7 @@ while ($rowA = mysql_fetch_array( $planRateQueryArr)){
     $installationChargesDict[$rowA["id"] ] =$rowA["plan_rate"];
   }              
 }
+
 $sql_invoice_details = "Select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, 
                         C.amount as amt, C.vehicleId  as vId, C.start_date as startDate, 
                         C.end_date as endDate, B.customer_Id as custId, 
@@ -155,7 +156,7 @@ $dueDate = $row1['dueDate'];
       <!-- Main content -->
       <section class="content">
         <form name='fullform' action="generate_invoice_pdf.php" id="fullform" class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
-        <input type="hidden" name="url" id="url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= $_GET['est'] ?>">
           <div class="box box-info">
                <!--  <div class="box-header">
                   <h3 class="box-title">Details</h3>

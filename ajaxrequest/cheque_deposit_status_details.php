@@ -21,7 +21,8 @@ error_reporting(0);
 						LEFT OUTER JOIN tbluser as D 
 						ON B.userId = D.id
 						LEFT OUTER JOIN tbl_customer_master as E 
-						ON B.customerId = E.cust_id Where A.ClearStatus = 'N' And A.DepositStatus = 'Y'";
+						ON B.customerId = E.cust_id 
+						Where A.ClearStatus = 'N' And A.DepositStatus = 'Y'";
 // echo $linkSQL;
 
 if ( ($executive != 0) or ( $depositDate != 0) or ($depositDateTo != 0) or ($branch != 0) )

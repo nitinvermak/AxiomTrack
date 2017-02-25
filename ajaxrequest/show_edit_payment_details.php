@@ -71,13 +71,13 @@ if(mysql_num_rows($stockArr)>0){
                 <td><small><?php print $kolor++;?>.</small></td>
                 <td><small><?php echo stripslashes($row["paymentId"]);?></small></td>
                 <td><small><?php echo getOraganization(stripslashes($row["callindataId"]));?></small></td>
-                <td><small><?php if($CashAmount != 0) { echo 'Cash'; } else if($chequeamt != 0) { echo 'Cheque'; } else if( $onlineAmt != 0) { echo $onlineAmt; } ?></small></td>
+                <td><small><?php if($CashAmount != 0) { echo 'Cash'; } else if($chequeamt != 0) { echo 'Cheque'; } else if( $onlineAmt != 0) { echo "NEFT"; } ?></small></td>
                 <td><small><?php if($row["bankname"] != ""){ echo getBankName(stripslashes($row["bankname"]));} else{ echo "N/A";}?></small></td>
                 <td><small><?php if($row["chequeNo"] != ""){ echo stripslashes($row["chequeNo"]);} else{ echo "N/A";}?></small></td>
                 <td><small><?php echo $amount; ?></small></td>
                 <td><small><?php echo stripcslashes($row["rcdDate"]);?></small></td>
                 <td><small>
-                <a href="update_quickbook_payment_status.php?chequeId=<?php echo $row["chequeId"];?>&cashId=<?php echo $row["paymentId"] ?>&token=<?php echo $token ?>">
+                <a href="update_quickbook_payment_status.php?chequeId=<?php echo $row["chequeId"];?>&cashId=<?php echo $row["paymentId"] ?>&neftId=<?php echo $row["neftId"] ?>&token=<?php echo $token ?>">
                 <img src='images/edit.png'></a>
                 <a href="edit_payment.php?paymentId=<?= $row["paymentId"] ?>&chequeId=<?= $row["chequeId"] ?>&onlinetransferId=<?= $row['neftId']; ?>&token=<?php echo $token ?>"  onclick="return confirm('Are you sure you want to Delete this record?')"><img src='images/drop.png'></a>
                 </small></td>

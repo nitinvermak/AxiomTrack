@@ -13,6 +13,8 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   header("location: index.php?token=".$token);
 }
 if(isset($_POST['submit'])){
+
+  $neft_Id = mysql_real_escape_string($_POST['neft_Id']);
   $chequeId = mysql_real_escape_string($_POST['chequeId']);
   $cashId = mysql_real_escape_string($_POST['cashId']);
   $organizationName = mysql_real_escape_string($_POST['organizationName']);
@@ -22,6 +24,8 @@ if(isset($_POST['submit'])){
   $bank = mysql_real_escape_string($_POST['bank']);
   $amountCheque = mysql_real_escape_string($_POST['amountCheque']);
   $depositDate = mysql_real_escape_string($_POST['depositDate']);
+  $onlineTransferAmount = mysql_real_escape_string($_POST['onlineTransferAmount']);
+  $refNo = mysql_real_escape_string($_POST['refNo']);
   $remarks = mysql_real_escape_string($_POST['remarks']) ;
 
   $sqlcheque = "UPDATE `quickbookpaymentcheque` SET `ChequeNo`='$chequeNo', `ChequeDate` = '$chequeDate', 
@@ -33,6 +37,11 @@ if(isset($_POST['submit'])){
               `Remarks` = '$remarks' WHERE `PaymentID`=".$cashId;
   $resultCash = mysql_query($sqlCash);
 
+  $sql_neft = "UPDATE `quickbookpaymentonlinetransfer` SET `RefNo`='$refNo',
+              `onlineAmount`='$onlineTransferAmount' 
+              WHERE `Id`=".$neft_Id;
+  $resultneft = mysql_query($sql_neft);
+  
   $_SESSION['sess_msg'] = 'Payment Updated successfully';
   header("location:edit_payment.php?token=".$token);
 }
@@ -46,10 +55,19 @@ $sqlcheque = "SELECT * FROM quickbookpaymentcheque as A
 $resultcheque = mysql_query($sqlcheque);
 $rowcheque = mysql_fetch_assoc($resultcheque);
 
+// Select Case Amount
 $sqlcash = "SELECT * FROM `quickbookpaymentmethoddetailsmaster` WHERE `PaymentID`= ".$_GET['cashId'];
 /*echo $sql;*/
 $resultcash = mysql_query($sqlcash);
 $rowcash = mysql_fetch_assoc($resultcash);
+
+
+// Select Online Amount
+$sql_neft = "SELECT `RefNo`, `onlineAmount` FROM `quickbookpaymentonlinetransfer` 
+             WHERE `Id`= ".$_GET['neftId'];
+// echo $sql_neft;
+$result_neft = mysql_query($sql_neft);
+$row_neft = mysql_fetch_assoc($result_neft);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -147,6 +165,7 @@ $(document).ready(function(){
                 <form name='fullform' class="form-horizontal"  method='post'>
                   <input type="hidden" name="chequeId" id = "chequeId" value="<?= $_GET['chequeId'] ?>">
                   <input type="hidden" name="cashId" id = "cashId" value="<?= $_GET['cashId'] ?>">
+                  <input type="hidden" name="neft_Id" id="neft_Id" value="<?php echo $_GET['neftId'] ?>">
                   <div class="form-group form_custom"><!-- form_custom -->
                     <div class="row"><!-- row -->
                           <div class="col-md-6 col-sm-6 custom_field">
@@ -206,15 +225,17 @@ $(document).ready(function(){
                           <input type="text" name="depositDate" id="depositDate" value="<?php if(isset($rowcheque['DepositDate'])){ echo $rowcheque['DepositDate']; }?>" class="date form-control" disabled>
                           </div>
                           <div class="clearfix"></div>
-                         <!-- <div class="col-md-12 field-option"><strong>Online Transfer</strong> <input type="checkbox" name="onlineTransfer" id="onlineTransfer"></div>
+                          <div class="col-md-12 field-option"><strong>Online Transfer</strong> <input type="checkbox" name="onlineTransfer" id="onlineTransfer"></div>
                           <div class="col-md-6 col-sm-6 custom_field">
                             <span><strong>Amount</strong> <i>*</i></span>
-                          <input type="text" name="onlineTransferAmount" id="onlineTransferAmount" class="form-control" disabled>
+                          <input type="text" name="onlineTransferAmount" id="onlineTransferAmount" 
+                          class="form-control" value="<?php echo $row_neft['onlineAmount']; ?>" disabled>
                           </div>
                           <div class="col-md-6 col-sm-6 custom_field">
                             <span><strong>Reference No.</strong> <i>*</i></span>
-                          <input type="text" name="refNo" id="refNo" class="form-control" disabled>
-                          </div>-->
+                          <input type="text" name="refNo" id="refNo" 
+                          value="<?php echo $row_neft['RefNo']; ?>" class="form-control" disabled>
+                          </div>
                           <div class="col-md-12 field-option"><strong>Other Details</strong></div>
                           <div class="col-md-6 col-sm-6 custom_field">
                             <span><strong>Remarks</strong> <i>*</i></span>
