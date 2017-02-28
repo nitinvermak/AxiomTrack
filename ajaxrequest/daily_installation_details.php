@@ -9,7 +9,8 @@ $configStatus1 = mysql_real_escape_string($_POST['configStatus1']);
 error_reporting(0);
 $linkSQL = "SELECT A.techinician_name as technician, A.id as id, A.ticketId as ticketId, A.mobile_no as mobile, 
 			A.device_id as deviceId, A.imei_no as IMEI, A.model_name as model, A.vehicle_no as vehicle_no, 
-			A.installation_date as installdate, C.Company_Name as CompanyName, A.create_by as create_by
+			A.installation_date as installdate, C.Company_Name as CompanyName, A.create_by as create_by,
+			A.customer_Id as custId
 			FROM tempvehicledata as A 
 			INNER JOIN tbl_customer_master as B 
 			ON A.customer_Id = B.cust_id
@@ -57,6 +58,7 @@ if(mysql_num_rows($stockArr)>0)
 		<tr>
             <th><small>S. No.</small></th>     
             <th><small>Ticket Id</small></th>
+            <th><small>Customer Id</small></th>
             <th><small>Company</small></th> 
             <th><small>Vehicle No</small></th> 
             <th><small>Mobile No</small></th> 
@@ -92,6 +94,7 @@ if(mysql_num_rows($stockArr)>0)
         <tr>
 	 		<td><small><?php print $kolor++;?>.</small></td>
             <td><small><?php echo stripslashes($row["ticketId"]);?></small></td>
+            <td><small><?= $row['custId']; ?></small></td>
 	 		<td><small><?php echo stripcslashes($row['CompanyName']);?></small></td>
             <td><small><?php echo stripcslashes($row['vehicle_no']);?></small></td>
             <td><small><?php echo stripcslashes($row['mobile']);?></small>

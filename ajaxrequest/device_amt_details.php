@@ -45,6 +45,7 @@ if(mysql_num_rows($stockArr)>0){
     <thead>
         <tr>
             <th><small>S. No.</small></th>
+            <th><small>Estimate Id</small></th>
             <th><small>Vehicle No.</small></th>
             <th><small>IMEI No.</small></th>
             <th><small>Mobile No.</small></th>
@@ -60,6 +61,7 @@ if(mysql_num_rows($stockArr)>0){
     ?>
         <tr>
             <td><small><?php print $kolor++;?>.</small></td>
+            <td><small><?= getEstimateId($row['vehicleId']); ?></small></td>
             <td><small><?php echo stripslashes($row["vehicleNo"]);?></small></td>
             <td><small><?php echo stripslashes($row["imeiNo"]);?></small></td>
             <td><small><?php echo getMobile(stripslashes($row["mobileNo"]));?></small></td>

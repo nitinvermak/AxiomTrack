@@ -779,6 +779,16 @@ function getSimNo($id)
   else
   return 'N/A';
 }
+function getEstimateId($vid)
+{
+  $sql="SELECT `estimateId` FROM `devicepayment` WHERE `vehicleId` = ".$vid;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['estimateId'])
+  return $result['estimateId'];
+  else
+  return '0';
+}
 function getpaymentStatus($val)
 {
 	if($val == 0)

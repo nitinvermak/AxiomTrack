@@ -4,7 +4,7 @@ include("../includes/config.inc.php");
 $custId = mysql_real_escape_string($_POST['custId']);
 error_reporting(0);
 
-echo $linkSQL = "SELECT A.customer_Id as custId, A.vehicle_no as vehicleNo, 
+$linkSQL = "SELECT A.customer_Id as custId, A.vehicle_no as vehicleNo, 
             A.paymentActiveFlag as paymentStatus, 
     				C.callingdata_id as callingdateId, B.device_amt as dueAmt,
             B.Vehicle_id as vehicleId, A.mobile_no as mobileNo, A.imei_no as imeiNo, 
@@ -16,7 +16,7 @@ echo $linkSQL = "SELECT A.customer_Id as custId, A.vehicle_no as vehicleNo,
           	ON B.cust_id = C.cust_id
           	WHERE A.customer_Id = '$custId '
           	and B.PlanactiveFlag ='Y'
-            and (A.devicePaymentStatus = 'P' or A.devicePaymentStatus = 'N' or or A.devicePaymentStatus = 'A')";
+            and A.devicePaymentStatus <> 'F'";
 // exit();
 $stockArr=mysql_query($linkSQL);
 

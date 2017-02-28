@@ -14,7 +14,7 @@ $linkSQL = "SELECT B.PaymentID as paymentId, C.callingdata_id as callingDataId,
 			A.bankDepositDate as depositDate, A.DepositStatus as DepositStatus,
 			A.ClearStatus as clearStatus, B.Remarks as remarks, B.adjustmentAmt as adjustmentAmt,
 			B.RecivedDate as rcdDate, A.chequeClearDate chequeClearDate, A.ChequeDate as ChequeDate,
-			B.userId as userId
+			B.userId as userId, C.cust_id as custId
 			FROM quickbookpaymentcheque as A 
 			INNER JOIN quickbookpaymentmethoddetailsmaster as B 
 			ON A.Id = B.ChequeID
@@ -65,7 +65,8 @@ if(mysql_num_rows($stockArr)>0)
 			<thead>
 				<tr>
 	  			<th><small>S. No.</small></th>     
-	  			<th><small>Payment ID</small></th>  
+	  			<th><small>Payment ID</small></th> 
+	  			<th><small>Customer Id</small></th> 
               	<th><small>Organization Name</small></th>
               	<th><small>Cheque Amt.</small></th>
               	<th><small>Bank</small></th>   
@@ -85,19 +86,6 @@ if(mysql_num_rows($stockArr)>0)
             <tbody>
                 <?php
 				$kolor=1;
-				if(isset($_GET['page']) and is_null($_GET['page']))
-					{ 
-						$kolor = 1;
-					}
-				elseif(isset($_GET['page']) and $_GET['page']==1)
-					{ 
-						$kolor = 1;
-					}
-				elseif(isset($_GET['page']) and $_GET['page']>1)
-					{
-						$kolor = ((int)$_GET['page']-1)* PER_PAGE_ROWS+1;
-					}
-					
 				if(mysql_num_rows($stockArr)>0)
 					{
 						while ($row = mysql_fetch_array($stockArr))
@@ -110,6 +98,7 @@ if(mysql_num_rows($stockArr)>0)
 	            <tr <?php print $class?>>
                 <td><small><?php print $kolor++;?>.</small></td>
                 <td><small><?php echo stripslashes($row["paymentId"]);?></small></td>
+                <td><small><?= $row['custId']; ?></small></td>
                 <td><small><?php echo getOraganization(stripslashes($row["callingDataId"]));?></small></td>
                 <td><small><?php echo stripslashes($row["chequeAmt"]); ?></small></td>
                 <td><small><?php echo getBankName(stripslashes($row["bankId"]));?></small></td>

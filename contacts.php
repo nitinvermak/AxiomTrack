@@ -291,6 +291,17 @@ function CallPincode()
 		document.getElementById('divpincode').innerHTML=str;
 		$(".select2").select2();
 	}
+
+function checkcompany(){
+	$.post("ajaxrequest/check_company_name.php?token=<?php echo $token;?>",
+	{
+		mobile : $('#mobile').val()
+	},
+	function(data){
+		/*alert(data);*/
+		$("#dv_alert").html(data);
+	});	
+}
 </script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini" onLoad="checkDefault()">
@@ -344,6 +355,7 @@ function CallPincode()
             <?php 
             }
             ?>
+            <span id="dv_alert"></span>
             <div class="col-md-12" id="contactform"> <!--open of the single form-->
 		    	<form name='myform' action="" class="form-horizontal" enctype="multipart/form-data" method="post" onSubmit="return chkcontactform(this)">
 		       		<input type="hidden" name="submitForm" value="yes" />
@@ -360,7 +372,8 @@ function CallPincode()
 		                        </div>
 		                        <div class="col-md-6 col-sm-6 custom_field">
 		                        	<span><strong>Company</strong> <i>*</i></span>
-		                            <input name="company" id="company" class="form-control" Placeholder="Company Name*" type="text" />                            
+		                            <input name="company" id="company" class="form-control" Placeholder="Company Name*" type="text"  />
+
 		                        </div>
 		                        <div class="col-md-6 col-sm-6 custom_field">
 		                            <span><strong>Phone</strong> <i>*</i></span>
@@ -368,7 +381,7 @@ function CallPincode()
 		                      </div>
 		                      <div class="col-md-6 col-sm-6 custom_field">
 		                        	<span><strong>Mobile No.</strong> <i>*</i></span>
-		                    		<input name="mobile" id="mobile" class="form-control" Placeholder="Mobile*" type="text" />
+		                    		<input name="mobile" id="mobile" class="form-control" Placeholder="Mobile*" type="text" onkeyup="checkcompany()" />
 		                      </div>
 		                      <div class="col-md-6 col-sm-6 custom_field">
 		                       	<span><strong>Email<i>*</i></strong></span>

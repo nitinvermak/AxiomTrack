@@ -167,7 +167,8 @@ function getAmount(obj){
                 adjustmentAmt : $("#adjestmentAmt").val(),
                 PrereceivedAmt : $("#PrereceivedAmt"+obj).val(),
                 pending_Amt : $("#pending_Amt"+obj).val(),
-                vehicleId : obj
+                vehicleId : obj,
+                cust_id : $("#cust_id").val()
             },
             function (data)
             {

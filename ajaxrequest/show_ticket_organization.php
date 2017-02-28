@@ -8,8 +8,8 @@ $ticket = mysql_real_escape_string($_POST['ticket']);
                 <div class="col-sm-10">
 <select name="organization" id="organization" class="form-control drop_down">
 	<!--<option value="">Select Organization</option>-->
-    <?php $Country=mysql_query("select B.cust_id as customerId, A.organization_id as Orgranization 
-								from tblticket as A 
+    <?php $Country=mysql_query("SELECT B.cust_id as customerId, A.organization_id as Orgranization 
+								FROM tblticket as A 
 								inner join tbl_customer_master as B 
 								On A.organization_id = B.callingdata_id 
 								where A.ticket_id = '$ticket' order by ticket_id ASC");

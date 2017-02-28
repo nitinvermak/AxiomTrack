@@ -10,7 +10,7 @@ $linkSQL = "SELECT A.PaymentID as paymentId, A.customerId as custId,
 			A.CashAmount as cashAmt, A.userId as create_by, 
 			A.status as confirmationStatus, A.RecivedDate as recivedDate,
 			B.callingdata_id as callingDataId, A.adjustmentAmt as adjustmentAmt,
-			A.paymentConfirmBy as paymentConfirmBy
+			A.paymentConfirmBy as paymentConfirmBy, B.cust_id as custid
 			FROM quickbookpaymentmethoddetailsmaster as A 
 			INNER JOIN tbl_customer_master as B 
 			ON A.customerId = B.cust_id WHERE A.CashAmount <> 0";
@@ -44,7 +44,8 @@ if(mysql_num_rows($stockArr)>0)
 			<thead>
 				<tr>
 	  			<th><small>S. No.</small></th>     
-	  			<th><small>Payment ID</small></th>  
+	  			<th><small>Payment ID</small></th> 
+	  			<th><small>Customer Id</small></th> 
               	<th><small>Organization Name</small></th>
               	<th><small>Cash Amt.</small></th>
                 <th><small>Confirmation Status</small></th> 
@@ -57,19 +58,6 @@ if(mysql_num_rows($stockArr)>0)
             <tbody>
                 <?php
 				$kolor=1;
-				if(isset($_GET['page']) and is_null($_GET['page']))
-					{ 
-						$kolor = 1;
-					}
-				elseif(isset($_GET['page']) and $_GET['page']==1)
-					{ 
-						$kolor = 1;
-					}
-				elseif(isset($_GET['page']) and $_GET['page']>1)
-					{
-						$kolor = ((int)$_GET['page']-1)* PER_PAGE_ROWS+1;
-					}
-					
 				if(mysql_num_rows($stockArr)>0)
 					{
 						while ($row = mysql_fetch_array($stockArr))
@@ -82,6 +70,7 @@ if(mysql_num_rows($stockArr)>0)
 	            <tr <?php print $class?>>
                 <td><small><?php print $kolor++;?>.</small></td>
                 <td><small><?php echo stripslashes($row["paymentId"]);?></small></td>
+                <td><small><?= $row['custid']; ?></small></td>
                 <td><small><?php echo getOraganization(stripslashes($row["callingDataId"]));?></small></td>
                 <td><small><?php echo stripslashes($row["cashAmt"]); ?></small></td>
                 <td><small><?php getConfirmation($row["confirmationStatus"]); ?></small></td>

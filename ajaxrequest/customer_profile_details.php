@@ -2,6 +2,7 @@
 include("../includes/config.inc.php"); 
 //include("includes/crosssite.inc.php"); 
 $cust_id = mysql_real_escape_string($_POST['searchText']);
+$customer_Id = mysql_real_escape_string($_POST['customer_Id']);
 if ($cust_id != NULL) {
   $queryArr=mysql_query("SELECT A.cust_id as cust_id, A.calling_product as calling_product, 
                          B.Company_Name as Company_Name, A.customerStatus as customerStatus,
@@ -12,6 +13,24 @@ if ($cust_id != NULL) {
                          INNER JOIN  tblcallingdata as B 
                          ON A.callingdata_id = B.id 
                          WHERE A.cust_id =".$cust_id);
+}
+else if($customer_Id != NULL){
+  $queryArr=mysql_query("SELECT A.cust_id as cust_id, A.calling_product as calling_product, 
+                         B.Company_Name as Company_Name, A.customerStatus as customerStatus,
+                         B.created as created, B.First_Name as First_Name, B.Last_Name as Last_Name, 
+                         B.email as email, B.Mobile as Mobile, B.id as callingDataId,
+                         A.activeStatus as activestatus
+                         FROM tbl_customer_master as A 
+                         INNER JOIN  tblcallingdata as B 
+                         ON A.callingdata_id = B.id 
+                         WHERE A.cust_id =".$customer_Id);
+}
+else{
+  echo '<div class="alert alert-danger alert-dismissible small-alert" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong><i class="fa fa-exclamation-circle" aria-hidden="true"></i></strong> Please Select Orgranization !
+        </div>';
+}
   $result=mysql_fetch_assoc($queryArr);
 
 ?>
@@ -80,12 +99,3 @@ if ($cust_id != NULL) {
      <div class="col-md-12" id="dvassign"></div>
   </div>               
 </div><!-- End From Custom -->
-<?php 
-}
-else{
-  echo '<div class="alert alert-danger alert-dismissible small-alert" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong><i class="fa fa-exclamation-circle" aria-hidden="true"></i></strong> Please Select Orgranization !
-        </div>';
-}
-?>

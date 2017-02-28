@@ -1,6 +1,7 @@
 <?php
 include("../includes/config.inc.php"); 
 //include("includes/crosssite.inc.php"); 
+$cust_id = mysql_real_escape_string($_POST['cust_id']);
 $receivedAmt = mysql_real_escape_string($_POST['receivedAmt']);
 $PrereceivedAmt = mysql_real_escape_string($_POST['PrereceivedAmt']);
 $vehicleId = mysql_real_escape_string($_POST['vehicleId']);
@@ -14,8 +15,17 @@ if($paymentId != 0 && $receivedAmt != 0)
 	if($pendingAmt != $receivedAmt){
 		if($receivedAmt <= $adjustmentAmt){
 			$adjustAmt = ($adjustmentAmt - $receivedAmt);
-			$sql = "INSERT INTO `devicepayment` SET `vehicleId`='$vehicleId', `deviceamt`='$receivedAmt', 
-					`paymentId`='$paymentId'";
+
+			// generate Estimate Id 
+			$sql_est = "INSERT INTO `tbl_invoice_master` SET `customerId`='$cust_id', 
+						`generatedAmount`='$pendingAmt', `paidAmount`='$receivedAmt',
+						`invoiceType`='B',`invoiceFlag`='P',`paymentStatusFlag`='A', `generateDate`=Now(), 
+						`dueDate`=Now()";
+			$result_est = mysql_query($sql_est);
+			$estimate_id = mysql_insert_id();
+
+			$sql = "INSERT INTO `devicepayment` SET `vehicleId`='$vehicleId', `estimateId`='$estimate_id', 
+					`deviceamt`='$receivedAmt', `paymentId`='$paymentId'";
 
 			// $sql = "UPDATE `tbl_gps_vehicle_payment_master` SET 
 			// 		`receivedAmt` = '$receivedAmt', `devicePaymentStatus` = 'P'
@@ -46,7 +56,15 @@ if($paymentId != 0 && $receivedAmt != 0)
 	elseif($pendingAmt == $receivedAmt){
 		if($receivedAmt <= $adjustmentAmt){
 			$adjustAmt = ($adjustmentAmt - $receivedAmt);
-			$sql = "INSERT INTO `devicepayment` SET `vehicleId`='$vehicleId', `deviceamt`='$receivedAmt', 
+			// generate Estimate Id 
+			$sql_est = "INSERT INTO `tbl_invoice_master` SET `customerId`='$cust_id', 
+						`generatedAmount`='$pendingAmt', `paidAmount`='$receivedAmt',
+						`invoiceType`='B',`invoiceFlag`='P',`paymentStatusFlag`='A', `generateDate`=Now(), 
+						`dueDate`=Now()";
+			$result_est = mysql_query($sql_est);
+			$estimate_id_full = mysql_insert_id();
+
+			$sql = "INSERT INTO `devicepayment` SET `vehicleId`='$vehicleId', `estimateId`='$estimate_id_full', `deviceamt`='$receivedAmt', 
 					`paymentId`='$paymentId'";
 			// $sql = "UPDATE `tbl_gps_vehicle_payment_master` SET `receivedAmt` = '$receivedAmt',
 			// 		`devicePaymentStatus` = 'F'
