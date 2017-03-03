@@ -27,7 +27,7 @@ $stockArr=mysql_query($linkSQL);
 
 if(mysql_num_rows($stockArr)>0)
 	{	
-		echo "<div class='col-md-12' id = 'divShow'></div>";
+		echo "<div class='col-md-12' id = 'divShow1'></div>";
 	 	echo '<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">';
 ?>	
 			 <thead>
@@ -50,7 +50,9 @@ if(mysql_num_rows($stockArr)>0)
              
         	<tr <?php print $class?>  id='<?php echo stripslashes($row["id"]);?>'>
       		<td><small><?php print $kolor++;?>.</small></td>
-	  		<td><small><?php echo stripslashes($row["vehicle_no"]);?></small></td>
+	  		<td><small><?php echo stripslashes($row["vehicle_no"]);?>
+	  			<input type="hidden" name="v_id" id="v_id" value="<?php echo $row['vehicleId']; ?>">
+	  		</small></td>
             <td>
             <small><?php echo stripslashes($row["device_id"]);?></small>
             <input type="hidden" name="deviceId" id="deviceId" value="<?php echo stripslashes($row["device_id"]);?>">

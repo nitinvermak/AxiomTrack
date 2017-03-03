@@ -157,7 +157,9 @@ if (isset($_POST['generatePDF'])) {
                   <tr>
                     <td width='50%' style='padding:5px;' valign='top'>
                       <p style='font-size:10px; font-family: arial, sans-serif; line-height:15px;'>
-                        <span>                            
+                        <span>    
+                          <strong>Customer Id:</strong>$customer_Id<br>
+                          <strong>Contact Person:</strong>". getCustomerName($customer_Id). "<br>                         
                           <strong>$Company</strong>
                           </span><br> 
                           <span>
@@ -220,19 +222,19 @@ if (isset($_POST['generatePDF'])) {
                    <table border='1' style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'>
                     <tr>
                       <td colspan='3' width='100%' style='padding: 5px;'>
-                        <center><span style='font-size:10px; font-weight:bold; font-family: arial, sans-serif;'>INVOICE SUMMARY</span></center>
+                        <center><span style='font-size:10px; font-weight:bold; font-family: arial, sans-serif;'>ESTIMATE SUMMARY</span></center>
                       </td>
                     </tr>
                     <tr>
                       <td width='33%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'>
-                          <strong>Invoice No.:</strong>  
+                          <strong>Estimate No.:</strong>  
                           $invoice_No
                         </span>
                       </td>
                       <td width='33%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'>
-                          <strong>Invoice Date:</strong> ". date("d-m-Y", strtotime($generateDate))."
+                          <strong>Estimate Date:</strong> ". date("d-m-Y", strtotime($generateDate))."
                         </span>
                       </td>
                       <td width='33%' style='padding: 5px;'>
@@ -245,31 +247,32 @@ if (isset($_POST['generatePDF'])) {
                    <table border='1' style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'>
                     <tr>
                       <td width='15%' style='padding: 5px;'>
-                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>No. of Vehicles:</strong> $total_vehicle</span>
+                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>No. of Vehicles</strong></span>
                       </td>
                       <td width='30%' style='padding: 5px;'>
-                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Rent Period:</strong> ". 
-                        date("d-m-Y", strtotime($from))." To ". date("d-m-Y", strtotime($to)) ."
-                        </span></td>
+                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Rent Period</strong></span></td>
                       <td width='15%' style='padding: 5px;'>
-                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Amount:</strong>
-                        ".$summ_total1."
-                      </span></td>
+                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Amount</strong></span></td>
                       <td width='20%' style='padding: 5px;'>
-                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Tax Amount:</strong> 
-                      ".$summ_tax1."
-                      </span></td>
+                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Tax Amount</strong></span></td>
                       <td width='20%' style='padding: 5px;'>
-                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Payble Amount: </strong>
-                          $grand_total
-                        </span></td>
+                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Payble Amount</strong></span></td>
                     </tr>
+                    <tr>
+                      <td width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>". $total_vehicle."</span></td>
+                      <td  width='30%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>". date("d-m-Y", strtotime($from))." To ". date("d-m-Y", strtotime($to)) ."</span></td>
+                      
+                      <td  width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$summ_total1."</span></td>
+                      <td  width='20%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$summ_tax1."</span></td>
+                      <td  width='20%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$grand_total."</span></td>
+                    </tr>
+
                    </table><br>
                    <table border='1' style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'>
                     <tr>
                       <td colspan='7' width='100%' style='padding: 5px;'>
                         <center>
-                          <span style='font-family: arial, sans-serif; font-size:10px; font-weight:bold;'>INVOICE DETAILS</span>
+                          <span style='font-family: arial, sans-serif; font-size:10px; font-weight:bold;'>ESTIMATE DETAILS</span>
                         </center>
                       </td>
                     </tr>
@@ -304,7 +307,7 @@ if (isset($_POST['generatePDF'])) {
                   <center>
                     <p style='font-family: arial, sans-serif; font-size:10px'><strong>Office Address:</strong> Plot No.- 610, Second Floor, Kakrola Housing Complex, Opp. Metro Pillor No.- 805, New Delhi - 110043<br>
                     <strong>Contact No.:</strong> 9015222422/7042198790 <br>
-                    <strong>Email:</strong> <a href='mailto:accounts@srtms.in?Subject=Invoice' target='_top'>accounts@srtms.in</a>
+                    <strong>Email:</strong> <a href='mailto:accounts@srtms.in?Subject=Estimate' target='_top'>accounts@srtms.in</a>
                     </p>
                   </center>
                  </div>";

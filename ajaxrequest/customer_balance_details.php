@@ -48,6 +48,7 @@ if ($cust_id != NULL) {
       <input type="button" name="showEdit" id="showEdit" value="Edit Plan" class="btn btn-info btn-sm">   
       <input type="button" name="estimateView" id="estimateView" onclick="getEstimateView(<?= $result['cust_id'];?>)" value="Rent Balance" class="btn btn-info btn-sm">
       <input type="button" name="deviceAmt" id="deviceAmt" onclick="getDeviceAmount(<?= $result['cust_id'];?>)" value="Device Amount Balance" class="btn btn-info btn-sm">
+      <input type="button" name="deviceAmt" id="deviceAmt" onclick="generate_device_estimate_details(<?= $result['cust_id'];?>)" value="Generate Device Estimate" class="btn btn-info btn-sm">
       <input type="button" name="pendingPayment" id="pendingPayment" onClick="getPendingReport();" value="Adjust Device Amount" class="btn btn-info btn-sm">
       <input type="button" name="PaymentHistory" id="PaymentHistory" onClick="getPaymentHistory();" value="Payment History" class="btn btn-info btn-sm">
       <input type="button" name="billingProfile" id="billingProfile" onClick="getBillingProfile();" value="Billing Profile" class="btn btn-info btn-sm">

@@ -4,6 +4,7 @@ include("../includes/crosssite.inc.php");
 $invId = mysql_real_escape_string($_POST['invId']);
 $rupeeAmt = mysql_real_escape_string($_POST['rupeeAmt']);
 $sql = "Update tbl_invoice_master Set discountedAmount = '$rupeeAmt' Where invoiceId ='$invId'";
+// exit();
 $result = mysql_query($sql);
 if($result){
 	echo '<div class="alert alert-success small-alert alert-dismissible" role="alert">

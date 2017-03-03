@@ -50,7 +50,9 @@ foreach ($decode_Json_Data as $array) {
         $result_add_due_date = mysql_query($sql_add_due_date );  
     }
 }
-echo $sql_invoice_master = "INSERT INTO `tbl_invoice_master` SET `customerId`='$customer_Id', `generatedAmount`='$total_sum_rent_amt', `paymentStatusFlag`='A',`invoiceFlag`='N', `invoiceType` ='A',
-                            `generateDate`='Now()',`dueDate`='$due_date'";
+echo $sql_invoice_master = "INSERT INTO `tbl_invoice_master` SET `customerId`='$customer_Id', 
+                            `generatedAmount`='$total_sum_rent_amt', `paymentStatusFlag`='A',
+                            `invoiceFlag`='N', `invoiceType` ='A', `generateDate`='Now()',
+                            `dueDate`='$due_date'";
     $result = mysql_query($sql_invoice_master);
 ?>

@@ -1098,6 +1098,20 @@ function getCust($id)
   else
   return 'N/A';
 }
+function getCustomerName($id)
+{
+  $sql="SELECT CONCAT(B.First_Name,' ', B.Last_Name) as name
+		FROM tbl_customer_master as A 
+		INNER JOIN tblcallingdata as B 
+		ON A.callingdata_id = B.id
+		WHERE A.cust_id = ".$id;
+  $rs=mysql_query($sql);
+  $result=mysql_fetch_assoc($rs);
+  if($result['name'])
+  return $result['name'];
+  else
+  return 'N/A';
+}
 function getCustContact($id)
 {
   $sql="SELECT  B.Mobile as mobile

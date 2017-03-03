@@ -367,6 +367,8 @@ $(document).on("click","#showHistory", function(){
                 });  
 })
 // ------------------------------ End -----------------------------//
+
+// ======================= Inactive Vehicle ====================//
 // -------------------------- Add Service Branch ---------------------------//
 $(document).on("click","#manageServiceBranch", function(){
     $('.loader').show();
@@ -420,11 +422,13 @@ function getInactive(obj)
     $('.loader').show();
     $.post("ajaxrequest/vehicle_inactive.php?token=<?php echo $token;?>",
             {
-                deviceId : obj
+                deviceId : obj,
+                cust_id : $('#cust_id').val(),
+                vehicle_id : $('#v_id').val()
             },
             function (data)
             {
-                $("#divShow").html(data);
+                $("#divShow1").html(data);
                 $(".loader").removeAttr("disabled");
                 $('.loader').fadeOut(1000);
             });

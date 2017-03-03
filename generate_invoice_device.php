@@ -12,90 +12,72 @@ if (isset($_SESSION) && $_SESSION['login']=='')
   session_destroy();
   header("location: index.php?token=".$token);
 }
-// Select Invoice Details
-$invoiceId = $_GET['est'];
-$where='';
-$linkSQL="";
-/*echo $invoiceId;*/      
-$planRateQuery= "Select id, planSubCategory, plan_rate 
-                 from tblplan 
-                 where productCategoryId = 4  
-                 and (planSubCategory = 1 
-                 or planSubCategory = 2 
-                 or planSubCategory = 3)";
-$planRateQueryArr = mysql_query($planRateQuery);
-$deviceAmountDict = array();
-$deviceRentAmtDict = array();
-$installationChargesDict = array();
-$typeBAmountEntry =0;
-while ($rowA = mysql_fetch_array( $planRateQueryArr)){
-  //echo $rowA["plan_category"].'='.$rowA["id"].'='.$rowA["plan_rate"].'</br>';
-  if ($rowA["planSubCategory"] == 1){
-    $deviceAmountDict[$rowA["id"] ] =$rowA["plan_rate"];
-  }
-  if ($rowA["planSubCategory"] == 2){
-    $deviceRentAmtDict[$rowA["id"] ] =$rowA["plan_rate"];
-  }
-  if ($rowA["planSubCategory"] == 3){
-    $installationChargesDict[$rowA["id"] ] =$rowA["plan_rate"];
-  }              
-}
+$estimate_id = $_GET['est'];
+// Select Customer Details
+$sql_info = "SELECT A.customerId as customerId 
+                FROM tbl_invoice_master as A 
+                INNER JOIN tbl_gps_vehicle_payment_master as B 
+                ON A.customerId = B.cust_id 
+                WHERE  A.invoiceId = $estimate_id";
+$result_info = mysql_query($sql_info);
+$row_info = mysql_fetch_assoc($result_info);
+$customer_id = $row_info['customerId'];
 
-$sql_invoice_details = "Select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, 
-                        C.amount as amt, C.vehicleId  as vId, C.start_date as startDate, 
-                        C.end_date as endDate, B.customer_Id as custId, 
-                        C.payment_rate_id as plan_rate_id          
-                        from tbl_payment_breakage as C left outer join
-                        tbl_gps_vehicle_master as B  
-                        On C.vehicleId = B.id         
-                        where C.invoiceId= '$invoiceId'
-                        order by   C.vehicleId, C.typeOfPaymentId";
-$result_invoice_details = mysql_query($sql_invoice_details);
-
-// Invoice Summary 
-$sql_invoice_summary = "Select COUNT(*) as totalVehicle, C.typeOfPaymentId as paymentType, 
-                        SUM(C.amount)as amt, MIN(C.start_date) as startDate, MAX(C.end_date) as endDate,
-                        B.customer_Id as custId 
-                        from tbl_payment_breakage as C 
-                        left outer join tbl_gps_vehicle_master as B 
-                        On C.vehicleId = B.id where C.invoiceId= '$invoiceId' 
-                        order by C.vehicleId, C.typeOfPaymentId ";
-$result_invoice_summary = mysql_query($sql_invoice_summary);
-$row = mysql_fetch_assoc($result_invoice_summary);
-$total_vehicle = $row['totalVehicle'];
-$grand_total = $row['amt'];
-$from = $row['startDate'];
-$to = $row['endDate'];
-$customer_Id = $row['custId'];
-
-
-// Select Company Details
-$sql_company_details = "SELECT B.Company_Name as Company_Name, B.Address as Address, B.Area as area, 
-                        B.City as city, B.State as state, B.District_id as district, B.Country as country, 
-                        B.Pin_code as pincode, B.Mobile as mobileno, B.email as email
-                        FROM tbl_customer_master as A 
-                        INNER JOIN tblcallingdata as B 
-                        ON A.callingdata_id = B.id
-                        Where A.cust_id = '$customer_Id'";
-$result_company_details = mysql_query($sql_company_details);
-$row = mysql_fetch_assoc($result_company_details);
-$Company = $row['Company_Name'];
-$address = $row['Address'];
+// Customer details
+$sql = "SELECT A.cust_id as custId, CONCAT(B.First_Name,' ', B.Last_Name) as contactPerson, 
+        B.Company_Name as companyName, B.Address as address, B.Area as area, B.City as city, 
+        B.District_id as district, B.State as state, B.Pin_code as pincode, B.email as email, 
+        B.Mobile as mobile
+        FROM tbl_customer_master as A 
+        INNER JOIN tblcallingdata as B 
+        ON A.callingdata_id = B.id 
+        WHERE A.cust_id = ".$customer_id;
+$result = mysql_query($sql);
+$row = mysql_fetch_assoc($result);
+$contactPersonName = $row['contactPerson'];
+$companyName = $row['companyName'];
+$address = $row['address'];
 $area = $row['area'];
 $city = $row['city'];
-$state = $row['state'];
 $district = $row['district'];
+$state = $row['state'];
 $pincode = $row['pincode'];
-$mobileno = $row['mobileno'];
 $email = $row['email'];
+$mobile = $row['mobile'];
 
-$sql_invoice = "SELECT `invoiceId`, `generateDate`, `dueDate` FROM `tbl_invoice_master`  
-                WHERE `invoiceId` =".$invoiceId;
-$result_invoice = mysql_query($sql_invoice);
-$row1 = mysql_fetch_assoc($result_invoice);
-$invoice_No = $row1['invoiceId'];
-$generateDate = $row1['generateDate'];
-$dueDate = $row1['dueDate'];
+// Select Estimate Summary
+$sql1 = "SELECT * FROM `tbl_invoice_master` WHERE `invoiceId`=".$estimate_id;
+$result1 = mysql_query($sql1);
+$row1 = mysql_fetch_assoc($result1);
+$generate_date = $row1['generateDate'];
+$due_date = $row1['dueDate'];
+
+// select no of vehilces
+$sql2 = "SELECT count(*) as no_of_veh, B.generatedAmount as generatedAmount
+         FROM tbl_gps_vehicle_payment_master as A 
+         INNER JOIN tbl_invoice_master as B 
+         ON A.cust_id = B.customerId 
+         WHERE A.device_status_gen_status = 'Y' 
+         AND B.invoiceType = 'B' 
+         AND B.invoiceId =  ".$estimate_id;
+$result2 = mysql_query($sql2);
+$row2 = mysql_fetch_assoc($result2);
+$total_vehicle = $row2['no_of_veh'];
+$total_amount = $row2['generatedAmount'];
+
+// ESTIMATE DETAILS 
+$sql3 = "SELECT C.vehicle_no as vehicle_no, A.device_amt as device_amt,
+        C.installation_date as activationdate
+        FROM tbl_gps_vehicle_payment_master as A 
+        INNER JOIN tbl_invoice_master as B 
+        ON A.cust_id = B.customerId 
+        INNER JOIN tbl_gps_vehicle_master as C 
+        ON A.Vehicle_id = C.id
+        WHERE A.device_status_gen_status = 'Y' 
+        AND B.invoiceType = 'B' 
+        AND B.invoiceId =".$estimate_id;
+$result3 = mysql_query($sql3);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -179,9 +161,9 @@ $dueDate = $row1['dueDate'];
                        <td width="50%" style="padding:5px; font-size: 15px;" valign="top">
                         <p style="padding: 5px 10px 5px 10px; line-height: 25px; font-size: 13px;">
                           <span>  
-                           <strong>Customer Id:</strong> <?= $customer_Id; ?> <br> 
-                           <strong>Contact Person:</strong> <?= getCustomerName($customer_Id); ?> <br>
-                           <strong><?= $Company; ?><input type="hidden" name="company_name" value="<?= $Company; ?>"></strong>
+                           <strong>Customer Id:</strong> <?= $customer_id; ?> <br> 
+                           <strong>Contact Person:</strong> <?= $contactPersonName; ?> <br>
+                           <strong><?= $companyName; ?><input type="hidden" name="company_name" value="<?= $companyName; ?>"></strong>
                           </span><br> 
                           <span>
                             <?= $address; ?>, <?= getarea($area); ?><br> <?= getcityname($city); ?>, 
@@ -193,8 +175,8 @@ $dueDate = $row1['dueDate'];
                             <?= getpincode($pincode); ?>">
                           </span><br>
                           <span>
-                           <?= $mobileno; ?>
-                           <input type="hidden" name="mobileno" id="mobileno" value="<?= $mobileno; ?>">
+                           <?= $mobile; ?>
+                           <input type="hidden" name="mobileno" id="mobileno" value="<?= $mobile; ?>">
                           </span><br>
                           <span>
                            <?= $email; ?>
@@ -261,23 +243,24 @@ $dueDate = $row1['dueDate'];
                     </tr>
                     <tr>
                       <td width="33%" style="padding: 5px;"><span><strong>Estimate No.:</strong> 
-                        <?= $invoice_No; ?>
-                        <input type="hidden" name="invoice_No" id="invoice_No" value="<?= $invoice_No; ?>">
+                        <?= $estimate_id; ?>
+                        <input type="hidden" name="invoice_No" id="invoice_No" value="<?= $estimate_id; ?>">
                         </span></td>
                       <td width="33%" style="padding: 5px;"><span><strong>Estimate Date:</strong> 
-                        <?= date("d-m-Y", strtotime($generateDate)); ?>
-                        <input type="hidden" name="invoice_date" id="invoice_date" value="<?= date("d-m-Y", strtotime($generateDate)); ?>">
+                        <?= date("d-m-Y", strtotime($generate_date)); ?>
+                        <input type="hidden" name="invoice_date" id="invoice_date" value="<?= date("d-m-Y", strtotime($generate_date)); ?>">
                       </span></td>
                       <td width="33%" style="padding: 5px;"><span><strong>Due Date:</strong> 
-                      <?= date("d-m-Y", strtotime($dueDate)); ?>
-                      <input type="hidden" name="due_date" id="due_date" value="<?= date("d-m-Y", strtotime($dueDate)); ?>">
+                      <?= date("d-m-Y", strtotime($due_date)); ?>
+                      <input type="hidden" name="due_date" id="due_date" 
+                      value="<?= date("d-m-Y", strtotime($due_date)); ?>">
                       </span></td>
                     </tr>
                    </table><br>
                    <table width="100%" border="1">
                     <tr>
                       <td width="15%" style="padding: 5px;"><span><strong>No. of Vehicles</strong></span></td>
-                      <td width="30%" style="padding: 5px;"><span><strong>Rent Period</strong></span></td>
+                     <!--  <td width="30%" style="padding: 5px;"><span><strong>Rent Period</strong></span></td> -->
                       <td width="15%" style="padding: 5px;"><span><strong>Amount</strong></span></td>
                       <td width="20%" style="padding: 5px;"><span><strong>Tax Amount</strong></span></td>
                       <td width="20%" style="padding: 5px;"><span><strong>Payble Amount</strong></span></td>
@@ -288,27 +271,23 @@ $dueDate = $row1['dueDate'];
                         <input type="hidden" name="total_vehicle" value="<?= $total_vehicle;?>"></span>
                       </td>
                       <td width="15%" style="padding: 5px;">
-                        <span><input type="hidden" name="from_period" value="<?= date("d-m-Y", strtotime($from)); ?>">
-                      <?= date("d-m-Y", strtotime($from)); ?> To <?= date("d-m-Y", strtotime($to)); ?> 
-                        <input type="hidden" name="to_period" value="<?= date("d-m-Y", strtotime($to)); ?>"> </span>
-                      </td>
-                      <td width="15%" style="padding: 5px;">
                       <span>
-                      <?php $summ_total = $grand_total/115 * 100;
+                      <?php $summ_total = $total_amount/112.5 * 100;
                             echo number_format($summ_total,2, '.', '');
                       ?>
-                      <input type="hidden" name="summ_amt" value="<?php echo number_format($summ_total,2, '.', ''); ?>" ></span>
+                      <input type="hidden" name="summ_amt" value="<?php echo number_format($summ_total,2, '.', ''); ?>" >
+                      <input type="hidden" name="summ_amt" value="<?php echo $total_amount; ?>" ></span>
                       </td>
                       <td width="15%" style="padding: 5px;">
-                      <span><?php $summ_tax = $summ_total/100 * 15;
+                      <span><?php $summ_tax = $summ_total/100 * 12.5;
                             echo number_format($summ_tax,2, '.', '');
                       ?>
                       <input type="hidden" name="summ_tax" value="<?php echo number_format($summ_tax,2, '.', ''); ?>"></span>
                       </td>
                       <td width="15%" style="padding: 5px;">
                         <span>
-                          <?= $grand_total;?>
-                        <input type="hidden" name="summ_grand_total" value="<?= $grand_total;?>">
+                          <?= $total_amount;?>
+                        <input type="hidden" name="summ_grand_total" value="<?= $total_amount;?>">
                         </span>
                       </td>
                       <!-- <td width="15%" style="padding: 5px;">
@@ -325,40 +304,35 @@ $dueDate = $row1['dueDate'];
                     <tr>
                       <td width="4%" style="padding: 5px;"><span><strong>S.No.</strong></span></td>
                       <td width="14%" style="padding: 5px;"><span><strong>Vehicle No.</strong></span></td>
-                      <td width="24%" style="padding: 5px;"><span><strong>Rent Period</strong></span></td>
-                      <td width="14%" style="padding: 5px;"><span><strong>Rent Per Vehicle</strong></span></td>
-                      <td width="14%" style="padding: 5px;"><span><strong>Total Amount</strong></span></td>
+                      <td width="14%" style="padding: 5px;"><span><strong>Activation Date</strong></span></td>
+                      <td width="14%" style="padding: 5px;"><span><strong>Device Amount</strong></span></td>
                       <td width="10%" style="padding: 5px;"><span><strong>Tax</strong></span></td>
                       <td width="16%" style="padding: 5px;"><span><strong>Payble Amount</strong> </span></td>
                     </tr>
                     <?php 
                     $sno = 1;
                     $sum_amt =0;
-                    while ($row = mysql_fetch_assoc($result_invoice_details)) {
+                    while ($row = mysql_fetch_assoc($result3)) {
 
-                      $amt = $row['amt'];
+                      $amt = getPlanAmt($row['device_amt']);;
                       $sum_amt += $amt;
                     ?>
                       <tr>
                         <td width="6%" style="padding: 5px;"><?= $sno++; ?>.<span></span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= $row['vehicleNo']; ?> 
-                        <input type="hidden" name="vehicle_No[]" value="<?= $row['vehicleNo']; ?>"> </span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= date("d-m-Y", strtotime($row['startDate'])); ?> To <?= date("d-m-Y", strtotime($row['endDate'])); ?>
-                        	<input type="hidden" name="rent_period[]" value="<?= date("d-m-Y", strtotime($row['startDate'])); ?> To <?= date("d-m-Y", strtotime($row['endDate'])); ?>">
-                        </span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= $deviceRentAmtDict[$row["plan_rate_id"] ]; ?>
-                        	<input type="hidden" name="rent_per_vehicle[]" value="<?= $deviceRentAmtDict[$row["plan_rate_id"] ]; ?>">
+                        <td width="16%" style="padding: 5px;"><span><?= $row['vehicle_no']; ?> 
+                        <input type="hidden" name="vehicle_No[]" value="<?= $row['vehicle_no']; ?>"> </span></td>
+                        <td width="16%" style="padding: 5px;"><span><?= date("d-m-Y", strtotime($row['activationdate'])); ?> 
                         </span></td>
                         <td width="16%" style="padding: 5px;"><span>
                           <?php 
-                          $total = $row['amt']/115 * 100;
+                          $total = $amt/112.5 * 100;
                           echo number_format($total,2, '.', '');
                           ?>
                           <input type="hidden" name="vehicle_total_amt[]" value="<?php echo number_format($total,2, '.', ''); ?>">
                         </span></td>
                         <td width="10%" style="padding: 5px;"><span>
                           <?php 
-                            $tax = $total/100 * 15;
+                            $tax = $total/100 * 12.5;
                             echo  number_format($tax,2, '.', ''); 
                           ?>
 							           <input type="hidden" name="vehicle_tax[]" value="<?php echo  number_format($tax,2, '.', '');  ?>">
@@ -371,7 +345,7 @@ $dueDate = $row1['dueDate'];
                      }
                     ?>
                     <tr>
-                      <td colspan="6" style="padding: 5px;">
+                      <td colspan="5" style="padding: 5px;">
                         <center><strong>Total Due Amount</strong></center>
                       </td>
                       <td  style="padding: 5px;">

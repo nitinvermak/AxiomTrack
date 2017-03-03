@@ -5,10 +5,7 @@ include("../includes/crosssite.inc.php");
 set_time_limit(0);
 error_reporting(E_ALL);
 $jsonData = $_POST['postData'];
-// echo print_r($jsonData['PostData']) ;
-// echo '<br/>';
-// $generate_date = $jsonData['gen_date'] ;
-// $due_date = $jsonData['due_date'] ;
+
 $today_date = date("Y-m-d");
 $due_date = date('Y-m-d',strtotime($today_date . "+15 days"));
 // echo "due date".$due_date;

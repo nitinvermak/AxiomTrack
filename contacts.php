@@ -362,7 +362,11 @@ function checkcompany(){
 		        	<input type='hidden' name='cid' id='cid'	value="<?php if(isset($_GET['id']) and $_GET['id']>0){ echo $_GET['id']; }?>"/>
 		          		<div class="form-group form_custom"><!-- form_custom -->
 		            		<div class="row"><!-- row -->
-		              			<div class="col-md-6 col-sm-6 custom_field">
+		            		  <div class="col-md-6 col-sm-6 custom_field">
+		                        	<span><strong>Mobile No.</strong> <i>*</i></span>
+		                    		<input name="mobile" id="mobile" class="form-control" Placeholder="Mobile*" type="text" onkeyup="checkcompany()" />
+		                      </div>
+		              		  <div class="col-md-6 col-sm-6 custom_field">
 		                			<span id="name" for="name"><strong>First Name</strong> <i>*</i></span>
 		                            <input name="first_name" id="first_name" placeholder="First Name*" class="form-control" type="text" />                        
 		           			  </div>
@@ -379,10 +383,7 @@ function checkcompany(){
 		                            <span><strong>Phone</strong> <i>*</i></span>
 		                            <input name="phone" id="phone" class="form-control" Placeholder="Phone*" type="text" />
 		                      </div>
-		                      <div class="col-md-6 col-sm-6 custom_field">
-		                        	<span><strong>Mobile No.</strong> <i>*</i></span>
-		                    		<input name="mobile" id="mobile" class="form-control" Placeholder="Mobile*" type="text" onkeyup="checkcompany()" />
-		                      </div>
+		                      
 		                      <div class="col-md-6 col-sm-6 custom_field">
 		                       	<span><strong>Email<i>*</i></strong></span>
 		                    	<input name="email" id="email" class="form-control" placeholder="Email*" type="email" />

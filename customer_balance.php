@@ -61,6 +61,7 @@ if (isset($_SESSION) && $_SESSION['login']=='')
 <script type="text/javascript" src="assets/plugins/datatables/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="assets/plugins/datatables/js/buttons.print.min.js"></script>
 <script  src="js/ajax.js"></script>
+<script type="text/javascript" src="js/checkbox.js"></script>
 <script>
 function cash(cash) {
         var cashAmount = document.getElementById("cashAmount");
@@ -522,7 +523,7 @@ function getData(){
 // Device Amount
 function getDeviceAmount(obj){
     $('.loader').show();
-    $.post("ajaxrequest/device_amt_details.php?token=<?php echo $token;?>",
+    $.post("ajaxrequest/show_estimate_device_amt.php?token=<?php echo $token;?>",
     {
         customerId : obj
     },
@@ -541,6 +542,57 @@ function getDeviceAmount(obj){
     });
 }
 // End Device Amount
+// generate Device Estimate
+function generate_device_estimate_details(obj){
+    $('.loader').show();
+    $.post("ajaxrequest/device_estimate_details.php?token=<?php echo $token;?>",
+    {
+        customerId : obj
+    },
+    function( data){
+        /*alert(data);*/
+        $("#dvassign").html(data);
+        $('.example').DataTable( {
+                dom: 'Bfrtip',
+                "bPaginate": false,
+                buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                         ]
+        });
+        $(".loader").removeAttr("disabled");
+        $('.loader').fadeOut(1000);
+    });
+}
+function generate_device_estimate(){
+    jsonArr = []
+    $('.row_val').each(function(){
+        var  device_amt1 = $("#device_amt1",this).val();
+        var customer_id1 = $("#customer_id1",this).val();
+        var vehicleId = $("#v_id",this).val();
+        jsonArr.push({"device_amt": device_amt1, 'customer_id': customer_id1, 'vehicleId': vehicleId });
+    });
+    // console.log(jsonArr);
+    url="ajaxrequest/generate_device_estimate.php?token=<?php echo $token;?>";
+    postData = {'PostData': jsonArr};
+    $.ajax({
+        type: "POST",
+        url: url,
+        data:{postData:postData},
+        dataType: "json" ,
+        success: function (data){
+            alert('a');
+            console.log(data);
+            //GetResponseA(data);
+        },
+        complete:function(data){
+          console.log(data.responseText);
+          $('#show_content').html(data.responseText);
+          $(".loader").removeAttr("disabled");
+          $('.loader').fadeOut(1000);
+        }
+    });
+}
+// End Generate Device Estimate
 // generate next due date
 function generate_duedate1(obj){
     $.post("ajaxrequest/manually_invoice.php?token=<?php echo $token;?>",
@@ -1058,6 +1110,44 @@ function getPaymentAdjustmentDetails(obj){
                     
                 });
 }
+function get_device_amt_payment_details(obj){
+    $.post("ajaxrequest/device_payment_details.php?token=<?php echo $token;?>",
+    {
+        estimateId : obj
+    },
+    function(data){
+        // alert(data);
+        $(".modal-content").html(data);            
+    });
+}
+// add device discount amt
+function add_discount_amt(obj){
+    $.post("ajaxrequest/percentage_amt.php?token=<?php echo $token;?>",
+    {
+        invId : obj,
+        rupeeAmt : $("#discount_amt").val()
+    },
+    function(data){
+        // alert(data);
+        $("#MsgDv").html(data);            
+    });
+}
+// Device Payment Form
+function get_form_device_payment(obj){
+    $.post("ajaxrequest/make_device_payment_form.php?token=<?php echo $token;?>",
+    {
+        estimateId : obj,
+        customer_name : $("#customer_name").val(),
+        discount : $("#discount").val(),
+        amt : $("#amt").val()
+    },
+    function(data){
+        // alert(data);
+        $(".modal-content").html(data);            
+    });
+}
+
+
 </script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
