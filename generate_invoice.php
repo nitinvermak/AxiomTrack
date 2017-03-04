@@ -44,7 +44,8 @@ while ($rowA = mysql_fetch_array( $planRateQueryArr)){
 $sql_invoice_details = "Select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, 
                         C.amount as amt, C.vehicleId  as vId, C.start_date as startDate, 
                         C.end_date as endDate, B.customer_Id as custId, 
-                        C.payment_rate_id as plan_rate_id          
+                        C.payment_rate_id as plan_rate_id, 
+                        B.installation_date as activationdate
                         from tbl_payment_breakage as C left outer join
                         tbl_gps_vehicle_master as B  
                         On C.vehicleId = B.id         
@@ -318,18 +319,19 @@ $dueDate = $row1['dueDate'];
                    <br>
                   <table width="100%" border="1">
                     <tr>
-                      <td colspan="7" width="100%" style="padding: 5px; font-size: 16px; font-weight: bold; text-align: center;">
+                      <td colspan="8" width="100%" style="padding: 5px; font-size: 16px; font-weight: bold; text-align: center;">
                         ESTIMATE DETAILS
                       </td>
                     </tr>
                     <tr>
                       <td width="4%" style="padding: 5px;"><span><strong>S.No.</strong></span></td>
-                      <td width="14%" style="padding: 5px;"><span><strong>Vehicle No.</strong></span></td>
+                      <td width="12%" style="padding: 5px;"><span><strong>Vehicle No.</strong></span></td>
+                      <td width="10%" style="padding: 5px;"><span><strong>Activation Date</strong></span></td>
                       <td width="24%" style="padding: 5px;"><span><strong>Rent Period</strong></span></td>
-                      <td width="14%" style="padding: 5px;"><span><strong>Rent Per Vehicle</strong></span></td>
-                      <td width="14%" style="padding: 5px;"><span><strong>Total Amount</strong></span></td>
+                      <td width="12%" style="padding: 5px;"><span><strong>Rent Per Vehicle</strong></span></td>
+                      <td width="12%" style="padding: 5px;"><span><strong>Total Amount</strong></span></td>
                       <td width="10%" style="padding: 5px;"><span><strong>Tax</strong></span></td>
-                      <td width="16%" style="padding: 5px;"><span><strong>Payble Amount</strong> </span></td>
+                      <td width="12%" style="padding: 5px;"><span><strong>Payble Amount</strong> </span></td>
                     </tr>
                     <?php 
                     $sno = 1;
@@ -340,16 +342,17 @@ $dueDate = $row1['dueDate'];
                       $sum_amt += $amt;
                     ?>
                       <tr>
-                        <td width="6%" style="padding: 5px;"><?= $sno++; ?>.<span></span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= $row['vehicleNo']; ?> 
+                        <td width="4%" style="padding: 5px;"><?= $sno++; ?>.<span></span></td>
+                        <td width="12%" style="padding: 5px;"><span><?= $row['vehicleNo']; ?> 
                         <input type="hidden" name="vehicle_No[]" value="<?= $row['vehicleNo']; ?>"> </span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= date("d-m-Y", strtotime($row['startDate'])); ?> To <?= date("d-m-Y", strtotime($row['endDate'])); ?>
+                        <td width="10%" style="padding: 5px;"><span><?= date("d-m-Y", strtotime($row['activationdate'])); ?></span></td>
+                        <td width="24%" style="padding: 5px;"><span><?= date("d-m-Y", strtotime($row['startDate'])); ?> To <?= date("d-m-Y", strtotime($row['endDate'])); ?>
                         	<input type="hidden" name="rent_period[]" value="<?= date("d-m-Y", strtotime($row['startDate'])); ?> To <?= date("d-m-Y", strtotime($row['endDate'])); ?>">
                         </span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= $deviceRentAmtDict[$row["plan_rate_id"] ]; ?>
+                        <td width="12%" style="padding: 5px;"><span><?= $deviceRentAmtDict[$row["plan_rate_id"] ]; ?>
                         	<input type="hidden" name="rent_per_vehicle[]" value="<?= $deviceRentAmtDict[$row["plan_rate_id"] ]; ?>">
                         </span></td>
-                        <td width="16%" style="padding: 5px;"><span>
+                        <td width="12%" style="padding: 5px;"><span>
                           <?php 
                           $total = $row['amt']/115 * 100;
                           echo number_format($total,2, '.', '');
@@ -363,7 +366,7 @@ $dueDate = $row1['dueDate'];
                           ?>
 							           <input type="hidden" name="vehicle_tax[]" value="<?php echo  number_format($tax,2, '.', '');  ?>">
                         </span></td>
-                        <td width="16%" style="padding: 5px;"><span><?= $amt; ?>
+                        <td width="12%" style="padding: 5px;"><span><?= $amt; ?>
                         <input type="hidden" name="vehicle_grand_total[]" value="<?= $amt; ?>">
                         </span></td>
                       </tr>
@@ -371,7 +374,7 @@ $dueDate = $row1['dueDate'];
                      }
                     ?>
                     <tr>
-                      <td colspan="6" style="padding: 5px;">
+                      <td colspan="7" style="padding: 5px;">
                         <center><strong>Total Due Amount</strong></center>
                       </td>
                       <td  style="padding: 5px;">

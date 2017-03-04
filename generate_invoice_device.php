@@ -139,7 +139,7 @@ $result3 = mysql_query($sql3);
       </section>
       <!-- Main content -->
       <section class="content">
-        <form name='fullform' action="generate_invoice_pdf.php" id="fullform" class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
+        <form name='fullform' action="generate_device_invoice_pdf.php" id="fullform" class="form-inline"  method='post' onSubmit="return confirmdelete(this)">
         <input type="hidden" name="invoice_id" id="invoice_id" value="<?= $_GET['est'] ?>">
           <div class="box box-info">
                <!--  <div class="box-header">

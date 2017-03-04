@@ -37,7 +37,9 @@ $stockArr=mysql_query($linkSQL);
                 <thead>
                 	<tr>
                         <th><small>S. No.</small></th>
+                        <th><small>Follow-Up</small></th>
                         <th><small>Estimate Type</small></th>
+                        <th><small>Customer Id</small></th>
                         <th><small>Company Name</small></th>
                         <th><small>Vehcile Details</small></th>
                         <th><small>Adress & Contact No</small></th>
@@ -57,7 +59,13 @@ $stockArr=mysql_query($linkSQL);
      		  	?>
                     <tr>
                         <td><small><?php print $kolor++;?>.</small></td>
+                        <td><small>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" 
+                            data-target=".bs-example-modal-lg" onclick="follow_up_rent(<?php echo stripslashes($row["estimateId"]);?>);">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            </button></small></td>
                         <td><small>Device</small></td>
+                        <td><small><?php echo stripslashes($row["custId"]);?></small></td>
             			<td><small><?php echo getOraganization(stripslashes($row["callingDateId"]));?></small></td>
                         <td><small><?php echo stripslashes($row["custId"]);?></small></td>
                         <td><small><?php echo getCustomerAddress($row["callingDateId"]);?></small></td>

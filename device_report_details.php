@@ -6,12 +6,10 @@ if ( isset ( $_GET['logout'] ) && $_GET['logout'] ==1 ) {
     session_destroy();
     header("location: index.php?token=".$token);
 }
-if (isset($_SESSION) && $_SESSION['login']=='') 
-{
-    session_destroy();
-    header("location: index.php?token=".$token);
+if (isset($_SESSION) && $_SESSION['login']=='') {
+  session_destroy();
+  header("location: index.php?token=".$token);
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -119,6 +117,54 @@ function getDevice_report(){
                 });  
 }
 // end
+function getField(){
+  var status = $("#followup_status").val();
+  // alert(status);
+  if(status == "Pending"){
+    document.getElementById("dv_ptp").style.display = "none";
+    document.getElementById("dv_reason").style.display = "";
+  }
+  else if(status == "Done"){
+    document.getElementById("dv_ptp").style.display = "";
+    document.getElementById("dv_reason").style.display = "none";
+  }
+}
+// follow-up for rent
+function follow_up_rent(obj){
+  $('.loader').show();
+  $.post("ajaxrequest/follow_up_for_payment.php?token=<?php echo $token;?>",
+  {
+    estimate_id : obj
+  },
+  function(data){
+    /*alert(data);*/
+    $(".modal-content").html(data);
+    $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+    $(".loader").removeAttr("disabled");
+    $('.loader').fadeOut(1000);
+  });  
+}
+function history_save(){
+  $('.loader').show();
+  $.post("ajaxrequest/save_payment_followup_history.php?token=<?php echo $token;?>",
+  {
+    estimate_id : $("#estimate_id").val(),
+    payment_status : $("#payment_status").val(),
+    followup_status : $("#followup_status").val(),
+    ptp_date : $("#ptp_date").val(),
+    reason : $("#reason").val(),
+    remarks : $("#remarks").val()
+  },
+  function(data){
+    /*alert(data);*/
+    $("#dv_msg").html(data);
+    // $( ".date" ).datepicker({dateFormat: 'yy-mm-dd'});
+    $(".loader").removeAttr("disabled");
+    $('.loader').fadeOut(1000);
+  }); 
+}
+// end follow-up for rent
+
 </script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -272,6 +318,15 @@ function getDevice_report(){
             </form>
         </section><!-- End Main content -->
     </div> <!-- end content Wrapper-->
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <!-- Show Modal Content From Ajax request page -->
+        </div>
+      </div>
+    </div>
+    <!-- end modal -->
     <?php include_once("includes/footer.php") ?>
     <!-- Loader -->
     <div class="loader">

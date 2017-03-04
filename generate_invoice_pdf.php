@@ -36,7 +36,8 @@ if (isset($_POST['generatePDF'])) {
  $sql_invoice_details = "Select B.vehicle_no as vehicleNo, C.typeOfPaymentId as paymentType, 
                         C.amount as amt, C.vehicleId  as vId, C.start_date as startDate, 
                         C.end_date as endDate, B.customer_Id as custId, 
-                        C.payment_rate_id as plan_rate_id          
+                        C.payment_rate_id as plan_rate_id,
+                        B.installation_date as active_date
                         from tbl_payment_breakage as C left outer join
                         tbl_gps_vehicle_master as B  
                         On C.vehicleId = B.id         
@@ -113,6 +114,7 @@ if (isset($_POST['generatePDF'])) {
                                 <td width='2%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$sno++.".</span></td>
                                 <td width='14%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$row['vehicleNo']." 
                                   </span></td>
+                                <td style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$row['active_date']."</span>
                                 <td width='22%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".
                                   date("d-m-Y", strtotime($row['startDate']))." To ". date("d-m-Y", strtotime($row['endDate']))."
                                   
@@ -270,24 +272,25 @@ if (isset($_POST['generatePDF'])) {
                    </table><br>
                    <table border='1' style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'>
                     <tr>
-                      <td colspan='7' width='100%' style='padding: 5px;'>
+                      <td colspan='8' width='100%' style='padding: 5px;'>
                         <center>
                           <span style='font-family: arial, sans-serif; font-size:10px; font-weight:bold;'>ESTIMATE DETAILS</span>
                         </center>
                       </td>
                     </tr>
                     <tr>
-                      <td width='6%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>S.No.</strong></span></td>
+                      <td width='4%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>S.No.</strong></span></td>
                       <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Vehicle No.</strong></span></td>
+                      <td width='10%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Activation Date</strong></span></td>
                       <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Rent Period</strong></span></td>
-                      <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Rent Per Vehicle</strong></span></td>
-                      <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Total Amount</strong></span></td>
+                      <td width='12%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Rent Per Vehicle</strong></span></td>
+                      <td width='12%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Total Amount</strong></span></td>
                       <td width='10%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Tax</strong></span></td>
                       <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Payble Amount</strong> </span></td>
                     </tr>".$vehicle_detail_string."       
                     
                        <tr>
-                      <td colspan='6' style='padding: 5px;'>
+                      <td colspan='7' style='padding: 5px;'>
                         <center>
                           <strong>
                           <span style='font-family: arial, sans-serif; font-size:10px'>

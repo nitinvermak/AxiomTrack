@@ -41,9 +41,10 @@ if(count($_POST['delete_selected'])>0 && (isset($_POST['delete_selected'])) )
 if(isset($_POST['inactive']))
     {
         $custid = mysql_real_escape_string($_POST['cust_id']);
-        $sql = "UPDATE tbl_customer_master SET activeStatus = 'N', paymentActiveFlag='N' Where cust_id = '$custid'";
+        $sql = "UPDATE tbl_customer_master SET activeStatus = 'N' Where cust_id = '$custid'";
         // echo $sql;
         $result = mysql_query($sql);
+        $sql1 = mysql_query("UPDATE `tbl_gps_vehicle_payment_master` SET `PlanactiveFlag`='N' WHERE `cust_id`='$custid'");
         if($result)
         {
             echo "<script> alert('Customer In Active Successfully'); </script>";
@@ -54,9 +55,9 @@ if(isset($_POST['inactive']))
 if(isset($_POST['active']))
     {
         $custid = mysql_real_escape_string($_POST['cust_id']);
-        $sql = "UPDATE tbl_customer_master SET activeStatus = 'Y', paymentActiveFlag='Y' Where cust_id = '$custid'";
-        // echo $sql;
+        $sql = "UPDATE tbl_customer_master SET activeStatus = 'Y' Where cust_id = '$custid'";
         $result = mysql_query($sql);
+        $sql1 = mysql_query("UPDATE `tbl_gps_vehicle_payment_master` SET `PlanactiveFlag`='Y' WHERE `cust_id`='$custid'");
         if($result)
         {
             echo "<script> alert('Customer Active Successfully'); </script>";

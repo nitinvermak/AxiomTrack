@@ -76,7 +76,8 @@ $oRS = mysql_query($linkSQL);
 		<table border="0" class="table table-hover table-bordered" id="example"> 
 		 <thead>
 		 	<tr>
-		      	<th><small>S.No.</small></th>  
+		      	<th><small>S.No.</small></th>
+		      	<th><small>Follow-Up</small></th>  
 		        <th><small>Estimate Id</small></th> 
 		        <th><small>Customer Id</small></th> 
 				<th><small>Estimate Type</small></th>
@@ -104,6 +105,11 @@ $oRS = mysql_query($linkSQL);
  	  	 ?>
          <tr>
       	 	<td><small><?php print $kolor++;?>.</small></td>
+      	 	<td><small>
+      	 		<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" 
+      	 		data-target=".bs-example-modal-lg" onclick="follow_up_rent(<?php echo stripslashes($row["estimateId"]);?>);">
+      	 		<i class="fa fa-phone" aria-hidden="true"></i>
+      	 		</button></small></td>
 	  		<td><small><?php echo stripslashes($row["estimateId"]);?></small></td>
 	  		<td><small><?= $row['cust_id']; ?></small></td>
       		<td><small>
@@ -115,6 +121,7 @@ $oRS = mysql_query($linkSQL);
 	        	<strong>To:</strong> 
 	        	<?php echo date("d-m-Y", strtotime(payment_to($row["estimateId"])));?>
         	</small></td>
+        	
 			<td><small><?php echo $row['companyName']; ?></small></td>
 			<td><small><?php echo $row['address']; ?></small></td>
 			<td><small><?php echo $row['mobile']; ?></small></td>
