@@ -37,7 +37,7 @@ if (isset($_POST['generatePDF'])) {
                         C.amount as amt, C.vehicleId  as vId, C.start_date as startDate, 
                         C.end_date as endDate, B.customer_Id as custId, 
                         C.payment_rate_id as plan_rate_id,
-                        B.installation_date as active_date
+                        B.installation_date as active_date, C.typeOfPaymentId as typeOfPaymentId
                         from tbl_payment_breakage as C left outer join
                         tbl_gps_vehicle_master as B  
                         On C.vehicleId = B.id         
@@ -87,7 +87,8 @@ if (isset($_POST['generatePDF'])) {
   $mobileno = $row['mobileno'];
   $email = $row['email'];
 
-  $sql_invoice = "SELECT `invoiceId`, `generateDate`, `dueDate` FROM `tbl_invoice_master`  
+  $sql_invoice = "SELECT `invoiceId`, `generateDate`, `dueDate`, `discountedAmount` 
+                  FROM `tbl_invoice_master`  
                   WHERE `invoiceId` =".$invoice_id;
   // echo "<br>";
   $result_invoice = mysql_query($sql_invoice);
@@ -95,6 +96,7 @@ if (isset($_POST['generatePDF'])) {
   $invoice_No = $row1['invoiceId'];
   $generateDate = $row1['generateDate'];
   $dueDate = $row1['dueDate'];
+  $discountedAmount = $row1['discountedAmount'];
 
   $sno = 1;
   $sum_amt =0;
@@ -109,12 +111,18 @@ if (isset($_POST['generatePDF'])) {
 
     $tax = $total/100 * 15;
     $tax_amt = number_format($tax,2, '.', '');
-
+    if($row['typeOfPaymentId']=='A'){
+      $type = "Rental";
+    }
+    else{
+      $type = "Installation Chrg.";
+    }
 	 $vehicle_detail_string = $vehicle_detail_string."<tr>
                                 <td width='2%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$sno++.".</span></td>
                                 <td width='14%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$row['vehicleNo']." 
                                   </span></td>
-                                <td style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$row['active_date']."</span>
+                                <td style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$row['active_date']."</span></td>
+                                <td style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".$type."</span></td>
                                 <td width='22%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'>".
                                   date("d-m-Y", strtotime($row['startDate']))." To ". date("d-m-Y", strtotime($row['endDate']))."
                                   
@@ -248,31 +256,34 @@ if (isset($_POST['generatePDF'])) {
                    </table><br>
                    <table border='1' style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'>
                     <tr>
-                      <td width='15%' style='padding: 5px;'>
+                      <td width='20%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'><strong>No. of Vehicles</strong></span>
                       </td>
-                      <td width='30%' style='padding: 5px;'>
+                      <td width='20%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Rent Period</strong></span></td>
                       <td width='15%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Amount</strong></span></td>
-                      <td width='20%' style='padding: 5px;'>
+                      <td width='15%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Tax Amount</strong></span></td>
-                      <td width='20%' style='padding: 5px;'>
+                      <td width='15%' style='padding: 5px;'>
+                        <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Discount Amount</strong></span></td>
+                      <td width='15%' style='padding: 5px;'>
                         <span style='font-size:10px; font-family: arial, sans-serif;'><strong>Payble Amount</strong></span></td>
                     </tr>
                     <tr>
-                      <td width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>". $total_vehicle."</span></td>
-                      <td  width='30%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>". date("d-m-Y", strtotime($from))." To ". date("d-m-Y", strtotime($to)) ."</span></td>
+                      <td width='20%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>". $total_vehicle."</span></td>
+                      <td  width='20%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>". date("d-m-Y", strtotime($from))." To ". date("d-m-Y", strtotime($to)) ."</span></td>
                       
                       <td  width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$summ_total1."</span></td>
-                      <td  width='20%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$summ_tax1."</span></td>
-                      <td  width='20%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$grand_total."</span></td>
+                      <td  width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$summ_tax1."</span></td>
+                      <td  width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$discountedAmount."</span></td>
+                      <td  width='15%' style='padding: 5px;'><span style='font-size:10px; font-family: arial, sans-serif;'>".$grnd_total = $grand_total-$discountedAmount."</span></td>
                     </tr>
 
                    </table><br>
                    <table border='1' style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'>
                     <tr>
-                      <td colspan='8' width='100%' style='padding: 5px;'>
+                      <td colspan='9' width='100%' style='padding: 5px;'>
                         <center>
                           <span style='font-family: arial, sans-serif; font-size:10px; font-weight:bold;'>ESTIMATE DETAILS</span>
                         </center>
@@ -282,15 +293,30 @@ if (isset($_POST['generatePDF'])) {
                       <td width='4%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>S.No.</strong></span></td>
                       <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Vehicle No.</strong></span></td>
                       <td width='10%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Activation Date</strong></span></td>
+                      <td style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Type</strong></span></td>
                       <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Rent Period</strong></span></td>
                       <td width='12%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Rent Per Vehicle</strong></span></td>
                       <td width='12%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Total Amount</strong></span></td>
                       <td width='10%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Tax</strong></span></td>
                       <td width='16%' style='padding: 5px;'><span style='font-family: arial, sans-serif; font-size:10px'><strong>Payble Amount</strong> </span></td>
                     </tr>".$vehicle_detail_string."       
-                    
-                       <tr>
-                      <td colspan='7' style='padding: 5px;'>
+                    <tr>
+                      <td colspan='8' style='padding: 5px;'>
+                        <center>
+                          <strong>
+                          <span style='font-family: arial, sans-serif; font-size:10px'>
+                            Discount Amount
+                          </span>
+                          </strong>
+                        </center>
+                      </td>
+                      <td  style='padding: 5px;'>
+                        <span style='font-family: arial, sans-serif; font-size:10px'><strong>$discountedAmount
+                        </strong></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan='8' style='padding: 5px;'>
                         <center>
                           <strong>
                           <span style='font-family: arial, sans-serif; font-size:10px'>
@@ -300,7 +326,8 @@ if (isset($_POST['generatePDF'])) {
                         </center>
                       </td>
                       <td  style='padding: 5px;'>
-                        <span style='font-family: arial, sans-serif; font-size:10px'><strong>$sum_amt
+                        <span style='font-family: arial, sans-serif; font-size:10px'><strong>
+                        ".$sum_grand_total=$sum_amt-$discountedAmount."
                         </strong></span>
                       </td>
                     </tr>

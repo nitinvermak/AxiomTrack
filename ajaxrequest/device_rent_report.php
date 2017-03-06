@@ -12,7 +12,8 @@ $linkSQL = "Select B.invoiceId as estimateId, B.invoiceType as invoiceType, A.cu
 			C.GeneratedDate as generatedDate, B.dueDate as duedate, D.Company_Name as companyName,
 			B.discountedAmount as discount, D.District_id as district, A.telecaller_id as leadgenId,
 			E.service_executive as serviceExecutive, D.Address as address, D.Mobile as mobile,
-			B.generatedAmount as generatedAmount
+			B.generatedAmount as generatedAmount, F.payment_status as payment_status,
+			F.follow_up_status as follow_up_status, F.ptp_date as ptp_date
 			from tbl_customer_master as A
 			inner join tbl_invoice_master as B
 			on A.cust_id = B.customerId
@@ -22,6 +23,8 @@ $linkSQL = "Select B.invoiceId as estimateId, B.invoiceType as invoiceType, A.cu
 			ON A.callingdata_id = D.id 
 			LEFT OUTER JOIN tbl_assign_customer_branch as E 
 			ON A.cust_id = E.cust_id
+			LEFT OUTER JOIN paymentfollowup as F 
+			On F.estimateId = B.invoiceId
 			where (B.invoiceFlag = 'N' or B.invoiceFlag = 'p')";
 			// B.paymentStatusFlag = 'A'
 			// And 
@@ -95,6 +98,9 @@ $oRS = mysql_query($linkSQL);
 		        <th><small>Payble Balance</small></th>
 		        <!-- <th><small>Action</small></th> -->
 				<th><small>Status</small></th>
+				<th><small>Payment Status</small></th>
+				<th><small>Follow-Up Status</small></th>
+				<th><small>PTP Date</small></th>
 	      	</tr>  
 		 </thead>  
 		 <tbody>
@@ -160,7 +166,43 @@ $oRS = mysql_query($linkSQL);
 			}
 	    	?>	    		
 	    	</td>
-      	
+      		<td><small>
+      			<?php  
+      			if($row['payment_status'] == ""){
+      				echo "N/A";
+      			}
+      			else if($row['payment_status'] == "Pending"){
+      				echo "<span class='label label-warning'>".$row['payment_status']."</span>";
+      			}
+      			else if($row['payment_status'] == "Received"){
+      				echo "<span class='label label-success'>".$row['payment_status']."</span>";
+      			}
+      			?>      				
+      			</small></td>
+      		<td><small>
+      			<?php  
+      			if($row['follow_up_status'] == ""){
+      				echo "N/A";
+      			}
+      			else if($row['follow_up_status'] == "Pending"){
+      				echo "<span class='label label-warning'>".$row['follow_up_status']."</span>";
+      			}
+      			else if($row['follow_up_status'] == "Done"){
+      				echo "<span class='label label-success'>".$row['follow_up_status']."</span>";
+      			}
+      			?>      				
+      			</small></td>
+      		<td><small><?php  
+      			if($row['ptp_date'] == '0000-00-00 00:00:00'){
+      				echo "N/A";
+      			}
+      			else if($row['ptp_date'] != NULL){
+      				echo  date("d-m-Y", strtotime($row['ptp_date']));
+      			}
+      			else{
+      				echo "N/A";
+      			}
+      			?> </small></td>
 		</tr>
         <?php 
            	}
